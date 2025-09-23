@@ -187,12 +187,17 @@ class SelectPlaceApp:
         self.info_label.configure(text="Lưới đã reset.")
 
     # --- các hàm tìm đường ---
-    def neighbors(self, pos):
+    def neighbors(self, pos, direction):
         r, c = pos
-        for dr, dc in [(-1,0),(0,-1),(0,1),(1,0)]:
+        # thứ tự: đi thẳng trước, rồi trái/phải, cuối cùng đi ngược
+        dirs = [(-1,0),(0,-1),(0,1),(1,0)]  # lên, trái, phải, xuống
+        for ndir, (dr, dc) in enumerate(dirs):
             nr, nc = r+dr, c+dc
             if 0 <= nr < ROWS and 0 <= nc < COLS:
-                yield (nr,nc)
+                # nếu ndir == direction => đi thẳng, ưu tiên cao hơn (priority thấp hơn)
+                priority = 0 if ndir == direction else 1
+                yield (nr, nc, ndir, priority)
+
 
     def h_score(self, current, target):
         """Hàm heuristic: Khoảng cách Manhattan từ điểm hiện tại đến đích"""
@@ -213,81 +218,43 @@ class SelectPlaceApp:
         return 2
 
     def dijkstra_astar(self, starts, targets):
-        """Kết hợp Dijkstra và A* với ưu tiên ô trống và cho phép đi ngược
-        g_score: chi phí thực tế từ điểm bắt đầu
-        h_score: ước lượng chi phí đến đích (Manhattan)
-        empty_priority: điểm ưu tiên cho ô trống
-        """
         target_set = set(targets)
         g_score = [[float("inf")]*COLS for _ in range(ROWS)]
-        f_score = [[float("inf")]*COLS for _ in range(ROWS)]
-        empty_priority = [[0]*COLS for _ in range(ROWS)]  # điểm ưu tiên cho ô trống
         parent = [[None]*COLS for _ in range(ROWS)]
-        visited = set()  # các ô đã xét
-        
-        # priority queue: (-empty_priority, f_score, g_score, pos)
-        # Đặt -empty_priority để ưu tiên ô có nhiều empty_priority hơn
+
         pq = []
-        
-        # Khởi tạo điểm ưu tiên cho ô trống
-        for r in range(ROWS):
-            for c in range(COLS):
-                if self.cost(r, c) == 1:  # nếu là ô trống
-                    empty_neighbors = sum(1 for nr,nc in self.neighbors((r,c)) 
-                                       if self.cost(nr,nc) == 1)
-                    empty_priority[r][c] = empty_neighbors + 1
-        
+
         for start in starts:
             r, c = start
             g_score[r][c] = 0
-            h = self.min_h_score(start, targets)
-            f_score[r][c] = h
-            # Ưu tiên theo thứ tự: empty_priority -> f_score -> g_score
-            heapq.heappush(pq, (-empty_priority[r][c], h, 0, start))
+            heapq.heappush(pq, (0, 0, -1, start))  # (f_score, g_score, direction, pos)
 
         found = None
-        
+
         while pq:
-            _, f, g, cur = heapq.heappop(pq)
+            f, g, direction, cur = heapq.heappop(pq)
             r, c = cur
-            
-            # Nếu chi phí hiện tại > g_score đã lưu, bỏ qua
+
             if g > g_score[r][c]:
                 continue
-                
-            # Nếu tìm thấy target
+
             if cur in target_set:
                 found = cur
                 break
-            
-            # Đánh dấu đã xét
-            visited.add(cur)
-                
-            # Xét các ô kề
-            for nb in self.neighbors(cur):
-                nr, nc = nb
+
+            for nr, nc, ndir, priority in self.neighbors(cur, direction):
                 move_cost = self.cost(nr, nc)
                 tentative_g = g + move_cost
-                
-                # Cập nhật nếu tìm thấy đường đi tốt hơn hoặc ô chưa được xét
-                if tentative_g <= g_score[nr][nc]:
+
+                if tentative_g < g_score[nr][nc]:
                     parent[nr][nc] = cur
                     g_score[nr][nc] = tentative_g
-                    h = self.min_h_score(nb, targets)
-                    f_score[nr][nc] = tentative_g + h
-                    
-                    # Thêm vào queue nếu ô chưa được xét
-                    if nb not in visited:
-                        # Ưu tiên theo thứ tự: empty_priority -> f_score -> g_score
-                        heapq.heappush(pq, (-empty_priority[nr][nc], 
-                                          f_score[nr][nc], 
-                                          tentative_g, 
-                                          nb))
+                    h = self.min_h_score((nr, nc), targets)
+                    heapq.heappush(pq, (tentative_g + h + priority, tentative_g, ndir, (nr, nc)))
 
         if not found:
             return None
 
-        # Tái tạo đường đi
         path = []
         p = found
         while p is not None:

@@ -6,13 +6,15 @@ ctk.set_default_color_theme("blue")
 
 ROWS = 4
 COLS = 3
-CELL_SIZE = 160
+CELL_SIZE = 200
+width_cell = 70
+height_cell = 70
 
 class SelectPlaceApp:
     def __init__(self):
         self.root = ctk.CTk()
         self.root.title("Chọn khối và đặt vào lưới")
-        self.root.geometry("720x720")
+        self.root.geometry("840x580")
 
         # Khung chính chứa lưới
         self.main_frame = ctk.CTkFrame(self.root)
@@ -38,8 +40,8 @@ class SelectPlaceApp:
                     btn = ctk.CTkButton(
                         cell_frame,
                         text=str(num),
-                        width=45,
-                        height=45,
+                        width=width_cell,
+                        height=height_cell,
                         fg_color="gray75",
                         corner_radius=8,
                         font=("Arial", 18),
@@ -245,7 +247,7 @@ class SelectPlaceApp:
         for start in starts:
             r, c = start
             g_score[r][c] = 0
-            heapq.heappush(pq, (0, 0, -1, start))  # (f_score, g_score, direction, pos)
+            heapq.heappush(pq, (0, 0, -1, start))  
 
         found = None
 
