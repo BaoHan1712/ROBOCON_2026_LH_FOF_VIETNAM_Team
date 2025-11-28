@@ -1,0 +1,43 @@
+*** Using Compiler 'V5.06 update 7 (build 960)', folder: 'C:\Keil_v5\ARM\ARMCC\Bin'
+Build target 'Project'
+compiling main.c...
+..\San_Do.h(98): error:  #140: too many arguments in function call
+  			Bam_thanh_laser_trai_1800(100, 0, 82, 3, 120); //-5
+..\San_Do.h(107): error:  #140: too many arguments in function call
+  			Bam_thanh_laser_trai_1800(40, 0, 82, 1, 100); //-5
+..\San_Do.h(120): error:  #140: too many arguments in function call
+  			Bam_thanh_laser_trai_1800(17, 0, 82, 1, 80); //-5
+..\San_Do.h(145): error:  #140: too many arguments in function call
+  			Bam_thanh_laser_trai_1800(40, 0, 83, 1, 100); //-5
+..\San_Do.h(154): error:  #140: too many arguments in function call
+  			Bam_thanh_laser_trai_1800(17, 0, 83, 1, 80); //-5
+..\San_Do.h(164): error:  #140: too many arguments in function call
+  			Bam_thanh_laser_trai_1800(12, -5, 83, 1, 80); //-5
+..\San_Do.h(289): error:  #140: too many arguments in function call
+  			Bam_thanh_laser_trai_1800(100, 5, 184, 2, 120); //-5
+..\San_Do.h(298): error:  #140: too many arguments in function call
+  			Bam_thanh_laser_trai_1800(40, 5, 184, 1, 100); //-5
+..\San_Do.h(309): error:  #140: too many arguments in function call
+  			Bam_thanh_laser_trai_1800(17, 5, 184, 1, 80); //-5
+..\San_Do.h(334): error:  #140: too many arguments in function call
+  			Bam_thanh_laser_trai_1800(30, 5, 184, 2, 100); //-5
+..\San_Do.h(343): error:  #140: too many arguments in function call
+  			Bam_thanh_laser_trai_1800(17, 10, 184, 1, 80); //-5
+..\San_Do.h(353): error:  #140: too many arguments in function call
+  			Bam_thanh_laser_trai_1800(12, 10, 184, 1, 80); //-5
+..\San_Do.h(476): error:  #140: too many arguments in function call
+  			Bam_thanh_laser_trai_1800(100, 5, 283, 3, 120); //-5
+..\San_Do.h(485): error:  #140: too many arguments in function call
+  			Bam_thanh_laser_trai_1800(40, 5, 283, 1, 100); //-5
+..\San_Do.h(496): error:  #140: too many arguments in function call
+  			Bam_thanh_laser_trai_1800(17, 5, 283, 1, 80); //-5
+..\San_Do.h(521): error:  #140: too many arguments in function call
+  			Bam_thanh_laser_trai_1800(30, 5, 285, 2, 100); //-5
+..\San_Do.h(530): error:  #140: too many arguments in function call
+  			Bam_thanh_laser_trai_1800(17, 10 , 285, 1, 80); //-5
+..\San_Do.h(540): error:  #140: too many arguments in function call
+  			Bam_thanh_laser_trai_1800(12, 20, 285, 1, 80); //-5
+..\main.c: 0 warnings, 18 errors
+".\Project\Project.axf" - 18 Error(s), 0 Warning(s).
+Target not created.
+Build Time Elapsed:  00:00:01

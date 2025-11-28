@@ -1,0 +1,81 @@
+#include <WiFi.h>
+#include <esp_now.h>
+
+#define DEVICE_NAME "ESP32-A"
+
+//================ UART PINS ==================
+#define RXD1 18  // RX từ STM32 TX
+#define TXD1 17  // TX (nếu cần gửi ngược lại)
+#define BAUD_RATE 921600  // tốc độ đọc từ STM32
+
+//================ MAC của ESP32-B ==================
+uint8_t peerMAC[] = {0x34, 0x5f, 0x45, 0xaa, 0x05, 0xec};
+
+char message[200];  // buffer dữ liệu nhận từ STM32
+
+//================ CALLBACK ==================
+void onDataSent(const esp_now_send_info_t *info, esp_now_send_status_t status) {
+  const uint8_t *mac = info->des_addr;
+  Serial.printf("SENT → %02X:%02X:%02X:%02X:%02X:%02X [%s]\n",
+                mac[0], mac[1], mac[2], mac[3], mac[4], mac[5],
+                status == ESP_NOW_SEND_SUCCESS ? "OK" : "FAIL");
+}
+
+void onDataRecv(const esp_now_recv_info_t *info, const uint8_t *data, int len) {
+  char recvMsg[200];
+  memcpy(recvMsg, data, len);
+  recvMsg[len] = '\0';
+  Serial.printf("📩 From B: %s\n", recvMsg);
+}
+
+//================ SETUP ==================
+void setup() {
+  Serial.begin(115200);  // cổng debug ra máy tính
+  Serial1.begin(BAUD_RATE, SERIAL_8N1, RXD1, TXD1); // UART đọc STM32
+  
+  WiFi.mode(WIFI_STA);
+  Serial.printf("[%s] MAC: %s\n", DEVICE_NAME, WiFi.macAddress().c_str());
+
+  // Khởi tạo ESP-NOW
+  if (esp_now_init() != ESP_OK) {
+    Serial.println("❌ ESP-NOW init failed!");
+    return;
+  }
+
+  esp_now_register_send_cb(onDataSent);
+  esp_now_register_recv_cb(onDataRecv);
+
+  // Thêm peer (ESP32-B)
+  esp_now_peer_info_t peerInfo = {};
+  memcpy(peerInfo.peer_addr, peerMAC, 6);
+  peerInfo.channel = 0;
+  peerInfo.encrypt = false;
+  esp_now_add_peer(&peerInfo);
+
+  Serial.println("✅ ESP32-A sẵn sàng đọc UART(921600) và gửi ESP-NOW!");
+}
+
+//================ LOOP ==================
+void loop() {
+  static unsigned long lastSend = 0;
+  unsigned long now = millis();
+
+  // đọc chuỗi từ STM32 (kết thúc bằng '\n')
+  if (Serial1.available()) {
+    int len = Serial1.readBytesUntil('\n', message, sizeof(message) - 1);
+    message[len] = '\0'; // kết thúc chuỗi
+
+    if (len > 0) {
+      Serial.printf("📥 From STM32: %s\n", message);  // hiển thị trên Serial monitor
+      // gửi qua ESP-NOW
+      esp_now_send(peerMAC, (uint8_t *)message, strlen(message));
+    }
+  }
+
+  // kiểm tra kết nối bằng gói Alive mỗi 5s
+  if (now - lastSend > 5000) {
+    lastSend = now;
+    sprintf(message, "%s Alive %lu", DEVICE_NAME, now / 1000);
+    esp_now_send(peerMAC, (uint8_t *)message, strlen(message));
+  }
+}
