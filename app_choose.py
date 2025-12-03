@@ -16,8 +16,8 @@ height_cell = 70
 class SelectPlaceApp:
     def __init__(self):
         self.root = ctk.CTk()
-        self.root.title("Robot Pathfinding: Hybrid (Auto + Manual)")
-        self.root.geometry("840x600") 
+        self.root.title("Robot Pathfinding: Hybrid (Auto + Manual) + AU Logic")
+        self.root.geometry("1000x700") # Mở rộng window để dễ nhìn
 
         self.main_frame = ctk.CTkFrame(self.root)
         self.main_frame.pack(padx=20, pady=20, expand=True, fill="both")
@@ -127,6 +127,56 @@ class SelectPlaceApp:
 
     def get_cell_id(self, r, c):
         return (ROWS - 1 - r) * COLS + (COLS - 1 - c) + 1
+
+    # --- HÀM XỬ LÝ CÔNG THỨC AU (MỚI THÊM) ---
+    def calculate_au_step(self, current_pos, next_pos):
+        """
+        Tính toán bước đi dựa trên công thức AU:
+        index = n - 1
+        r = floor(index / 3)
+        c = index % 3
+        dx, dy, steps, rotations, Hướng
+        """
+        # 1. Lấy ID (n) của vị trí hiện tại và tiếp theo
+        n1 = self.get_cell_id(current_pos[0], current_pos[1])
+        n2 = self.get_cell_id(next_pos[0], next_pos[1])
+
+        # 2. Tính Index và toạ độ Au (r, c) cho vị trí hiện tại (1)
+        index1 = n1 - 1
+        r_au1 = index1 // 3  # Tương đương floor(index / 3)
+        c_au1 = index1 % 3   # Tương đương index % 3
+
+        # 3. Tính Index và toạ độ Au (r, c) cho vị trí tiếp theo (2)
+        index2 = n2 - 1
+        r_au2 = index2 // 3
+        c_au2 = index2 % 3
+
+        # 4. Tính vector di chuyển dx, dy
+        dx = c_au2 - c_au1
+        dy = r_au2 - r_au1
+
+        # 5. Tính Steps và Rotations
+        steps = abs(dx) + abs(dy)
+        total_rotations = steps * 500
+
+        # 6. Xác định hướng văn bản
+        directions = []
+        if dx > 0: directions.append("Trái")
+        if dx < 0: directions.append("Phải")
+        if dy > 0: directions.append("Lên")
+        if dy < 0: directions.append("Xuống")
+        
+        dir_str = " + ".join(directions) if directions else "Đứng yên"
+
+        return {
+            "n1": n1, "n2": n2,
+            "r_au1": r_au1, "c_au1": c_au1,
+            "r_au2": r_au2, "c_au2": c_au2,
+            "dx": dx, "dy": dy,
+            "steps": steps,
+            "rotations": total_rotations,
+            "direction_str": dir_str
+        }
 
     def toggle_mode(self, new_mode, button):
         if self.mode == new_mode:
@@ -403,9 +453,6 @@ class SelectPlaceApp:
     def solve_manual_targets(self):
         # Logic: Dùng thuật toán tối ưu để đi qua các điểm đã chọn thủ công
         
-        # Thay vì thử mọi điểm xuất phát, ta chọn điểm xuất phát dựa trên target đầu tiên của hoán vị
-        # potential_starts = [(ROWS-1, c) for c in range(COLS)] <-- CŨ
-        
         perms = list(itertools.permutations(self.selected_targets))
         
         best_cost = float('inf')
@@ -448,7 +495,6 @@ class SelectPlaceApp:
             self.info_label.configure(text=f"Lỗi: Cần ít nhất 2 khối số 2 để chạy Auto.")
             return
 
-        # potential_starts = [(ROWS-1, c) for c in range(COLS)] <-- CŨ
         combos_2 = list(itertools.combinations(list_2s, 2))
         potential_discards = [None] + list_1s
 
@@ -513,24 +559,48 @@ class SelectPlaceApp:
             lbl_picked.place(relx=0.85, rely=0.15, anchor="center")
             self.grid_cells[pr][pc]["overlays"].append(lbl_picked)
 
+        print("\n" + "="*60)
+        print(" BẮT ĐẦU MÔ PHỎNG VÀ TÍNH TOÁN (AU FORMULA) ")
+        print("="*60)
+
         for segment_path, segment_action in simulation_path:
             path_ids = [self.get_cell_id(r,c) for r,c in segment_path]
             
             if segment_action == "FINISH":
-                print(f"\n[Về đích] -> {path_ids}")
-                full_path_display.extend(segment_path[1:] if full_path_display else segment_path)
+                print(f"\n>> PHÂN ĐOẠN: VỀ ĐÍCH")
+                print(f"Path IDs: {path_ids}")
             else:
                 picked_id = self.get_cell_id(segment_action[0], segment_action[1])
                 standing_id = self.get_cell_id(segment_path[-1][0], segment_path[-1][1])
-                print(f"\n[Hành trình {step_counter+1}]")
-                print(f"-> Di chuyển: {path_ids}")
-                print(f"-> Đứng tại {standing_id} -> Gắp {picked_id}")
+                print(f"\n>> PHÂN ĐOẠN {step_counter+1}: ĐI ĐẾN ĐIỂM GẮP")
+                print(f"Path IDs: {path_ids}")
+                print(f"Action: Đứng tại ID {standing_id} -> Gắp ID {picked_id}")
                 draw_pick(segment_action, segment_path[-1], step_counter)
                 step_counter += 1
-                if not full_path_display: full_path_display.extend(segment_path)
-                else: full_path_display.extend(segment_path[1:])
+
+            # --- IN RA CHI TIẾT CÔNG THỨC AU CHO PHÂN ĐOẠN NÀY ---
+            print("   --- Chi tiết kỹ thuật (Au Formula) ---")
+            for i in range(len(segment_path) - 1):
+                curr = segment_path[i]
+                next_node = segment_path[i+1]
+                
+                # Gọi hàm tính toán AU mới thêm
+                au_data = self.calculate_au_step(curr, next_node)
+                
+                # Format output chuẩn kỹ thuật
+                print(f"   [Step] ID:{au_data['n1']}->{au_data['n2']} | "
+                      f"Idx:{au_data['n1']-1}->{au_data['n2']-1} | "
+                      f"Au(r,c):({au_data['r_au1']},{au_data['c_au1']})->({au_data['r_au2']},{au_data['c_au2']}) | "
+                      f"d({au_data['dx']:>2},{au_data['dy']:>2}) | "
+                      f"Rot:{au_data['rotations']} | Hướng: {au_data['direction_str']}")
+            # -----------------------------------------------------
+
+            if not full_path_display: full_path_display.extend(segment_path)
+            else: full_path_display.extend(segment_path[1:])
 
         print("="*60)
+        
+        # Vẽ số thứ tự bước đi lên GUI
         for idx, (r, c) in enumerate(full_path_display):
             existing = self.grid_cells[r][c]["overlays"]
             important_overlay = any(x.cget("text") in ["✖", "✓"] for x in existing)
