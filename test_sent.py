@@ -1,8 +1,14 @@
 import customtkinter as ctk
 import heapq
-import itertools 
-from sent_uart import build_packet
+import itertools
+import struct
+import serial
+import time
 
+# --- Cấu hình Serial ---
+# Bạn hãy thay đổi 'COM3' thành cổng COM thực tế trên máy tính của bạn
+UART_PORT = 'COM3' 
+BAUD_RATE = 115200
 
 ctk.set_appearance_mode("System")
 ctk.set_default_color_theme("blue")
@@ -13,11 +19,20 @@ CELL_SIZE = 200
 width_cell = 70
 height_cell = 70
 
+# --- Hàm đóng gói gói tin (User provided) ---
+def build_packet(move, action, block_id):
+    start = 0x02
+    end = 0x03
+    # Checksum logic: cộng dồn các byte dữ liệu
+    checksum = (start + move + action + block_id) & 0xFF
+    packet = struct.pack('6B', start, move, action, block_id, checksum, end)
+    return packet
+
 class SelectPlaceApp:
     def __init__(self):
         self.root = ctk.CTk()
-        self.root.title("Robot Pathfinding: Hybrid (Auto + Manual)")
-        self.root.geometry("840x600") 
+        self.root.title("Robot Pathfinding: Hybrid & UART Control")
+        self.root.geometry("840x700") # Tăng chiều cao để chứa log
 
         self.main_frame = ctk.CTkFrame(self.root)
         self.main_frame.pack(padx=20, pady=20, expand=True, fill="both")
@@ -69,7 +84,6 @@ class SelectPlaceApp:
                 )
                 id_label.place(relx=0.02, rely=0.02, anchor="nw")
                 
-                # Binding click cho ô (để chọn target thủ công)
                 cell_frame.bind("<Button-1>", lambda e, pos=(i, j): self.cell_clicked(pos))
 
                 row.append({
@@ -78,7 +92,7 @@ class SelectPlaceApp:
                     "overlays": [],
                     "buttons": block_buttons,
                     "id_label": id_label,
-                    "selected": False # Trạng thái chọn thủ công
+                    "selected": False
                 })
             self.grid_cells.append(row)
 
@@ -108,7 +122,7 @@ class SelectPlaceApp:
         self.select_btn.pack(side="left", padx=5)
 
         self.run_btn = ctk.CTkButton(
-            self.bottom_frame, text="CHẠY (Auto/Manual)", width=160, height=40,
+            self.bottom_frame, text="CHẠY & GỬI UART", width=160, height=40,
             fg_color="#5cb85c", hover_color="#449d44",
             command=self.smart_run
         )
@@ -116,34 +130,33 @@ class SelectPlaceApp:
 
         self.info_label = ctk.CTkLabel(
             self.root,
-            text="Chế độ: Đặt khối.\nBấm 'Chọn ô' để chọn thủ công hoặc bấm 'CHẠY' để Auto.",
+            text="Chế độ: Đặt khối.\nBấm 'CHẠY' để tìm đường và gửi dữ liệu xuống STM32.",
             width=250, height=60, wraplength=600, justify="left"
         )
         self.info_label.pack(pady=8)
 
-        self.mode = "PLACE" # PLACE / DELETE / SELECT
+        self.mode = "PLACE"
         self.active_button = None
-        self.selected_targets = [] # Danh sách các ô được chọn thủ công
+        self.selected_targets = []
 
+    # --- CÁC HÀM UI CƠ BẢN (GIỮ NGUYÊN) ---
     def get_cell_id(self, r, c):
         return (ROWS - 1 - r) * COLS + (COLS - 1 - c) + 1
 
     def toggle_mode(self, new_mode, button):
         if self.mode == new_mode:
-            # Tắt chế độ hiện tại -> Về PLACE
             self.mode = "PLACE"
             if self.active_button:
                 self.active_button.configure(fg_color=self.active_button.default_color)
             self.active_button = None
             self.info_label.configure(text="Trở lại chế độ Đặt khối.")
         else:
-            # Bật chế độ mới
             self.mode = new_mode
             if self.active_button:
                 self.active_button.configure(fg_color=self.active_button.default_color)
             self.active_button = button
             button.default_color = button.cget("fg_color")
-            button.configure(fg_color="yellow") # Highlight nút đang active
+            button.configure(fg_color="yellow")
             
             if new_mode == "DELETE":
                 self.info_label.configure(text="Chế độ XÓA: Click vào nút số hoặc ô để xóa.")
@@ -153,7 +166,6 @@ class SelectPlaceApp:
     def cell_clicked(self, position):
         r, c = position
         cell = self.grid_cells[r][c]
-        
         if self.mode == "DELETE":
             if cell["content"]:
                 cell["content"]["widget"].destroy()
@@ -162,9 +174,7 @@ class SelectPlaceApp:
                     btn.pack(side="left", expand=True, padx=5, pady=5)
                 cell["id_label"].lift()
                 self.info_label.configure(text=f"Đã xóa tại ({r},{c})")
-        
         elif self.mode == "SELECT":
-            # Logic chọn ô thủ công
             if not cell["selected"]:
                 cell["frame"].configure(fg_color="orange")
                 cell["selected"] = True
@@ -180,17 +190,12 @@ class SelectPlaceApp:
     def place_block(self, number, position):
         r, c = position
         cell = self.grid_cells[r][c]
-        
-        # Nếu đang ở chế độ Xóa hoặc Chọn -> Không đặt khối (hoặc xử lý theo mode)
         if self.mode == "DELETE":
-            self.cell_clicked(position) # Gọi hàm xóa
+            self.cell_clicked(position)
             return
-        
         if self.mode == "SELECT":
-            self.cell_clicked(position) # Gọi hàm chọn
+            self.cell_clicked(position)
             return
-
-        # Chế độ PLACE
         if cell["content"]:
             self.info_label.configure(text="Ô đã có khối, hãy xóa trước.")
             return
@@ -217,15 +222,11 @@ class SelectPlaceApp:
                 for ov in cell["overlays"]:
                     ov.destroy()
                 cell["overlays"].clear()
-                
-                # Reset trạng thái chọn
                 cell["selected"] = False
                 cell["frame"].configure(fg_color="transparent")
-                
                 for btn in cell["buttons"]:
                     btn.pack(side="left", expand=True, padx=5, pady=5)
                 cell["id_label"].lift()
-        
         self.mode = "PLACE"
         self.selected_targets.clear()
         if self.active_button:
@@ -234,18 +235,13 @@ class SelectPlaceApp:
         self.info_label.configure(text="Lưới đã reset.")
 
     # --- CÁC HÀM LOGIC TÌM ĐƯỜNG (ENGINE) ---
-
     def check_traversable_rules(self, r, c, virtual_grid=None):
         if not (0 <= r < ROWS and 0 <= c < COLS): return False
-        
         if virtual_grid:
             status = virtual_grid[r][c]
-            if status == "EMPTY" or status == "IGNORED":
-                return True
-
+            if status == "EMPTY" or status == "IGNORED": return True
         cell = self.grid_cells[r][c]
-        if cell["content"] and cell["content"]["number"] == 3:
-            return False
+        if cell["content"] and cell["content"]["number"] == 3: return False
         return True
 
     def get_access_points(self, target_pos, virtual_grid=None):
@@ -253,7 +249,6 @@ class SelectPlaceApp:
         points = []
         if self.check_traversable_rules(r, c, virtual_grid):
             points.append((r, c))
-
         dirs = [(-1, 0), (1, 0), (0, -1), (0, 1)]
         for dr, dc in dirs:
             nr, nc = r + dr, c + dc
@@ -281,7 +276,6 @@ class SelectPlaceApp:
         return min(self.h_score(pos, target) for target in targets)
 
     def cost(self, r, c, virtual_grid=None):
-        # Flat cost = 1 để ưu tiên đường ngắn nhất tuyệt đối
         return 1 
 
     def dijkstra_astar(self, starts, targets, use_arm=False, virtual_grid=None):
@@ -289,7 +283,6 @@ class SelectPlaceApp:
         parent = [[None]*COLS for _ in range(ROWS)]
         pq = []
         goal_map = {} 
-
         if use_arm:
             for t in targets:
                 aps = self.get_access_points(t, virtual_grid)
@@ -297,40 +290,30 @@ class SelectPlaceApp:
                     if p not in goal_map: goal_map[p] = t
         else:
             for t in targets: goal_map[t] = t 
-
         if not goal_map: return None, None
-
         for start in starts:
             r, c = start
             g_score[r][c] = 0
             heapq.heappush(pq, (0, 0, -1, start))  
-
         found_node = None
         picked_target = None
-
         while pq:
             f, g, direction, cur = heapq.heappop(pq)
             r, c = cur
-
             if g > g_score[r][c]: continue
-
             if cur in goal_map:
                 found_node = cur
                 picked_target = goal_map[cur]
                 break
-
             for nr, nc, ndir, priority in self.neighbors(cur, direction, virtual_grid):
                 move_cost = self.cost(nr, nc, virtual_grid)
                 tentative_g = g + move_cost
-
                 if tentative_g < g_score[nr][nc]:
                     parent[nr][nc] = cur
                     g_score[nr][nc] = tentative_g
                     h = self.min_h_score((nr, nc), list(goal_map.keys()))
                     heapq.heappush(pq, (tentative_g + h + priority, tentative_g, ndir, (nr, nc)))
-
         if not found_node: return None, None
-
         path = []
         p = found_node
         while p is not None:
@@ -343,98 +326,74 @@ class SelectPlaceApp:
         virtual_grid = [[None]*COLS for _ in range(ROWS)]
         for r, c in ignored_blocks:
             virtual_grid[r][c] = "IGNORED"
-
         full_simulation_path = []
         total_steps = 0
         current_starts = start_candidates
         last_target_pos = None
         combo_bonus = 0
-
         for idx, target in enumerate(ordered_targets):
-            # Combo Logic: Thưởng nếu gắp liên tiếp 2 ô kề nhau
             if last_target_pos and self.is_adjacent(last_target_pos, target):
                 combo_bonus += 2.5 
-
             path, picked = self.dijkstra_astar(current_starts, [target], use_arm=True, virtual_grid=virtual_grid)
             if not path: return float('inf'), []
-            
             segment_cost = 0
             for r, c in path:
                 segment_cost += self.cost(r, c, virtual_grid)
-            
             total_steps += segment_cost
             full_simulation_path.append((path, picked))
-            
             last_pos = path[-1]
             last_target_pos = picked
             current_starts = [last_pos]
             tr, tc = picked
             virtual_grid[tr][tc] = "EMPTY"
-
         final_goals = [(0, c) for c in range(COLS)]
         path_home, _ = self.dijkstra_astar(current_starts, final_goals, use_arm=False, virtual_grid=virtual_grid)
         if not path_home: return float('inf'), []
-        
         for r, c in path_home:
             total_steps += self.cost(r, c, virtual_grid)
-            
         full_simulation_path.append((path_home, "FINISH"))
         final_score = total_steps - combo_bonus
         return final_score, full_simulation_path
 
-    # --- HÀM CHẠY THÔNG MINH (HYBRID) ---
+    # --- HÀM CHẠY THÔNG MINH ---
     def smart_run(self):
-        # 1. Reset Overlays
         for r in range(ROWS):
             for c in range(COLS):
                 for ov in self.grid_cells[r][c]["overlays"]: ov.destroy()
                 self.grid_cells[r][c]["overlays"].clear()
 
-        # 2. Xác định Input
-        # Nếu người dùng đã chọn ô thủ công (Selected Mode)
         if self.selected_targets:
             print("\n>>> CHẾ ĐỘ THỦ CÔNG (MANUAL) <<<")
             self.solve_manual_targets()
         else:
-            # Nếu không chọn gì -> Chế độ Tự động tìm R2
             print("\n>>> CHẾ ĐỘ TỰ ĐỘNG (AUTO) <<<")
             self.solve_auto_targets()
 
     def solve_manual_targets(self):
-        # Logic: Dùng thuật toán tối ưu để đi qua các điểm đã chọn thủ công
-        
-        # Thay vì thử mọi điểm xuất phát, ta chọn điểm xuất phát dựa trên target đầu tiên của hoán vị
-        # potential_starts = [(ROWS-1, c) for c in range(COLS)] <-- CŨ
-        
         perms = list(itertools.permutations(self.selected_targets))
-        
         best_cost = float('inf')
         best_sim = None
         best_perm = None
-
         for perm in perms:
-            # LOGIC MỚI: Bắt buộc xuất phát từ cột của mục tiêu đầu tiên
             first_target_col = perm[0][1]
             forced_start = (ROWS - 1, first_target_col)
-            
-            # Ở chế độ thủ công, ta không tự ý loại bỏ khối nào (ignored = [])
             cost, sim_data = self.simulate_sequence([forced_start], perm, [])
-            
             if cost < best_cost:
                 best_cost = cost
                 best_sim = sim_data
                 best_perm = perm
-        
         if best_sim:
             final_ids = [self.get_cell_id(*p) for p in best_perm]
             print(f"-> Manual Order: {final_ids}")
             self.visualize_result(best_sim, [])
-            self.info_label.configure(text=f"Thủ công: Gắp theo thứ tự {final_ids}.")
+            self.info_label.configure(text=f"Thủ công: {final_ids}. Đang gửi UART...")
+            
+            # GỌI HÀM GỬI UART Ở ĐÂY
+            self.process_and_send_uart(best_sim)
         else:
             self.info_label.configure(text="Không tìm được đường đi cho các ô đã chọn.")
 
     def solve_auto_targets(self):
-        # Logic: Tự tìm 2 khối 2 và loại 1 khối 1
         list_1s = []
         list_2s = []
         for r in range(ROWS):
@@ -443,44 +402,38 @@ class SelectPlaceApp:
                 if content:
                     if content["number"] == 1: list_1s.append((r, c))
                     elif content["number"] == 2: list_2s.append((r, c))
-
         if len(list_2s) < 2:
             self.info_label.configure(text=f"Lỗi: Cần ít nhất 2 khối số 2 để chạy Auto.")
             return
-
-        # potential_starts = [(ROWS-1, c) for c in range(COLS)] <-- CŨ
         combos_2 = list(itertools.combinations(list_2s, 2))
         potential_discards = [None] + list_1s
-
         best_cost = float('inf')
         best_sim = None
         best_targets_set = None
         best_ignored_set = []
-
         for c2 in combos_2:
             active_targets = list(c2)
             for discard_r1 in potential_discards:
                 current_ignored = [discard_r1] if discard_r1 else []
                 permutations = list(itertools.permutations(active_targets))
-                
                 for perm in permutations:
-                    # LOGIC MỚI: Bắt buộc xuất phát từ cột của mục tiêu đầu tiên
                     first_target_col = perm[0][1]
                     forced_start = (ROWS - 1, first_target_col)
-                    
                     cost, sim_data = self.simulate_sequence([forced_start], perm, current_ignored)
                     if cost < best_cost:
                         best_cost = cost
                         best_sim = sim_data
                         best_targets_set = perm
                         best_ignored_set = current_ignored
-
         if best_sim:
             final_ids = [self.get_cell_id(*p) for p in best_targets_set]
             ignored_ids = [self.get_cell_id(*p) for p in best_ignored_set]
             print(f"-> Auto Pick: {final_ids}, Ignore: {ignored_ids}")
             self.visualize_result(best_sim, best_ignored_set)
-            self.info_label.configure(text=f"Auto: Chọn {final_ids}. Loại {ignored_ids}.")
+            self.info_label.configure(text=f"Auto: {final_ids}. Đang gửi UART...")
+            
+            # GỌI HÀM GỬI UART Ở ĐÂY
+            self.process_and_send_uart(best_sim)
         else:
             self.info_label.configure(text="Không tìm thấy đường đi khả thi.")
 
@@ -514,23 +467,14 @@ class SelectPlaceApp:
             self.grid_cells[pr][pc]["overlays"].append(lbl_picked)
 
         for segment_path, segment_action in simulation_path:
-            path_ids = [self.get_cell_id(r,c) for r,c in segment_path]
-            
             if segment_action == "FINISH":
-                print(f"\n[Về đích] -> {path_ids}")
                 full_path_display.extend(segment_path[1:] if full_path_display else segment_path)
             else:
-                picked_id = self.get_cell_id(segment_action[0], segment_action[1])
-                standing_id = self.get_cell_id(segment_path[-1][0], segment_path[-1][1])
-                print(f"\n[Hành trình {step_counter+1}]")
-                print(f"-> Di chuyển: {path_ids}")
-                print(f"-> Đứng tại {standing_id} -> Gắp {picked_id}")
                 draw_pick(segment_action, segment_path[-1], step_counter)
                 step_counter += 1
                 if not full_path_display: full_path_display.extend(segment_path)
                 else: full_path_display.extend(segment_path[1:])
 
-        print("="*60)
         for idx, (r, c) in enumerate(full_path_display):
             existing = self.grid_cells[r][c]["overlays"]
             important_overlay = any(x.cget("text") in ["✖", "✓"] for x in existing)
@@ -550,6 +494,114 @@ class SelectPlaceApp:
             else:
                  lbl.place(relx=0.2, rely=0.85, anchor="center")
             self.grid_cells[r][c]["overlays"].append(lbl)
+
+    # --- LOGIC GỬI UART (ĐÃ SỬA: XỬ LÝ ĐIỂM XUẤT PHÁT TỪ NGOÀI) ---
+    def process_and_send_uart(self, simulation_path):
+        """
+        Chuyển đổi Path tọa độ thành các lệnh Move/Action tương đối.
+        Sửa lỗi: Robot từ bên ngoài (Off-board) đi vào điểm đầu tiên.
+        """
+        try:
+            ser = serial.Serial(UART_PORT, BAUD_RATE, timeout=1)
+            print(f"\n[UART] Connected to {UART_PORT}")
+        except Exception as e:
+            print(f"\n[UART ERROR] Không thể mở cổng {UART_PORT}: {e}")
+            self.info_label.configure(text=f"Lỗi UART: Không mở được {UART_PORT}")
+            return
+
+        # Vector định nghĩa hướng: (row_change, col_change)
+        current_facing = (-1, 0) # North
+        
+        # Mapping quay phải/trái
+        right_turn_map = {(-1,0):(0,1), (0,1):(1,0), (1,0):(0,-1), (0,-1):(-1,0)}
+        left_turn_map = {(-1,0):(0,-1), (0,-1):(1,0), (1,0):(0,1), (0,1):(-1,0)}
+
+        print("--- BẮT ĐẦU GỬI UART (SEQUENTIAL) ---")
+        
+        # Flag để kiểm soát việc robot từ ngoài đi vào lần đầu tiên
+        is_first_entry = True
+
+        for segment_path, segment_action in simulation_path:
+            
+            # --- XỬ LÝ ĐẶC BIỆT: ROBOT TỪ NGOÀI ĐI VÀO ---
+            if is_first_entry:
+                # Nếu là segment đầu tiên, điểm đầu tiên (path[0]) chính là nơi robot cần đi vào từ bên ngoài
+                entry_pos = segment_path[0]
+                entry_id = self.get_cell_id(entry_pos[0], entry_pos[1])
+                
+                # Giả định: Từ bên ngoài đi thẳng vào ô đầu tiên (Row cao nhất) -> Move = 1
+                packet = build_packet(1, 4, entry_id)
+                ser.write(packet)
+                print(f"Move=1, Act=4, ID={entry_id} (ENTRY FROM OUTSIDE)")
+                time.sleep(0.1)
+                
+                is_first_entry = False
+
+            # GIAI ĐOẠN 1: DI CHUYỂN (MOVE)
+            # Robot thực hiện đi từ đầu path đến cuối path
+            for i in range(len(segment_path) - 1):
+                curr_pos = segment_path[i]
+                next_pos = segment_path[i+1]
+                
+                # ID của ô robot sắp đi vào
+                step_block_id = self.get_cell_id(next_pos[0], next_pos[1])
+
+                # Tính vector di chuyển
+                dr = next_pos[0] - curr_pos[0]
+                dc = next_pos[1] - curr_pos[1]
+                move_vec = (dr, dc)
+                
+                move_cmd = 0 
+                
+                if move_vec == current_facing:
+                    move_cmd = 1 # Đi thẳng
+                elif move_vec == left_turn_map[current_facing]:
+                    move_cmd = 2 # Rẽ trái
+                    current_facing = move_vec 
+                elif move_vec == right_turn_map[current_facing]:
+                    move_cmd = 3 # Rẽ phải
+                    current_facing = move_vec 
+                else:
+                    print(f"[Warn] Yêu cầu quay 180 độ tại {curr_pos}->{next_pos}")
+                    continue 
+
+                # Gửi gói tin MOVE
+                packet = build_packet(move_cmd, 4, step_block_id)
+                ser.write(packet)
+                print(f"Move={move_cmd}, Act=4, ID={step_block_id}")
+                time.sleep(0.1) 
+            
+            # GIAI ĐOẠN 2: HÀNH ĐỘNG (ACTION)
+            if segment_action != "FINISH":
+                robot_pos = segment_path[-1] # Robot đang đứng ở đây
+                target_pos = segment_action  # Vật nằm ở đây
+                
+                action_block_id = self.get_cell_id(target_pos[0], target_pos[1])
+                
+                # Tính vector hướng gắp
+                dr_act = target_pos[0] - robot_pos[0]
+                dc_act = target_pos[1] - robot_pos[1]
+                act_vec = (dr_act, dc_act)
+                
+                action_cmd = 4 
+                
+                if act_vec == current_facing:
+                    action_cmd = 1 
+                elif act_vec == left_turn_map[current_facing]:
+                    action_cmd = 2 
+                elif act_vec == right_turn_map[current_facing]:
+                    action_cmd = 3 
+                
+                # Gửi gói tin ACTION
+                if action_cmd != 4:
+                    packet = build_packet(0, action_cmd, action_block_id)
+                    ser.write(packet)
+                    print(f"Move=0, Act={action_cmd}, ID={action_block_id}")
+                    time.sleep(0.5) 
+
+        ser.close()
+        print("--- HOÀN THÀNH ---")
+        self.info_label.configure(text=f"Đã gửi xong.")
 
     def run(self):
         self.root.mainloop()
