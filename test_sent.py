@@ -32,7 +32,7 @@ class SelectPlaceApp:
     def __init__(self):
         self.root = ctk.CTk()
         self.root.title("Robot Pathfinding: Hybrid & UART Control")
-        self.root.geometry("840x700") # Tăng chiều cao để chứa log
+        self.root.geometry("840x630") # Tăng chiều cao để chứa log
 
         self.main_frame = ctk.CTkFrame(self.root)
         self.main_frame.pack(padx=20, pady=20, expand=True, fill="both")
