@@ -22,14 +22,14 @@ ser = serial.Serial(
 print("UART opened")
 
 # # --- Gửi liên tục ---
-# while True:
-#     move     = random.randint(1, 100)
-#     action   = random.randint(1, 100)
-#     block_id = random.randint(1, 100)
+while True:
+    move     = random.randint(1, 100)
+    action   = random.randint(1, 100)
+    block_id = random.randint(1, 100)
 
-#     packet = build_packet(move, action, block_id)
+    packet = build_packet(move, action, block_id)
 
-#     ser.write(packet)
-#     print(f"Đã gửi → move={move}, action={action}, id={block_id}, packet={packet}")
+    ser.write(packet)
+    print(f"Đã gửi → move={move}, action={action}, id={block_id}, packet={packet}")
 
-#     time.sleep(1)
+    time.sleep(0.3)
