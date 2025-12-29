@@ -88,22 +88,22 @@ vu8 DATA_SPEED[70]={255,1,0,0,
 
 #define	DIA_CHI_START10						DATA_SPEED[36]=255 // -- OK
 #define	ID10									 		DATA_SPEED[37]=10
-#define Ban_2_next						    DATA_SPEED[38]=0
-#define Ban_2_back				        DATA_SPEED[38]=1
-#define	Ban_2											DATA_SPEED[39]
+#define tay_xoay_thuan 					  DATA_SPEED[38]=1
+#define tay_xoay_nghich			      DATA_SPEED[38]=0
+#define	tay_xoay									DATA_SPEED[39]
 
 #define	DIA_CHI_START11						DATA_SPEED[40]=255 // -- OK
 #define	ID11											DATA_SPEED[41]=11 
-#define Ban_3_next				 				DATA_SPEED[42]=0
-#define Ban_3_back								DATA_SPEED[42]=1 
-#define	Ban_3											DATA_SPEED[43]
+#define tay_gat_toi				 				DATA_SPEED[42]=0
+#define tay_gat_lui								DATA_SPEED[42]=1 
+#define	tay_gat										DATA_SPEED[43]
 
 
 #define	DIA_CHI_START12						DATA_SPEED[44]=255 // -- OK
 #define	ID12											DATA_SPEED[45]=12 
-#define Ban_1_next				 				DATA_SPEED[46]=0
-#define Ban_1_back								DATA_SPEED[46]=1
-#define	Ban_1											DATA_SPEED[47]
+#define May_bom_on				 				DATA_SPEED[46]=0
+#define May_bom_off								DATA_SPEED[46]=1
+#define	May_bom										DATA_SPEED[47]
 
 
 #define	DIA_CHI_START13						DATA_SPEED[48]=255 // -- OK
@@ -147,25 +147,17 @@ vu8 DATA_SPEED[70]={255,1,0,0,
 #define cam_bien_laze_truoc							 		 _ADC1_Value[5]  //OK 
 
 
-#define bien_tro_chan_truoc									 _ADC1_Value[0]
-#define bien_tro_chan_sau										 _ADC1_Value[1]
-#define bien_tro_xoay_tay									 	 _ADC1_Value[2]	
-#define bien_tro_nang_tay								 	 	 _ADC1_Value[3]	 //OK
-
+#define bien_tro_chan_truoc									 _ADC1_Value[0]//pin2
+#define bien_tro_chan_sau										 _ADC1_Value[1]//pin3
+#define bien_tro_xoay_tay									 	 _ADC1_Value[2]//pin4	
+#define bien_tro_nang_tay								 	 	 _ADC1_Value[3]//pin5	 //OK
+ 
 //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx OUTPUT xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx//
 //CO CAU LAY BONG
 
 
 #define   XI_LANH_DAY_BONG_RA								GPIO_WriteBit(GPIOA,GPIO_Pin_12,0) // -- OK
 #define   XI_LANH_DAY_BONG_VAO							GPIO_WriteBit(GPIOA,GPIO_Pin_12,1)
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////
-
-#define   XI_LANH_NANG_KEP									GPIO_WriteBit(GPIOD,GPIO_Pin_15,0) // -- OK
-#define   XI_LANH_HA_KEP										GPIO_WriteBit(GPIOD,GPIO_Pin_15,1)
- 
-#define   XI_LANH_KEP_DONG									GPIO_WriteBit(GPIOB,GPIO_Pin_10,1) // -- OK
-#define   XI_LANH_KEP_MO										GPIO_WriteBit(GPIOB,GPIO_Pin_10,0)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -175,6 +167,29 @@ vu8 DATA_SPEED[70]={255,1,0,0,
 #define   XI_LANH_LAZE_ON										GPIO_WriteBit(GPIOB,GPIO_Pin_11,1) // -- OK
 #define   XI_LANH_LAZE_OFF									GPIO_WriteBit(GPIOB,GPIO_Pin_11,0)
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+#define   XI_LANH_NANG_KEP									GPIO_WriteBit(GPIOB,GPIO_Pin_0,0) // -- OK
+#define   XI_LANH_HA_KEP										GPIO_WriteBit(GPIOB,GPIO_Pin_0,1)
+ 
+#define   XI_LANH_KEP_DONG									GPIO_WriteBit(GPIOB,GPIO_Pin_11,0) // -- OK
+#define   XI_LANH_KEP_MO										GPIO_WriteBit(GPIOB,GPIO_Pin_11,1)
+
+#define   XI_LANH_NANG_LEN									  GPIO_WriteBit(GPIOD,GPIO_Pin_15,1) // -- OK
+#define   XI_LANH_NANG_XUONG										GPIO_WriteBit(GPIOD,GPIO_Pin_15,0)
+
+#define   XI_LANH_DAY_RA									GPIO_WriteBit(GPIOB,GPIO_Pin_6,1) // -- OK
+#define   XI_LANH_DAY_VAO								 GPIO_WriteBit(GPIOB,GPIO_Pin_6,0)
+
+//                                    GPIO_ReadOutputDataBit(GPIOB, GPIO_Pin_11), OK
+//                                    GPIO_ReadOutputDataBit(GPIOA, GPIO_Pin_11),
+//                                    GPIO_ReadOutputDataBit(GPIOB, GPIO_Pin_10),
+//                                    GPIO_ReadOutputDataBit(GPIOA, GPIO_Pin_12),
+//                                    GPIO_ReadOutputDataBit(GPIOD, GPIO_Pin_15), OK
+//                                    GPIO_ReadOutputDataBit(GPIOB, GPIO_Pin_6), OK
+//                                    GPIO_ReadOutputDataBit(GPIOB, GPIO_Pin_0),
+//                                    GPIO_ReadOutputDataBit(GPIOB, GPIO_Pin_7)
+
 
 // SAN    
 #define  DO																	GPIO_WriteBit(GPIOC,GPIO_Pin_15,1)
@@ -182,21 +197,23 @@ vu8 DATA_SPEED[70]={255,1,0,0,
 
 //================================INPUT==================================//
 //CAM BIEN TREN ROBOT 1
-#define  CB_Banh_Truoc													GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_15)// -- OK
+#define  CB_Banh_Truoc													GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_11)// -- OK
 #define  CB_Banh_Sau														GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_14)
-#define  CB_Ha_Dau															GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_2)
-#define  CB_Ha_Sau															GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_3)
+#define  CB_Ha_Dau															GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_15)
+#define  CB_Ha_Sau															GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_0)
+#define  CB_tay_kep															GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_1)
+#define  CB_bung															  GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_2)
 //#define  CB_0h																	GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_3)// NOT OK 
 //#define  CB_8h																	GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_15)
 //#define  CB_4h 																	GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_14)
 #define  Home_Rear_Left											GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_8) // -- OK
-#define  Home_Rear_Right										GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_0)
+#define  Home_Rear_Right										GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_5)
 #define  Home_Front_Left										GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_7)
 #define  Home_Front_Right										GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_4)
 //================================INPUT==================================//
 
 
-#define  CB_CHAM_THANH_LUA1											GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_1)
+#define  CB_CHAM_THANH_LUA1											GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_5)
 #define  CB_HOME_NANG_HA												GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_4)
 #define  CB_TAY_GAP_BONG_DUOI										GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_3)
 #define  CB_XL_NANG_LUA_4												GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_10)
@@ -232,10 +249,10 @@ vu8 DATA_SPEED[70]={255,1,0,0,
 //#define Encoder_4h			(vs32)((num_over_t5<<16) | TIM_GetCounter(TIM5))/61.3 
 //#define Encoder_8h			(vs32)((num_over_t3<<16) | TIM_GetCounter(TIM3))/61.3 //TRONG78.32306
 //#define Encoder_0h			(vs32)((num_over_t2<<16) | TIM_GetCounter(TIM2))/61.3
-#define Encoder_Front_Left	(vs32)((num_over_t5<<16) | TIM_GetCounter(TIM5))/12
+#define Encoder_Front_Left	(vs32)((num_over_t3<<16) | TIM_GetCounter(TIM3))/12
 #define Encoder_Front_Right	(vs32)((num_over_t2<<16) | TIM_GetCounter(TIM2))/12
 #define Encoder_Rear_Left		(vs32)((num_over_t4<<16) | TIM_GetCounter(TIM4))/12
-#define Encoder_Rear_Right	(vs32)((num_over_t3<<16) | TIM_GetCounter(TIM3))/12
+#define Encoder_Rear_Right	(vs32)((num_over_t5<<16) | TIM_GetCounter(TIM5))/12
 
 //#define Encoder_Run_Right		(vs32)((num_over_t1<<16) | TIM_GetCounter(TIM1))/10
 
@@ -327,11 +344,11 @@ char Do_Xanh;
 //////////////////////////chong nhieu encoder////////////////////
 vs32 ENCODER_FL()
 {
-	vs32 en, enOld = Encoder_Rear_Right;
+	vs32 en, enOld = Encoder_Front_Left;
 	int i=0;
 	while( i < 2)
 	{
-		en = Encoder_Rear_Right;
+		en = Encoder_Front_Left;
 		if(abs(en - enOld) < 5) i++;
 		enOld = en;
 	}
@@ -1245,71 +1262,163 @@ void UART3_DMA_RX(u32 baudrate)
 }
 
 //====================	========UART4=======================================
+#define UART4_BUFFER_SIZE 6
+vu8 RX_UART4[UART4_BUFFER_SIZE];
+
 void UART4_DMA_RX(u32 baudrate)
 {		
-	DMA_InitTypeDef DMA_InitStructure;
-	NVIC_InitTypeDef NVIC_InitStructure;
-	USART_InitTypeDef USART_InitStructure;
-	GPIO_InitTypeDef GPIO_InitStructure;
-	RCC_APB1PeriphClockCmd(RCC_APB1Periph_UART4, ENABLE);
-	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE);
-	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_DMA1, ENABLE);
-	/*-------------------------- GPIO Configuration ----------------------------*/
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0 | GPIO_Pin_1;
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
-	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
-	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-	GPIO_Init(GPIOA, &GPIO_InitStructure);
-	/* Connect USART pins to AF */
-	GPIO_PinAFConfig(GPIOA, GPIO_PinSource0, GPIO_AF_UART4);
-	GPIO_PinAFConfig(GPIOA, GPIO_PinSource1, GPIO_AF_UART4);
+    DMA_InitTypeDef DMA_InitStructure;
+    NVIC_InitTypeDef NVIC_InitStructure;
+    USART_InitTypeDef USART_InitStructure;
+    GPIO_InitTypeDef GPIO_InitStructure;
+    
+    // C?u h?nh clock cho c?c ngo?i vi
+    RCC_APB1PeriphClockCmd(RCC_APB1Periph_UART4, ENABLE);
+    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOC, ENABLE);
+    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_DMA1, ENABLE);
 
-	USART_InitStructure.USART_BaudRate = baudrate;
-	USART_InitStructure.USART_WordLength = USART_WordLength_8b;
-	USART_InitStructure.USART_StopBits = USART_StopBits_1;
-	USART_InitStructure.USART_Parity = USART_Parity_No;
-	USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None; 
-	USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx; 
-	USART_Init(UART4, &USART_InitStructure); 
-	USART_Cmd(UART4, ENABLE);
+    // C?u h?nh GPIO gi? nguy?n
+    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_10 | GPIO_Pin_11;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
+    GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+    GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+    GPIO_Init(GPIOC, &GPIO_InitStructure);
 
-	/////////////////////////////////////////////	   
+    GPIO_PinAFConfig(GPIOC, GPIO_PinSource10, GPIO_AF_UART4);
+    GPIO_PinAFConfig(GPIOC, GPIO_PinSource11, GPIO_AF_UART4);
 
-	/* Configure the Priority Group to 2 bits */
-	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
-	/* Enable the UART4 RX DMA Interrupt */
-	NVIC_InitStructure.NVIC_IRQChannel = DMA1_Stream2_IRQn;
-	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
-	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
-	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
-	NVIC_Init(&NVIC_InitStructure);
+    // C?u h?nh UART gi? nguy?n 
+    USART_InitStructure.USART_BaudRate = baudrate;
+    USART_InitStructure.USART_WordLength = USART_WordLength_8b;
+    USART_InitStructure.USART_StopBits = USART_StopBits_1;
+    USART_InitStructure.USART_Parity = USART_Parity_No;
+    USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
+    USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;
+    USART_Init(UART4, &USART_InitStructure);
+    USART_Cmd(UART4, ENABLE);
 
-	DMA_DeInit(DMA1_Stream2);
-	DMA_InitStructure.DMA_Channel = DMA_Channel_4;
-	DMA_InitStructure.DMA_DIR = DMA_DIR_PeripheralToMemory; // Receive
-	DMA_InitStructure.DMA_Memory0BaseAddr = (uint32_t)RX_USART2;
-	DMA_InitStructure.DMA_BufferSize = 8;//(uint16_t)sizeof(Buffer);
-	DMA_InitStructure.DMA_PeripheralBaseAddr = (uint32_t)&UART4->DR;
-	DMA_InitStructure.DMA_PeripheralInc = DMA_PeripheralInc_Disable;
-	DMA_InitStructure.DMA_MemoryInc = DMA_MemoryInc_Enable;
-	DMA_InitStructure.DMA_PeripheralDataSize = DMA_PeripheralDataSize_Byte;
-	DMA_InitStructure.DMA_MemoryDataSize = DMA_MemoryDataSize_Byte;
-	DMA_InitStructure.DMA_Mode = DMA_Mode_Circular;
-	DMA_InitStructure.DMA_Priority = DMA_Priority_High;
-	DMA_InitStructure.DMA_FIFOMode = DMA_FIFOMode_Enable;
-	DMA_InitStructure.DMA_FIFOThreshold = DMA_FIFOThreshold_Full;
-	DMA_InitStructure.DMA_MemoryBurst = DMA_MemoryBurst_Single;
-	DMA_InitStructure.DMA_PeripheralBurst = DMA_PeripheralBurst_Single; 
-	DMA_Init(DMA1_Stream2, &DMA_InitStructure); 
-	/* Enable the USART Rx DMA request */
-	USART_DMACmd(UART4, USART_DMAReq_Rx, ENABLE); 
-	/* Enable DMA Stream Half Transfer and Transfer Complete interrupt */
-	USART_DMACmd(UART4, USART_DMAReq_Rx, ENABLE); // Enable USART Rx DMA Request
-	DMA_ITConfig(DMA1_Stream2, DMA_IT_TC, ENABLE);  
-	/* Enable the DMA RX Stream */
-	DMA_Cmd(DMA1_Stream2, ENABLE);	
+    // C?u h?nh ng?t DMA
+    NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
+    NVIC_InitStructure.NVIC_IRQChannel = DMA1_Stream2_IRQn;
+    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 3; 
+    NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;
+    NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+    NVIC_Init(&NVIC_InitStructure);
+
+    // C?u h?nh DMA 
+    DMA_DeInit(DMA1_Stream2);
+    DMA_InitStructure.DMA_Channel = DMA_Channel_4;
+    DMA_InitStructure.DMA_DIR = DMA_DIR_PeripheralToMemory;
+    DMA_InitStructure.DMA_Memory0BaseAddr = (uint32_t)RX_UART4;
+    DMA_InitStructure.DMA_BufferSize = UART4_BUFFER_SIZE;
+    DMA_InitStructure.DMA_PeripheralBaseAddr = (uint32_t)&UART4->DR;
+    DMA_InitStructure.DMA_PeripheralInc = DMA_PeripheralInc_Disable;
+    DMA_InitStructure.DMA_MemoryInc = DMA_MemoryInc_Enable;
+    DMA_InitStructure.DMA_PeripheralDataSize = DMA_PeripheralDataSize_Byte;
+    DMA_InitStructure.DMA_MemoryDataSize = DMA_MemoryDataSize_Byte;
+    DMA_InitStructure.DMA_Mode = DMA_Mode_Normal; // Thay d?i t? Circular sang Normal
+    DMA_InitStructure.DMA_Priority = DMA_Priority_High;
+    DMA_InitStructure.DMA_FIFOMode = DMA_FIFOMode_Disable; // Disable FIFO mode
+    DMA_InitStructure.DMA_FIFOThreshold = DMA_FIFOThreshold_Full;
+    DMA_InitStructure.DMA_MemoryBurst = DMA_MemoryBurst_Single;
+    DMA_InitStructure.DMA_PeripheralBurst = DMA_PeripheralBurst_Single;
+    DMA_Init(DMA1_Stream2, &DMA_InitStructure);
+
+    USART_DMACmd(UART4, USART_DMAReq_Rx, ENABLE);
+		USART_DMACmd(UART4, USART_DMAReq_Tx, ENABLE);
+    DMA_ITConfig(DMA1_Stream2, DMA_IT_TC, ENABLE);
+    DMA_Cmd(DMA1_Stream2, ENABLE);
 }
+
+uint8_t move = 0;
+uint8_t action = 0;
+uint8_t id_block = 0;
+
+//------------------ Ðém data gui vê rôi thuc thi----------
+int count_data_uart4 = 0;
+
+#include <stdint.h>
+
+#define QUEUE_SIZE 50   // tùy b?n ch?nh
+
+typedef struct {
+    uint8_t move;
+    uint8_t action;
+    uint8_t id_block;
+} Packet_t;
+
+// Hàng d?i FIFO
+Packet_t packet_queue[QUEUE_SIZE];
+uint16_t head = 0;   // v? trí thêm
+uint16_t tail = 0;   // v? trí lay
+
+// ham them vao hang doi
+void Queue_Push(uint8_t move, uint8_t action, uint8_t id)
+{
+    if (count_data_uart4 < QUEUE_SIZE)
+    {
+        packet_queue[head].move = move;
+        packet_queue[head].action = action;
+        packet_queue[head].id_block = id;
+
+        head = (head + 1) % QUEUE_SIZE;
+        count_data_uart4++;
+    }
+}
+
+// ham lay goi tin
+int Queue_Pop(Packet_t *out)
+{
+    if (count_data_uart4 == 0)
+        return 0; 
+    *out = packet_queue[tail];
+    tail = (tail + 1) % QUEUE_SIZE;
+
+    count_data_uart4--;
+    return 1;
+}
+
+// ham xoa goi tin
+void Queue_Timeout_Handler(void)
+{
+    if (count_data_uart4 > 0)
+    {
+        Packet_t old;
+        Queue_Pop(&old);
+				count_data_uart4--;
+    }
+}
+
+
+void ProcessReceivedData_2(void)
+{
+    if (RX_UART4[0] == 0x02 && RX_UART4[5] == 0x03)
+    {
+        uint8_t calc_checksum =
+            (RX_UART4[0] + RX_UART4[1] + RX_UART4[2] + RX_UART4[3]) & 0xFF;
+
+        // Kiem tra checksum
+        if (calc_checksum == RX_UART4[4])
+        {
+            move     = RX_UART4[1];
+            action   = RX_UART4[2];
+            id_block = RX_UART4[3];
+					 // Luu vào hàng doi
+            Queue_Push(move, action, id_block);
+
+        }
+        else
+        {
+            // checksum sai
+            move = 44; 
+						action = 44;
+						id_block = 44;
+        }
+    }
+}
+
+
 
 //========================================================================
 //---------------------------- KHAI BAO UART 5-----------------------------
@@ -1434,9 +1543,8 @@ void UART5_DMA_TX(u32 baudrate)
 
 /////////////////
 ////////////////////////////////////////////////////////////
-#define UART_BUFFER_SIZE 10
+#define UART_BUFFER_SIZE 4
 vu8 RX_USART6[UART_BUFFER_SIZE];
-
 vu8 received_offset = 0;  
 vu16 received_distance = 0;
 
@@ -1454,7 +1562,7 @@ void UART6_DMA_RX(u32 baudrate)
    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
    GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
    GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
-   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
+   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
    GPIO_Init(GPIOC, &GPIO_InitStructure);
    /* Connect USART pins to AF */
    GPIO_PinAFConfig(GPIOC, GPIO_PinSource6, GPIO_AF_USART6);
@@ -1478,49 +1586,65 @@ void UART6_DMA_RX(u32 baudrate)
    NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
    NVIC_Init(&NVIC_InitStructure);
 	
-	 DMA_DeInit(DMA2_Stream1);
+    DMA_DeInit(DMA2_Stream1); 
    DMA_InitStructure.DMA_Channel = DMA_Channel_5;
    DMA_InitStructure.DMA_DIR = DMA_DIR_PeripheralToMemory; // Receive
-   DMA_InitStructure.DMA_Memory0BaseAddr = (uint32_t)RX_USART6;
-   DMA_InitStructure.DMA_BufferSize = 16;//(uint16_t)sizeof(DATA_COLOR);
+   DMA_InitStructure.DMA_Memory0BaseAddr = (uint32_t)RX_USART6;;
+   DMA_InitStructure.DMA_BufferSize =UART_BUFFER_SIZE;//(uint16_t)sizeof(DATA_COLOR);
    DMA_InitStructure.DMA_PeripheralBaseAddr = (uint32_t)&USART6->DR;
    DMA_InitStructure.DMA_PeripheralInc = DMA_PeripheralInc_Disable;
    DMA_InitStructure.DMA_MemoryInc = DMA_MemoryInc_Enable;
    DMA_InitStructure.DMA_PeripheralDataSize = DMA_PeripheralDataSize_Byte;
    DMA_InitStructure.DMA_MemoryDataSize = DMA_MemoryDataSize_Byte;
-   DMA_InitStructure.DMA_Mode = DMA_Mode_Circular;
-   DMA_InitStructure.DMA_Priority = DMA_Priority_High;
-   DMA_InitStructure.DMA_FIFOMode = DMA_FIFOMode_Enable;
+	 
+   DMA_InitStructure.DMA_Mode = DMA_Mode_Normal;//DMA_Mode_Circular
+  DMA_InitStructure.DMA_Priority = DMA_Priority_High;//DMA_Priority_High;
+  DMA_InitStructure.DMA_FIFOMode =DMA_FIFOMode_Disable;
    DMA_InitStructure.DMA_FIFOThreshold = DMA_FIFOThreshold_Full;
    DMA_InitStructure.DMA_MemoryBurst = DMA_MemoryBurst_Single;
    DMA_InitStructure.DMA_PeripheralBurst = DMA_PeripheralBurst_Single; 
    DMA_Init(DMA2_Stream1, &DMA_InitStructure); 
    /* Enable DMA Stream Half Transfer and Transfer Complete interrupt */
    USART_DMACmd(USART6, USART_DMAReq_Rx, ENABLE); // Enable USART Rx DMA Request
-	 DMA_ITConfig(DMA2_Stream1, DMA_IT_TC, ENABLE);  
-   /* Enable the DMA RX Stream */
+	 USART_DMACmd(USART6, USART_DMAReq_Tx, ENABLE); // CONFIG TRUYEN LEN
+	 
+	 
+	 DMA_ITConfig(DMA2_Stream1, DMA_IT_TC, ENABLE);
+/* Enable the DMA RX Stream */
    DMA_Cmd(DMA2_Stream1, ENABLE);
+	 
+
 }
 
-
-
-
-volatile uint8_t uart5_flag = 0;
-char uart5_data[64];   // nh?n chu?i dài (64 byte)
-
-void ProcessReceivedData(void)   // ISR
+void ProcessReceivedData(void)
 {
-    int i;   
 
-    for (i = 0; i < 64; i++)
-        uart5_data[i] = RX_USART5[i];
+    vu8 offset = 0;
+    vu16 distance = 0;
 
-    uart5_flag = 1;
+    // Ki?m tra byte b?t d?u c? d?ng kh?ng (0x02)
+    if (RX_USART6[0] == 0x02)
+    {
+        // L?y d? li?u offset t? byte th? 2
+        offset = RX_USART6[1];
 
-    DMA_Cmd(DMA1_Stream0, DISABLE);
-    DMA_SetCurrDataCounter(DMA1_Stream0, 64);
-    DMA_Cmd(DMA1_Stream0, ENABLE);
+        // L?y d? li?u distance t? byte 3 v? 4 (big-endian)
+        distance = (RX_USART6[2] << 8) | RX_USART6[3];
+
+
+            // N?u d?ng th? luu d? li?u
+            received_offset = offset;
+            received_distance = distance;
+        }
+    
+    else
+    {
+        // N?u sai byte b?t d?u th? cung g?n l?i
+        received_offset = 4;
+        received_distance = 4;
+    }
 }
+
 
 
 
@@ -1648,28 +1772,28 @@ void HMI_TRAN(vs32 _so_dong)
 										HMI_DMI("IMU:", -IMU,1);
 										break;
 									case 2:
-										HMI_DMI("Chan Truoc: ",	bientrochantruocValue,2);
+										HMI_DMI("Tro chan Truoc: ",	bientrochantruocValue,2);
 										break;
 									case 3:
-										HMI_DMI("Chan Sau:  ",bientrochansauValue,3);
+										HMI_DMI("Tro chan Sau:  ",bientrochansauValue,3);
 										break;
 									case 4:
-										HMI_DMI("Xoay tay ",bientroxoaytayValue,4);
+										HMI_DMI("Tro xoay tay ",bientroxoaytayValue,4);
 										break;
 									case 5:
-										HMI_DMI("Nang tay ",bientroxoaytayValue,5);
+										HMI_DMI("Tro nang tay ",bientronangtayValue,5);
 										break;
 									case 6:
-										HMI_DMI("Lazer truoc ",lazeTruocValue,6);
+									  HMI_DMI("ENCODER_FL ",ENCODER_FL(),6);
 										break;
 									case 7:
-										HMI_DMI("Lazer trai ",lazeTraiValue,7);
+										HMI_DMI("ENCODER_FR ",ENCODER_FR(),7);
 										break;
 									case 8:
-										HMI_DMI("Lazer phai",lazePhaiValue,8);										
+										HMI_DMI("ENCODER_RR ",ENCODER_RR(),8);										
 										break;
 									case 9:
-										HMI_DMI("ENCODER_FL ",ENCODER_RR(),9);///
+										HMI_DMI("ENCODER_RL ",ENCODER_RL(),9);///
 										break;
 //										if(NUT_CHUYEN_SAN == 1){
 //											HMI_DMI("NUT CHUYEN SAN: DO",NUT_CHUYEN_SAN,9);
@@ -1680,15 +1804,15 @@ void HMI_TRAN(vs32 _so_dong)
 										break;
 									case 10:	  
 									//HMI_DMI("BTN:",GP_BTN[4],10);
-										HMI_DMI("ENCODER_FR ",ENCODER_FR(),10);
 										break;
 									case 11:
-										HMI_DMI("received_offset :",received_offset,11);  					
+										HMI_DMI("Lazer phai",lazePhaiValue,11);  					
 										break;
 									case 12:
-										HMI_DMI("received_distance:",received_distance,12);  						
+										HMI_DMI("Lazer truoc ",lazeTruocValue,12);  						
 										break;
 									case 13:
+										HMI_DMI("Lazer trai ",lazeTraiValue,13);
 										//HMI_DMI("CTHT_BONG_LEN :",CTHT_BONG_LEN,13);   
 										break;
 									case 14:

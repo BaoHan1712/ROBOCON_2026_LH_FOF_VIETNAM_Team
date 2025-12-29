@@ -361,6 +361,6 @@ unsigned char gp_get_mode_uart() {
 vu8 wantExit(void)
 {
 	//gp_update_uart();	
-	if(DOWN)      return 0; 
-  else           return 1;
+	if(DOWN)      return 1; 
+  else           return 0;
 }

@@ -23,8 +23,12 @@ extern float	JTL;
 int state_nang = 1;
 int state_ha = 1;
 
-int	Min_chan_truoc = 220, Max_chan_truoc = 720, target_chan_truoc;
-int	Min_chan_sau = 220, Max_chan_sau = 720, target_chan_sau;
+int	Min_chan_truoc = 230, Max_chan_truoc = 695, target_chan_truoc;
+int	Min_chan_sau = 230, Max_chan_sau = 695, target_chan_sau;
+int	Min_tay_kep = 215, Max_tay_kep = 800, target_tay_kep;
+int	Min_kep = 400, Max_kep = 900, target_kep;
+
+int	speed_chan_sau, speed_chan_truoc;
 
 int force_F;
 int final_force;
@@ -528,8 +532,10 @@ void Chan_truoc()
 		else																						mor_lift_front_up;
 
 		speed_temp = abs(bientrochantruocValue - target_chan_truoc)*3;
-		if (speed_temp > 170)
-				speed_temp = 170;
+//		if (speed_temp > 170)
+//				speed_temp = 170;
+		if (speed_temp > speed_chan_truoc)
+				speed_temp = speed_chan_truoc;
 		if (speed_temp < 30)
 				speed_temp = 30;
 	
@@ -541,11 +547,6 @@ void Chan_truoc()
 
 void Chan_sau()
 {
-//		if(BienTroNongBanValue < taget_BT_Xoay - 5 ){
-//			Cylinder = 0;
-//			return;
-//		}
-	
 	if (target_chan_sau < Min_chan_sau)
 		target_chan_sau = Min_chan_sau;
 	if (target_chan_sau > Max_chan_sau)
@@ -557,8 +558,8 @@ void Chan_sau()
 		else																						mor_lift_rear_up;
 
 		speed_temp = abs(bientrochansauValue - target_chan_sau)*3;
-		if (speed_temp > 250)
-				speed_temp = 250;
+		if (speed_temp > speed_chan_sau)
+				speed_temp = speed_chan_sau;
 		if (speed_temp < 50)
 				speed_temp = 50;
 	
@@ -567,57 +568,123 @@ void Chan_sau()
 	else mor_lift_rear = 0;
 }
 
+	void Xoay_tay_kep()
+{
+	if (target_tay_kep < Min_tay_kep)
+		target_tay_kep = Min_tay_kep;
+	if (target_tay_kep > Max_tay_kep)
+		target_tay_kep = Max_tay_kep;
+
+	if (abs(bientroxoaytayValue - target_tay_kep) > 3)
+	{
+		if (bientroxoaytayValue > target_tay_kep)			tay_xoay_thuan;
+		else																					tay_xoay_nghich;
+
+		speed_temp = abs(bientroxoaytayValue - target_tay_kep)*3;
+		if (speed_temp > 250)
+				speed_temp = 250;
+		if (speed_temp < 200)
+				speed_temp = 200;
+	
+		tay_xoay = speed_temp;
+	}
+	else tay_xoay = 0;
+}
+
+void Nang_ha_tay_kep()
+{
+	if (target_kep < Min_kep)
+		target_kep = Min_kep;
+	if (target_kep > Max_kep)
+		target_kep = Max_kep;
+
+	if (abs(bientronangtayValue - target_kep) > 3)
+	{
+		if (bientronangtayValue > target_kep)				tay_gat_toi;
+		else																					tay_gat_lui;
+
+		speed_temp = abs(bientronangtayValue - target_kep)*3;
+		if (speed_temp > 250)
+				speed_temp = 250;
+		if (speed_temp < 50)
+				speed_temp = 50;
+	
+		tay_gat = speed_temp;
+	}
+	else tay_gat = 0;
+}
+
 //******************************** leo bac ****************************88
 void Leo_bac_200(void)
 {	
 	int i;
 	
-	robotRunAngle(0,30,0,0);
 	
-	target_chan_truoc = 460, target_chan_sau = 460;
+	speed_chan_sau = 190;
+	speed_chan_truoc = 250;
+	
+	target_chan_truoc = 470, target_chan_sau = 470;
+	
+		for(i=0;i<550;i++)	
+	{	
+		while(CB_Ha_Dau == 0)	{vTaskDelay(1); if(wantExit())	break;} 
+	}
+	
+//	robotRunAngle(0,20,0,0);
+	robotRun(0,20);
+	
 	for(i=0;i<550;i++)	
 	{	
-		while(CB_Banh_Truoc == 0)	{vTaskDelay(1); if(!wantExit())	break;}
+		while(CB_Ha_Dau == 1)	{vTaskDelay(1); if(wantExit())	break;}
 	}
 	
-	robotRunAngle(0,30,0,0);
-	for(i=0;i<250;i++)	
-	{
-		while(lazeTruocValue > 10)	{vTaskDelay(5); if(!wantExit())	break;}
-	}
 	robotStop(0);
-	
-	robotRunAngle(0,20,0,0);
-	for(i=0;i<250;i++)	
-	{
-		while(CB_Banh_Truoc == 1)		{vTaskDelay(5); if(!wantExit())	break;}
-	}
-	robotStop(55);
-	
-	target_chan_truoc = 230;
+//	
+	target_chan_truoc = 235;
 	for(i=0;i<50;i++)		
 	{
-		while(bientrochantruocValue > 330)	{vTaskDelay(5); if(!wantExit())	break;}
+		while(bientrochantruocValue > 300)	{vTaskDelay(5); if(wantExit())	break;}
+	}
+////	target_chan_sau = 490;
+////	robotRunAngle(0,20,0,0);
+	robotRun(0,20);
+	
+	for(i=0;i<550;i++)	
+	{	
+		while(CB_bung == 1)	{vTaskDelay(1); if(wantExit())	break;}
 	}
 	
-	robotRunAngle(0,20,0,0);
-	for(i=0;i<250;i++)	
-	{	
-		while(CB_Ha_Sau == 1) {vTaskDelay(5); if(!wantExit())	break;}
-	}
-	robotStop(0);
+	target_chan_truoc = 245;
+	
+	RESET_ENCODER(); 
+	
+	while(ENCODER_RR() < 350)	{vTaskDelay (5); if(wantExit())	break;}
 
+	robotStop(0);
+	
 	target_chan_sau = 230;
+
 	for(i=0;i<250;i++)	
 	{
-		while(bientrochansauValue > 330)	{vTaskDelay(5); if(!wantExit())	break;}
+		while(bientrochansauValue > 300)	{vTaskDelay(5); if(wantExit())	break;}
 	}
-
-	robotRunAngle(0,20,0,0);
+	
+	robotRun(0,12);
+	RESET_ENCODER(); 
+	
+//	robotRun(0,12);
+	while(ENCODER_FL() < 850)	{vTaskDelay (5); if(wantExit())	break;}
+ 
+	robotStop(0);
+	target_chan_sau = 245;
+//	robotRunAngle(0,20,0,0);
+	robotRun(0,20);
 	for(i=0;i<150;i++) 
 	{
-		while(CB_Banh_Sau == 1)		{vTaskDelay(1); if(!wantExit())	break;}
+		while(CB_Ha_Sau == 1)		{vTaskDelay(1); if(wantExit())	break;}
 	}
+	
+	target_chan_truoc = 280, target_chan_sau = 280;
 	robotStop(0);
 	
 }
@@ -626,51 +693,81 @@ void Leo_bac_400(void)
 {	
 	int i;
 	
-	target_chan_truoc = 685, target_chan_sau = 685;
+	speed_chan_sau = 170;
+	speed_chan_truoc = 250;
+	
+	target_chan_truoc = 690, target_chan_sau = 690;
+	
+	for(i=0;i<250;i++)	
+	{
+		while(bientrochantruocValue > 685)	{vTaskDelay(5); if(wantExit())	break;}
+	}
+	
+//	for(i=0;i<550;i++)	
+//	{	
+//		while(CB_Ha_Dau == 0)	{vTaskDelay(1); if(wantExit())	break;} 
+//	}
+//	
+//	robotRunAngle(0,20,0,0);
+	robotRun(0,10);
+	
 	for(i=0;i<550;i++)	
-	{
-		while(CB_Banh_Truoc == 0)	{vTaskDelay(5); if(!wantExit())	break;}
+	{	
+		while(CB_Ha_Dau == 1)	{vTaskDelay(1); if(wantExit())	break;}
 	}
 	
-	robotRunAngle(0,30,0,0);
-	for(i=0;i<250;i++)	
-	{
-		while(lazeTruocValue > 10)	{vTaskDelay(5); if(!wantExit())	break;}
-	}
 	robotStop(0);
 	
-	robotRunAngle(0,20,0,0);
-	for(i=0;i<250;i++)	
-	{
-		while(CB_Banh_Truoc == 1)	{vTaskDelay(5); if(!wantExit())	break;}
-	}
-	robotStop(0);
+	target_chan_truoc = 235;
 	
-	target_chan_truoc = 230;
-	
-	for(i=0;i<250;i++)
+	for(i=0;i<50;i++)		
 	{
-	while(bientrochantruocValue > 330)	{vTaskDelay(5); if(!wantExit())	break;}
+		while(bientrochantruocValue > 300)	{vTaskDelay(5); if(wantExit())	break;}
 	}
 	
-	robotRunAngle(0,20,0,0);
-	for(i=0;i<250;i++)	
-	{
-		while(CB_Ha_Sau == 1) {vTaskDelay(5); if(!wantExit())	break;}
+//	robotRunAngle(0,20,0,0);
+	robotRun(0,20);
+	
+	for(i=0;i<550;i++)	
+	{	
+		while(CB_bung == 1)	{vTaskDelay(1); if(wantExit())	break;}
 	}
-	robotStop(0);
+	
+	target_chan_truoc = 245;
+	
+	RESET_ENCODER(); 
+	
+	while(ENCODER_RR() < 350)	{vTaskDelay (5); if(wantExit())	break;}
 
+	robotStop(0);
+	
 	target_chan_sau = 230;
-	for(i=0;i<250;i++)
+	
+	for(i=0;i<250;i++)	
 	{
-	while(bientrochansauValue > 330)	{vTaskDelay(5); if(!wantExit())	break;}
+		while(bientrochansauValue > 300)	{vTaskDelay(5); if(wantExit())	break;}
 	}
-	robotRunAngle(0,20,0,0);
+	robotRun(0,20);
+	
+	RESET_ENCODER(); 
+	
+	while(ENCODER_FL() < 600)	{vTaskDelay (5); if(wantExit())	break;}
+	
+	robotStop(0);
+	
+	target_chan_sau = 245;
+
+	
+////	robotRunAngle(0,20,0,0);
+	robotRun(0,20);
 	
 	for(i=0;i<150;i++) 
 	{
-		while(CB_Banh_Sau == 1)	{vTaskDelay(5); if(!wantExit())	break;}
+		while(CB_Ha_Sau == 1)		{vTaskDelay(1); if(wantExit())	break;}
 	}
+	
+	target_chan_truoc = 470, target_chan_sau = 470;
+	
 	robotStop(0);
 	
 }
@@ -678,174 +775,180 @@ void Leo_bac_400(void)
 void Xuong_bac_200(void)
 {	
 	int i;
+	speed_chan_sau = 180;
+	speed_chan_truoc = 250;
 	
-	robotRunAngle(0,20,0,0);
 	target_chan_truoc = 235, target_chan_sau = 235;
+	
 	for(i=0;i<250;i++)	
 	{
-		while(CB_Ha_Dau == 1)	{vTaskDelay(5); if(!wantExit())	break;}
+		while(CB_Ha_Dau == 1)	{vTaskDelay(5); if(wantExit())	break;}
 	}
-	robotRunAngle(0,20,0,0);
-	for(i=0;i<250;i++)	while(CB_Banh_Truoc == 0)	vTaskDelay(5);
 	
-	robotRunAngle(0,8,0,0);
-	for(i=0;i<220;i++)	
-	{
-		while(CB_Ha_Dau == 0)	{vTaskDelay(5); if(!wantExit())	break;}
+//	robotRunAngle(0,20,0,0);
+	robotRun(0,20);
+	
+	for(i=0;i<250;i++)
+	{	
+		while(CB_Ha_Dau == 0)	{vTaskDelay(1); if(wantExit())	break;}
 	}
+
+	RESET_ENCODER();
+	
+	while(ENCODER_RR() < 555)	{vTaskDelay (5); if(wantExit())	break;}
+	
 	robotStop(0);
 	
-	target_chan_truoc = 460;
-	for(i=0;i<350;i++)
-	{
-		while(bientrochantruocValue < 440)	{vTaskDelay(5); if(!wantExit())	break;}
-	}
-	robotStop(0);
+	target_chan_truoc = 470;
 	
-	robotRunAngle(0,18,0,0);
-	for(i=0;i<220;i++)	
+		for(i=0;i<250;i++)	
 	{
-		while(CB_Banh_Sau == 0) {vTaskDelay(5); if(!wantExit())	break;}
+		while(bientrochantruocValue < 460)	{vTaskDelay(5); if(wantExit())	break;}
 	}
+	
+//	robotRunAngle(0,20,0,0);
+	robotRun(0,20);
+	
+	for(i=0;i<550;i++)	
+	{	
+		while(CB_bung == 0)	{vTaskDelay(1); if(wantExit())	break;}
+	}
+	
+	RESET_ENCODER(); 
+	
+	while(ENCODER_FR() < 1000)	{vTaskDelay (5); if(wantExit())	break;}
+	
 	robotStop(0);
 
-	target_chan_sau = 460;
-	for(i=0;i<350;i++)
+	target_chan_sau = 465;
+	
+	for(i=0;i<250;i++)	
 	{
-		while(bientrochansauValue < 450)	{vTaskDelay(5); if(!wantExit())	break;}
-	}
-	robotRunAngle(0,18,0,0);
-	for(i=0;i<150;i++)
-	{
-		while(CB_Banh_Sau == 0)	{vTaskDelay(5); if(!wantExit())	break;}
+		while(bientrochansauValue < 455)	{vTaskDelay(5); if(wantExit())	break;}
 	}
 	
-	//vTaskDelay(3000);
+//	robotRunAngle(0,20,0,0);
+	robotRun(0,20);
+	
+	for(i=0;i<150;i++) 
+	{
+		while(CB_Ha_Sau == 0)		{vTaskDelay(1); if(wantExit())	break;}
+	}
+	
 	robotStop(0);
 }
 	
-/////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////
 	void Xuong_bac_400(void)
 {	
 	int i;
 	
-	robotRunAngle(0,20,0,0);
-	target_chan_truoc = 235, target_chan_sau = 235;
+	speed_chan_sau = 190;
+	speed_chan_truoc = 250;
+	
+	target_chan_truoc = 240, target_chan_sau = 240;
 	for(i=0;i<250;i++)	
 	{
-		while(CB_Ha_Dau == 1)	{vTaskDelay(5); if(!wantExit())	break;}
+		while(CB_Ha_Dau == 1)	{vTaskDelay(5); if(wantExit())	break;}
 	}
 	
-	robotRunAngle(0,20,0,0);
-	for(i=0;i<250;i++)	
-	{
-		while(CB_Banh_Truoc == 0)	{vTaskDelay(5); if(!wantExit())	break;}
-	}
-	robotRunAngle(0,8,0,0);
+//	robotRunAngle(0,20,0,0);
+	robotRun(0,20);
 	
-	for(i=0;i<250;i++)	
-	{
-		while(CB_Ha_Dau == 0)	{vTaskDelay(5); if(!wantExit())	break;}
+	for(i=0;i<250;i++)
+	{	
+		while(CB_Ha_Dau == 0)	{vTaskDelay(1); if(wantExit())	break;}
 	}
+////	target_chan_truoc = 690;
+////	
+	RESET_ENCODER();
+	
+while(ENCODER_RR() < 550)	{vTaskDelay (5); if(wantExit())	break;}
+	
 	robotStop(0);
 	
-	target_chan_truoc = 685;
-	for(i=0;i<450;i++)
+	target_chan_truoc = 690;
+
+	
+		for(i=0;i<250;i++)	
 	{
-		while(bientrochantruocValue < 650)	{vTaskDelay(5); if(!wantExit())	break;}
+		while(bientrochantruocValue < 680)	{vTaskDelay(5); if(wantExit())	break;}
 	}
 	
-	robotRunAngle(0,20,0,0);
-	for(i=0;i<250;i++)	
-	{
-		while(CB_Banh_Sau == 0) {vTaskDelay(5); if(!wantExit())	break;}
+	robotRunAngle(0,10,0,0);
+	robotRun(0,10);
+	
+	for(i=0;i<550;i++)	
+	{	
+		while(CB_bung == 0)	{vTaskDelay(1); if(wantExit())	break;}
 	}
+	
+	RESET_ENCODER(); 
+	
+	while(ENCODER_FR() < 1100)	{vTaskDelay (5); if(wantExit())	break;}
+	
 	robotStop(0);
 
-	target_chan_sau = 685;
-	for(i=0;i<450;i++)
+	target_chan_sau = 690;
+	
+	for(i=0;i<250;i++)	
 	{
-		while(bientrochansauValue < 650)	{vTaskDelay(5); if(!wantExit())	break;}
+		while(bientrochansauValue < 685)	{vTaskDelay(5); if(wantExit())	break;}
 	}
-
-	robotRunAngle(0,18,0,0);
+	
+	robotRunAngle(0,10,0,0);
+	
 	for(i=0;i<150;i++) 
 	{
-		while(CB_Banh_Sau == 0)	{vTaskDelay(5); if(!wantExit())	break;}
+		while(CB_Ha_Sau == 0)		{vTaskDelay(1); if(wantExit())	break;}
 	}
-	//vTaskDelay(3000);
+	
 	robotStop(0);
 }
-//******************************** leo bac 400 ****************************88
-//void Leo_bac_400(void)
-//{
-//	robotRun(0,10);
-//	while(CB_Banh_Truoc == 1)	vTaskDelay(1);
-//	robotStop(0);
-//	
-//	target_chan_truoc = 225;
-//	vTaskDelay(9000);
-//	
-//	robotRun(0,10);
-//	while(CB_Ha_Sau == 1) vTaskDelay(1);
-//	robotStop(0);
-//	target_chan_sau = 225;
-//	vTaskDelay(8000);
-//	
-//	robotRun(0,10);
-//	while(CB_Banh_Sau == 1)	vTaskDelay(1);
-//	robotStop(0);
-//	
-//}
-//void Xuong_bac_200(void)
-//{
-//	target_chan_truoc = 230, target_chan_sau = 230;
-//	while(CB_Ha_Dau == 1)	vTaskDelay(1);
-//	
-//	robotRun(0,10);
-//	while(CB_Ha_Dau == 0)	vTaskDelay(1);
-//	robotStop(0);
-//	
-//	target_chan_truoc = 455;
-//	vTaskDelay(7000);
-//	
-//	robotRun(0,10);
-//	while(CB_Banh_Sau == 0 ) vTaskDelay(1);
-//	robotStop(0);
-//	target_chan_sau = 455;
-//	vTaskDelay(7000);
-//	
-//	robotRun(0,10);
-//	vTaskDelay(5000);
-//	robotStop(0);
-//	
-//}
-//void Xuong_bac_400(void)
-//{
-//	target_chan_truoc = 230, target_chan_sau = 230;
-//	while(CB_Ha_Dau == 1)	vTaskDelay(1);
-//	
-//	robotRun(0,10);
-//	while(CB_Ha_Dau == 0)	vTaskDelay(1);
-//	robotStop(0);
-//	
-//	target_chan_truoc = 685;
-//	vTaskDelay(8000);
-//	
-//	robotRun(0,10);
-//	while(CB_Banh_Sau == 0 ) vTaskDelay(1);
-//	robotStop(0);
-//	target_chan_sau = 685;
-//	vTaskDelay(10000);
-//	
-//	robotRun(0,10);
-//	vTaskDelay(5000);
-//	robotStop(0);
-//	
-//}
-/////////////////////////////Tay kep///////////////////////////
+//******************************** hut ngang ****************************88
+void Lay_KFS_Ngang(void)
+{
+	int i;
+	speed_chan_sau = 250;
+	speed_chan_truoc = 170;
+	
+	target_chan_truoc = 630, target_chan_sau = 630;
+	
+	
+	target_tay_kep = 500;
+	while(abs(bientroxoaytayValue - target_tay_kep) > 5)	vTaskDelay(3);
+		
+	target_kep = 410;
+	May_bom = 250;
+	while(abs(bientronangtayValue - target_kep) > 5)	vTaskDelay(3);
+	
+	target_chan_truoc = 590, target_chan_sau = 595;
+	
+	vTaskDelay(8000);
+	
+	target_kep = 800;
+	
+	while(abs(bientronangtayValue - target_kep) > 5) vTaskDelay(3);
+	
+	XI_LANH_NANG_LEN;
+	target_tay_kep = 795;  
+	
+	while(abs(bientroxoaytayValue - target_tay_kep) > 5)	vTaskDelay(3);
+	
+	XI_LANH_NANG_XUONG;
+	
+	vTaskDelay(15000);
+	
+	target_kep = 800;
+	
+	while(abs(bientronangtayValue - target_kep) > 5) vTaskDelay(3);
+	
 
-
+//May_bom = 0;
+	
+	
+	
+}
 //********************************************* bam thanh laser phai ********************************************
 void Bam_thanh_laser_phai(int speed, int runangle, int AngleHead, int lazer_stable_phai, int num_change_stable, int fix_max,int rat)
 {
@@ -868,69 +971,134 @@ void Bam_thanh_laser_phai(int speed, int runangle, int AngleHead, int lazer_stab
 		robotRunAngle(runangle, speed, AngleHead, 0.77);
 }
 
+//********************************************* bam thanh laser truoc ********************************************
+void Bam_laser_truoc(int speed, int runangle, int AngleHead, int lazer_stable_truoc, int num_change_stable, int fix_max,int rat)
+{
+	int fix;
 
-////********************************************* bam thanh laser trai lui ********************************************
-//void Bam_thanh_laser_trai_1800(int speed, int runangle, int AngleHead, int lazer_stable_trai, int num_change_stable, int fix_max, int rat)
-//{
-//	int fix;
+	fix = abs(lazeTruocValue - lazer_stable_truoc) * rat;
 
-//	fix = abs(lazeTraiValue - lazer_stable_trai) * rat;
+	if (fix > fix_max)
+	fix = fix_max;
 
-//	if (fix > fix_max)
-//		fix = fix_max;
+	if (lazeTruocValue - lazer_stable_truoc < num_change_stable)
+	{
+		robotRunAngle(runangle - fix, speed, AngleHead, 0.7);
+	}
+	else if (lazeTruocValue - lazer_stable_truoc > num_change_stable)
+	{
+		robotRunAngle(runangle + fix, speed, AngleHead, 0.7);
+	}
+	else
+		robotRunAngle(runangle, speed, AngleHead, 0.77);
+}
+/////////////////////////////leodoc/////////////////////////////////////////
+	void leodoc1(void)
+{	
+	int i;
+	
+	speed_chan_sau = 100;
+	speed_chan_truoc = 160;
+	
+	target_chan_truoc = 270, target_chan_sau = 280;
+	
+	robotRun(0,30);
+	for(i=0;i<550;i++)	
+	{	
+			while(lazeTruocValue > 40)	{vTaskDelay(5); if(wantExit())	break;}
+	}
+	
+	robotRun(0,30);
+	for(i=0;i<550;i++)	
+	{	
+			while(lazeTruocValue < 70)	{vTaskDelay(5); if(wantExit())	break;}
+	}	
+	
+	robotRun(0,30);
+	
+	for(i=0;i<550;i++)	
+	{	
+			while(lazeTruocValue > 50)	{vTaskDelay(5); if(wantExit())	break;}
+	}			
+	
+	
+	robotStop(0);
+	
+	for(i=0;i<550;i++)	
+	{	
+			while(lazeTraiValue > 100)	
+			{	
+				Bam_laser_truoc(60,-900,0,32,2,200,30);
+				vTaskDelay(5); 
+				if(wantExit())	break;
+			}
+		
+	}	
+	
+	for(i=0;i<550;i++)	
+	{	
+			while(lazeTraiValue > 15)	
+			{	
+				Bam_laser_truoc(20,-900,0,32,2,200,30);
+				vTaskDelay(5); 
+				if(wantExit())	break;
+			}
+		
+	}	
+	robotStop(0);
+}
 
-//	if (lazeTraiValue - lazer_stable_trai > num_change_stable)
-//	{
-//		robotRunAngle(runangle + fix, speed, AngleHead, 0.07);
-//	}
-//	else if (lazeTraiValue - lazer_stable_trai < num_change_stable)
-//	{
-//		robotRunAngle(runangle - fix, speed, AngleHead, 0.07);
-//	}
-//	else
-//		robotRunAngle(runangle, speed, AngleHead, 0.07);
-//}
-
-////*********************************** bam thnah laser truoc sang phai ***************************************
-//void bam_Thanh_Lazer_Truoc_Sang_Phai(int speed, int Runangle, int AngleHead, int lazer_stable_truoc, int num_change_stable, int fix_max)
-//{
-//	int fix;
-
-//	fix = abs(lazeTruocValue - lazer_stable_truoc) * 12;
-
-//	if (fix > fix_max)
-//		fix = fix_max;
-
-//	if (lazeTruocValue - lazer_stable_truoc > num_change_stable)
-//	{
-//		robotRunAngle(Runangle - fix, speed, AngleHead, 0.07);
-//	}
-//	else if (lazeTruocValue - lazer_stable_truoc < num_change_stable)
-//	{
-//		robotRunAngle(Runangle + fix, speed, AngleHead, 0.07);
-//	}
-//	else
-//		robotRunAngle(Runangle, speed, AngleHead, 0.07);
-//}
-
-////*********************************** bam thnah laser truoc sang trai ***************************************
-//void bam_Thanh_Lazer_Truoc_Sang_Trai(int speed, int Runangle, int AngleHead, int lazer_stable_truoc, int num_change_stable, int fix_max)
-//{
-//	int fix;
-
-//	fix = abs(lazeTruocValue - lazer_stable_truoc) * 15;
-
-//	if (fix > fix_max)
-//		fix = fix_max;
-
-//	if (lazeTruocValue - lazer_stable_truoc > num_change_stable)
-//	{
-//		robotRunAngle(Runangle + fix, speed, AngleHead, 0.07);
-//	}
-//	else if (lazeTruocValue - lazer_stable_truoc < num_change_stable)
-//	{
-//		robotRunAngle(Runangle - fix, speed, AngleHead, 0.07);
-//	}
-//	else
-//		robotRunAngle(Runangle, speed, AngleHead, 0.07);
-//}
+void leodoc2(void)
+{	
+	int i;
+	
+	speed_chan_sau = 100;
+	speed_chan_truoc = 160;
+	
+	target_chan_truoc = 270, target_chan_sau = 280;
+	
+	robotRun(0,30);
+	for(i=0;i<550;i++)	
+	{	
+			while(lazeTruocValue > 40)	{vTaskDelay(5); if(wantExit())	break;}
+	}
+	
+	robotRun(0,30);
+	for(i=0;i<550;i++)	
+	{	
+			while(lazeTruocValue < 70)	{vTaskDelay(5); if(wantExit())	break;}
+	}	
+	
+	robotRun(0,30);
+	
+	for(i=0;i<550;i++)	
+	{	
+			while(lazeTruocValue > 50)	{vTaskDelay(5); if(wantExit())	break;}
+	}			
+	
+	
+	robotStop(0);
+	
+	for(i=0;i<550;i++)	
+	{	
+			while(lazeTraiValue > 100)	
+			{	
+				Bam_laser_truoc(60,-900,0,32,2,200,30);
+				vTaskDelay(5); 
+				if(wantExit())	break;
+			}
+		
+	}	
+	
+	for(i=0;i<550;i++)	
+	{	
+			while(lazeTraiValue > 15)	
+			{	
+				Bam_laser_truoc(20,-900,0,32,2,200,30);
+				vTaskDelay(5); 
+				if(wantExit())	break;
+			}
+		
+	}	
+	robotStop(0);
+}

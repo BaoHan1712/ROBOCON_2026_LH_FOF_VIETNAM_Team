@@ -173,53 +173,53 @@ void lane_trai(void)
 }
 	void lane_giua(void)
 {
-				while(lazeTruocValue > 140)	
-				{
-					Bam_thanh_laser_phai(60,0,0,230,2,550,40);
-					if(!wantExit())	break;
-				}
-				
-				while(lazeTruocValue > 12)	
-				{
-					if(lazeTruocValue < 100)	target_chan_truoc = 460, target_chan_sau = 460;
-					Bam_thanh_laser_phai(30,0,0,280,2,250,40);
-					if(!wantExit())	break;
-				}
+//				while(lazeTruocValue > 140)	
+//				{
+//					Bam_thanh_laser_phai(60,0,0,230,2,550,40);
+//					if(!wantExit())	break;
+//				}
+//				
+//				while(lazeTruocValue > 12)	
+//				{
+//					if(lazeTruocValue < 100)	target_chan_truoc = 460, target_chan_sau = 460;
+//					Bam_thanh_laser_phai(30,0,0,280,2,250,40);
+//					if(!wantExit())	break;
+//				}
 					Leo_bac_200();
 					vTaskDelay(5);
 					Leo_bac_200();
-					vTaskDelay(5);
-					Leo_bac_200();
-					vTaskDelay(5);
-					Xuong_bac_200();
-					RESET_ENCODER();
-					robotRunAngle(0,30,0,0);
-					
-					for(i=0;i<250;i++)	
-					{
-						while(ENCODER_FR() < 1100)	
-						{	
-							vTaskDelay(5);
-							if(ENCODER_FR() > 900)		target_chan_truoc = 235, target_chan_sau = 235;
-							if(!wantExit())	break;
-						}
-					
-					}
-					
-					Xuong_bac_400();
-					RESET_ENCODER();
-					robotRunAngle(0,30,0,0);
-					
-					for(i=0;i<250;i++)	
-					{
-						while(ENCODER_FR() < 1000)	
-						{	
-							vTaskDelay(5);
-							if(ENCODER_FR() > 800)		target_chan_truoc = 235, target_chan_sau = 235;
-							if(!wantExit())	break;
-						}
-					
-					}
+//					vTaskDelay(5);
+//					Leo_bac_200();
+//					vTaskDelay(5);
+//					Xuong_bac_200();
+//					RESET_ENCODER();
+//					robotRunAngle(0,30,0,0);
+//					robotRun(0,20);
+//					for(i=0;i<250;i++)	
+//					{
+//						while(ENCODER_FR() < 1100)	
+//						{	
+//							vTaskDelay(5);
+//							if(ENCODER_FR() > 900)		target_chan_truoc = 235, target_chan_sau = 235;
+//							if(!wantExit())	break;
+//						}
+//					
+//					}
+//					
+//					Xuong_bac_400();
+//					RESET_ENCODER();
+//					robotRunAngle(0,30,0,0);
+//					
+//					for(i=0;i<250;i++)	
+//					{
+//						while(ENCODER_FR() < 1000)	
+//						{	
+//							vTaskDelay(5);
+//							if(ENCODER_FR() > 800)		target_chan_truoc = 235, target_chan_sau = 235;
+//							if(!wantExit())	break;
+//						}
+//					
+//					}
 				robotStop(0);
 }
 	void lane_phai(void)

@@ -59,6 +59,8 @@ static void taskDieuKhienCoCau1(void *pvParameters)
 		ADCValue_Control();	
 		Chan_truoc();
 		Chan_sau();
+		Xoay_tay_kep();
+		Nang_ha_tay_kep();
 		vTaskDelay(3);
 	}
 }
@@ -102,18 +104,24 @@ static void taskMain(void *pvParameters)
 	UART1_DMA_RX(115200); // usart giao tiep voi laban
 	UART2_DMA_TX(115200); /// DIEU KHIEN DONG CO
 	UART3_DMA_RX(115200); // usart giao tiep de doc gamepad
-	// UART4_DMA_RX(115200);	//SU DUNG DE GIAO TIEP MACH DO LAI
+	UART4_DMA_RX(115200);	//SU DUNG DE GIAO TRUYEN UART
 	UART5_DMA_TX(921600); // GIAO TIEP MAN HINH HMI
 	// if (SysTick_Config(SystemCoreClock / 1000))while (1);// 1ms truyen du lieu usart den cac slever
-//	UART6_DMA_RX(115200);
+	//UART6_DMA_RX(115200);
 	
 	// reset lai laban
 	robotResetIMU();
 	Vi_tri = 0;
 	RESET_ENCODER(); 
+	
+	speed_chan_sau = 20;
+	speed_chan_truoc = 60;
 
-	target_chan_truoc = 320;
-	target_chan_sau = 320;
+	target_chan_truoc = 450;
+	target_chan_sau = 450;
+
+	target_tay_kep = 500;
+	target_kep = 900;
 	//-----------------------------------
 	xTaskCreate(taskRobotAnalytics, (signed char *)"taskRobotAnalytics", 256, NULL, 0, NULL);
 	xTaskCreate(taskDieuKhienCoCau, (signed char *)"taskDieuKhienCoCau", 256, NULL, 0, NULL);
@@ -124,11 +132,39 @@ static void taskMain(void *pvParameters)
 
 	while (1)
 	{ 
+		
+		
 		while(SHARE) 
 		{	
-
 				robotGamePadControl(7,40);
-		
+
+				if(TRIANGLE)	Leo_bac_200();
+				if(SQUARE)		Leo_bac_400();
+				if (O)				Xuong_bac_200();
+				if (X)				Xuong_bac_400();
+				if (R2)				leodoc1();
+//				if(TRIANGLE)	lane_giua();
+//				if(SQUARE)		Leo_bac_400();
+//				if (O)				Xuong_bac_200();
+//				if (X)				Xuong_bac_400();
+			
+//			if(TRIANGLE)			tay_gat = 50, tay_gat_lui;
+//			else if(X)				tay_gat = 50, tay_gat_toi;
+//			else							tay_gat = 0;
+//			
+//			if(SQUARE)				target_tay_kep = 795;
+//			if(O)							target_tay_kep = 500;
+//			if(X)							May_bom = 200;XI_LANH_DAY_VAO,XI_LANH_DAY_RA;
+//			if(TRIANGLE)			May_bom = 0;
+//			if(SQUARE)				May_bom = 200,target_kep = 925,XI_LANH_NANG_LEN;//2
+//			if(O)							May_bom = 0;//4
+			
+//			if(X)							Lay_KFS_Ngang();
+//			if(X)							target_kep = 430,May_bom = 200,target_chan_sau = 620,target_chan_truoc = 620;//1
+//			if(TRIANGLE)			May_bom = 200,target_tay_kep = 795,target_kep = 870,tay_gat_toi,XI_LANH_NANG_XUONG;//3
+//			if(TRIANGLE && R1)	target_tay_kep = 795,May_bom = 200,target_kep = 860,tay_gat_toi;
+//			if(TRIANGLE && R2)	target_tay_kep = 500,tay_gat_lui;
+//			if(TRIANGLE)			target_tay_kep = 600;
 			//if(O)	target_chan_truoc = 220, target_chan_sau = 800;
 			//if(O)					target_chan_truoc = 720, target_chan_sau = 300;
 			
@@ -143,71 +179,71 @@ static void taskMain(void *pvParameters)
 //				if(O && L2) target_chan_sau = 560;
 //				if(X && L2) target_chan_sau = 805;
 			//if(SQUARE && R2 && !L2) 		target_chan_truoc = 685, target_chan_sau = 685;
-			if(SQUARE && R2) 		target_chan_truoc = 618, target_chan_sau = 640; // tay_kep
-			if(O && R2) 				target_chan_truoc = 460, target_chan_sau = 460;
-			if(TRIANGLE && R2 && !L2)	target_chan_truoc = 230, target_chan_sau = 230;
-			
-			if(TRIANGLE && !R2 && !L2)
-			{
-				//Leo_bac_200();	
-				lane_trai();
-				//XI_LANH_KEP_DONG;
-			}
-			if(X && !R2 && !L2)
-			{
-				//Leo_bac_400();
-				lane_giua();
-				//XI_LANH_KEP_MO;
-			}
-			if(SQUARE && !R2 && !L2)
-			{
-				//Xuong_bac_200();
-				lane_phai();
-				//XI_LANH_NANG_KEP;
-			}
-			if(O && !R2 && !L2)
-			{
-				//Xuong_bac_400();
-				XI_LANH_HA_KEP;
-			}
-			if(TRIANGLE && L2 && !R2)
-			{
-				Xuat_Phat_Lay_Vu_Khi_1();
-				//XI_LANH_NANG_KEP;
-			}  
-			if(SQUARE && L2 && !R2)
-			{
-				Xuat_Phat_Lay_Vu_Khi_2();
-				//XI_LANH_HA_KEP;
-			} 
-			if(X && L2 && !R2)
-			{
-				Xuat_Phat_Lay_Vu_Khi_3();
-				
-			} 
-			if(O && L2 && !R2)
-			{
-				Xuat_Phat_Lay_Vu_Khi_4();
-				
-			} 
-			
-			
-		
-//			if(TRIANGLE && !X)		
+//			if(SQUARE && R2) 		target_chan_truoc = 618, target_chan_sau = 640; // tay_kep
+//			if(O && R2) 				target_chan_truoc = 460, target_chan_sau = 460;
+//			if(TRIANGLE && R2 && !L2)	target_chan_truoc = 230, target_chan_sau = 230;
+//			
+//			if(TRIANGLE && !R2 && !L2)
 //			{
-//				mor_lift_front = 150; mor_lift_front_up;
-//				mor_lift_rear = 250; mor_lift_rear_up;
+//				//Leo_bac_200();	
+//				lane_trai();
+//				//XI_LANH_KEP_DONG;
 //			}
-//			else	if(!TRIANGLE && X)		
+//			if(X && !R2 && !L2)
 //			{
-//				mor_lift_front = 150; mor_lift_front_down;
-//				mor_lift_rear = 250; mor_lift_rear_down;
+//				//Leo_bac_400();
+//				lane_giua();
+//				//XI_LANH_KEP_MO;
 //			}
-//			else
+//			if(SQUARE && !R2 && !L2)
 //			{
-//				mor_lift_front = 0;
-//				mor_lift_rear = 0;	
+//				//Xuong_bac_200();
+//				lane_phai();
+//				//XI_LANH_NANG_KEP;
 //			}
+//			if(O && !R2 && !L2)
+//			{
+//				//Xuong_bac_400();
+//				XI_LANH_HA_KEP;
+//			}
+//			if(TRIANGLE && L2 && !R2)
+//			{
+//				Xuat_Phat_Lay_Vu_Khi_1();
+//				//XI_LANH_NANG_KEP;
+//			}  
+//			if(SQUARE && L2 && !R2)
+//			{
+//				Xuat_Phat_Lay_Vu_Khi_2();
+//				//XI_LANH_HA_KEP;
+//			} 
+//			if(X && L2 && !R2)
+//			{
+//				Xuat_Phat_Lay_Vu_Khi_3();
+//				
+//			} 
+//			if(O && L2 && !R2)
+//			{
+//				Xuat_Phat_Lay_Vu_Khi_4();
+//				
+//			} 
+//			
+//			
+//		
+////			if(TRIANGLE && !X)		
+////			{
+////				mor_lift_front = 150; mor_lift_front_up;
+////				mor_lift_rear = 250; mor_lift_rear_up;
+////			}
+////			else	if(!TRIANGLE && X)		
+////			{
+////				mor_lift_front = 150; mor_lift_front_down;
+////				mor_lift_rear = 250; mor_lift_rear_down;
+////			}
+////			else
+////			{
+////				mor_lift_front = 0;
+////				mor_lift_rear = 0;	
+////			}
 		}
 		robotStop(0);
 	}

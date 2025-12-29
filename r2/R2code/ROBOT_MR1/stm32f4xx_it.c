@@ -202,20 +202,22 @@ void DMA1_Stream6_IRQHandler(void) // UART2_TX
     DMA_ClearITPendingBit(DMA1_Stream6, DMA_IT_TCIF6);
   }
 }
-///////////
-void DMA2_Stream1_IRQHandler(void)// ngat DMA uart1 RX
+/////////// uart6 //////
+
+void DMA2_Stream1_IRQHandler(void)
 {
-	    
- if (DMA_GetITStatus(DMA2_Stream1, DMA_IT_TCIF1))
+    if(DMA_GetITStatus(DMA2_Stream1, DMA_IT_TCIF1))
     {
-        // Xóa c? ng?t
         DMA_ClearITPendingBit(DMA2_Stream1, DMA_IT_TCIF1);
-        
-        // G?i hàm x? lý d? li?u dã nh?n
         ProcessReceivedData();
+        DMA_Cmd(DMA2_Stream1, DISABLE);
+        DMA_SetCurrDataCounter(DMA2_Stream1, 4);  // Gia su dung 6 byte thì 6
+
+        // Kích hoat lai DMA
+        DMA_Cmd(DMA2_Stream1, ENABLE);
     }
-	
 }
+
 ////////////////
 void DMA2_Stream2_IRQHandler(void)// ngat DMA uart1 RX
 {
@@ -277,15 +279,25 @@ DMA_Cmd(DMA1_Stream7, DISABLE);
   }
 }
 
-/**************************************************************************************/
-
+/********************************** UART4 ********************************************/
 
 void DMA1_Stream2_IRQHandler(void)
 {
-	
-		DMA_ClearITPendingBit(DMA1_Stream2, DMA_IT_TCIF4);
-}
+    if(DMA_GetITStatus(DMA1_Stream2, DMA_IT_TCIF2))
+    {
+        DMA_ClearITPendingBit(DMA1_Stream2, DMA_IT_TCIF2);
+        ProcessReceivedData_2();
 
+        // Vô hi?u hóa DMA d? c?u hình l?i
+        DMA_Cmd(DMA1_Stream2, DISABLE);
+        
+        // Reset l?i con tr? và kích thu?c buffer
+        DMA_SetCurrDataCounter(DMA1_Stream2, 6);
+        
+        // Kích ho?t l?i DMA d? nh?n gói ti?p theo
+        DMA_Cmd(DMA1_Stream2, ENABLE);
+    }
+}
 
 //=============================================================
 
