@@ -3,7 +3,7 @@
 
 /* ===================== CONFIG ===================== */
 
-uint8_t peerAddress[] = {0x30, 0xC9, 0x22, 0x32, 0xD4, 0xA8};
+uint8_t peerAddress[] = {0x68, 0xFE, 0x71, 0xF8, 0x20, 0x8C};
 
 #define UART_BAUDRATE 115200
 #define PACKET_SIZE 6
