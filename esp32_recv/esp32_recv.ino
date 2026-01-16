@@ -4,13 +4,19 @@
 /* ===================== CONFIG ===================== */
 
 #define UART_BAUDRATE 115200
-#define PACKET_SIZE 6
+#define PACKET_SIZE 7
 #define LED_PIN 2   // LED 2 ESP32
+
+bool ledBlinking = false;
+unsigned long ledTimestamp = 0;
+#define LED_BLINK_TIME 100   // ms
+
 
 /* ===================== DATA STRUCT ===================== */
 
 typedef struct __attribute__((packed)) {
   uint8_t start;
+  uint8_t id_rb;
   uint8_t move;
   uint8_t action;
   uint8_t block_id;
@@ -41,7 +47,7 @@ void setup() {
 /* ===================== LOOP ===================== */
 
 void loop() {
-  // Không làm gì, ESP-NOW chạy bằng interrupt/callback
+updateLED();
 }
 
 /* ===================== FUNCTION IMPLEMENT ===================== */
@@ -81,5 +87,16 @@ void onDataRecv(const esp_now_recv_info_t *recv_info,
 // --- LED BLINK ---
 void blinkLED() {
   digitalWrite(LED_PIN, HIGH);
-  digitalWrite(LED_PIN, LOW);
+  ledBlinking = true;
+  ledTimestamp = millis();
 }
+
+void updateLED() {
+  if (!ledBlinking) return;
+
+  if (millis() - ledTimestamp >= LED_BLINK_TIME) {
+    digitalWrite(LED_PIN, LOW);
+    ledBlinking = false;
+  }
+}
+

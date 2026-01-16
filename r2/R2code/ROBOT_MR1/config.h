@@ -1262,7 +1262,7 @@ void UART3_DMA_RX(u32 baudrate)
 }
 
 //====================	========UART4=======================================
-#define UART4_BUFFER_SIZE 6
+#define UART4_BUFFER_SIZE 7
 vu8 RX_UART4[UART4_BUFFER_SIZE];
 
 void UART4_DMA_RX(u32 baudrate)
@@ -1331,6 +1331,7 @@ void UART4_DMA_RX(u32 baudrate)
     DMA_Cmd(DMA1_Stream2, ENABLE);
 }
 
+uint8_t id_rb = 0;
 uint8_t move = 0;
 uint8_t action = 0;
 uint8_t id_block = 0;
@@ -1343,29 +1344,31 @@ int count_data_uart4 = 0;
 #define QUEUE_SIZE 50   // tùy b?n ch?nh
 
 typedef struct {
+    uint8_t id_rb;
     uint8_t move;
     uint8_t action;
     uint8_t id_block;
 } Packet_t;
 
-// Hàng d?i FIFO
 Packet_t packet_queue[QUEUE_SIZE];
-uint16_t head = 0;   // v? trí thêm
-uint16_t tail = 0;   // v? trí lay
+uint16_t head = 0;
+uint16_t tail = 0;
 
 // ham them vao hang doi
-void Queue_Push(uint8_t move, uint8_t action, uint8_t id)
+void Queue_Push(uint8_t id_rb, uint8_t move, uint8_t action, uint8_t id)
 {
     if (count_data_uart4 < QUEUE_SIZE)
     {
-        packet_queue[head].move = move;
-        packet_queue[head].action = action;
+        packet_queue[head].id_rb    = id_rb;
+        packet_queue[head].move     = move;
+        packet_queue[head].action   = action;
         packet_queue[head].id_block = id;
 
         head = (head + 1) % QUEUE_SIZE;
         count_data_uart4++;
     }
 }
+
 
 // ham lay goi tin
 int Queue_Pop(Packet_t *out)
@@ -1385,35 +1388,37 @@ void Queue_Timeout_Handler(void)
     if (count_data_uart4 > 0)
     {
         Packet_t old;
-        Queue_Pop(&old);
-				count_data_uart4--;
+        Queue_Pop(&old); 
     }
 }
 
-
+// hàm nhân gói tin
 void ProcessReceivedData_2(void)
 {
-    if (RX_UART4[0] == 0x02 && RX_UART4[5] == 0x03)
+    if (RX_UART4[0] == 0x02 && RX_UART4[6] == 0x03)
     {
         uint8_t calc_checksum =
-            (RX_UART4[0] + RX_UART4[1] + RX_UART4[2] + RX_UART4[3]) & 0xFF;
+            (RX_UART4[0] +
+             RX_UART4[1] +
+             RX_UART4[2] +
+             RX_UART4[3] +
+             RX_UART4[4]) & 0xFF;
 
-        // Kiem tra checksum
-        if (calc_checksum == RX_UART4[4])
+        if (calc_checksum == RX_UART4[5])
         {
-            move     = RX_UART4[1];
-            action   = RX_UART4[2];
-            id_block = RX_UART4[3];
-					 // Luu vào hàng doi
-            Queue_Push(move, action, id_block);
+            id_rb    = RX_UART4[1];
+            move     = RX_UART4[2];
+            action   = RX_UART4[3];
+            id_block = RX_UART4[4];
 
+            Queue_Push(id_rb, move, action, id_block);
         }
         else
         {
-            // checksum sai
-            move = 44; 
-						action = 44;
-						id_block = 44;
+            id_rb    = 44;
+            move     = 44;
+            action   = 44;
+            id_block = 44;
         }
     }
 }

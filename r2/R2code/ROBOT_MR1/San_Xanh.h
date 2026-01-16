@@ -303,3 +303,139 @@ void lane_trai(void)
 				
 				robotStop(0);
 }
+
+// hàm xu ly tac vu
+void Process_Packet(Packet_t *pkt)
+{
+    switch (pkt->id_block)
+    {
+        /* ================= ID_BLOCK 1 ================= */
+        case 1:
+            if (pkt->move == 1)
+            {
+                Leo_bac_400();   // v� d?: n�ng
+            }
+            else if (pkt->move == 2)
+            {
+                Xuong_bac_200();    // v� d?: h?
+            }
+
+            //Action_Custom(pkt->action);
+            if(wantExit()) break; vTaskDelay(1);
+
+        /* ================= ID_BLOCK 2 ================= */
+        case 2:
+            if (pkt->move == 1)
+            {
+                // TODO: Thay h�m cho block 2
+            }
+            else if (pkt->move == 2)
+            {
+                // TODO
+            }
+
+            // x? l� action
+            if(wantExit()) break; vTaskDelay(1);
+
+        /* ================= ID_BLOCK 3 ================= */
+        case 3:
+            if (pkt->move == 1)
+            {
+                // TODO
+            }
+            else if (pkt->move == 2)
+            {
+                // TODO
+            }
+            if(wantExit()) break; vTaskDelay(1);
+
+        /* ================= ID_BLOCK 4 ================= */
+        case 4:
+            if (pkt->move == 1)
+            {
+                // TODO
+            }
+            if(wantExit()) break; vTaskDelay(1);
+
+        /* ================= ID_BLOCK 5 ================= */
+        case 5:
+            if (pkt->move == 1)
+            {
+                // TODO
+            }
+            if(wantExit()) break; vTaskDelay(1);
+
+        /* ================= ID_BLOCK 6 ================= */
+        case 6:
+            if (pkt->move == 1)
+            {
+                // TODO
+            }
+            if(wantExit()) break; vTaskDelay(1);
+
+        /* ================= ID_BLOCK 7 ================= */
+        case 7:
+            if (pkt->move == 1)
+            {
+                // TODO
+            }
+            if(wantExit()) break; vTaskDelay(1);
+
+        /* ================= ID_BLOCK 8 ================= */
+        case 8:
+            if (pkt->move == 1)
+            {
+                // TODO
+            }
+            if(wantExit()) break; vTaskDelay(1);
+
+        /* ================= ID_BLOCK 9 ================= */
+        case 9:
+            if (pkt->move == 1)
+            {
+                // TODO
+            }
+            if(wantExit()) break; vTaskDelay(1);
+
+        /* ================= ID_BLOCK 10 ================= */
+        case 10:
+            if (pkt->move == 1)
+            {
+                // TODO
+            }
+           if(wantExit()) break; vTaskDelay(1);
+
+        /* ================= ID_BLOCK 11 ================= */
+        case 11:
+            if (pkt->move == 1)
+            {
+                // TODO
+            }
+            if(wantExit()) break; vTaskDelay(1);
+
+        /* ================= ID_BLOCK 12 ================= */
+        case 12:
+            if (pkt->move == 1)
+            {
+                // TODO
+            }
+           if(wantExit()) break; vTaskDelay(1);
+
+        /* ================= DEFAULT ================= */
+        default:
+            // id_block kh�ng h?p l?
+            break;
+    }
+}
+
+ ////cách dung
+void Process_forest_RBC(void)
+{
+    Packet_t pkt;
+
+    if (Queue_Pop(&pkt))
+    {
+        Process_Packet(&pkt);
+        // gói tin đã bị xóa khỏi queue
+    }
+}

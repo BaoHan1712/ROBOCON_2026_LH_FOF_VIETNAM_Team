@@ -3,10 +3,12 @@
 
 /* ===================== CONFIG ===================== */
 
-uint8_t peerAddress[] = {0x68, 0xFE, 0x71, 0xF8, 0x20, 0x8C};
+uint8_t peerAddress[] = {0x68, 0xFE, 0x71, 0xFA, 0xC5, 0xE4};
+
 
 #define UART_BAUDRATE 115200
-#define PACKET_SIZE 6
+#define PACKET_SIZE  7
+
 #define START_BYTE 0x02
 #define END_BYTE   0x03
 
@@ -15,8 +17,9 @@ uint8_t peerAddress[] = {0x68, 0xFE, 0x71, 0xF8, 0x20, 0x8C};
 
 /* ===================== DATA STRUCT ===================== */
 
-typedef struct {
+typedef struct __attribute__((packed)) {
   uint8_t start;
+  uint8_t id_rb;     
   uint8_t move;
   uint8_t action;
   uint8_t block_id;
@@ -34,10 +37,12 @@ unsigned long ledTimestamp = 0;
 
 void initUART();
 void initESPNow();
+
 bool readPacketUART(Packet &pkt);
 bool validatePacket(const Packet &pkt);
-void sendPacketESPNow(const Packet &pkt);
 uint8_t calcChecksum(const Packet &pkt);
+
+void sendPacketESPNow(const Packet &pkt);
 
 void triggerBlink();
 void updateLED();
@@ -57,23 +62,24 @@ void setup() {
 }
 
 /* ===================== LOOP ===================== */
-
 void loop() {
   Packet pkt;
 
-  if (readPacketUART(pkt)) {
+  if (readPacketUART(pkt)) {   // Python gửi xong 1 gói
+    triggerBlink();            // NHÁY LED NGAY
+
     if (validatePacket(pkt)) {
-      triggerBlink();          // 👈 kích hoạt blink
       sendPacketESPNow(pkt);
     }
   }
 
-  updateLED();                // 👈 update LED bằng millis
+  updateLED();
 }
 
-/* ===================== FUNCTION IMPLEMENT ===================== */
+/* ===================== INIT ===================== */
 
 void initUART() {
+  // đã init Serial ở setup
 }
 
 void initESPNow() {
@@ -91,7 +97,7 @@ void initESPNow() {
   esp_now_add_peer(&peerInfo);
 }
 
-// --- UART PACKET ---
+/* ===================== UART PARSER ===================== */
 bool readPacketUART(Packet &pkt) {
   static uint8_t buffer[PACKET_SIZE];
   static uint8_t index = 0;
@@ -99,26 +105,44 @@ bool readPacketUART(Packet &pkt) {
   while (Serial.available()) {
     uint8_t b = Serial.read();
 
-    if (index == 0 && b != START_BYTE) continue;
+    // Chờ START_BYTE
+    if (index == 0) {
+      if (b != START_BYTE) continue;
+    }
 
     buffer[index++] = b;
 
     if (index == PACKET_SIZE) {
-      memcpy(&pkt, buffer, PACKET_SIZE);
       index = 0;
-      return pkt.end == END_BYTE;
+
+      memcpy(&pkt, buffer, PACKET_SIZE);
+
+      // check frame
+      if (pkt.start != START_BYTE) return false;
+      if (pkt.end   != END_BYTE)   return false;
+
+      return true;   // 👈 nhận đủ 1 packet từ Python
     }
   }
   return false;
 }
+
+
+/* ===================== CHECKSUM ===================== */
 
 bool validatePacket(const Packet &pkt) {
   return pkt.checksum == calcChecksum(pkt);
 }
 
 uint8_t calcChecksum(const Packet &pkt) {
-  return (pkt.start + pkt.move + pkt.action + pkt.block_id) & 0xFF;
+  return (pkt.id_rb +
+          pkt.move +
+          pkt.action +
+          pkt.block_id) & 0xFF;
 }
+
+
+/* ===================== ESP-NOW SEND ===================== */
 
 void sendPacketESPNow(const Packet &pkt) {
   esp_now_send(peerAddress, (uint8_t*)&pkt, sizeof(Packet));
@@ -142,7 +166,7 @@ void updateLED() {
       ledState = false;
       ledTimestamp = millis();
     } else {
-      ledBlinking = false; // blink xong
+      ledBlinking = false;
     }
   }
 }

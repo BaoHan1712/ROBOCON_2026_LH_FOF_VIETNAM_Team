@@ -292,7 +292,7 @@ void DMA1_Stream2_IRQHandler(void)
         DMA_Cmd(DMA1_Stream2, DISABLE);
         
         // Reset l?i con tr? và kích thu?c buffer
-        DMA_SetCurrDataCounter(DMA1_Stream2, 6);
+        DMA_SetCurrDataCounter(DMA1_Stream2, 7);
         
         // Kích ho?t l?i DMA d? nh?n gói ti?p theo
         DMA_Cmd(DMA1_Stream2, ENABLE);
