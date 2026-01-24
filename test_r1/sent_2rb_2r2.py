@@ -126,15 +126,22 @@ class SelectPlaceApp:
         self.select_btn.pack(side="left", padx=5)
 
         self.run_btn = ctk.CTkButton(
-            self.bottom_frame, text="CHẠY & GỬI UART", width=160, height=40,
+            self.bottom_frame, text="TÌM ĐƯỜNG", width=120, height=40,
             fg_color="#5cb85c", hover_color="#449d44",
             command=self.smart_run
         )
         self.run_btn.pack(side="left", padx=5)
 
+        self.send_btn = ctk.CTkButton(
+            self.bottom_frame, text="GỬI UART", width=120, height=40,
+            fg_color="#f0ad4e", hover_color="#ec971f",
+            command=self.send_uart
+        )
+        self.send_btn.pack(side="left", padx=5)
+
         self.info_label = ctk.CTkLabel(
             self.root,
-            text="Chế độ: Đặt khối.\nBấm 'CHẠY' để tìm đường và gửi dữ liệu xuống STM32.",
+            text="Chế độ: Đặt khối.\nBấm 'TÌM ĐƯỜNG' để tìm đường, sau đó 'GỬI UART' để truyền.",
             width=250, height=60, wraplength=600, justify="left"
         )
         self.info_label.pack(pady=8)
@@ -142,6 +149,9 @@ class SelectPlaceApp:
         self.mode = "PLACE"
         self.active_button = None
         self.selected_targets = []
+        self.simulation_path = None
+        self.best_targets_set = None
+        self.best_ignored_set = []
 
     # --- CÁC HÀM UI CƠ BẢN ---
     def get_cell_id(self, r, c):
@@ -416,6 +426,13 @@ class SelectPlaceApp:
         final_score = total_steps - combo_bonus
         return final_score, full_simulation_path
 
+    def send_uart(self):
+        if not self.simulation_path:
+            self.info_label.configure(text="Chưa có đường đi. Hãy tìm đường trước.")
+            return
+        self.info_label.configure(text="Đang gửi UART...")
+        self.process_and_send_uart(self.simulation_path)
+
     # --- HÀM CHẠY THÔNG MINH ---
     def smart_run(self):
         for r in range(ROWS):
@@ -447,10 +464,10 @@ class SelectPlaceApp:
             final_ids = [self.get_cell_id(*p) for p in best_perm]
             print(f"-> Manual Order: {final_ids}")
             self.visualize_result(best_sim, [])
-            self.info_label.configure(text=f"Thủ công: {final_ids}. Đang gửi UART...")
-            
-            # GỌI HÀM GỬI UART Ở ĐÂY
-            self.process_and_send_uart(best_sim)
+            self.simulation_path = best_sim
+            self.best_targets_set = best_perm
+            self.best_ignored_set = []
+            self.info_label.configure(text=f"Thủ công: {final_ids}. Sẵn sàng gửi UART.")
         else:
             self.info_label.configure(text="Không tìm được đường đi cho các ô đã chọn.")
 
@@ -520,9 +537,10 @@ class SelectPlaceApp:
             ignored_ids = [self.get_cell_id(*p) for p in best_ignored_set]
             print(f"-> Auto Pick: {final_ids}, Ignore: {ignored_ids}")
             self.visualize_result(best_sim, best_ignored_set)
-            self.info_label.configure(text=f"Auto: {final_ids}. Đang gửi UART...")
-            
-            self.process_and_send_uart(best_sim)
+            self.simulation_path = best_sim
+            self.best_targets_set = best_targets_set
+            self.best_ignored_set = best_ignored_set
+            self.info_label.configure(text=f"Auto: {final_ids}. Sẵn sàng gửi UART.")
         else:
             self.info_label.configure(text="Không tìm thấy đường đi khả thi.")
 
