@@ -4,6 +4,8 @@ import itertools
 import struct
 import serial
 import time
+from gui_tkinter import set_state, STATE_FOREST, STATE_IDLE 
+import cv2
 
 # --- Cấu hình Serial ---
 UART_PORT = 'COM3' 
@@ -31,6 +33,9 @@ class SelectPlaceApp:
         self.root = ctk.CTk()
         self.root.title("Robot Pathfinding: Hybrid & UART Control")
         self.root.geometry("850x580") 
+
+        # --- Xử lý khi bấm nút X trên cửa sổ ---
+        self.root.protocol("WM_DELETE_WINDOW", self.on_closing)
 
         self.main_frame = ctk.CTkFrame(self.root)
         self.main_frame.pack(padx=20, pady=20, expand=True, fill="both")
@@ -126,15 +131,22 @@ class SelectPlaceApp:
         self.select_btn.pack(side="left", padx=5)
 
         self.run_btn = ctk.CTkButton(
-            self.bottom_frame, text="CHẠY & GỬI UART", width=160, height=40,
+            self.bottom_frame, text="TÌM ĐƯỜNG", width=120, height=40,
             fg_color="#5cb85c", hover_color="#449d44",
             command=self.smart_run
         )
         self.run_btn.pack(side="left", padx=5)
 
+        self.send_btn = ctk.CTkButton(
+            self.bottom_frame, text="GỬI UART", width=120, height=40,
+            fg_color="#f0ad4e", hover_color="#ec971f",
+            command=self.send_uart
+        )
+        self.send_btn.pack(side="left", padx=5)
+
         self.info_label = ctk.CTkLabel(
             self.root,
-            text="Chế độ: Đặt khối.\nBấm 'CHẠY' để tìm đường và gửi dữ liệu xuống STM32.",
+            text="Chế độ: Đặt khối.\nBấm 'TÌM ĐƯỜNG' để tìm đường, sau đó 'GỬI UART' để truyền.",
             width=250, height=60, wraplength=600, justify="left"
         )
         self.info_label.pack(pady=8)
@@ -142,6 +154,17 @@ class SelectPlaceApp:
         self.mode = "PLACE"
         self.active_button = None
         self.selected_targets = []
+        self.simulation_path = None
+        self.best_targets_set = None
+        self.best_ignored_set = []
+
+
+    # --- Xử lý đóng cửa sổ ---
+    def on_closing(self):
+        print(">> Closing Forest App...")
+        set_state["value"] = STATE_IDLE  # Reset trạng thái về IDLE
+        self.root.quit()    # Thoát mainloop
+        self.root.destroy() # Hủy cửa sổ
 
     # --- CÁC HÀM UI CƠ BẢN ---
     def get_cell_id(self, r, c):
@@ -416,6 +439,13 @@ class SelectPlaceApp:
         final_score = total_steps - combo_bonus
         return final_score, full_simulation_path
 
+    def send_uart(self):
+        if not self.simulation_path:
+            self.info_label.configure(text="Chưa có đường đi. Hãy tìm đường trước.")
+            return
+        self.info_label.configure(text="Đang gửi UART...")
+        self.process_and_send_uart(self.simulation_path)
+
     # --- HÀM CHẠY THÔNG MINH ---
     def smart_run(self):
         for r in range(ROWS):
@@ -447,10 +477,10 @@ class SelectPlaceApp:
             final_ids = [self.get_cell_id(*p) for p in best_perm]
             print(f"-> Manual Order: {final_ids}")
             self.visualize_result(best_sim, [])
-            self.info_label.configure(text=f"Thủ công: {final_ids}. Đang gửi UART...")
-            
-            # GỌI HÀM GỬI UART Ở ĐÂY
-            self.process_and_send_uart(best_sim)
+            self.simulation_path = best_sim
+            self.best_targets_set = best_perm
+            self.best_ignored_set = []
+            self.info_label.configure(text=f"Thủ công: {final_ids}. Sẵn sàng gửi UART.")
         else:
             self.info_label.configure(text="Không tìm được đường đi cho các ô đã chọn.")
 
@@ -520,9 +550,10 @@ class SelectPlaceApp:
             ignored_ids = [self.get_cell_id(*p) for p in best_ignored_set]
             print(f"-> Auto Pick: {final_ids}, Ignore: {ignored_ids}")
             self.visualize_result(best_sim, best_ignored_set)
-            self.info_label.configure(text=f"Auto: {final_ids}. Đang gửi UART...")
-            
-            self.process_and_send_uart(best_sim)
+            self.simulation_path = best_sim
+            self.best_targets_set = best_targets_set
+            self.best_ignored_set = best_ignored_set
+            self.info_label.configure(text=f"Auto: {final_ids}. Sẵn sàng gửi UART.")
         else:
             self.info_label.configure(text="Không tìm thấy đường đi khả thi.")
 
@@ -745,9 +776,9 @@ class SelectPlaceApp:
         print("=" * 60)
         self.info_label.configure(text=f"Đã gửi xong.")
 
-    def run(self):
+    def run_algothism_forest(self):
         self.root.mainloop()
 
-if __name__ == "__main__":
-    app = SelectPlaceApp()
-    app.run()
+# if __name__ == "__main__":
+#     app = SelectPlaceApp()
+#     app.run_algothism_forest()
