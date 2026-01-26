@@ -11,14 +11,19 @@ def build_packet(id_rb, state, move, action, block_id):
     packet = struct.pack('8B', start, id_rb, state, move, action, block_id, checksum, end)
     return packet
 
-
-# --- Mở UART ---
-ser = serial.Serial(
-    port='COM3',       # đổi theo máy bạn
-    baudrate=115200
-)
-
-
+def send_packet_once(port , baudrate, packet):
+    ser = None
+    try:
+        ser = serial.Serial(
+            port=port,
+            baudrate=baudrate,
+        )
+        ser.write(packet)
+        ser.flush()             
+        time.sleep(0.05)
+    finally:
+        if ser and ser.is_open:
+            ser.close()          # GIẢI PHÓNG PORT
 
 
 # # # --- Gửi liên tục ---

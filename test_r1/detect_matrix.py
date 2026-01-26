@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 import time
-from config_uart.sent_uart import build_packet, ser
+from config_uart.sent_uart import build_packet, send_packet_once
 from gui_tkinter import set_state, STATE_IDLE
 
 # ================== CONFIG ==================
@@ -19,6 +19,8 @@ PTS = np.float32([
     [431, 492],
     [242, 499]
 ])
+
+
 
 # ================== HELPER ==================
 def lerp(p1, p2, t):
@@ -97,7 +99,7 @@ def detect_square_object(hsv, cell_mask, cell_area):
     return False
 
 # ================== SEND PACKETS ==================
-def send_row_2_packet(cell_has_square, ser):
+def send_row_2_packet(cell_has_square):
     id_robot = 2
     state = 3
     row = 1
@@ -110,7 +112,7 @@ def send_row_2_packet(cell_has_square, ser):
         col_data.append([4, 5, 6][c] if has_square else [40, 50, 60][c])
 
     packet = build_packet(id_robot, state, *col_data)
-    ser.write(packet)
+    send_packet_once("COM3", 115200, packet)
     print("Sent packet ROW 2:", list(packet))
 
 # ================== MAIN ==================
@@ -164,7 +166,7 @@ def matrix_camera_loop():
 
         # Sau 5 giây mới gửi
         if not sent and now_ms - start_ms >= time_sent_uart:
-            send_row_2_packet(cell_has_square, ser)
+            send_row_2_packet(cell_has_square)
             sent = True
             set_state["value"] = STATE_IDLE # gửi xong về gốc
             break
