@@ -1,7 +1,8 @@
 import threading
 import time
 from gui_tkinter import set_state, STATE_FOREST
-import cv2
+from uart_listener import *
+from config_uart.sent_uart import ser
 
 from gui_tkinter import start_gui, set_state
 from cam_detect import weapon_camera_loop
@@ -29,9 +30,12 @@ def run_algothism_forest():
     print(">> FOREST UI CLOSED.")
 
 def state_manager():
-    global current_state
     while True:
         state = set_state["value"]
+
+        if state == STATE_IDLE:
+            time.sleep(0.02)
+            continue
 
         if state == STATE_WEAPON:
             weapon_camera_loop()
@@ -42,18 +46,25 @@ def state_manager():
         elif state == STATE_FOREST:
             run_algothism_forest()
 
+        # 🔁 QUAY VỀ IDLE
+        set_state["value"] = STATE_IDLE
+
+        # 🔓 MỞ LẠI UART
+        uart_enable["value"] = True
+
         time.sleep(0.01)
 
-
 if __name__ == "__main__":
-    # chạy GUI ở thread riêng
-    gui_thread = threading.Thread(target=start_gui)
-    gui_thread.daemon = True
+    gui_thread = threading.Thread(target=start_gui, daemon=True)
     gui_thread.start()
 
-    # chạy state manager
+    uart_thread = threading.Thread(
+        target=uart_state_listener,
+        args=(ser,),
+        daemon=True
+    )
+    uart_thread.start()
+
     state_manager()
-
-
 
 

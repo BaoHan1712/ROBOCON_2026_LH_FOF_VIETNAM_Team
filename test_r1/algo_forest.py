@@ -1,7 +1,7 @@
 import customtkinter as ctk
 import heapq
 import itertools
-from config_uart.sent_uart import build_packet, send_packet_once
+from config_uart.sent_uart import build_packet, send_packet_once, ser
 import time
 from gui_tkinter import set_state, STATE_FOREST, STATE_IDLE 
 import cv2
@@ -628,11 +628,11 @@ class SelectPlaceApp:
                     if entry_cell["content"] and entry_cell["content"]["number"] == 1:
                         print(f"  ├─ [ENTRY CHECK] Phát hiện KHỐI 1 tại entry point {entry_pos} (ID={entry_id})")
                         packet = build_packet(1, 2, 0, 0, entry_id)
-                        send_packet_once("COM3", 115200, packet)
+                        send_packet_once(ser, packet)
                         self.log_packet(packet, f"LOẠI BỎ KHỐI 1 tại ID {entry_id}")
                     
                     packet = build_packet(2, 2, 1, 4, entry_id)
-                    send_packet_once("COM3", 115200, packet)
+                    send_packet_once(ser, packet)
                     self.log_packet(packet, f"ENTRY: Đi vào ID {entry_id}")
                     time.sleep(0.1)
                     
@@ -652,7 +652,7 @@ class SelectPlaceApp:
                         for block_1_to_remove in blocks_to_remove:
                             remove_block_id = self.get_cell_id(block_1_to_remove[0], block_1_to_remove[1])
                             packet = build_packet(1, 2, 0, 0, remove_block_id)
-                            send_packet_once("COM3", 115200, packet)
+                            send_packet_once(ser, packet)
                             self.log_packet(packet, f"REMOVE: Loại bỏ vật cản ID {remove_block_id}")
                             
                             r, c = block_1_to_remove
@@ -698,12 +698,12 @@ class SelectPlaceApp:
                         self.grid_cells[nr][nc]["overlays"].append(lbl_obstacle)
                         
                         packet = build_packet(1, 2, 0, 0, step_block_id)
-                        send_packet_once("COM3", 115200, packet)
+                        send_packet_once(ser, packet)
                         self.log_packet(packet, f"REMOVE: Loại bỏ vật cản ID {step_block_id}")
                         time.sleep(0.3)
 
                     packet = build_packet(2, 2, move_cmd, 4, step_block_id)
-                    send_packet_once("COM3", 115200, packet)
+                    send_packet_once(ser, packet)
                     move_desc = ["?", "Đi thẳng", "Rẽ trái", "Rẽ phải"][move_cmd]
                     self.log_packet(packet, f"MOVE: {move_desc} tới ID {step_block_id}")
                     time.sleep(0.1) 
@@ -726,7 +726,7 @@ class SelectPlaceApp:
                     
                     if action_cmd != 4 or act_vec == (0,0):
                         packet = build_packet(2, 2, 0, action_cmd, action_block_id)
-                        send_packet_once("COM3", 115200, packet)
+                        send_packet_once(ser, packet)
                         act_desc = ["?", "Gắp thẳng", "Gắp trái", "Gắp phải", "Gắp tại chỗ"][action_cmd]
                         self.log_packet(packet, f"ACTION: {act_desc} tại ID {action_block_id}")
                         time.sleep(0.5)

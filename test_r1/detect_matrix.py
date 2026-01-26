@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 import time
-from config_uart.sent_uart import build_packet, send_packet_once
+from config_uart.sent_uart import build_packet, send_packet_once, ser
 from gui_tkinter import set_state, STATE_IDLE
 
 # ================== CONFIG ==================
@@ -112,7 +112,7 @@ def send_row_2_packet(cell_has_square):
         col_data.append([4, 5, 6][c] if has_square else [40, 50, 60][c])
 
     packet = build_packet(id_robot, state, *col_data)
-    send_packet_once("COM3", 115200, packet)
+    send_packet_once(ser, packet)
     print("Sent packet ROW 2:", list(packet))
 
 # ================== MAIN ==================
