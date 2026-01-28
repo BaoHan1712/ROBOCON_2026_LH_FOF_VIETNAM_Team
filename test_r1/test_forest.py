@@ -47,17 +47,17 @@ class SelectPlaceApp:
                 cell_frame.grid_propagate(False)
 
                 block_buttons = []
-                for k in range(3):
-                    num = k + 1
+                block_labels = [1, 2,"F"]
+                for k, label in enumerate(block_labels):
                     btn = ctk.CTkButton(
                         cell_frame,
-                        text=str(num),
+                        text=str(label),
                         width=width_cell,
                         height=height_cell,
                         fg_color="gray75",
                         corner_radius=8,
                         font=("Arial", 18),
-                        command=lambda n=num, pos=(i, j): self.place_block(n, pos)
+                        command=lambda n=label, pos=(i, j): self.place_block(n, pos)
                     )
                     btn.pack(side="left", expand=True, padx=5, pady=5)
                     block_buttons.append(btn)
