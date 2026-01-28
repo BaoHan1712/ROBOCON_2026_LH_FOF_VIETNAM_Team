@@ -4,13 +4,16 @@ import itertools
 import struct
 import serial
 import time
+from gui_tkinter import set_state, STATE_FOREST, STATE_IDLE 
+from config_uart.sent_uart import build_packet, send_packet_once, ser
+
+
+ctk.set_appearance_mode("System")
+ctk.set_default_color_theme("blue")
 
 # --- Cấu hình Serial ---
 UART_PORT = 'COM3' 
 BAUD_RATE = 115200
-
-ctk.set_appearance_mode("System")
-ctk.set_default_color_theme("blue")
 
 ROWS = 4
 COLS = 3
@@ -18,19 +21,16 @@ CELL_SIZE = 200
 width_cell = 70
 height_cell = 70
 
-# --- Hàm đóng gói gói tin ---
-def build_packet(id_rb, move, action, block_id):
-    start = 0x02
-    end = 0x03
-    checksum = (start + id_rb + move + action + block_id) & 0xFF
-    packet = struct.pack('7B', start, id_rb, move, action, block_id, checksum, end)
-    return packet
+
 
 class SelectPlaceApp:
     def __init__(self):
         self.root = ctk.CTk()
         self.root.title("Robot Pathfinding: Hybrid & UART Control")
         self.root.geometry("850x580") 
+
+        # --- Xử lý khi bấm nút X trên cửa sổ ---
+        self.root.protocol("WM_DELETE_WINDOW", self.on_closing)
 
         self.main_frame = ctk.CTkFrame(self.root)
         self.main_frame.pack(padx=20, pady=20, expand=True, fill="both")
@@ -135,7 +135,7 @@ class SelectPlaceApp:
         self.send_btn = ctk.CTkButton(
             self.bottom_frame, text="GỬI UART", width=120, height=40,
             fg_color="#f0ad4e", hover_color="#ec971f",
-            command=self.send_uart
+            command=self.sent_and_close, 
         )
         self.send_btn.pack(side="left", padx=5)
 
@@ -152,6 +152,19 @@ class SelectPlaceApp:
         self.simulation_path = None
         self.best_targets_set = None
         self.best_ignored_set = []
+
+    # --- Xử lý đóng cửa sổ ---
+    def on_closing(self):
+        print(">> Closing Forest App...")
+        set_state["value"] = STATE_IDLE
+        self.root.quit()
+        self.root.destroy()
+
+    def sent_and_close(self):
+        self.send_uart()
+        print(">> Đã truyền UART thành công!")
+        self.info_label.configure(text="✓ Đã gửi UART thành công! Bạn có thể đóng cửa sổ bằng nút X.")
+        # Không tự động đóng - để người dùng có quyền kiểm soát
 
     # --- CÁC HÀM UI CƠ BẢN ---
     def get_cell_id(self, r, c):
@@ -248,38 +261,28 @@ class SelectPlaceApp:
             self.active_button = None
         self.info_label.configure(text="Lưới đã reset.")
 
-    # --- CÁC HÀM LOGIC TÌM ĐƯỜNG (ENGINE) ---
+    # --- ENGINE ---
     def check_traversable_rules(self, r, c, virtual_grid=None, target_pos=None):
         if not (0 <= r < ROWS and 0 <= c < COLS): return False
-        
-        # Nếu ô hiện tại là đích đến (cho ID 1,2,3 - Row 3) thì cho phép đi vào
         if target_pos and (r, c) == target_pos:
-            if r == 3: 
-                return True
-
+            if r == 3: return True
         if virtual_grid:
             status = virtual_grid[r][c]
             if status == "EMPTY" or status == "IGNORED": return True
-        
         cell = self.grid_cells[r][c]
         if cell["content"] and cell["content"]["number"] == 3: return False
         if cell["content"] and cell["content"]["number"] == 2: return False
-
         return True
 
     def get_access_points(self, target_pos, virtual_grid=None):
         r, c = target_pos
         points = []
-
-        # Nếu target nằm ở hàng 3 (ID 1,2,3), điểm đến chính là ô đó
         if r == 3:
             if self.check_traversable_rules(r, c, virtual_grid, target_pos=target_pos):
                 points.append((r, c))
             return points
-
         if self.check_traversable_rules(r, c, virtual_grid):
             points.append((r, c))
-        
         dirs = [(-1, 0), (1, 0), (0, -1), (0, 1)]
         for dr, dc in dirs:
             nr, nc = r + dr, c + dc
@@ -302,6 +305,17 @@ class SelectPlaceApp:
     def count_unique_columns(self, pos1, pos2, pos3):
         cols = {pos1[1], pos2[1], pos3[1]}
         return len(cols)
+
+    def calculate_pair_score(self, pos1, pos2):
+        """Tính điểm tối ưu cho cặp khối 2: cùng cột > gần nhau > ít bước"""
+        # Ưu tiên 1: Cùng cột (đi thẳng) - điểm cao nhất
+        if pos1[1] == pos2[1]:
+            dist = abs(pos1[0] - pos2[0])
+            return 10000 - dist * 10  # Cùng cột: score rất cao
+        
+        # Ưu tiên 2: Khoảng cách Manhattan (gần nhau)
+        manhattan = abs(pos1[0] - pos2[0]) + abs(pos1[1] - pos2[1])
+        return 5000 - manhattan * 10  # Score dựa trên khoảng cách
 
     def calculate_group_proximity_score(self, pos1, pos2, pos3):
         unique_cols = self.count_unique_columns(pos1, pos2, pos3)
@@ -337,6 +351,10 @@ class SelectPlaceApp:
         return min(self.h_score(pos, target) for target in targets)
 
     def cost(self, r, c, virtual_grid=None):
+        # Ưu tiên đường ít vật cản (khối 1) bằng cách tăng chi phí khi gặp khối 1
+        cell = self.grid_cells[r][c]
+        if cell["content"] and cell["content"]["number"] == 1:
+            return 5  # Chi phí cao hơn để tránh khối 1 càng nhiều càng tốt
         return 1 
 
     def dijkstra_astar(self, starts, targets, use_arm=False, virtual_grid=None):
@@ -600,14 +618,17 @@ class SelectPlaceApp:
                  lbl.place(relx=0.2, rely=0.85, anchor="center")
             self.grid_cells[r][c]["overlays"].append(lbl)
 
+    # --- LOG HELPER ---
+    def log_packet(self, packet, msg):
+        """Hàm hỗ trợ in log packet ra màn hình"""
+        dec_str = " ".join(f"{b:3d}" for b in packet)
+        print(f"   >>> [UART SENT] HEX: [{dec_str}] | {msg}")
+
     # --- LOGIC GỬI UART (ĐÃ SỬA: XỬ LÝ ĐIỂM XUẤT PHÁT TỪ NGOÀI) ---
     def process_and_send_uart(self, simulation_path):
-        try:
-            ser = serial.Serial(UART_PORT, BAUD_RATE, timeout=1)
-            print(f"\n[UART] Connected to {UART_PORT}")
-        except Exception as e:
-            print(f"\n[UART ERROR] Không thể mở cổng {UART_PORT}: {e}")
-            self.info_label.configure(text=f"Lỗi UART: Không mở được {UART_PORT}")
+        if not ser or not ser.is_open:
+            print(f"\n[UART ERROR] UART port không sẵn sàng")
+            self.info_label.configure(text=f"Lỗi UART: Port không mở")
             return
 
         current_facing = (-1, 0) # North
@@ -640,12 +661,12 @@ class SelectPlaceApp:
                 entry_cell = self.grid_cells[entry_pos[0]][entry_pos[1]]
                 if entry_cell["content"] and entry_cell["content"]["number"] == 1:
                     print(f"  ├─ [ENTRY CHECK] Phát hiện KHỐI 1 tại entry point {entry_pos} (ID={entry_id})")
-                    packet = build_packet(1, 0, 0, entry_id)
+                    packet = build_packet(1, 2, 0, 0, entry_id)
                     ser.write(packet)
                     print(f"  ├─ [REMOVE AT ENTRY] id_rb=1, Move=0, Act=0, BlockID={entry_id} (LOẠI BỎ KHỐI 1)")
                     time.sleep(0.3)
                 
-                packet = build_packet(2, 1, 4, entry_id)
+                packet = build_packet(2, 2, 1, 4, entry_id)
                 ser.write(packet)
                 print(f"  ├─ [ENTRY] id_rb=2, Move=1, Act=4, BlockID={entry_id}")
                 time.sleep(0.1)
@@ -666,7 +687,7 @@ class SelectPlaceApp:
                 if blocks_to_remove:
                     for block_1_to_remove in blocks_to_remove:
                         remove_block_id = self.get_cell_id(block_1_to_remove[0], block_1_to_remove[1])
-                        packet = build_packet(1, 0, 0, remove_block_id)
+                        packet = build_packet(1, 2, 0, 0, remove_block_id)
                         ser.write(packet)
                         print(f"  ├─ [REMOVE] id_rb=1, Move=0, Act=0, BlockID={remove_block_id} (LOẠI BỎ KHỐI 1)")
                         
@@ -715,12 +736,12 @@ class SelectPlaceApp:
                     lbl_obstacle.place(relx=0.5, rely=0.5, anchor="center")
                     self.grid_cells[nr][nc]["overlays"].append(lbl_obstacle)
                     
-                    packet = build_packet(1, 0, 0, step_block_id)
+                    packet = build_packet(1, 2, 0, 0, step_block_id)
                     ser.write(packet)
                     print(f"  │  │  └─ id_rb=1, Move=0, Act=0, ID={step_block_id} (LOẠI BỎ KHỐI 1)")
                     time.sleep(0.3)
 
-                packet = build_packet(2, move_cmd, 4, step_block_id)
+                packet = build_packet(2, 2, move_cmd, 4, step_block_id)
                 ser.write(packet)
                 move_desc = ["?", "Đi thẳng", "Rẽ trái", "Rẽ phải"][move_cmd]
                 print(f"  │  ├─ id_rb=2, Move={move_cmd} ({move_desc}), Act=4, BlockID={step_block_id}")
@@ -751,21 +772,22 @@ class SelectPlaceApp:
                         action_cmd = 3 
                 
                 if action_cmd != 4 or act_vec == (0,0):
-                    packet = build_packet(2, 0, action_cmd, action_block_id)
+                    packet = build_packet(2, 2, 0, action_cmd, action_block_id)
                     ser.write(packet)
                     act_desc = ["?", "Gắp thẳng", "Gắp trái", "Gắp phải", "Gắp tại chỗ"][action_cmd]
                     print(f"     └─ id_rb=2 (BÌNH THƯỜNG), Move=0, Act={action_cmd} ({act_desc}), BlockID={action_block_id}")
                     time.sleep(0.5)
 
-        ser.close()
         print("\n" + "=" * 60)
         print("HOÀN THÀNH GỬI UART")
         print("=" * 60)
         self.info_label.configure(text=f"Đã gửi xong.")
 
-    def run(self):
+
+    def run_algothism_forest(self):
         self.root.mainloop()
+
 
 if __name__ == "__main__":
     app = SelectPlaceApp()
-    app.run()
+    app.run_algothism_forest()

@@ -11,9 +11,6 @@ from config_uart.sent_uart import build_packet, send_packet_once, ser
 ctk.set_appearance_mode("System")
 ctk.set_default_color_theme("blue")
 
-# --- Cấu hình Serial ---
-UART_PORT = 'COM3' 
-BAUD_RATE = 115200
 
 ROWS = 4
 COLS = 3
@@ -788,6 +785,6 @@ class SelectPlaceApp:
         self.root.mainloop()
 
 
-if __name__ == "__main__":
-    app = SelectPlaceApp()
-    app.run_algothism_forest()
+# if __name__ == "__main__":
+#     app = SelectPlaceApp()
+#     app.run_algothism_forest()
