@@ -28,7 +28,7 @@ def send_packet_once(ser, packet):
 
 # # # --- Gửi liên tục ---
 # while True:
-#     id_rb    = random.randint(1, 100)
+#     id_rb    = 1
 #     state     = random.randint(1, 100)
 #     move     = random.randint(1, 100)
 #     action   = random.randint(1, 100)

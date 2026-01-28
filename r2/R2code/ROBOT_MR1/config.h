@@ -1331,8 +1331,9 @@ void UART4_DMA_RX(u32 baudrate)
     DMA_Cmd(DMA1_Stream2, ENABLE);
 }
 
+
 uint8_t id_rb = 0;
-uint8_t state = 0;
+uint8_t state_rb = 0;
 uint8_t move = 0;
 uint8_t action = 0;
 uint8_t id_block = 0;
@@ -1342,34 +1343,28 @@ int count_data_uart4 = 0;
 
 #include <stdint.h>
 
-#define QUEUE_SIZE 200   // tùy b?n ch?nh
+#define QUEUE_SIZE 50   // tùy b?n ch?nh
 
 typedef struct {
     uint8_t id_rb;
-    uint8_t state;
+    uint8_t state_rb;
     uint8_t move;
     uint8_t action;
     uint8_t id_block;
 } Packet_t;
 
-
+// Hàng d?i FIFO
 Packet_t packet_queue[QUEUE_SIZE];
-uint16_t head = 0;
-uint16_t tail = 0;
+uint16_t head = 0;   // v? trí thêm
+uint16_t tail = 0;   // v? trí lay
 
 // ham them vao hang doi
-void Queue_Push(uint8_t id_rb,
-                uint8_t state,
-                uint8_t move,
-                uint8_t action,
-                uint8_t id)
+void Queue_Push(uint8_t move, uint8_t action, uint8_t id)
 {
     if (count_data_uart4 < QUEUE_SIZE)
     {
-        packet_queue[head].id_rb    = id_rb;
-        packet_queue[head].state    = state;
-        packet_queue[head].move     = move;
-        packet_queue[head].action   = action;
+        packet_queue[head].move = move;
+        packet_queue[head].action = action;
         packet_queue[head].id_block = id;
 
         head = (head + 1) % QUEUE_SIZE;
@@ -1395,45 +1390,49 @@ void Queue_Timeout_Handler(void)
     if (count_data_uart4 > 0)
     {
         Packet_t old;
-        Queue_Pop(&old); 
+        Queue_Pop(&old);
+				count_data_uart4--;
     }
 }
 
-// hàm nhân gói tin
+
 void ProcessReceivedData_2(void)
 {
-    // Frame: [0]=0x02 ... [7]=0x03
-    if (RX_UART4[0] == 0x02 && RX_UART4[7] == 0x03)
+	uint8_t calc_checksum =
+        (RX_UART4[0] +   // start
+         RX_UART4[1] +   // id_rb
+         RX_UART4[2] +   // state
+         RX_UART4[3] +   // move
+         RX_UART4[4] +   // action
+         RX_UART4[5]) & 0xFF; // id_block
+	
+	
+    // Check start & end
+    if (RX_UART4[0] != 0x02) return;
+    if (RX_UART4[7] != 0x03) return;
+
+    // Tính checksum
+    
+
+    if (calc_checksum == RX_UART4[6])
     {
-        uint8_t calc_checksum =
-            (RX_UART4[1] +   // id_rb
-             RX_UART4[2] +   // state
-             RX_UART4[3] +   // move
-             RX_UART4[4] +   // action
-             RX_UART4[5]) & 0xFF; // id_block
+        id_rb    = RX_UART4[1];
+        state_rb    = RX_UART4[2];
+        move     = RX_UART4[3];
+        action   = RX_UART4[4];
+        id_block = RX_UART4[5];
 
-        if (calc_checksum == RX_UART4[6])
-        {
-            id_rb    = RX_UART4[1];
-            state    = RX_UART4[2];
-            move     = RX_UART4[3];
-            action   = RX_UART4[4];
-            id_block = RX_UART4[5];
-
-            Queue_Push(id_rb, state, move, action, id_block);
-        }
-        else
-        {
-            // DEBUG / FAIL SAFE
-            id_rb    = 44;
-            state    = 44;
-            move     = 44;
-            action   = 44;
-            id_block = 44;
-        }
+        // Push vào FIFO
+        Queue_Push(move, action, id_block);
+    }
+    else
+    {
+        // checksum sai ? dánh d?u l?i
+        move     = 0xFF;
+        action   = 0xFF;
+        id_block = 0xFF;
     }
 }
-
 
 //========================================================================
 //---------------------------- KHAI BAO UART 5-----------------------------
@@ -1821,17 +1820,17 @@ void HMI_TRAN(vs32 _so_dong)
 									//HMI_DMI("BTN:",GP_BTN[4],10);
 										break;
 									case 11:
-										HMI_DMI("action",action,11);  					
+										HMI_DMI("count_data :",count_data_uart4,11);  			
 										break;
 									case 12:
 										HMI_DMI("move",move,12);  						
 										break;
 									case 13:
-										HMI_DMI("Lazer trai ",lazeTraiValue,13);
+										HMI_DMI("Action",action,13);  
 										//HMI_DMI("CTHT_BONG_LEN :",CTHT_BONG_LEN,13);   
 										break;
 									case 14:
-										//HMI_DMI("CB_TAY_BAN:",CAM_BIEN_TU_TAY_BAN,14);  
+										HMI_DMI("ID_Block:",id_block,14 );  
 										break;		
 									case 15:
 										//HMI_DMI("TESSSSt:",servo_Sau_Trai,15); 
