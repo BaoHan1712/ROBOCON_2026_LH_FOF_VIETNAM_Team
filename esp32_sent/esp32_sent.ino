@@ -3,23 +3,21 @@
 
 /* ===================== CONFIG ===================== */
 
-uint8_t peerAddress[] = {0x68, 0xFE, 0x71, 0xFA, 0xC5, 0xE4};
+#define UART_BAUDRATE   115200
+#define PACKET_SIZE     8
 
+#define START_BYTE      0x02
+#define END_BYTE        0x03
 
-#define UART_BAUDRATE 115200
-#define PACKET_SIZE  7
-
-#define START_BYTE 0x02
-#define END_BYTE   0x03
-
-#define LED_PIN 2
-#define LED_BLINK_TIME 100  // ms
+#define LED_PIN         2
+#define LED_BLINK_TIME  100   // ms
 
 /* ===================== DATA STRUCT ===================== */
 
 typedef struct __attribute__((packed)) {
   uint8_t start;
-  uint8_t id_rb;     
+  uint8_t id_rb;
+  uint8_t state;
   uint8_t move;
   uint8_t action;
   uint8_t block_id;
@@ -30,24 +28,16 @@ typedef struct __attribute__((packed)) {
 /* ===================== LED STATE ===================== */
 
 bool ledBlinking = false;
-bool ledState = false;
 unsigned long ledTimestamp = 0;
 
-/* ===================== FUNCTION DECLARE ===================== */
+/* ===================== FUNCTION PROTOTYPE ===================== */
 
-void initUART();
-void initESPNow();
-
-bool readPacketUART(Packet &pkt);
-bool validatePacket(const Packet &pkt);
-uint8_t calcChecksum(const Packet &pkt);
-
-void sendPacketESPNow(const Packet &pkt);
-
-void triggerBlink();
+void blinkLED();
 void updateLED();
 
-void onDataSent(const wifi_tx_info_t *tx_info, esp_now_send_status_t status);
+bool validatePacket(const Packet &pkt);
+uint8_t calcChecksum(const Packet &pkt);
+bool checkPacketFromESPNow(const Packet &pkt);
 
 /* ===================== SETUP ===================== */
 
@@ -57,76 +47,46 @@ void setup() {
   pinMode(LED_PIN, OUTPUT);
   digitalWrite(LED_PIN, LOW);
 
-  initUART();
-  initESPNow();
+  WiFi.mode(WIFI_STA);
+
+  if (esp_now_init() != ESP_OK) {
+    return;
+  }
+
+  esp_now_register_recv_cb(onDataRecv);
 }
 
 /* ===================== LOOP ===================== */
+
 void loop() {
-  Packet pkt;
-
-  if (readPacketUART(pkt)) {   // Python gửi xong 1 gói
-    triggerBlink();            // NHÁY LED NGAY
-
-    if (validatePacket(pkt)) {
-      sendPacketESPNow(pkt);
-    }
-  }
-
   updateLED();
 }
 
-/* ===================== INIT ===================== */
+/* ===================== ESP-NOW RX ===================== */
 
-void initUART() {
-  // đã init Serial ở setup
+void onDataRecv(const esp_now_recv_info_t *recv_info,
+                const uint8_t *incomingData,
+                int len) {
+
+  if (len != PACKET_SIZE) return;
+
+  Packet pkt;
+  memcpy(&pkt, incomingData, PACKET_SIZE);
+
+  if (pkt.start != START_BYTE) return;
+  if (pkt.end   != END_BYTE)   return;
+
+  if (!validatePacket(pkt)) return;
+
+  // ⭐ LỌC ROBOT THEO id_rb
+  if (!checkPacketFromESPNow(pkt)) return;
+
+  // ✅ GÓI HỢP LỆ
+  blinkLED();
+
+  // Gửi nguyên 8 byte xuống STM32
+  Serial.write((uint8_t*)&pkt, PACKET_SIZE);
 }
-
-void initESPNow() {
-  WiFi.mode(WIFI_STA);
-
-  if (esp_now_init() != ESP_OK) return;
-
-  esp_now_register_send_cb(onDataSent);
-
-  esp_now_peer_info_t peerInfo = {};
-  memcpy(peerInfo.peer_addr, peerAddress, 6);
-  peerInfo.channel = 0;
-  peerInfo.encrypt = false;
-
-  esp_now_add_peer(&peerInfo);
-}
-
-/* ===================== UART PARSER ===================== */
-bool readPacketUART(Packet &pkt) {
-  static uint8_t buffer[PACKET_SIZE];
-  static uint8_t index = 0;
-
-  while (Serial.available()) {
-    uint8_t b = Serial.read();
-
-    // Chờ START_BYTE
-    if (index == 0) {
-      if (b != START_BYTE) continue;
-    }
-
-    buffer[index++] = b;
-
-    if (index == PACKET_SIZE) {
-      index = 0;
-
-      memcpy(&pkt, buffer, PACKET_SIZE);
-
-      // check frame
-      if (pkt.start != START_BYTE) return false;
-      if (pkt.end   != END_BYTE)   return false;
-
-      return true;   // 👈 nhận đủ 1 packet từ Python
-    }
-  }
-  return false;
-}
-
 
 /* ===================== CHECKSUM ===================== */
 
@@ -135,44 +95,33 @@ bool validatePacket(const Packet &pkt) {
 }
 
 uint8_t calcChecksum(const Packet &pkt) {
-  return (pkt.id_rb +
+  return (pkt.start +
+          pkt.id_rb +
+          pkt.state +
           pkt.move +
           pkt.action +
           pkt.block_id) & 0xFF;
 }
 
-
-/* ===================== ESP-NOW SEND ===================== */
-
-void sendPacketESPNow(const Packet &pkt) {
-  esp_now_send(peerAddress, (uint8_t*)&pkt, sizeof(Packet));
+/* ===================== FILTER PACKET ===================== */
+// Chỉ nhận robot có id_rb == 1
+bool checkPacketFromESPNow(const Packet &pkt) {
+  return (pkt.id_rb == 1);
 }
 
-/* ===================== LED NON-BLOCKING ===================== */
+/* ===================== LED ===================== */
 
-void triggerBlink() {
-  ledBlinking = true;
-  ledState = true;
-  ledTimestamp = millis();
+void blinkLED() {
   digitalWrite(LED_PIN, HIGH);
+  ledBlinking = true;
+  ledTimestamp = millis();
 }
 
 void updateLED() {
   if (!ledBlinking) return;
 
   if (millis() - ledTimestamp >= LED_BLINK_TIME) {
-    if (ledState) {
-      digitalWrite(LED_PIN, LOW);
-      ledState = false;
-      ledTimestamp = millis();
-    } else {
-      ledBlinking = false;
-    }
+    digitalWrite(LED_PIN, LOW);
+    ledBlinking = false;
   }
-}
-
-/* ===================== ESP-NOW CALLBACK ===================== */
-
-void onDataSent(const wifi_tx_info_t *tx_info, esp_now_send_status_t status) {
-  // không log
 }

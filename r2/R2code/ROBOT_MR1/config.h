@@ -1262,7 +1262,7 @@ void UART3_DMA_RX(u32 baudrate)
 }
 
 //====================	========UART4=======================================
-#define UART4_BUFFER_SIZE 7
+#define UART4_BUFFER_SIZE 8
 vu8 RX_UART4[UART4_BUFFER_SIZE];
 
 void UART4_DMA_RX(u32 baudrate)
@@ -1332,6 +1332,7 @@ void UART4_DMA_RX(u32 baudrate)
 }
 
 uint8_t id_rb = 0;
+uint8_t state = 0;
 uint8_t move = 0;
 uint8_t action = 0;
 uint8_t id_block = 0;
@@ -1341,25 +1342,32 @@ int count_data_uart4 = 0;
 
 #include <stdint.h>
 
-#define QUEUE_SIZE 50   // tùy b?n ch?nh
+#define QUEUE_SIZE 200   // tùy b?n ch?nh
 
 typedef struct {
     uint8_t id_rb;
+    uint8_t state;
     uint8_t move;
     uint8_t action;
     uint8_t id_block;
 } Packet_t;
+
 
 Packet_t packet_queue[QUEUE_SIZE];
 uint16_t head = 0;
 uint16_t tail = 0;
 
 // ham them vao hang doi
-void Queue_Push(uint8_t id_rb, uint8_t move, uint8_t action, uint8_t id)
+void Queue_Push(uint8_t id_rb,
+                uint8_t state,
+                uint8_t move,
+                uint8_t action,
+                uint8_t id)
 {
     if (count_data_uart4 < QUEUE_SIZE)
     {
         packet_queue[head].id_rb    = id_rb;
+        packet_queue[head].state    = state;
         packet_queue[head].move     = move;
         packet_queue[head].action   = action;
         packet_queue[head].id_block = id;
@@ -1368,7 +1376,6 @@ void Queue_Push(uint8_t id_rb, uint8_t move, uint8_t action, uint8_t id)
         count_data_uart4++;
     }
 }
-
 
 // ham lay goi tin
 int Queue_Pop(Packet_t *out)
@@ -1395,34 +1402,37 @@ void Queue_Timeout_Handler(void)
 // hàm nhân gói tin
 void ProcessReceivedData_2(void)
 {
-    if (RX_UART4[0] == 0x02 && RX_UART4[6] == 0x03)
+    // Frame: [0]=0x02 ... [7]=0x03
+    if (RX_UART4[0] == 0x02 && RX_UART4[7] == 0x03)
     {
         uint8_t calc_checksum =
-            (RX_UART4[0] +
-             RX_UART4[1] +
-             RX_UART4[2] +
-             RX_UART4[3] +
-             RX_UART4[4]) & 0xFF;
+            (RX_UART4[1] +   // id_rb
+             RX_UART4[2] +   // state
+             RX_UART4[3] +   // move
+             RX_UART4[4] +   // action
+             RX_UART4[5]) & 0xFF; // id_block
 
-        if (calc_checksum == RX_UART4[5])
+        if (calc_checksum == RX_UART4[6])
         {
             id_rb    = RX_UART4[1];
-            move     = RX_UART4[2];
-            action   = RX_UART4[3];
-            id_block = RX_UART4[4];
+            state    = RX_UART4[2];
+            move     = RX_UART4[3];
+            action   = RX_UART4[4];
+            id_block = RX_UART4[5];
 
-            Queue_Push(id_rb, move, action, id_block);
+            Queue_Push(id_rb, state, move, action, id_block);
         }
         else
         {
+            // DEBUG / FAIL SAFE
             id_rb    = 44;
+            state    = 44;
             move     = 44;
             action   = 44;
             id_block = 44;
         }
     }
 }
-
 
 
 //========================================================================
@@ -1811,10 +1821,10 @@ void HMI_TRAN(vs32 _so_dong)
 									//HMI_DMI("BTN:",GP_BTN[4],10);
 										break;
 									case 11:
-										HMI_DMI("Lazer phai",lazePhaiValue,11);  					
+										HMI_DMI("action",action,11);  					
 										break;
 									case 12:
-										HMI_DMI("Lazer truoc ",lazeTruocValue,12);  						
+										HMI_DMI("move",move,12);  						
 										break;
 									case 13:
 										HMI_DMI("Lazer trai ",lazeTraiValue,13);

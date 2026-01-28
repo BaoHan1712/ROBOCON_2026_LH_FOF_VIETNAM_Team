@@ -4,7 +4,7 @@
 /* ===================== CONFIG ===================== */
 
 #define UART_BAUDRATE 115200
-#define PACKET_SIZE 7
+#define PACKET_SIZE 8
 #define LED_PIN 2   // LED 2 ESP32
 
 bool ledBlinking = false;
@@ -17,6 +17,7 @@ unsigned long ledTimestamp = 0;
 typedef struct __attribute__((packed)) {
   uint8_t start;
   uint8_t id_rb;
+  uint8_t state;
   uint8_t move;
   uint8_t action;
   uint8_t block_id;

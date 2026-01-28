@@ -3,7 +3,7 @@
 <title>Static Call Graph - [.\Project\Project.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\Project\Project.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060750: Last Updated: Wed Jan 14 15:49:44 2026
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060750: Last Updated: Wed Jan 28 11:08:12 2026
 <BR><P>
 <H3>Maximum Stack Usage =        304 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -312,7 +312,7 @@ Global Symbols
 <BR>[Address Reference Count : 1]<UL><LI> startup_stm32f4xx.o(RESET)
 </UL>
 <P><STRONG><a name="[18]"></a>DMA1_Stream2_IRQHandler</STRONG> (Thumb, 60 bytes, Stack size 8 bytes, stm32f4xx_it.o(.text))
-<BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = DMA1_Stream2_IRQHandler &rArr; ProcessReceivedData_2 &rArr; Queue_Push
+<BR><BR>[Stack]<UL><LI>Max Depth = 40<LI>Call Chain = DMA1_Stream2_IRQHandler &rArr; ProcessReceivedData_2 &rArr; Queue_Push
 </UL>
 <BR>[Calls]<UL><LI><a href="#[74]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ProcessReceivedData_2
 <LI><a href="#[72]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DMA_SetCurrDataCounter
@@ -827,23 +827,23 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[61]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;taskMain
 </UL>
 
-<P><STRONG><a name="[c2]"></a>Queue_Push</STRONG> (Thumb, 86 bytes, Stack size 16 bytes, main.o(.text))
-<BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = Queue_Push
+<P><STRONG><a name="[c2]"></a>Queue_Push</STRONG> (Thumb, 104 bytes, Stack size 20 bytes, main.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 20<LI>Call Chain = Queue_Push
 </UL>
 <BR>[Called By]<UL><LI><a href="#[74]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ProcessReceivedData_2
 </UL>
 
-<P><STRONG><a name="[c1]"></a>Queue_Pop</STRONG> (Thumb, 60 bytes, Stack size 0 bytes, main.o(.text), UNUSED)
+<P><STRONG><a name="[c1]"></a>Queue_Pop</STRONG> (Thumb, 66 bytes, Stack size 0 bytes, main.o(.text), UNUSED)
 <BR><BR>[Called By]<UL><LI><a href="#[111]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Process_forest_RBC
 <LI><a href="#[c0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Queue_Timeout_Handler
 </UL>
 
-<P><STRONG><a name="[c0]"></a>Queue_Timeout_Handler</STRONG> (Thumb, 20 bytes, Stack size 8 bytes, main.o(.text), UNUSED)
+<P><STRONG><a name="[c0]"></a>Queue_Timeout_Handler</STRONG> (Thumb, 20 bytes, Stack size 12 bytes, main.o(.text), UNUSED)
 <BR><BR>[Calls]<UL><LI><a href="#[c1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Queue_Pop
 </UL>
 
-<P><STRONG><a name="[74]"></a>ProcessReceivedData_2</STRONG> (Thumb, 132 bytes, Stack size 8 bytes, main.o(.text))
-<BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = ProcessReceivedData_2 &rArr; Queue_Push
+<P><STRONG><a name="[74]"></a>ProcessReceivedData_2</STRONG> (Thumb, 150 bytes, Stack size 12 bytes, main.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = ProcessReceivedData_2 &rArr; Queue_Push
 </UL>
 <BR>[Calls]<UL><LI><a href="#[c2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Queue_Push
 </UL>
@@ -870,7 +870,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[61]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;taskMain
 </UL>
 
-<P><STRONG><a name="[c4]"></a>UART6_DMA_RX</STRONG> (Thumb, 358 bytes, Stack size 96 bytes, main.o(.text), UNUSED)
+<P><STRONG><a name="[c4]"></a>UART6_DMA_RX</STRONG> (Thumb, 360 bytes, Stack size 96 bytes, main.o(.text), UNUSED)
 <BR><BR>[Calls]<UL><LI><a href="#[b9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USART_Init
 <LI><a href="#[bb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USART_DMACmd
 <LI><a href="#[9e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RCC_APB2PeriphClockCmd
@@ -942,7 +942,7 @@ Global Symbols
 <LI><a href="#[ca]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;delay_ms
 </UL>
 
-<P><STRONG><a name="[cc]"></a>HMI_TRAN</STRONG> (Thumb, 1232 bytes, Stack size 224 bytes, main.o(.text))
+<P><STRONG><a name="[cc]"></a>HMI_TRAN</STRONG> (Thumb, 1218 bytes, Stack size 224 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 296<LI>Call Chain = HMI_TRAN &rArr; HMI_PUTS &rArr; HMI_ky_tu &rArr; strcmp
 </UL>
 <BR>[Calls]<UL><LI><a href="#[cd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_WriteBit
@@ -1026,7 +1026,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[e9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;robotDirectionAnalytics
 </UL>
 
-<P><STRONG><a name="[ea]"></a>absF</STRONG> (Thumb, 26 bytes, Stack size 0 bytes, main.o(.text))
+<P><STRONG><a name="[ea]"></a>absF</STRONG> (Thumb, 148 bytes, Stack size 0 bytes, main.o(.text))
 <BR><BR>[Called By]<UL><LI><a href="#[e9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;robotDirectionAnalytics
 </UL>
 
@@ -1035,7 +1035,7 @@ Global Symbols
 <LI><a href="#[e7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;robotAngleAnalytics
 </UL>
 
-<P><STRONG><a name="[ef]"></a>giaToc</STRONG> (Thumb, 186 bytes, Stack size 0 bytes, main.o(.text))
+<P><STRONG><a name="[ef]"></a>giaToc</STRONG> (Thumb, 54 bytes, Stack size 0 bytes, main.o(.text))
 <BR><BR>[Called By]<UL><LI><a href="#[ed]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;robotAnalytics
 </UL>
 
@@ -1217,7 +1217,7 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[f4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xoaytam
 </UL>
 
-<P><STRONG><a name="[f2]"></a>calculateSpeed</STRONG> (Thumb, 278 bytes, Stack size 56 bytes, main.o(.text), UNUSED)
+<P><STRONG><a name="[f2]"></a>calculateSpeed</STRONG> (Thumb, 276 bytes, Stack size 56 bytes, main.o(.text), UNUSED)
 <BR><BR>[Calls]<UL><LI><a href="#[e6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_f2d
 <LI><a href="#[d6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dmul
 <LI><a href="#[da]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dadd
@@ -1249,7 +1249,7 @@ Global Symbols
 <LI><a href="#[fa]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_sqrt
 </UL>
 
-<P><STRONG><a name="[114]"></a>ADCValue_Control</STRONG> (Thumb, 638 bytes, Stack size 0 bytes, main.o(.text))
+<P><STRONG><a name="[114]"></a>ADCValue_Control</STRONG> (Thumb, 642 bytes, Stack size 0 bytes, main.o(.text))
 <BR><BR>[Called By]<UL><LI><a href="#[60]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;taskDieuKhienCoCau1
 </UL>
 
@@ -1269,7 +1269,7 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[60]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;taskDieuKhienCoCau1
 </UL>
 
-<P><STRONG><a name="[fb]"></a>Leo_bac_200</STRONG> (Thumb, 530 bytes, Stack size 8 bytes, main.o(.text))
+<P><STRONG><a name="[fb]"></a>Leo_bac_200</STRONG> (Thumb, 536 bytes, Stack size 8 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 100<LI>Call Chain = Leo_bac_200 &rArr; robotRun &rArr; robotCurve &rArr; calculateMotor &rArr; __hardfp_sinf &rArr; __mathlib_rredf2
 </UL>
 <BR>[Calls]<UL><LI><a href="#[fc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskDelay
@@ -1305,7 +1305,7 @@ Global Symbols
 <LI><a href="#[61]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;taskMain
 </UL>
 
-<P><STRONG><a name="[100]"></a>Xuong_bac_200</STRONG> (Thumb, 394 bytes, Stack size 8 bytes, main.o(.text))
+<P><STRONG><a name="[100]"></a>Xuong_bac_200</STRONG> (Thumb, 422 bytes, Stack size 8 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 100<LI>Call Chain = Xuong_bac_200 &rArr; robotRun &rArr; robotCurve &rArr; calculateMotor &rArr; __hardfp_sinf &rArr; __mathlib_rredf2
 </UL>
 <BR>[Calls]<UL><LI><a href="#[fc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskDelay
@@ -1323,7 +1323,7 @@ Global Symbols
 <LI><a href="#[61]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;taskMain
 </UL>
 
-<P><STRONG><a name="[101]"></a>Xuong_bac_400</STRONG> (Thumb, 452 bytes, Stack size 8 bytes, main.o(.text))
+<P><STRONG><a name="[101]"></a>Xuong_bac_400</STRONG> (Thumb, 424 bytes, Stack size 8 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 144<LI>Call Chain = Xuong_bac_400 &rArr; robotRunAngle &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[fc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskDelay
@@ -1355,7 +1355,7 @@ Global Symbols
 <LI><a href="#[109]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Xuat_Phat_Lay_Vu_Khi_1
 </UL>
 
-<P><STRONG><a name="[104]"></a>Bam_laser_truoc</STRONG> (Thumb, 236 bytes, Stack size 40 bytes, main.o(.text))
+<P><STRONG><a name="[104]"></a>Bam_laser_truoc</STRONG> (Thumb, 238 bytes, Stack size 40 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 176<LI>Call Chain = Bam_laser_truoc &rArr; robotRunAngle &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[e5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;robotRunAngle
@@ -1384,7 +1384,7 @@ Global Symbols
 <LI><a href="#[fd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wantExit
 </UL>
 
-<P><STRONG><a name="[107]"></a>robotGamePadControl</STRONG> (Thumb, 688 bytes, Stack size 32 bytes, main.o(.text))
+<P><STRONG><a name="[107]"></a>robotGamePadControl</STRONG> (Thumb, 690 bytes, Stack size 32 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 124<LI>Call Chain = robotGamePadControl &rArr; robotRun &rArr; robotCurve &rArr; calculateMotor &rArr; __hardfp_sinf &rArr; __mathlib_rredf2
 </UL>
 <BR>[Calls]<UL><LI><a href="#[e4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;robotRun
@@ -1469,7 +1469,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[111]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Process_forest_RBC
 </UL>
 
-<P><STRONG><a name="[111]"></a>Process_forest_RBC</STRONG> (Thumb, 18 bytes, Stack size 8 bytes, main.o(.text), UNUSED)
+<P><STRONG><a name="[111]"></a>Process_forest_RBC</STRONG> (Thumb, 18 bytes, Stack size 16 bytes, main.o(.text), UNUSED)
 <BR><BR>[Calls]<UL><LI><a href="#[110]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Process_Packet
 <LI><a href="#[c1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Queue_Pop
 </UL>

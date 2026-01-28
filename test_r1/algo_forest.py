@@ -154,8 +154,9 @@ class SelectPlaceApp:
 
     def sent_and_close(self):
         self.send_uart()
-        print(">> Đã truyền UART, sẽ đóng app sau 5 giây")
-        self.root.after(5000, self.on_closing)
+        print(">> Đã truyền UART thành công!")
+        self.info_label.configure(text="✓ Đã gửi UART thành công! Bạn có thể đóng cửa sổ bằng nút X.")
+        # Không tự động đóng - để người dùng có quyền kiểm soát
 
     # --- CÁC HÀM UI CƠ BẢN ---
     def get_cell_id(self, r, c):
@@ -297,6 +298,17 @@ class SelectPlaceApp:
         cols = {pos1[1], pos2[1], pos3[1]}
         return len(cols)
 
+    def calculate_pair_score(self, pos1, pos2):
+        """Tính điểm tối ưu cho cặp khối 2: cùng cột > gần nhau > ít bước"""
+        # Ưu tiên 1: Cùng cột (đi thẳng) - điểm cao nhất
+        if pos1[1] == pos2[1]:
+            dist = abs(pos1[0] - pos2[0])
+            return 10000 - dist * 10  # Cùng cột: score rất cao
+        
+        # Ưu tiên 2: Khoảng cách Manhattan (gần nhau)
+        manhattan = abs(pos1[0] - pos2[0]) + abs(pos1[1] - pos2[1])
+        return 5000 - manhattan * 10  # Score dựa trên khoảng cách
+
     def calculate_group_proximity_score(self, pos1, pos2, pos3):
         unique_cols = self.count_unique_columns(pos1, pos2, pos3)
         if unique_cols == 1:
@@ -331,6 +343,10 @@ class SelectPlaceApp:
         return min(self.h_score(pos, target) for target in targets)
 
     def cost(self, r, c, virtual_grid=None):
+        # Ưu tiên đường ít vật cản (khối 1) bằng cách tăng chi phí khi gặp khối 1
+        cell = self.grid_cells[r][c]
+        if cell["content"] and cell["content"]["number"] == 1:
+            return 5  # Chi phí cao hơn để tránh khối 1 càng nhiều càng tốt
         return 1 
 
     def dijkstra_astar(self, starts, targets, use_arm=False, virtual_grid=None):
@@ -480,25 +496,59 @@ class SelectPlaceApp:
         
         print(f">>> Có {len(list_2s)} khối 2. Cấu hình: CHỈ LẤY 2 KHỐI.")
 
-        priority_2s = [pos for pos in list_2s if pos[0] == 3]
-        target_sequences = [] 
-
+        # --- ƯUTÊN TUYỆT ĐỐI: Khối 2 ở cửa vào (ID 1,2,3 - Row 3) ---
+        target_sequences = []
+        priority_2s = [pos for pos in list_2s if pos[0] == 3]  # Row 3 = ID 1,2,3
+        
         if priority_2s:
-            print(f">>> Phát hiện khối 2 tại ID 1,2,3 (Row 3). BẮT BUỘC lấy trước.")
-            for p_start in priority_2s:
-                remaining = [b for b in list_2s if b != p_start]
-                for second in remaining:
-                    target_sequences.append((p_start, second))
+            print(f">>> BUỘC: Phát hiện khối 2 tại cửa vào (ID 1,2,3). PHẢI lấy trước.")
+            # Khối 2 ở cửa vào bắt buộc làm target đầu tiên
+            for first_target in priority_2s:
+                remaining = [b for b in list_2s if b != first_target]
+                for second_target in remaining:
+                    # Tính score cho cặp này (first_target là bắt buộc)
+                    pair_score = self.calculate_pair_score(first_target, second_target)
+                    target_sequences.append((first_target, second_target, pair_score))
+            
+            # Sắp xếp theo score để ưu tiên cặp tốt nhất
+            target_sequences.sort(key=lambda x: x[2], reverse=True)
+            target_sequences = [pair[:2] for pair in target_sequences]  # Lấy chỉ (first, second)
+            
+            best_pair = target_sequences[0] if target_sequences else None
+            if best_pair:
+                print(f">>> Chọn cặp: ID {self.get_cell_id(*best_pair[0])}, ID {self.get_cell_id(*best_pair[1])}")
         else:
-            print(f">>> Không có khối 2 vùng ưu tiên. Tìm đường tối ưu bất kỳ.")
-            target_sequences = list(itertools.permutations(list_2s, 2))
+            print(f">>> Không có khối 2 ở cửa vào. Tìm cặp tối ưu:")
+            # --- Tìm cặp khối 2 cùng cột (đi thẳng) hoặc gần nhau ---
+            best_pair_score = -1
+            best_pair = None
+            
+            for pair in itertools.permutations(list_2s, 2):
+                pair_score = self.calculate_pair_score(pair[0], pair[1])
+                if pair_score > best_pair_score:
+                    best_pair_score = pair_score
+                    best_pair = pair
+            
+            if best_pair:
+                # Ưu tiên cặp tốt nhất
+                print(f">>> Tìm được cặp khối 2 tối ưu: ID {self.get_cell_id(*best_pair[0])}, ID {self.get_cell_id(*best_pair[1])} (Score: {best_pair_score})")
+                target_sequences.append(best_pair)
+                
+                # Thêm các cặp khác với score cao hơn ngưỡng
+                threshold = best_pair_score * 0.7  # 70% score của cặp tốt nhất
+                for pair in itertools.permutations(list_2s, 2):
+                    if pair != best_pair:
+                        pair_score = self.calculate_pair_score(pair[0], pair[1])
+                        if pair_score >= threshold:
+                            target_sequences.append(pair)
+            else:
+                target_sequences = list(itertools.permutations(list_2s, 2))
         
         potential_discards = [None] + list_1s
-        best_cost = float('inf')
-        best_sim = None
-        best_targets_set = None
-        best_ignored_set = []
-        
+        candidates = []
+
+        # Thực hiện mô phỏng cho tất cả cặp/tuỳ chọn loại bỏ.
+        # Lưu lại (cost, pair, ignored, sim_data, pair_score, pair_distance)
         for ordered_pair in target_sequences:
             active_targets = list(ordered_pair)
             for discard_r1 in potential_discards:
@@ -506,11 +556,27 @@ class SelectPlaceApp:
                 first_target_col = active_targets[0][1]
                 forced_start = (ROWS - 1, first_target_col)
                 cost, sim_data = self.simulate_sequence([forced_start], active_targets, current_ignored)
-                if cost < best_cost:
-                    best_cost = cost
-                    best_sim = sim_data
-                    best_targets_set = active_targets
-                    best_ignored_set = current_ignored
+                # pair_score giúp ưu tiên cùng cột nếu cùng chi phí
+                p0, p1 = active_targets[0], active_targets[1]
+                pair_score = self.calculate_pair_score(p0, p1)
+                pair_distance = abs(p0[0]-p1[0]) + abs(p0[1]-p1[1])
+                candidates.append((cost, active_targets, current_ignored, sim_data, pair_score, pair_distance))
+
+        # Nếu không có phương án hợp lệ
+        if not candidates:
+            self.info_label.configure(text="Không tìm thấy đường đi khả thi.")
+            return
+
+        # Chọn chi phí nhỏ nhất trước (ưu tiên đường ngắn nhất để về đích)
+        min_cost = min(c[0] for c in candidates)
+        tol = 1e-6
+        winners = [c for c in candidates if abs(c[0] - min_cost) <= tol]
+
+        # Nếu có nhiều phương án cùng chi phí, chọn phương án có cặp gần nhau nhất (manhattan nhỏ),
+        # nếu còn hoà thì chọn pair_score cao hơn (cùng cột ưu tiên).
+        if len(winners) > 1:
+            winners.sort(key=lambda x: (x[5], -x[4]))  # (pair_distance asc, pair_score desc)
+        best_cost, best_targets_set, best_ignored_set, best_sim, _, _ = winners[0]
 
         if best_sim:
             final_ids = [self.get_cell_id(*p) for p in best_targets_set]
@@ -522,6 +588,7 @@ class SelectPlaceApp:
             print("="*50)
             print(f"1. CÁC KHỐI SẼ LẤY (Thứ tự): {final_ids}")
             print(f"2. CÁC KHỐI CẦN LOẠI BỎ    : {ignored_ids}")
+            print(f"3. TỔNG CHI PHÍ (BƯỚC)      : {best_cost:.1f}")
             print("="*50 + "\n")
             
             self.visualize_result(best_sim, best_ignored_set)
@@ -638,9 +705,9 @@ class SelectPlaceApp:
                     
                     is_first_entry = False
 
+                blocks_to_remove = []  # Danh sách vật cản đã gửi loại bỏ
                 if segment_action == "FINISH":
                     print(f"  ├─ [FINISH PHASE] Kiểm tra vật cản trên đường về...")
-                    blocks_to_remove = []
                     for check_pos in traveled_path:
                         cr, cc = check_pos
                         cell = self.grid_cells[cr][cc]
@@ -687,7 +754,8 @@ class SelectPlaceApp:
                     cell_next = self.grid_cells[nr][nc]
                     has_block_1_ahead = cell_next["content"] and cell_next["content"]["number"] == 1
                     
-                    if has_block_1_ahead:
+                    # Chỉ gửi REMOVE nếu vật cản chưa được xử lý trong FINISH PHASE
+                    if has_block_1_ahead and next_pos not in blocks_to_remove:
                         print(f"  │  ├─ Phát hiện KHỐI 1 tại {next_pos} (ID={step_block_id}) chặn đường")
                         lbl_obstacle = ctk.CTkLabel(
                             self.grid_cells[nr][nc]["frame"], text="⚠",
@@ -700,6 +768,7 @@ class SelectPlaceApp:
                         packet = build_packet(1, 2, 0, 0, step_block_id)
                         send_packet_once(ser, packet)
                         self.log_packet(packet, f"REMOVE: Loại bỏ vật cản ID {step_block_id}")
+                        blocks_to_remove.append(next_pos)  # Thêm vào danh sách đã xử lý
                         time.sleep(0.3)
 
                     packet = build_packet(2, 2, move_cmd, 4, step_block_id)
