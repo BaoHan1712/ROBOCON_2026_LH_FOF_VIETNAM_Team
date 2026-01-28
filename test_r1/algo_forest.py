@@ -361,13 +361,13 @@ class SelectPlaceApp:
         
         # Nếu ô có Khối 1: CHI PHÍ CỰC LỚN (Tránh bằng mọi giá)
         if cell["content"] and cell["content"]["number"] == 1:
-            return 20  # Cost 20 như bạn yêu cầu
+            return 2  # Cost 20 như bạn yêu cầu
             
         # Nếu ô có Khối 3 (Vật cản cứng): Vô cực
         if cell["content"] and cell["content"]["number"] == 3:
             return float('inf')
             
-        return 1 
+        return 2  # Chi phí di chuyển bình thường 
 
     def dijkstra_astar(self, starts, targets, use_arm=False, virtual_grid=None):
         g_score = [[float("inf")]*COLS for _ in range(ROWS)]
