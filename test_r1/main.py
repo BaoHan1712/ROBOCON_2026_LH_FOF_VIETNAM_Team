@@ -5,7 +5,7 @@ from uart_listener import *
 from config_uart.sent_uart import ser
 
 from gui_tkinter import start_gui, set_state
-from cam_detect import weapon_camera_loop
+# from cam_detect import weapon_camera_loop
 from detect_matrix import matrix_camera_loop
 from algo_forest import SelectPlaceApp
 
@@ -37,8 +37,8 @@ def state_manager():
             time.sleep(0.02)
             continue
 
-        if state == STATE_WEAPON:
-            weapon_camera_loop()
+        # if state == STATE_WEAPON:
+        #     weapon_camera_loop()
 
         elif state == STATE_MATRIX:
             matrix_camera_loop()

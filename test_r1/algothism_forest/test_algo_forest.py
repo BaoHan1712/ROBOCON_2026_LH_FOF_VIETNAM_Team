@@ -5,7 +5,7 @@ import struct
 import serial
 import time
 from gui_tkinter import set_state, STATE_FOREST, STATE_IDLE 
-from config_uart.sent_uart import build_packet, send_packet_once, ser
+# from config_uart.sent_uart import build_packet, send_packet_once, ser
 
 
 ctk.set_appearance_mode("System")
@@ -154,7 +154,6 @@ class SelectPlaceApp:
     def on_closing(self):
         print(">> Closing Forest App...")
         set_state["value"] = STATE_IDLE
-        print("Đã quay về trạng thái IDLE.")
         self.root.quit()
         self.root.destroy()
 
@@ -645,10 +644,10 @@ class SelectPlaceApp:
     # --- LOGIC GỬI UART ---
     # --- LOGIC GỬI UART (ĐÃ TINH GỌN: KHÔNG GỬI LỆNH GẮP 2 LẦN) ---
     def process_and_send_uart(self, simulation_path):
-        if not ser or not ser.is_open:
-            print(f"\n[UART ERROR] UART port không sẵn sàng")
-            self.info_label.configure(text=f"Lỗi UART: Port không mở")
-            return
+        # if not ser or not ser.is_open:
+        #     print(f"\n[UART ERROR] UART port không sẵn sàng")
+        #     self.info_label.configure(text=f"Lỗi UART: Port không mở")
+        #     return
 
         current_facing = (-1, 0) # Mặc định hướng Bắc
         right_turn_map = {(-1,0):(0,1), (0,1):(1,0), (1,0):(0,-1), (0,-1):(-1,0)}
@@ -685,16 +684,16 @@ class SelectPlaceApp:
                 # 1. Nếu cửa vào có KHỐI 1 -> Phá
                 if entry_cell["content"] and entry_cell["content"]["number"] == 1:
                     print(f"  │  ├─ Phát hiện KHỐI 1. Gửi lệnh PHÁ trước.")
-                    packet = build_packet(1, 2, 0, 0, entry_id)
-                    ser.write(packet)
-                    time.sleep(0.3)
+                    # packet = build_packet(1, 2, 0, 0, entry_id)
+                    # ser.write(packet)
+                    # time.sleep(0.3)
                 
                 # 2. Nếu cửa vào có KHỐI 2 -> Gắp trước
                 if entry_cell["content"] and entry_cell["content"]["number"] == 2:
                     print(f"  │  ├─ Phát hiện KHỐI 2 tại cửa vào. Gửi lệnh GẮP trước khi vào.")
-                    packet = build_packet(2, 2, 0, 4, entry_id) # Act=4: Gắp tại chỗ
-                    ser.write(packet)
-                    print(f"  │  └─ [ACTION FIRST] id_rb=2, Move=0, Act=4, BlockID={entry_id}")
+                    # packet = build_packet(2, 2, 0, 4, entry_id) # Act=4: Gắp tại chỗ
+                    # ser.write(packet)
+                    # print(f"  │  └─ [ACTION FIRST] id_rb=2, Move=0, Act=4, BlockID={entry_id}")
                     
                     # Đánh dấu đã gắp
                     picked_blocks.append(entry_id) 
@@ -707,8 +706,8 @@ class SelectPlaceApp:
                     time.sleep(0.5)
 
                 # 3. Sau khi dọn dẹp xong -> Đi vào
-                packet = build_packet(2, 2, 1, 4, entry_id)
-                ser.write(packet)
+                # packet = build_packet(2, 2, 1, 4, entry_id)
+                # ser.write(packet)
                 print(f"  ├─ [ENTRY MOVE] id_rb=2, Move=1, Act=4, BlockID={entry_id}")
                 time.sleep(0.1)
                 
@@ -744,8 +743,8 @@ class SelectPlaceApp:
                 # Kiểm tra vật cản
                 if cell_next["content"] and cell_next["content"]["number"] == 1:
                     print(f"  │  ├─ ⚠ KHỐI 1 chắn đường tại ID={step_block_id}. Gửi lệnh PHÁ.")
-                    packet = build_packet(1, 2, 0, 0, step_block_id)
-                    ser.write(packet)
+                    # packet = build_packet(1, 2, 0, 0, step_block_id)
+                    # ser.write(packet)
                     time.sleep(0.3)
                     
                 elif cell_next["content"] and cell_next["content"]["number"] == 2:
@@ -753,8 +752,8 @@ class SelectPlaceApp:
                     if step_block_id not in picked_blocks:
                         print(f"  │  ├─ ⚠ KHỐI 2 chắn đường tại ID={step_block_id}. Gửi lệnh GẮP trước.")
                         pick_act = move_cmd 
-                        packet = build_packet(2, 2, 0, pick_act, step_block_id)
-                        ser.write(packet)
+                        # packet = build_packet(2, 2, 0, pick_act, step_block_id)
+                        # ser.write(packet)
                         
                         act_desc = ["?", "Gắp thẳng", "Gắp trái", "Gắp phải"][pick_act]
                         print(f"  │  │  └─ [PICK BEFORE MOVE] id_rb=2, Move=0, Act={pick_act} ({act_desc}), ID={step_block_id}")
@@ -772,8 +771,8 @@ class SelectPlaceApp:
                         print(f"  │  ├─ KHỐI 2 tại ID={step_block_id} đã được gắp trước đó. Bỏ qua lệnh gắp.")
 
                 # DI CHUYỂN
-                packet = build_packet(2, 2, move_cmd, 4, step_block_id)
-                ser.write(packet)
+                # packet = build_packet(2, 2, move_cmd, 4, step_block_id)
+                # ser.write(packet)
                 move_desc = ["?", "Đi thẳng", "Rẽ trái", "Rẽ phải"][move_cmd]
                 print(f"  │  ├─ [MOVE] id_rb=2, Move={move_cmd} ({move_desc}), Act=4, BlockID={step_block_id}")
                 time.sleep(0.1) 
@@ -801,8 +800,8 @@ class SelectPlaceApp:
                         elif act_vec == left_turn_map[current_facing]: action_cmd = 2 
                         elif act_vec == right_turn_map[current_facing]: action_cmd = 3 
                     
-                    packet = build_packet(2, 2, 0, action_cmd, action_block_id)
-                    ser.write(packet)
+                    # packet = build_packet(2, 2, 0, action_cmd, action_block_id)
+                    # ser.write(packet)
                     
                     # Đánh dấu đã gắp (đề phòng trường hợp logic phức tạp hơn sau này)
                     picked_blocks.append(action_block_id)
@@ -820,6 +819,6 @@ class SelectPlaceApp:
         self.root.mainloop()
 
 
-# if __name__ == "__main__":
-#     app = SelectPlaceApp()
-#     app.run_algothism_forest()
+if __name__ == "__main__":
+    app = SelectPlaceApp()
+    app.run_algothism_forest()
