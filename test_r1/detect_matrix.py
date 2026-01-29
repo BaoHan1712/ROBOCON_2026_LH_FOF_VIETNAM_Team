@@ -5,7 +5,7 @@ from config_uart.sent_uart import build_packet, send_packet_once, ser
 from gui_tkinter import set_state, STATE_IDLE
 
 # ================== CONFIG ==================
-IMAGE_PATH = r"matrix\image.png"
+IMAGE_PATH = r"test_r1\matrix\image.png"
 ROWS = 3
 COLS = 3
 MIN_OBJECT_AREA = 1550
