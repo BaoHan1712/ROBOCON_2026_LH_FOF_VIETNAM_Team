@@ -1,8 +1,6 @@
 import customtkinter as ctk
 import heapq
 import itertools
-import struct
-import serial
 import time
 from gui_tkinter import set_state, STATE_FOREST, STATE_IDLE 
 from config_uart.sent_uart import build_packet, send_packet_once, ser
@@ -525,8 +523,6 @@ class SelectPlaceApp:
         print(f"\n>>> XỬ LÝ ĐƯỜNG ĐI THỦ CÔNG: {self.selected_targets}")
         
         # Đóng gói đường đi thủ công thành format cho UART
-        # Format: [(path_list, action)]
-        # action="FINISH" để báo hiệu kết thúc chuỗi
         manual_simulation = [(self.selected_targets, "FINISH")]
         
         self.simulation_path = manual_simulation
@@ -555,7 +551,6 @@ class SelectPlaceApp:
         print(f">>> Có {len(list_2s)} khối 2. Bắt đầu phân tích chiến thuật...")
 
         # --- LỌC KHỐI ƯU TIÊN (HÀNG 3 - ID 1, 2, 3) ---
-        # Row 3 tương ứng với các ID 1, 2, 3 (hàng dưới cùng)
         priority_2s = [pos for pos in list_2s if pos[0] == 3]
         has_priority = len(priority_2s) > 0
 
@@ -589,34 +584,51 @@ class SelectPlaceApp:
                         best_col_sequence = col_2s
 
         # --- KIỂM TRA LOGIC BẮT BUỘC ID 1,2,3 ---
-        # Nếu có khối ở hàng 3, nhưng chiến thuật cột lại bắt đầu từ hàng trên (ví dụ hàng 2) -> HỦY CỘT
         if best_col_sequence and has_priority:
             start_node = best_col_sequence[0]
-            if start_node[0] != 3: # Nếu không bắt đầu từ hàng 3
+            if start_node[0] != 3: 
                 print(f">>> Hủy chiến thuật cột vì không lấy khối ở ID 1,2,3 trước.")
                 best_col_sequence = None
 
         # --- 2. TẠO DANH SÁCH ĐƯỜNG ĐI ---
         if best_col_sequence:
-            print(f">>> [CHIẾN THUẬT CỘT] Chọn cột {best_col_sequence[0][1]}")
-            target_sequences.append(tuple(best_col_sequence))
+            main_col_idx = best_col_sequence[0][1] # Lấy index cột chính
+            print(f">>> [CHIẾN THUẬT CỘT] Đã chọn cột {main_col_idx} (Có {len(best_col_sequence)} khối).")
+
+            # --- LOGIC MỚI: KIỂM TRA CỘT BÊN CẠNH ---
+            # Tìm tất cả khối 2 nằm ở cột kề (main_col_idx +/- 1)
+            adjacent_r2s = []
+            for blk in list_2s:
+                if blk not in best_col_sequence: # Không tính khối đã có trong cột
+                    r, c = blk
+                    if abs(c - main_col_idx) == 1: # Kiểm tra cột liền kề
+                        adjacent_r2s.append(blk)
+            
+            if adjacent_r2s:
+                print(f">>> [MỞ RỘNG] Phát hiện {len(adjacent_r2s)} khối ở cột bên cạnh. Kích hoạt lấy 3 khối.")
+                # Tạo các phương án: [Cột dọc] + [1 Khối bên cạnh]
+                # Thử tất cả các khối bên cạnh tìm được để thuật toán chọn đường đi tối ưu nhất
+                for adj_blk in adjacent_r2s:
+                    new_sequence = list(best_col_sequence)
+                    new_sequence.append(adj_blk) # Thêm khối cạnh bên vào cuối hành trình
+                    target_sequences.append(tuple(new_sequence))
+            else:
+                print(f">>> [GIỮ NGUYÊN] Cột bên cạnh không có khối 2. Chỉ ăn cột dọc.")
+                target_sequences.append(tuple(best_col_sequence))
+            # ------------------------------------------
+
         else:
-            # Nếu không có cột ngon, chạy tìm kiếm
+            # Nếu không có cột ngon, chạy tìm kiếm cũ
             if has_priority:
                 print(f">>> BẮT BUỘC: Phải lấy khối ở hàng đáy (ID 1,2,3) trước!")
-                
-                # Trường hợp A: Có từ 2 khối trở lên ở hàng đáy -> Ưu tiên ăn hết hàng đáy
                 if len(priority_2s) >= 2:
                     target_sequences = list(itertools.permutations(priority_2s, 2))
-                
-                # Trường hợp B: Chỉ có 1 khối ở hàng đáy -> Ăn nó trước, rồi ăn khối bất kỳ khác
                 else:
                     p_start = priority_2s[0]
                     remaining = [b for b in list_2s if b != p_start]
                     for second in remaining:
                         target_sequences.append((p_start, second))
             else:
-                # Không có khối nào ở hàng 3 -> Chạy hoán vị bình thường
                 print(f">>> Không có khối ID 1,2,3. Tìm đường tự do.")
                 target_sequences = list(itertools.permutations(list_2s, 2))
         
@@ -650,8 +662,11 @@ class SelectPlaceApp:
             ignored_ids = [self.get_cell_id(*p) for p in best_ignored_set]
             
             mode_str = "AUTO PRIORITY 1-2-3" if has_priority else "AUTO NORMAL"
-            if best_col_sequence and tuple(best_targets_set) == tuple(best_col_sequence):
-                 mode_str = "AUTO COLUMN"
+            if best_col_sequence:
+                if len(best_targets_set) > len(best_col_sequence):
+                    mode_str = "AUTO COLUMN + SIDE PICK" # Đã lấy thêm khối bên cạnh
+                else:
+                    mode_str = "AUTO COLUMN ONLY"
 
             print(f"-> {mode_str} ({self.team_color}): {final_ids}, Ignore: {ignored_ids}")
             self.visualize_result(best_sim, best_ignored_set)
