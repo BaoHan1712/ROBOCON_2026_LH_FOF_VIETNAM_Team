@@ -3,7 +3,7 @@ import time
 import serial
 import random
 
-ser = serial.Serial(port="COM3", baudrate=115200)
+ser = serial.Serial(port="COM9", baudrate=115200)
 
 # --- Hàm đóng gói ---
 def build_packet(id_rb, state, move, action, block_id):
@@ -27,16 +27,16 @@ def send_packet_once(ser, packet):
 
 
 # # # --- Gửi liên tục ---
-# while True:
-#     id_rb    = 1
-#     state     = random.randint(1, 100)
-#     move     = random.randint(1, 100)
-#     action   = random.randint(1, 100)
-#     block_id = random.randint(1, 100)
+while True:
+    id_rb    = 1
+    state     = random.randint(1, 100)
+    move     = random.randint(1, 100)
+    action   = random.randint(1, 100)
+    block_id = random.randint(1, 100)
 
-#     packet = build_packet(id_rb, state, move, action, block_id)
+    packet = build_packet(id_rb, state, move, action, block_id)
 
-#     ser.write(packet)
-#     print(f"Đã gửi → move={move}, action={action}, id={block_id}, packet={packet}")
+    ser.write(packet)
+    print(f"Đã gửi → move={move}, action={action}, id={block_id}, packet={packet}")
 
-#     time.sleep(1)
+    time.sleep(1)
