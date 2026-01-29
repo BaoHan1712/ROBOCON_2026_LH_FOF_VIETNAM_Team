@@ -3,10 +3,10 @@
 
 /* ===================== CONFIG ===================== */
 
-uint8_t peerAddress[] = {0x30, 0xC9, 0x22, 0x32, 0xD4, 0xA8};
+uint8_t peerAddress[] = {0x68, 0xFE, 0x71, 0xFA, 0xC5, 0xE4};
 
 #define UART_BAUDRATE 115200
-#define PACKET_SIZE  8  
+#define PACKET_SIZE  8
 
 #define START_BYTE 0x02
 #define END_BYTE   0x03
@@ -14,12 +14,18 @@ uint8_t peerAddress[] = {0x30, 0xC9, 0x22, 0x32, 0xD4, 0xA8};
 #define LED_PIN 2
 #define LED_BLINK_TIME 100
 
+// UART pin mapping (đổi nếu cần)
+#define UART1_RX 3
+#define UART1_TX 1
+#define UART2_RX 16
+#define UART2_TX 17
+
 /* ===================== DATA STRUCT ===================== */
 
 typedef struct __attribute__((packed)) {
   uint8_t start;
   uint8_t id_rb;
-  uint8_t state;      
+  uint8_t state;
   uint8_t move;
   uint8_t action;
   uint8_t block_id;
@@ -32,16 +38,26 @@ typedef struct __attribute__((packed)) {
 bool ledBlinking = false;
 unsigned long ledTimestamp = 0;
 
+/* ===================== FUNCTION DECLARE ===================== */
+
+bool readPacketUART(HardwareSerial &uart, Packet &pkt);
+bool validatePacket(const Packet &pkt);
+uint8_t calcChecksum(const Packet &pkt);
+
+void blinkLED();
+void updateLED();
+
 /* ===================== SETUP ===================== */
 
 void setup() {
-  Serial.begin(UART_BAUDRATE);
+  Serial.begin(115200);   // debug
+  Serial1.begin(UART_BAUDRATE, SERIAL_8N1, UART1_RX, UART1_TX);
+  Serial2.begin(UART_BAUDRATE, SERIAL_8N1, UART2_RX, UART2_TX);
 
   pinMode(LED_PIN, OUTPUT);
   digitalWrite(LED_PIN, LOW);
 
   WiFi.mode(WIFI_STA);
-
   if (esp_now_init() != ESP_OK) return;
 
   esp_now_peer_info_t peerInfo = {};
@@ -49,6 +65,8 @@ void setup() {
   peerInfo.channel = 0;
   peerInfo.encrypt = false;
   esp_now_add_peer(&peerInfo);
+
+  Serial.println("ESP32 ROUTER READY");
 }
 
 /* ===================== LOOP ===================== */
@@ -56,34 +74,39 @@ void setup() {
 void loop() {
   Packet pkt;
 
-  if (readPacketUART(pkt)) {
+  // 👉 NHẬN TỪ SERIAL1
+  if (readPacketUART(Serial1, pkt)) {
     blinkLED();
 
-    if (!validatePacket(pkt)) return;
+    if (!validatePacket(pkt)) {
+      Serial.println("Checksum error");
+      return;
+    }
 
-    // ===== ROUTING THEO id_rb =====
+    // ===== ROUTING =====
     if (pkt.id_rb == 1) {
-      // ➜ GỬI QUA ESP-NOW CHO RB1
+      // ➜ ESP-NOW → RB1
       esp_now_send(peerAddress, (uint8_t*)&pkt, sizeof(Packet));
+      Serial.println("Route: Serial1 → ESP-NOW (RB1)");
     }
     else if (pkt.id_rb == 2) {
-      // ➜ GỬI XUỐNG STM32 QUA UART
-      Serial.write((uint8_t*)&pkt, sizeof(Packet));
+      // ➜ Serial2 → RB2
+      Serial2.write((uint8_t*)&pkt, sizeof(Packet));
+      Serial.println("Route: Serial1 → Serial2 (RB2)");
     }
-    // id khác → bỏ
   }
 
   updateLED();
-} 
+}
 
 /* ===================== UART PARSER ===================== */
 
-bool readPacketUART(Packet &pkt) {
+bool readPacketUART(HardwareSerial &uart, Packet &pkt) {
   static uint8_t buffer[PACKET_SIZE];
   static uint8_t index = 0;
 
-  while (Serial.available()) {
-    uint8_t b = Serial.read();
+  while (uart.available()) {
+    uint8_t b = uart.read();
 
     if (index == 0 && b != START_BYTE) continue;
 

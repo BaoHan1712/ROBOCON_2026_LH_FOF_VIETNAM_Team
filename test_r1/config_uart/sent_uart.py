@@ -3,7 +3,7 @@ import time
 import serial
 import random
 
-ser = serial.Serial(port="COM9", baudrate=115200)
+ser = serial.Serial(port="COM3", baudrate=115200)
 
 # --- Hàm đóng gói ---
 def build_packet(id_rb, state, move, action, block_id):
