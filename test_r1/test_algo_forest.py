@@ -238,6 +238,8 @@ class SelectPlaceApp:
     def cell_clicked(self, position):
         r, c = position
         cell = self.grid_cells[r][c]
+
+        # --- Logic XÓA (Giữ nguyên) ---
         if self.mode == "DELETE":
             if cell["content"]:
                 cell["content"]["widget"].destroy()
@@ -246,18 +248,43 @@ class SelectPlaceApp:
                     btn.pack(side="left", expand=True, padx=5, pady=5)
                 cell["id_label"].lift()
                 self.info_label.configure(text=f"Đã xóa tại ({r},{c})")
+            return # Kết thúc hàm nếu là xóa
+
+        # --- Logic SELECT MỚI (Vẽ đường thủ công) ---
         elif self.mode == "SELECT":
-            if not cell["selected"]:
-                cell["frame"].configure(fg_color="orange")
-                cell["selected"] = True
-                self.selected_targets.append((r, c))
-                self.info_label.configure(text=f"Đã chọn ID: {self.get_cell_id(r,c)}")
+            # 1. Kiểm tra xem ô đã chọn chưa (Không cho chọn lại ô cũ để tránh vòng lặp phức tạp)
+            if cell["selected"]:
+                self.info_label.configure(text=f"Ô ({r},{c}) đã có trong đường đi!")
+                return
+
+            # 2. Logic kiểm tra liền kề (Adjacency Rule)
+            if not self.selected_targets:
+                # Nếu là ô đầu tiên được chọn
+                pass # Luôn cho phép chọn điểm xuất phát
             else:
-                cell["frame"].configure(fg_color="transparent")
-                cell["selected"] = False
-                if (r, c) in self.selected_targets:
-                    self.selected_targets.remove((r, c))
-                self.info_label.configure(text=f"Bỏ chọn ID: {self.get_cell_id(r,c)}")
+                last_r, last_c = self.selected_targets[-1]
+                # Tính khoảng cách Manhattan (chỉ cho phép đi ngang hoặc dọc 1 ô)
+                dist = abs(r - last_r) + abs(c - last_c)
+                if dist != 1:
+                    self.info_label.configure(text=f"LỖI: Ô ({r},{c}) không nằm cạnh ô trước đó!", text_color="red")
+                    return # Không làm gì cả
+
+            # 3. Thêm vào đường đi và đổi màu
+            self.selected_targets.append((r, c))
+            cell["selected"] = True
+            cell["frame"].configure(fg_color="#4caf50") # Màu xanh lá cho đường đi
+            
+            # 4. Hiển thị số bước ngay lập tức
+            step_idx = len(self.selected_targets) - 1
+            lbl_step = ctk.CTkLabel(
+                cell["frame"], text=str(step_idx),
+                width=28, height=28, fg_color="#444444", text_color="white",
+                corner_radius=14, font=("Arial", 12, "bold")
+            )
+            lbl_step.place(relx=0.85, rely=0.85, anchor="center")
+            cell["overlays"].append(lbl_step)
+
+            self.info_label.configure(text=f"Bước {step_idx}: Đã chọn ({r},{c}). Tiếp tục chọn ô cạnh bên...", text_color="black")
 
     def place_block(self, number, position):
         r, c = position
@@ -294,17 +321,21 @@ class SelectPlaceApp:
                 for ov in cell["overlays"]:
                     ov.destroy()
                 cell["overlays"].clear()
+                
+                # Reset trạng thái
                 cell["selected"] = False
-                cell["frame"].configure(fg_color="transparent")
+                cell["frame"].configure(fg_color="transparent") # Trả lại màu nền
+                
                 for btn in cell["buttons"]:
                     btn.pack(side="left", expand=True, padx=5, pady=5)
                 cell["id_label"].lift()
+        
         self.mode = "PLACE"
-        self.selected_targets.clear()
+        self.selected_targets.clear() # Xóa danh sách đường vẽ tay
         if self.active_button:
             self.active_button.configure(fg_color=self.active_button.default_color)
             self.active_button = None
-        self.info_label.configure(text="Lưới đã reset.")
+        self.info_label.configure(text="Lưới đã reset. Mời chọn lại chế độ.")
 
     # --- ENGINE ---
     def check_traversable_rules(self, r, c, virtual_grid=None, target_pos=None):
@@ -487,29 +518,25 @@ class SelectPlaceApp:
             self.solve_auto_targets()
 
     def solve_manual_targets(self):
-        perms = list(itertools.permutations(self.selected_targets))
-        best_cost = float('inf')
-        best_sim = None
-        best_perm = None
-        for perm in perms:
-            first_target_col = perm[0][1]
-            forced_start = (3, first_target_col)
-            cost, sim_data = self.simulate_sequence([forced_start], perm, [])
-            if cost < best_cost:
-                best_cost = cost
-                best_sim = sim_data
-                best_perm = perm
-        if best_sim:
-            final_ids = [self.get_cell_id(*p) for p in best_perm]
-            print(f"-> Manual Order ({self.team_color}): {final_ids}")
-            self.visualize_result(best_sim, [])
-            self.simulation_path = best_sim
-            self.best_targets_set = best_perm
-            self.best_ignored_set = []
-            self.info_label.configure(text=f"Thủ công: {final_ids}. Sẵn sàng gửi UART.")
-        else:
-            self.info_label.configure(text="Không tìm được đường đi cho các ô đã chọn.")
+        if not self.selected_targets:
+            self.info_label.configure(text="Bạn chưa vẽ đường đi nào!")
+            return
 
+        print(f"\n>>> XỬ LÝ ĐƯỜNG ĐI THỦ CÔNG: {self.selected_targets}")
+        
+        # Đóng gói đường đi thủ công thành format cho UART
+        # Format: [(path_list, action)]
+        # action="FINISH" để báo hiệu kết thúc chuỗi
+        manual_simulation = [(self.selected_targets, "FINISH")]
+        
+        self.simulation_path = manual_simulation
+        
+        # Hiển thị thông báo sẵn sàng
+        final_ids = [self.get_cell_id(*p) for p in self.selected_targets]
+        print(f"-> Path IDs: {final_ids}")
+        self.info_label.configure(text=f"Đã lưu đường đi thủ công ({len(self.selected_targets)} bước). Sẵn sàng GỬI UART.")
+    
+    #Hàm tính toán chạy tự động
     def solve_auto_targets(self):
         list_1s = []
         list_2s = []
@@ -527,9 +554,14 @@ class SelectPlaceApp:
 
         print(f">>> Có {len(list_2s)} khối 2. Bắt đầu phân tích chiến thuật...")
 
+        # --- LỌC KHỐI ƯU TIÊN (HÀNG 3 - ID 1, 2, 3) ---
+        # Row 3 tương ứng với các ID 1, 2, 3 (hàng dưới cùng)
+        priority_2s = [pos for pos in list_2s if pos[0] == 3]
+        has_priority = len(priority_2s) > 0
+
         target_sequences = []
         
-        # --- PHẦN MỚI: QUÉT CỘT DỌC (VERTICAL SCAN STRATEGY) ---
+        # --- 1. CHIẾN THUẬT QUÉT CỘT DỌC (VERTICAL SCAN) ---
         best_col_sequence = None
         max_2s_in_col = 0
         min_1s_in_col = float('inf')
@@ -537,7 +569,7 @@ class SelectPlaceApp:
         for c in range(COLS):
             col_2s = []
             col_1_count = 0
-            # Quét từ dưới lên (Row 3 -> 0) để tạo đường đi thuận tiện nhất
+            # Quét từ dưới lên (Row 3 -> 0)
             for r in range(ROWS - 1, -1, -1):
                 content = self.grid_cells[r][c]["content"]
                 if content:
@@ -546,38 +578,46 @@ class SelectPlaceApp:
                     elif content["number"] == 1:
                         col_1_count += 1
             
-            # Logic ưu tiên theo yêu cầu:
-            # 1. Phải lấy được ít nhất 2 khối 2 trên cột dọc
             if len(col_2s) >= 2:
-                # 2. Ưu tiên số lượng khối 2 nhiều hơn (gắp được 3 khối thì gắp luôn)
                 if len(col_2s) > max_2s_in_col:
                     max_2s_in_col = len(col_2s)
                     min_1s_in_col = col_1_count
                     best_col_sequence = col_2s
-                # 3. Nếu số lượng khối 2 bằng nhau, ưu tiên đường ít phải phá khối 1 hơn
                 elif len(col_2s) == max_2s_in_col:
                     if col_1_count < min_1s_in_col:
                         min_1s_in_col = col_1_count
                         best_col_sequence = col_2s
 
-        # --- QUYẾT ĐỊNH CHIẾN THUẬT ---
+        # --- KIỂM TRA LOGIC BẮT BUỘC ID 1,2,3 ---
+        # Nếu có khối ở hàng 3, nhưng chiến thuật cột lại bắt đầu từ hàng trên (ví dụ hàng 2) -> HỦY CỘT
+        if best_col_sequence and has_priority:
+            start_node = best_col_sequence[0]
+            if start_node[0] != 3: # Nếu không bắt đầu từ hàng 3
+                print(f">>> Hủy chiến thuật cột vì không lấy khối ở ID 1,2,3 trước.")
+                best_col_sequence = None
+
+        # --- 2. TẠO DANH SÁCH ĐƯỜNG ĐI ---
         if best_col_sequence:
-            print(f">>> [CHIẾN THUẬT CỘT] Chọn cột {best_col_sequence[0][1]}: {len(best_col_sequence)} khối 2, vướng {min_1s_in_col} khối 1.")
-            # Chuyển thành tuple để code phía dưới xử lý được
+            print(f">>> [CHIẾN THUẬT CỘT] Chọn cột {best_col_sequence[0][1]}")
             target_sequences.append(tuple(best_col_sequence))
         else:
-            # Nếu không có cột nào ngon, dùng logic cũ (Ưu tiên hàng 3 hoặc hoán vị)
-            print(f">>> Không có cột tối ưu. Dùng chiến thuật tìm kiếm rộng.")
-            priority_2s = [pos for pos in list_2s if pos[0] == 3]
-            
-            if priority_2s:
-                print(f">>> Ưu tiên hàng đáy (Row 3).")
-                for p_start in priority_2s:
+            # Nếu không có cột ngon, chạy tìm kiếm
+            if has_priority:
+                print(f">>> BẮT BUỘC: Phải lấy khối ở hàng đáy (ID 1,2,3) trước!")
+                
+                # Trường hợp A: Có từ 2 khối trở lên ở hàng đáy -> Ưu tiên ăn hết hàng đáy
+                if len(priority_2s) >= 2:
+                    target_sequences = list(itertools.permutations(priority_2s, 2))
+                
+                # Trường hợp B: Chỉ có 1 khối ở hàng đáy -> Ăn nó trước, rồi ăn khối bất kỳ khác
+                else:
+                    p_start = priority_2s[0]
                     remaining = [b for b in list_2s if b != p_start]
                     for second in remaining:
                         target_sequences.append((p_start, second))
             else:
-                print(f">>> Tìm đường tối ưu bất kỳ (Permutations).")
+                # Không có khối nào ở hàng 3 -> Chạy hoán vị bình thường
+                print(f">>> Không có khối ID 1,2,3. Tìm đường tự do.")
                 target_sequences = list(itertools.permutations(list_2s, 2))
         
         # --- PHẦN TÍNH TOÁN CHI PHÍ (GIỮ NGUYÊN) ---
@@ -589,9 +629,6 @@ class SelectPlaceApp:
         
         for ordered_targets in target_sequences:
             active_targets = list(ordered_targets)
-            
-            # Nếu chạy chiến thuật cột, ta thử nghiệm xem việc phá khối 1 có lợi không
-            # Nếu danh sách target_sequences chỉ có 1 phần tử (là chiến thuật cột), vòng lặp này chạy rất nhanh
             
             for discard_r1 in potential_discards:
                 current_ignored = [discard_r1] if discard_r1 else []
@@ -612,10 +649,9 @@ class SelectPlaceApp:
             final_ids = [self.get_cell_id(*p) for p in best_targets_set]
             ignored_ids = [self.get_cell_id(*p) for p in best_ignored_set]
             
+            mode_str = "AUTO PRIORITY 1-2-3" if has_priority else "AUTO NORMAL"
             if best_col_sequence and tuple(best_targets_set) == tuple(best_col_sequence):
-                mode_str = "AUTO COLUMN"
-            else:
-                mode_str = "AUTO NORMAL"
+                 mode_str = "AUTO COLUMN"
 
             print(f"-> {mode_str} ({self.team_color}): {final_ids}, Ignore: {ignored_ids}")
             self.visualize_result(best_sim, best_ignored_set)
@@ -628,7 +664,6 @@ class SelectPlaceApp:
             
     # --- HÀM VẼ GIAO DIỆN KẾT QUẢ (ĐÃ CẬP NHẬT VẼ BÚA) ---
     def visualize_result(self, simulation_path, ignored_blocks):
-        # Vẽ dấu X cho các khối bị bỏ qua (ignored)
         for r, c in ignored_blocks:
             lbl_ignore = ctk.CTkLabel(self.grid_cells[r][c]["frame"], text="✖",
                                width=40, height=40, fg_color="#aaaaaa", text_color="white",
@@ -797,6 +832,7 @@ class SelectPlaceApp:
                 
                 if cell_next["content"] and cell_next["content"]["number"] == 1:
                     print(f"  │  ├─ ⚠ KHỐI 1 chắn đường tại ID={step_block_id}. Gửi lệnh PHÁ.")
+                    print(f"     └─ [BREAK] id_rb=1, Move=2, Act=0, BlockID={step_block_id}")
                     packet = build_packet(1, 2, 0, 0, step_block_id)
                     ser.write(packet)
                     
