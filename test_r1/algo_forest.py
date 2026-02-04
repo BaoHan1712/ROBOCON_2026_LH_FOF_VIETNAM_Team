@@ -354,20 +354,29 @@ class SelectPlaceApp:
     def get_access_points(self, target_pos, virtual_grid=None):
         r, c = target_pos
         points = []
+        
+        # 1. Kiểm tra chính ô mục tiêu (Target)
+        # Nếu là hàng 0 hoặc 3, được phép đi vào chính ô đó (Logic cũ)
         if r == 3 or r == 0:
             if self.check_traversable_rules(r, c, virtual_grid, target_pos=target_pos):
                 points.append((r, c))
-            return points
-            
-        if self.check_traversable_rules(r, c, virtual_grid):
+            # --- SỬA LỖI: ĐÃ XÓA DÒNG 'return points' TẠI ĐÂY ---
+            # Để code chạy tiếp xuống dưới và tìm thêm các ô hàng xóm
+        
+        # Nếu không phải hàng 0,3 (hoặc logic chung), kiểm tra xem có đi vào được không
+        elif self.check_traversable_rules(r, c, virtual_grid):
             points.append((r, c))
+
+        # 2. Kiểm tra 4 ô xung quanh (Neighbors) để đứng gắp bằng tay
+        # Code cũ không chạy phần này cho hàng 0 và 3, nên robot buộc phải đi vào ô mục tiêu
         dirs = [(-1, 0), (1, 0), (0, -1), (0, 1)]
         for dr, dc in dirs:
             nr, nc = r + dr, c + dc
             if self.check_traversable_rules(nr, nc, virtual_grid):
                 points.append((nr, nc))
+                
         return points
-
+    
     def neighbors(self, pos, direction, virtual_grid=None, target_pos=None):
         r, c = pos
         dirs = [(-1,0),(0,-1),(0,1),(1,0)]
@@ -533,6 +542,7 @@ class SelectPlaceApp:
         self.info_label.configure(text=f"Đã lưu đường đi thủ công ({len(self.selected_targets)} bước). Sẵn sàng GỬI UART.")
     
     #Hàm tính toán chạy tự động
+    # Hàm tính toán chạy tự động
     def solve_auto_targets(self):
         list_1s = []
         list_2s = []
@@ -609,8 +619,24 @@ class SelectPlaceApp:
                 # Gộp cột chính và tất cả khối bên cạnh vào một danh sách
                 combined_sequence = list(best_col_sequence) + adjacent_r2s
   
-                # Sắp xếp theo thứ tự hàng từ dưới lên (Row 3 -> 0)
-                combined_sequence.sort(key=lambda pos: pos[0], reverse=True)
+                # --- SỬA CHỮA QUAN TRỌNG TẠI ĐÂY ---
+                # Sắp xếp ưu tiên:
+                # 1. Hàng (Row) lớn hơn đi trước (đi từ dưới lên).
+                # 2. Nếu cùng hàng, khối nằm ở CỘT CHÍNH (main_col_idx) đi trước.
+                #    Lý do: Phải gắp khối ở cột chính để "dọn đường" đứng vào đó, 
+                #    sau đó mới đứng ở cột chính gắp khối bên cạnh.
+                
+                def sort_key(pos):
+                    row = pos[0]
+                    col = pos[1]
+                    # Khoảng cách tới cột chính (0 là chính, 1 là cạnh)
+                    dist_to_main = abs(col - main_col_idx)
+                    # Sort tuple (Row giảm dần, Ưu tiên cột chính). 
+                    # Vì reverse=True (giảm dần), ta cần giá trị của Cột Chính lớn hơn Cột Phụ.
+                    # Main (dist=0), Side (dist=1). Ta dùng -dist: Main(0), Side(-1). 0 > -1.
+                    return (row, -dist_to_main)
+
+                combined_sequence.sort(key=sort_key, reverse=True)
                 
                 # Thêm phương án "Ăn tất cả" vào danh sách mục tiêu
                 target_sequences.append(tuple(combined_sequence))
