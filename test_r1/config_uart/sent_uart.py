@@ -20,7 +20,7 @@ def send_packet_once(ser, packet):
             return
         ser.write(packet)
         ser.flush()             
-        time.sleep(0.05)
+        time.sleep(2)
     except Exception as e:
         print(f"UART send error: {e}")
     # Removed ser.close() to keep port open for shared use
@@ -28,11 +28,11 @@ def send_packet_once(ser, packet):
 
 # # # --- Gửi liên tục ---
 # while True:
-#     id_rb    = 1
+#     id_rb    = 2
 #     state     = random.randint(1, 100)
 #     move     = random.randint(1, 100)
 #     action   = random.randint(1, 100)
-#     block_id = random.randint(1, 100)
+#     block_id = 2
 
 #     packet = build_packet(id_rb, state, move, action, block_id)
 
@@ -40,3 +40,47 @@ def send_packet_once(ser, packet):
 #     print(f"Đã gửi → move={move}, action={action}, id={block_id}, packet={packet}")
 
 #     time.sleep(1)
+
+
+id_rb    = 2
+# packet = build_packet(id_rb, 2, 0, 4, 2)
+# ser.write(packet)
+# print(f"Đã gửi")
+# time.sleep(2)
+
+
+# packet = build_packet(id_rb, 2, 0, 4, 3)
+# ser.write(packet)
+# print(f"Đã gửi")
+# time.sleep(2)
+
+# packet = build_packet(id_rb, 2, 1, 4, 3)
+# ser.write(packet)
+# print(f"Đã gửi")
+# time.sleep(2)
+
+
+# packet = build_packet(id_rb, 2, 1, 4, 6)
+# ser.write(packet)
+# print(f"Đã gửi")
+# time.sleep(2)
+
+
+# packet = build_packet(id_rb, 2, 1, 4, 9)
+# ser.write(packet)
+# print(f"Đã gửi")
+# time.sleep(2)
+
+# packet = build_packet(id_rb, 2, 1, 4, 12)
+# ser.write(packet)
+# print(f"Đã gửi")
+# time.sleep(2)
+
+# packet = build_packet(id_rb, 2, 1, 4, 12)
+# ser.write(packet)
+# print(f"Đã gửi")
+# time.sleep(2)
+
+
+
+
