@@ -52,21 +52,21 @@ compiling main.c...
   	NVIC_InitTypeDef NVIC_InitStructure;
 ..\config.h(1708): warning:  #47-D: incompatible redefinition of macro "UART_BUFFER_SIZE"  (declared at line 1587)
   #define UART_BUFFER_SIZE 4
-..\config.h(1927): warning:  #188-D: enumerated type mixed with another type
+..\config.h(1928): warning:  #188-D: enumerated type mixed with another type
   											GPIO_WriteBit(GPIOC,GPIO_Pin_15,0);
-..\config.h(1931): warning:  #188-D: enumerated type mixed with another type
+..\config.h(1932): warning:  #188-D: enumerated type mixed with another type
   											GPIO_WriteBit(GPIOC,GPIO_Pin_15,1);
-..\config.h(1971): warning:  #111-D: statement is unreachable
+..\config.h(1972): warning:  #111-D: statement is unreachable
   										break;
-..\config.h(1918): warning:  #177-D: variable "camera"  was declared but never referenced
+..\config.h(1919): warning:  #177-D: variable "camera"  was declared but never referenced
   		char*camera="11111111111111111111110111111111";
-..\config.h(1921): warning:  #550-D: variable "_chu_cac_bit"  was set but never used
+..\config.h(1922): warning:  #550-D: variable "_chu_cac_bit"  was set but never used
   									char _chu_cac_bit[40];
-..\config.h(2049): warning:  #177-D: variable "_k"  was declared but never referenced
+..\config.h(2050): warning:  #177-D: variable "_k"  was declared but never referenced
   	{int _k,_i;
-..\config.h(2049): warning:  #177-D: variable "_i"  was declared but never referenced
+..\config.h(2050): warning:  #177-D: variable "_i"  was declared but never referenced
   	{int _k,_i;
-..\config.h(2061): warning:  #1-D: last line of file ends without a newline
+..\config.h(2062): warning:  #1-D: last line of file ends without a newline
   }
 ..\4OmniControler.h(390): warning:  #1035-D: single-precision operand implicitly converted to double-precision
   			robotRotate(robotAngle, (abs(robotAngle - _robotIMUAngle) > 100? (robotAngle > _robotIMUAngle ? rotate: -rotate):(robotAngle - _robotIMUAngle)*0.005), 0);
@@ -76,31 +76,31 @@ compiling main.c...
       float speed = MIN_SPEED + (MAX_SPEED - MIN_SPEED) * tanh(0.05 * distanceFromCenter);
 ..\DieuKhienCoCau.h(127): warning:  #140-D: too many arguments in function call
               robotRotateStop(0);
-..\DieuKhienCoCau.h(196): warning:  #177-D: variable "gocBan"  was declared but never referenced
+..\DieuKhienCoCau.h(200): warning:  #177-D: variable "gocBan"  was declared but never referenced
       float gocBan = 0;
-..\DieuKhienCoCau.h(325): warning:  #177-D: variable "lazeSauCouter"  was declared but never referenced
+..\DieuKhienCoCau.h(329): warning:  #177-D: variable "lazeSauCouter"  was declared but never referenced
   	static unsigned int lazeSauCouter = 0, lazeSau_SUM = 0;
-..\DieuKhienCoCau.h(325): warning:  #177-D: variable "lazeSau_SUM"  was declared but never referenced
+..\DieuKhienCoCau.h(329): warning:  #177-D: variable "lazeSau_SUM"  was declared but never referenced
   	static unsigned int lazeSauCouter = 0, lazeSau_SUM = 0;
-..\DieuKhienCoCau.h(333): warning:  #177-D: variable "bientromamxoayCouter"  was declared but never referenced
+..\DieuKhienCoCau.h(337): warning:  #177-D: variable "bientromamxoayCouter"  was declared but never referenced
   	static unsigned int bientromamxoayCouter = 0, bientromamxoay_SUM = 0;
-..\DieuKhienCoCau.h(333): warning:  #177-D: variable "bientromamxoay_SUM"  was declared but never referenced
+..\DieuKhienCoCau.h(337): warning:  #177-D: variable "bientromamxoay_SUM"  was declared but never referenced
   	static unsigned int bientromamxoayCouter = 0, bientromamxoay_SUM = 0;
-..\DieuKhienCoCau.h(337): warning:  #177-D: variable "bientrodaytayCouter"  was declared but never referenced
+..\DieuKhienCoCau.h(341): warning:  #177-D: variable "bientrodaytayCouter"  was declared but never referenced
   	static unsigned int bientrodaytayCouter = 0, bientrodaytay_SUM = 0;
-..\DieuKhienCoCau.h(337): warning:  #177-D: variable "bientrodaytay_SUM"  was declared but never referenced
+..\DieuKhienCoCau.h(341): warning:  #177-D: variable "bientrodaytay_SUM"  was declared but never referenced
   	static unsigned int bientrodaytayCouter = 0, bientrodaytay_SUM = 0;
-..\DieuKhienCoCau.h(338): warning:  #177-D: variable "bientronangtayCouter"  was declared but never referenced
+..\DieuKhienCoCau.h(342): warning:  #177-D: variable "bientronangtayCouter"  was declared but never referenced
   	static unsigned int bientronangtayCouter = 0, bientronangtay_SUM = 0;
-..\DieuKhienCoCau.h(338): warning:  #177-D: variable "bientronangtay_SUM"  was declared but never referenced
+..\DieuKhienCoCau.h(342): warning:  #177-D: variable "bientronangtay_SUM"  was declared but never referenced
   	static unsigned int bientronangtayCouter = 0, bientronangtay_SUM = 0;
-..\DieuKhienCoCau.h(1563): warning:  #1-D: last line of file ends without a newline
+..\DieuKhienCoCau.h(2108): warning:  #1-D: last line of file ends without a newline
   }
 ..\BasicFunction.h(54): warning:  #177-D: variable "td_x"  was declared but never referenced
   	int tocdo = 40, td_x = 5;
 ..\main.c: 35 warnings, 0 errors
 linking...
-Program Size: Code=52968 RO-data=656 RW-data=1064 ZI-data=59560  
+Program Size: Code=56416 RO-data=656 RW-data=1068 ZI-data=59564  
 FromELF: creating hex file...
 ".\Project\Project.axf" - 0 Error(s), 35 Warning(s).
 
@@ -124,7 +124,7 @@ Package Vendor: Keil
 <h2>Collection of Component Files used:</h2>
 
    * Component: ARM::CMSIS:CORE:6.1.0
-Build Time Elapsed:  00:00:01
+Build Time Elapsed:  00:00:00
 </pre>
 </body>
 </html>

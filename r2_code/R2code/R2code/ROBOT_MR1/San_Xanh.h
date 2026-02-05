@@ -153,40 +153,7 @@ void Vao_rung_mai_1(void)
 					}
 				}
 	robotStop(20);
-				
-	//    gio chan cao len vao 					
-	// chay len phia truoc
-				
-	speed_chan_sau = 180;
-	speed_chan_truoc = 250;
-
-	target_chan_truoc = 690;
-	target_chan_sau = 690;
-				
-	for(i=0;i<250;i++)	
-	{
-		while(bientrochantruocValue < 685)	{vTaskDelay(5); if(!wantExit())	break;}
-	}			
-				
-
-	for(i=0;i<250;i++)	
-	{
-		while(CB_Ha_Dau == 1)	
-			{	
-						Bam_thanh_laser_trai(7,-900,-880,152,2,150,15);//robotRun(-450,10);
-						if(!wantExit())	break;
-			}
-	}
-	
-	RESET_ENCODER();
-	
-	while(abs(ENCODER_RR()) + abs(ENCODER_RL()) < 540)	
-	{	
-		Bam_thanh_laser_trai(7,-900,-880,152,2,150,15);//robotRun(-450,10);
-		if(!wantExit())	break;
-	}
-	
-	robotStop(30);
+						
 				
 }
 
@@ -379,9 +346,9 @@ void Init_Action_Table(void)
 	    /* =========================================
        move 20 , action 20 chay ra cua ra
        ========================================= */
-    action_table[20][20][10] = Xuong_bac_200;
-    action_table[20][20][11] = Xuong_bac_400;
-    action_table[20][20][12] = Xuong_bac_200;
+    action_table[20][20][10] = vuot_rung_ve_homeTay_bac_200;
+    action_table[20][20][11] = vuot_rung_ve_homeTay_bac_400;
+    action_table[20][20][12] = vuot_rung_ve_homeTay_bac_200;
 
 
     /* =========================================
@@ -436,17 +403,17 @@ void Init_Action_Table(void)
        move 1 , action 4 chay thang
        ========================================= */
     action_table[1][4][1] = Leo_bac_400;
-    action_table[1][4][2] = Leo_bac_200;
+    action_table[1][4][2] = Leo_bac_200_bam_thanh_phai;
 		action_table[1][4][3] = Leo_bac_400;
-		action_table[1][4][4]  = Xuong_bac_200;
-    action_table[1][4][5] = Leo_bac_200;
+		action_table[1][4][4]  = Xuong_bac_200_bam_thanh_phai;
+    action_table[1][4][5] = Leo_bac_200_bam_thanh_phai;
     action_table[1][4][6] = Leo_bac_200;
-    action_table[1][4][7] = Leo_bac_200;
+    action_table[1][4][7] = Leo_bac_200_bam_thanh_phai;
     action_table[1][4][8] = Leo_bac_200;
-    action_table[1][4][9]  = Xuong_bac_200;
-    action_table[1][4][10] = Xuong_bac_200;
+    action_table[1][4][9]  = Xuong_bac_200_bam_thanh_trai;
+    action_table[1][4][10] = Xuong_bac_200_bam_thanh_phai;
     action_table[1][4][11] = Xuong_bac_200;
-		action_table[1][4][12] = Xuong_bac_200;
+		action_table[1][4][12] = Xuong_bac_200_bam_thanh_trai;
 }
 
 

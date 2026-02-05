@@ -354,20 +354,29 @@ class SelectPlaceApp:
     def get_access_points(self, target_pos, virtual_grid=None):
         r, c = target_pos
         points = []
+        
+        # 1. Kiểm tra chính ô mục tiêu (Target)
+        # Nếu là hàng 0 hoặc 3, được phép đi vào chính ô đó (Logic cũ)
         if r == 3 or r == 0:
             if self.check_traversable_rules(r, c, virtual_grid, target_pos=target_pos):
                 points.append((r, c))
-            return points
-            
-        if self.check_traversable_rules(r, c, virtual_grid):
+            # --- SỬA LỖI: ĐÃ XÓA DÒNG 'return points' TẠI ĐÂY ---
+            # Để code chạy tiếp xuống dưới và tìm thêm các ô hàng xóm
+        
+        # Nếu không phải hàng 0,3 (hoặc logic chung), kiểm tra xem có đi vào được không
+        elif self.check_traversable_rules(r, c, virtual_grid):
             points.append((r, c))
+
+        # 2. Kiểm tra 4 ô xung quanh (Neighbors) để đứng gắp bằng tay
+        # Code cũ không chạy phần này cho hàng 0 và 3, nên robot buộc phải đi vào ô mục tiêu
         dirs = [(-1, 0), (1, 0), (0, -1), (0, 1)]
         for dr, dc in dirs:
             nr, nc = r + dr, c + dc
             if self.check_traversable_rules(nr, nc, virtual_grid):
                 points.append((nr, nc))
+                
         return points
-
+    
     def neighbors(self, pos, direction, virtual_grid=None, target_pos=None):
         r, c = pos
         dirs = [(-1,0),(0,-1),(0,1),(1,0)]
@@ -595,23 +604,41 @@ class SelectPlaceApp:
             main_col_idx = best_col_sequence[0][1] # Lấy index cột chính
             print(f">>> [CHIẾN THUẬT CỘT] Đã chọn cột {main_col_idx} (Có {len(best_col_sequence)} khối).")
 
-            # --- LOGIC MỚI: KIỂM TRA CỘT BÊN CẠNH ---
-            # Tìm tất cả khối 2 nằm ở cột kề (main_col_idx +/- 1)
+            # 1. Tìm TẤT CẢ khối 2 nằm ở cột kề (main_col_idx +/- 1)
             adjacent_r2s = []
             for blk in list_2s:
-                if blk not in best_col_sequence: # Không tính khối đã có trong cột
+                if blk not in best_col_sequence: 
                     r, c = blk
                     if abs(c - main_col_idx) == 1: # Kiểm tra cột liền kề
                         adjacent_r2s.append(blk)
             
             if adjacent_r2s:
-                print(f">>> [MỞ RỘNG] Phát hiện {len(adjacent_r2s)} khối ở cột bên cạnh. Kích hoạt lấy 3 khối.")
-                # Tạo các phương án: [Cột dọc] + [1 Khối bên cạnh]
-                # Thử tất cả các khối bên cạnh tìm được để thuật toán chọn đường đi tối ưu nhất
-                for adj_blk in adjacent_r2s:
-                    new_sequence = list(best_col_sequence)
-                    new_sequence.append(adj_blk) # Thêm khối cạnh bên vào cuối hành trình
-                    target_sequences.append(tuple(new_sequence))
+                print(f">>> [MỞ RỘNG] Phát hiện {len(adjacent_r2s)} khối ở cột bên cạnh. Gộp vào hành trình.")
+                
+                # Gộp cột chính và tất cả khối bên cạnh vào một danh sách
+                combined_sequence = list(best_col_sequence) + adjacent_r2s
+  
+                # --- SỬA CHỮA QUAN TRỌNG TẠI ĐÂY ---
+                # Sắp xếp ưu tiên:
+                # 1. Hàng (Row) lớn hơn đi trước (đi từ dưới lên).
+                # 2. Nếu cùng hàng, khối nằm ở CỘT CHÍNH (main_col_idx) đi trước.
+                #    Lý do: Phải gắp khối ở cột chính để "dọn đường" đứng vào đó, 
+                #    sau đó mới đứng ở cột chính gắp khối bên cạnh.
+                
+                def sort_key(pos):
+                    row = pos[0]
+                    col = pos[1]
+                    # Khoảng cách tới cột chính (0 là chính, 1 là cạnh)
+                    dist_to_main = abs(col - main_col_idx)
+                    # Sort tuple (Row giảm dần, Ưu tiên cột chính). 
+                    # Vì reverse=True (giảm dần), ta cần giá trị của Cột Chính lớn hơn Cột Phụ.
+                    # Main (dist=0), Side (dist=1). Ta dùng -dist: Main(0), Side(-1). 0 > -1.
+                    return (row, -dist_to_main)
+
+                combined_sequence.sort(key=sort_key, reverse=True)
+                
+                # Thêm phương án "Ăn tất cả" vào danh sách mục tiêu
+                target_sequences.append(tuple(combined_sequence))
             else:
                 print(f">>> [GIỮ NGUYÊN] Cột bên cạnh không có khối 2. Chỉ ăn cột dọc.")
                 target_sequences.append(tuple(best_col_sequence))
@@ -765,15 +792,16 @@ class SelectPlaceApp:
         is_first_entry = True
         traveled_path = []
         picked_blocks = []
+        count_rb2 = 0  # Counter for packets where id_rb == 2
 
         for segment_idx, (segment_path, segment_action) in enumerate(simulation_path):
             print(f"\n[SEGMENT {segment_idx}] Action: {segment_action}")
             
-            if segment_action != "FINISH":
-                if not traveled_path:
-                    traveled_path.extend(segment_path)
-                else:
-                    traveled_path.extend(segment_path[1:])
+            # ALWAYS record traveled_path (include FINISH paths so we can detect exit gates)
+            if not traveled_path:
+                traveled_path.extend(segment_path)
+            else:
+                traveled_path.extend(segment_path[1:])
             
             # --- XỬ LÝ CỬA VÀO (ENTRY) ---
             if is_first_entry:
@@ -783,11 +811,20 @@ class SelectPlaceApp:
                 
                 print(f"  ├─ [ENTRY START] Kiểm tra ô ID={entry_id} (R:{entry_pos[0]}, C:{entry_pos[1]})")
 
+                # --- SEND START PACKET (2,2,10,10,entry_id) WHEN ENTERING FROM GATE 1/2/3 ---
+                if entry_id in [1, 2, 3]:
+                    print(f"  │  ├─ [START PACKET] Gửi gói START (2,2,10,10) tới ID={entry_id}")
+                    start_packet = build_packet(2, 2, 10, 10, entry_id)
+                    ser.write(start_packet)
+                    time.sleep(0.1)
+
                 if entry_cell["content"] and entry_cell["content"]["number"] == 1:
                     print(f"  │  ├─ Phát hiện KHỐI 1. Gửi lệnh PHÁ trước.")
+                    time.sleep(0.3)
                     packet = build_packet(1, 2, 0, 0, entry_id)
                     print(f"  │  └─ [BREAK BLOCK] id_rb=1, Move=2, Act=0, BlockID={entry_id}")
                     ser.write(packet)
+                    
                     
                     # Vẽ búa nếu chưa có (để feedback thời gian thực)
                     if not any(isinstance(x, ctk.CTkLabel) and x.cget("text") == "🔨" for x in entry_cell["overlays"]):
@@ -801,8 +838,11 @@ class SelectPlaceApp:
                 
                 if entry_cell["content"] and entry_cell["content"]["number"] == 2:
                     print(f"  │  ├─ Phát hiện KHỐI 2 tại cửa vào. Gửi lệnh GẮP trước khi vào.")
-                    packet = build_packet(2, 2, 0, 4, entry_id) 
+                    time.sleep(0.3)
+                    packet = build_packet(2, 2, 0, 1, entry_id) 
+                    count_rb2 += 1
                     ser.write(packet)
+                    print(f"  │  └─ [PICK BLOCK] id_rb=2, Move=0, Act=1, BlockID={entry_id}")
                     picked_blocks.append(entry_id) 
                     
                     lbl_picked = ctk.CTkLabel(entry_cell["frame"], text="✓",
@@ -812,7 +852,9 @@ class SelectPlaceApp:
                     entry_cell["overlays"].append(lbl_picked)
                     time.sleep(0.5)
 
+                time.sleep(0.3)
                 packet = build_packet(2, 2, 1, 4, entry_id)
+                count_rb2 += 1
                 ser.write(packet)
                 print(f"  ├─ [ENTRY MOVE] id_rb=2, Move=1, Act=4, BlockID={entry_id}")
                 time.sleep(0.1)
@@ -848,6 +890,7 @@ class SelectPlaceApp:
                 if cell_next["content"] and cell_next["content"]["number"] == 1:
                     print(f"  │  ├─ ⚠ KHỐI 1 chắn đường tại ID={step_block_id}. Gửi lệnh PHÁ.")
                     print(f"     └─ [BREAK] id_rb=1, Move=2, Act=0, BlockID={step_block_id}")
+                    time.sleep(0.3)
                     packet = build_packet(1, 2, 0, 0, step_block_id)
                     ser.write(packet)
                     
@@ -865,7 +908,9 @@ class SelectPlaceApp:
                     if step_block_id not in picked_blocks:
                         print(f"  │  ├─ ⚠ KHỐI 2 chắn đường tại ID={step_block_id}. Gửi lệnh GẮP trước.")
                         pick_act = move_cmd 
+                        time.sleep(0.3)
                         packet = build_packet(2, 2, 0, pick_act, step_block_id)
+                        count_rb2 += 1
                         ser.write(packet)
                         picked_blocks.append(step_block_id)
 
@@ -876,7 +921,9 @@ class SelectPlaceApp:
                         cell_next["overlays"].append(lbl_picked)
                         time.sleep(0.5)
 
+                time.sleep(0.3)
                 packet = build_packet(2, 2, move_cmd, 4, step_block_id)
+                count_rb2 += 1
                 ser.write(packet)
                 move_desc = ["?", "Đi thẳng", "Rẽ trái", "Rẽ phải"][move_cmd]
                 print(f"  │  ├─ [MOVE] id_rb=2, Move={move_cmd} ({move_desc}), Act=4, BlockID={step_block_id}")
@@ -903,23 +950,36 @@ class SelectPlaceApp:
                         elif act_vec == left_turn_map[current_facing]: action_cmd = 2 
                         elif act_vec == right_turn_map[current_facing]: action_cmd = 3 
                     
+                    time.sleep(0.3)
                     packet = build_packet(2, 2, 0, action_cmd, action_block_id)
+                    count_rb2 += 1
                     ser.write(packet)
                     picked_blocks.append(action_block_id)
                     
                     act_desc = ["?", "Gắp thẳng", "Gắp trái", "Gắp phải", "Gắp tại chỗ"][action_cmd]
                     print(f"     └─ [ACTION] id_rb=2, Move=0, Act={action_cmd} ({act_desc}), BlockID={action_block_id}")
-                    time.sleep(0.5)
+                    time.sleep(0.3)
+
+        # --- SEND END PACKET IF EXITED AT GATE 10/11/12 ---
+        if traveled_path:
+            last_pos = traveled_path[-1]
+            last_id = self.get_cell_id(last_pos[0], last_pos[1])
+            if last_id in [10, 11, 12]:
+                print(f"  ├─ [END PACKET] Gửi gói END (2,2,10,20) tới ID={last_id}")
+                end_packet = build_packet(2, 2, 20, 20, last_id)
+                ser.write(end_packet)
+                time.sleep(0.1)
 
         print("\n" + "=" * 60)
         print("HOÀN THÀNH GỬI UART")
+        print(f"Tổng packet với id_rb=2 đã gửi: {count_rb2}")
         print("=" * 60)
-        self.info_label.configure(text=f"Đã gửi xong ({self.team_color}).")
+        self.info_label.configure(text=f"Đã gửi xong ({self.team_color}). Tổng id_rb=2: {count_rb2}")
 
     def run_algothism_forest(self):
         self.root.mainloop()
 
 
-if __name__ == "__main__":
-    app = SelectPlaceApp()
-    app.run_algothism_forest()
+# if __name__ == "__main__":
+#     app = SelectPlaceApp()
+#     app.run_algothism_forest()

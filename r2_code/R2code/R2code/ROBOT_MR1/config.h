@@ -1910,6 +1910,7 @@ void run_read_gyro_uart3(void)
 
 int da_lay_tay1 = 0;
 int da_lay_tay2 = 0;
+int da_lay_tay3 = 0;
 
 //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 //---------------------------- TRUYEN DU LIEU VAO MANG-----------------------------
@@ -1944,7 +1945,7 @@ void HMI_TRAN(vs32 _so_dong)
 										HMI_DMI("Tro xoay tay ",bientroxoaytayValue,3);
 										break;
 									case 4:
-										HMI_DMI("take_data_block ",take_data_block,4);
+										HMI_DMI("da_lay_tay2 ",da_lay_tay2,4);
 											break;
 
 									case 5:
