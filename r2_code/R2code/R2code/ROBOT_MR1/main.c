@@ -204,20 +204,22 @@ static void taskMain(void *pvParameters)
 			{
 				Init_Action_Table(); 
 	//			if(O && L2 && !R2)							Xuong_bac_400();
-//				if(O && L2 && !R2 && Vi_tri == 0)								Xuat_Phat_Lay_Vu_Khi_Xanh(19,-1750),Vi_tri = 1 ;
-//				if(TRIANGLE && L2 && !R2 && Vi_tri == 0)				Xuat_Phat_Lay_Vu_Khi_Xanh(37,1750),Vi_tri = 1;
-//				if(SQUARE && L2 && !R2 && Vi_tri == 0)					Xuat_Phat_Lay_Vu_Khi_Xanh(56,1700),Vi_tri = 1;
-////				
-//				if(O && L2 && !R2 && Vi_tri == 1)								Run_All_Blocks_From_Queue();
+				if(O && L2 && !R2 && Vi_tri == 0)								Xuat_Phat_Lay_Vu_Khi_Xanh(19,-1750),Vi_tri = 1 ;
+				if(TRIANGLE && L2 && !R2 && Vi_tri == 0)				Xuat_Phat_Lay_Vu_Khi_Xanh(37,1750),Vi_tri = 1;
+				if(SQUARE && L2 && !R2 && Vi_tri == 0)					Xuat_Phat_Lay_Vu_Khi_Xanh(56,1700),Vi_tri = 1;
+//				
+				if(O && L2 && !R2 && Vi_tri == 1)								tudonghoantoan();
+				if(X && L2 && !R2 )	 														Vao_rung_mai_1();
 //				
 //					if(O && L2 && !R2 && Vi_tri == 1)						Run_All_Blocks_From_Queue();
 //				if(SQUARE && L2 && !R2 && Vi_tri == 1)				Lay_phia_truoc_bac_200();
 				
 				
-				if(TRIANGLE&& L2 && !R2 )						Leo_bac_400();
-				if(SQUARE && L2 && !R2)							Lay_phia_truoc_bac_200_duoi(); 
-				if(X && L2 && !R2 )									Lay_phia_truoc_bac_400();
-//				if(O && L2 && !R2 )								test_tay_3();
+//				if(TRIANGLE&& L2 && !R2 )						Leo_bac_400();
+//				if(SQUARE && L2 && !R2)							Lay_phia_truoc_bac_200_duoi(); 
+//				if(X && L2 && !R2 )									Leo_bac_200_bam_thanh_phai_encoder();
+//				if(O && L2 && !R2 )									Xuong_bac_200_encoder_bam_thanh_phai();
+//				if(O && L2 && !R2 )								test_tay_3(); Lay_phia_truoc_bac_200_duoi
 //				if (OPTIONS) 											chaytudong_esp_now();
 				
 				

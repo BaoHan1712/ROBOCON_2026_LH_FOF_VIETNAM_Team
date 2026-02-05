@@ -1911,6 +1911,7 @@ void run_read_gyro_uart3(void)
 int da_lay_tay1 = 0;
 int da_lay_tay2 = 0;
 int da_lay_tay3 = 0;
+int hoan_thanh_chay_rung = 0;
 
 //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 //---------------------------- TRUYEN DU LIEU VAO MANG-----------------------------

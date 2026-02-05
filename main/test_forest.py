@@ -402,12 +402,28 @@ class SelectPlaceApp:
 
     def cost(self, r, c, virtual_grid=None):
         if not (0 <= r < ROWS and 0 <= c < COLS): return float('inf')
+        
+        # Kiểm tra xem ô này có nằm trong danh sách ĐƯỢC PHÉP ĐI QUA (đã phá/đã gắp) trong giả lập không
+        is_virtually_empty = False
+        if virtual_grid:
+            status = virtual_grid[r][c]
+            if status == "EMPTY" or status == "IGNORED":
+                is_virtually_empty = True
+
         cell = self.grid_cells[r][c]
+        
+        # --- LOGIC KHỐI 1 (SỬA ĐỔI): Chỉ cho phép đi qua nếu đã nằm trong danh sách IGNORED ---
         if cell["content"] and cell["content"]["number"] == 1:
-            return 2  
+            if is_virtually_empty:
+                return 2  # Tốn chi phí để phá, nhưng đi được
+            else:
+                return float('inf')  # CẤM TUYỆT ĐỐI đi qua khối 1 thứ hai
+        
+        # Khối 3 luôn là tường
         if cell["content"] and cell["content"]["number"] == 3:
             return float('inf')
-        return 2  
+            
+        return 2  # Chi phí di chuyển bình thường
 
     def dijkstra_astar(self, starts, targets, use_arm=False, virtual_grid=None):
         g_score = [[float("inf")]*COLS for _ in range(ROWS)]
@@ -557,7 +573,7 @@ class SelectPlaceApp:
             self.info_label.configure(text=f"Lỗi: Cần ít nhất 2 khối số 2 để chạy Auto.")
             return
 
-        print(f">>> Có {len(list_2s)} khối 2. Bắt đầu phân tích chiến thuật...")
+        print(f">>> Có {len(list_2s)} khối 2. Bắt đầu phân tích (Max 3 khối, Max 1 phá)...")
 
         # --- LỌC KHỐI ƯU TIÊN (HÀNG 3 - ID 1, 2, 3) ---
         priority_2s = [pos for pos in list_2s if pos[0] == 3]
@@ -592,75 +608,64 @@ class SelectPlaceApp:
                         min_1s_in_col = col_1_count
                         best_col_sequence = col_2s
 
-        # --- KIỂM TRA LOGIC BẮT BUỘC ID 1,2,3 ---
+        # Kiểm tra ưu tiên hàng đáy cho cột
         if best_col_sequence and has_priority:
             start_node = best_col_sequence[0]
             if start_node[0] != 3: 
-                print(f">>> Hủy chiến thuật cột vì không lấy khối ở ID 1,2,3 trước.")
                 best_col_sequence = None
 
         # --- 2. TẠO DANH SÁCH ĐƯỜNG ĐI ---
         if best_col_sequence:
-            main_col_idx = best_col_sequence[0][1] # Lấy index cột chính
-            print(f">>> [CHIẾN THUẬT CỘT] Đã chọn cột {main_col_idx} (Có {len(best_col_sequence)} khối).")
+            main_col_idx = best_col_sequence[0][1]
+            print(f">>> [CHIẾN THUẬT CỘT] Cột {main_col_idx} có {len(best_col_sequence)} khối.")
 
-            # 1. Tìm TẤT CẢ khối 2 nằm ở cột kề (main_col_idx +/- 1)
             adjacent_r2s = []
             for blk in list_2s:
                 if blk not in best_col_sequence: 
                     r, c = blk
-                    if abs(c - main_col_idx) == 1: # Kiểm tra cột liền kề
+                    if abs(c - main_col_idx) == 1:
                         adjacent_r2s.append(blk)
             
-            if adjacent_r2s:
-                print(f">>> [MỞ RỘNG] Phát hiện {len(adjacent_r2s)} khối ở cột bên cạnh. Gộp vào hành trình.")
-                
-                # Gộp cột chính và tất cả khối bên cạnh vào một danh sách
-                combined_sequence = list(best_col_sequence) + adjacent_r2s
-  
-                # --- SỬA CHỮA QUAN TRỌNG TẠI ĐÂY ---
-                # Sắp xếp ưu tiên:
-                # 1. Hàng (Row) lớn hơn đi trước (đi từ dưới lên).
-                # 2. Nếu cùng hàng, khối nằm ở CỘT CHÍNH (main_col_idx) đi trước.
-                #    Lý do: Phải gắp khối ở cột chính để "dọn đường" đứng vào đó, 
-                #    sau đó mới đứng ở cột chính gắp khối bên cạnh.
-                
-                def sort_key(pos):
-                    row = pos[0]
-                    col = pos[1]
-                    # Khoảng cách tới cột chính (0 là chính, 1 là cạnh)
-                    dist_to_main = abs(col - main_col_idx)
-                    # Sort tuple (Row giảm dần, Ưu tiên cột chính). 
-                    # Vì reverse=True (giảm dần), ta cần giá trị của Cột Chính lớn hơn Cột Phụ.
-                    # Main (dist=0), Side (dist=1). Ta dùng -dist: Main(0), Side(-1). 0 > -1.
-                    return (row, -dist_to_main)
+            combined_sequence = list(best_col_sequence) + adjacent_r2s
 
-                combined_sequence.sort(key=sort_key, reverse=True)
+            # Sắp xếp: Hàng lớn đi trước, Cột chính đi trước
+            def sort_key(pos):
+                row = pos[0]
+                col = pos[1]
+                dist_to_main = abs(col - main_col_idx)
+                return (row, -dist_to_main)
+
+            combined_sequence.sort(key=sort_key, reverse=True)
+            
+            # --- [UPDATE] GIỚI HẠN TỐI ĐA 3 KHỐI ---
+            if len(combined_sequence) > 3:
+                print(f">>> [LIMIT] Cắt danh sách cột từ {len(combined_sequence)} xuống 3 khối.")
+                combined_sequence = combined_sequence[:3]
                 
-                # Thêm phương án "Ăn tất cả" vào danh sách mục tiêu
-                target_sequences.append(tuple(combined_sequence))
-            else:
-                print(f">>> [GIỮ NGUYÊN] Cột bên cạnh không có khối 2. Chỉ ăn cột dọc.")
-                target_sequences.append(tuple(best_col_sequence))
-            # ------------------------------------------
+            target_sequences.append(tuple(combined_sequence))
 
         else:
-            # Nếu không có cột ngon, chạy tìm kiếm cũ
+            # --- CHIẾN THUẬT TỰ DO (PERMUTATIONS) ---
+            # [UPDATE] Tìm tổ hợp 3 khối và 2 khối (Không tìm 4)
+            print(f">>> Tìm đường tự do (Tổ hợp 2 và 3 khối)...")
+            
+            raw_sequences = []
+            # Ưu tiên lấy 3 khối trước
+            if len(list_2s) >= 3:
+                raw_sequences.extend(list(itertools.permutations(list_2s, 3)))
+            # Sau đó xét trường hợp lấy 2 khối
+            if len(list_2s) >= 2:
+                raw_sequences.extend(list(itertools.permutations(list_2s, 2)))
+            
             if has_priority:
-                print(f">>> BẮT BUỘC: Phải lấy khối ở hàng đáy (ID 1,2,3) trước!")
-                if len(priority_2s) >= 2:
-                    target_sequences = list(itertools.permutations(priority_2s, 2))
-                else:
-                    p_start = priority_2s[0]
-                    remaining = [b for b in list_2s if b != p_start]
-                    for second in remaining:
-                        target_sequences.append((p_start, second))
+                print(f">>> BẮT BUỘC: Phải lấy khối ở hàng đáy (ID 1,2,3) đầu tiên!")
+                # Lọc: Chỉ giữ các chuỗi bắt đầu bằng khối ở hàng 3
+                target_sequences = [s for s in raw_sequences if s[0] in priority_2s]
             else:
-                print(f">>> Không có khối ID 1,2,3. Tìm đường tự do.")
-                target_sequences = list(itertools.permutations(list_2s, 2))
-        
+                target_sequences = raw_sequences
+
         # --- PHẦN TÍNH TOÁN CHI PHÍ (GIỮ NGUYÊN) ---
-        potential_discards = [None] + list_1s
+        potential_discards = [None] + list_1s # List này đảm bảo chỉ xét việc phá 0 hoặc 1 khối
         best_cost = float('inf')
         best_sim = None
         best_targets_set = None
@@ -673,7 +678,6 @@ class SelectPlaceApp:
                 current_ignored = [discard_r1] if discard_r1 else []
                 first_target_col = active_targets[0][1]
                 
-                # Bắt buộc xuất phát từ hàng 3 của cột mục tiêu đầu tiên
                 forced_start = (3, first_target_col)
                 
                 cost, sim_data = self.simulate_sequence([forced_start], active_targets, current_ignored)
@@ -688,19 +692,13 @@ class SelectPlaceApp:
             final_ids = [self.get_cell_id(*p) for p in best_targets_set]
             ignored_ids = [self.get_cell_id(*p) for p in best_ignored_set]
             
-            mode_str = "AUTO PRIORITY 1-2-3" if has_priority else "AUTO NORMAL"
-            if best_col_sequence:
-                if len(best_targets_set) > len(best_col_sequence):
-                    mode_str = "AUTO COLUMN + SIDE PICK" # Đã lấy thêm khối bên cạnh
-                else:
-                    mode_str = "AUTO COLUMN ONLY"
-
+            mode_str = "AUTO (MAX 3)"
             print(f"-> {mode_str} ({self.team_color}): {final_ids}, Ignore: {ignored_ids}")
             self.visualize_result(best_sim, best_ignored_set)
             self.simulation_path = best_sim
             self.best_targets_set = best_targets_set
             self.best_ignored_set = best_ignored_set
-            self.info_label.configure(text=f"{mode_str}: {final_ids}. Sẵn sàng gửi UART.")
+            self.info_label.configure(text=f"Đã tìm thấy đường (Max 3 khối): {final_ids}. Phá khối: {ignored_ids}")
         else:
             self.info_label.configure(text="Không tìm thấy đường đi khả thi.")
             
@@ -980,6 +978,6 @@ class SelectPlaceApp:
         self.root.mainloop()
 
 
-# if __name__ == "__main__":
-#     app = SelectPlaceApp()
-#     app.run_algothism_forest()
+if __name__ == "__main__":
+    app = SelectPlaceApp()
+    app.run_algothism_forest()

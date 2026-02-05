@@ -66,7 +66,7 @@ float _robotY = 50;
 float _robotX = 120;
 
 int motorLock = 2;
-int motorLockRepeat = 10000;//20000
+int motorLockRepeat = 100000;//20000
 float radian = 3.141592653589793238462643/180;
 //=================================================
 //------ Bien toan cuc de dieu khien ------
