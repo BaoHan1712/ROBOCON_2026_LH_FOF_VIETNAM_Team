@@ -13,8 +13,9 @@
 #include "doc_tay_game.h"
 #include "config.h"
 
+#include "3SwerveWheel_HanBao.h"
 //#include "3SwerveWheel_Vu.h"
-#include "4OmniControler.h"
+//#include "4OmniControler.h"
 #include "FreeRTOS.h"
 #include "task.h"
 #include "DieuKhienCoCau.h"
@@ -119,7 +120,7 @@ static void taskMain(void *pvParameters)
 	// reset lai laban
 	robotResetIMU();
 	
-//	//---- reset he thong ve vi tri ban dau
+//	//---- reset he thong ve vi tri ban dautb
 	while(!Home_wheel_RL_Out() | !Home_wheel_RR_Out() | !Home_wheel_FR_Out() | !Home_wheel_FL_Out());
 	while(!Home_wheel_RL() | !Home_wheel_RR() | !Home_wheel_FR() | !Home_wheel_FL());
 ////	
@@ -166,30 +167,28 @@ target_nang = BienTroNangValue;
 	
 			if (LJOY && !L1 && !L2) Quang_tro = 250,Quang_tro_off;
 			else			Quang_tro = 0,Quang_tro_off;
-			if (LJOY && !L1 && !L2) leodoc();
+//			if (LJOY && !L1 && !L2) leodocdo();
 			Cylinder_Tay_Day();
 			Cylinder_Tay_Kep();
 			Cylinder_Xoay_Kep();
 			Hut_nha_KFS();
 			Lay_KFS_Tu_Dong();
-//			if(LEFT && R1)		Bac_kfs(553,161);
-//			if(UP && R1)			Bac_kfs(725,150);
-//			if(RIGHT && R1)		Bac_kfs(955,166);
+			if(LEFT && R1)		Bac_kfs(553,161);
+			if(UP && R1)			Bac_kfs(725,150);
+			if(RIGHT && R1)		Bac_kfs(955,166);
 
-			if(O && !R1 && R2)	speed_nang = 250,target_nang = 747;
+			if(O && !R1 && R2)	speed_nang = 250,target_nang = 785;
 			if(OPTIONS)	Ve_home();
 			if(CHON_SAN == 1)
 			{
 			if (LJOY && L1)	Cua_goc_xanh_1();
-			if (RJOY && Vi_tri == 0)	Xuat_Phat_Lay_Gay_Xanh(27), Vi_tri = 1; 
-			if (RJOY && Vi_tri == 1)	Thoat_rap_vu_khi(), Vi_tri = 2;
+			if (RJOY && Vi_tri == 0)	Xuat_Phat_Lay_Gay_Xanh(23);
 				
 			if(SQUARE && L2 && !R2)					DatKFS_Xanh(10,150,150);
 			if(TRIANGLE && L2 && !R2)				DatKFS_Xanh(75,100,200);
 			if(O && L2 && !R2)							DatKFS_Xanh(143,100,300);
-			if(LEFT && R2)		vitri10xanh();
-			if(UP && R2)			vitri11xanh();
-			if(RIGHT && R2)		vitri12xanh();				
+			if(UP && R2)				chaytudong_esp_now_san_xanh(); //// chay tu dong san xanh
+			if(LEFT && R2)			vtri1vs2xanh(438,389,725,150);;
 
 			}
 			else
@@ -198,9 +197,8 @@ target_nang = BienTroNangValue;
 				if(SQUARE && L2 && !R2)					DatKFSDo(10,150,120);
 				if(TRIANGLE && L2 && !R2)				DatKFSDo(75,100,150);
 				if(O && L2 && !R2)							DatKFSDo(143,100,220);	
-				if(LEFT && R2)			vtri11do(725,150);
-				if(UP && R2)				chaytudong_esp_now();
-				
+				if(UP && R2)				chaytudong_esp_now_san1(); //// chay tu dong san red			
+//				if(LEFT && R2)			vtri11do(725,150);
 			}
 				
 			}

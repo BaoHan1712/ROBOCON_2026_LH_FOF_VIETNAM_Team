@@ -1481,17 +1481,19 @@ uint8_t take_data_block = 0;   // block dang duoc thuc thi
 uint8_t has_active_block = 0;  // 0: chua lay, 1: dang xu lý
 
 // ham them data vao hang doi
-void Queue_Push(uint8_t move, uint8_t action, uint8_t id_block)
+void Queue_Push(uint8_t state, uint8_t move, uint8_t action, uint8_t id_block)
 {
     if (count_data_uart4 >= QUEUE_SIZE) return;
 
-    packet_queue[head].move = move;
-    packet_queue[head].action = action;
+    packet_queue[head].state_rb = state;
+    packet_queue[head].move     = move;
+    packet_queue[head].action   = action;
     packet_queue[head].id_block = id_block;
 
     head = (head + 1) % QUEUE_SIZE;
     count_data_uart4++;
 }
+
 
 int Queue_Peek(Packet_t *out)
 {
@@ -1516,23 +1518,6 @@ int Queue_Pop(Packet_t *out)
     return 1;
 }
 
-
-// ham lay data de xu ly
-void Take_Next_Block_From_Queue(void)
-{
-    Packet_t pkt;
-
-    if (has_active_block) return;
-
-    if (Queue_Peek(&pkt))   // ? peek thay vì pop
-    {
-        take_data_block = pkt.id_block;
-        move   = pkt.move;
-        action = pkt.action;
-
-        has_active_block = 1;
-    }
-}
 
 // ham hoan thanh data
 void Finish_Current_Block(void)
@@ -1570,11 +1555,13 @@ void ProcessReceivedData_2(void)
         id_block = RX_UART4[5];
 
         // Push vào FIFO
-        Queue_Push(move, action, id_block);
+        Queue_Push(state_rb, move, action, id_block);
+
     }
     else
     {
         // checksum sai ? dánh d?u l?i
+				state_rb     = 0xFF;
         move     = 0xFF;
         action   = 0xFF;
         id_block = 0xFF;

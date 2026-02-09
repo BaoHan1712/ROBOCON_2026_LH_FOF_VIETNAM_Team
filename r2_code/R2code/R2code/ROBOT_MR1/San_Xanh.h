@@ -22,7 +22,7 @@ void Xuat_Phat_Lay_Vu_Khi_Xanh(int vu_khi, int goc_ve)
 						if(!wantExit())	break;
 					}
 				}
-				target_chan_truoc = 586, target_chan_sau =585;
+				target_chan_truoc = 585, target_chan_sau =585;
 	
 				for(i=0;i<250;i++)
 				{
@@ -315,8 +315,8 @@ void DoNothing(void);
 
 /* ================= GLOBAL TABLE ================= */
 /* QUAN TRoNG: move truoc */
-ActionFunc action_table[MAX_MOVE][MAX_ACTION][MAX_ID];
-
+ActionFunc action_table[MAX_MOVE][MAX_ACTION][MAX_ID];   // state 2
+ActionFunc zone3_table [MAX_MOVE][MAX_ACTION][MAX_ID];   // state 3
 
 /* ================= DEFAULT ================= */
 
@@ -325,9 +325,9 @@ void DoNothing(void) {}
 extern int hoan_thanh_chay_rung;
 
 
-/* ================= INIT ================= */
+/* ================= INIT CUA STATE 2 VUOT RUNG SAN XANH ================= */
 
-void Init_Action_Table(void)
+void Init_Action_Table_san_xanh(void)
 {
     int m, a, i;
 
@@ -365,41 +365,17 @@ void Init_Action_Table(void)
 		action_table[0][1][7] = Lay_phia_truoc_bac_200_tren;
 		action_table[0][1][8] = Lay_phia_truoc_bac_200_tren;
 		action_table[0][1][9] = Lay_phia_truoc_bac_200_duoi;
-		action_table[0][1][10] = Lay_phia_truoc_bac_200_duoi;
-		action_table[0][1][11] = Lay_phia_truoc_bac_200_duoi;
-		action_table[0][1][12] = Lay_phia_truoc_bac_200_duoi;
+		action_table[0][1][10]= Lay_phia_truoc_bac_200_duoi;
+		action_table[0][1][11]= Lay_phia_truoc_bac_200_duoi;
+		action_table[0][1][12]= Lay_phia_truoc_bac_200_duoi;
 
 //    /* =========================================
 //       move 0 , action 2, dung lai de lay ben trai
 //       ========================================= */
-//    action_table[0][2][1] = Lay_phia_truoc_bac_400;
-//    action_table[0][2][2] = Lay_phia_truoc_bac_200_tren;
-//    action_table[0][2][3] = Lay_phia_truoc_bac_400;
-//		action_table[0][2][4] = Lay_phia_truoc_bac_200_tren;
-//		action_table[0][2][5] = Lay_phia_truoc_bac_200_tren;
-//		action_table[0][2][6] = Lay_phia_truoc_bac_200_tren;
-//		action_table[0][2][7] = Lay_phia_truoc_bac_200_tren;
-//		action_table[0][2][8] = Lay_phia_truoc_bac_200_tren;
-//		action_table[0][2][9] = Lay_phia_truoc_bac_200_tren;
-////		action_table[0][2][10] = Lay_phia_truoc_bac_200_tren;
-////		action_table[0][2][11] = Lay_phia_truoc_bac_200_tren;
-////		action_table[0][2][12] = Lay_phia_truoc_bac_200_tren;
 
 //    /* =========================================
 //       move 0 , action 3, dung lai de lay ben phai
 //       ========================================= */
-//    action_table[0][3][1] = Lay_phia_truoc_bac_400;
-//    action_table[0][3][2] = Lay_phia_truoc_bac_200_tren;
-//    action_table[0][3][3] = Lay_phia_truoc_bac_400;
-//		action_table[0][3][4] = Lay_phia_truoc_bac_200_tren;
-//		action_table[0][3][5] = Lay_phia_truoc_bac_200_tren;
-//		action_table[0][3][6] = Lay_phia_truoc_bac_200_tren;
-//		action_table[0][3][7] = Lay_phia_truoc_bac_200_tren;
-//		action_table[0][3][8] = Lay_phia_truoc_bac_200_tren;
-//		action_table[0][3][9] = Lay_phia_truoc_bac_200_tren;
-////		action_table[0][3][10] = Lay_phia_truoc_bac_200_tren;
-////		action_table[0][3][11] = Lay_phia_truoc_bac_200_tren;
-////		action_table[0][3][12] = Lay_phia_truoc_bac_200_tren;
 
     /* =========================================
        move 1 , action 4 chay thang
@@ -418,116 +394,62 @@ void Init_Action_Table(void)
 		action_table[1][4][12] = Xuong_bac_200;
 }
 
+/* ================= INIT CUA STATE 3 DAT KHOI TREN BUC ================= */
+void Init_Zone3_Table_xan_xanh(void)
+{
+    int m,a,i;
+
+    for(m=0;m<MAX_MOVE;m++)
+        for(a=0;a<MAX_ACTION;a++)
+            for(i=0;i<MAX_ID;i++)
+                zone3_table[m][a][i] = DoNothing;
+
+//    zone3_table[4][15][16] = Zone3_Special_Run; 	//O 4 BI DAT , o 5,6 trong
+//    zone3_table[14][5][16] = Zone3_Special_Run;		//O 5 BI DAT , o 4 6 trong
+//    zone3_table[14][15][6] = Zone3_Special_Run;		//O 6 BI DAT , o 4 5 trong
+//    zone3_table[4][5][16] = Zone3_Special_Run; 		//O 4 5 BI DAT , O 6 trong
+//    zone3_table[4][15][6] = Zone3_Special_Run;		//O 4 6 BI DAT , o 5 trong
+//    zone3_table[14][5][6] = Zone3_Special_Run;		//O 5 6 BI DAT , o 4 trong
+}
+
 
 /* ================= RUN ================= */
-
-//void Run_All_Blocks_From_Queue(void)
-//{
-//    Packet_t pkt;
-
-//    while (Queue_Pop(&pkt))
-//    {
-//        move   = pkt.move;
-//        action = pkt.action;
-//        take_data_block = pkt.id_block;
-
-//        if (move < MAX_MOVE &&
-//            action < MAX_ACTION &&
-//            take_data_block < MAX_ID)
-//        {
-//            action_table[move][action][take_data_block]();
-//        }
-//        else
-//        {
-//            DoNothing();
-//        }
-//    }
-
-//    has_active_block = 0;
-//}
-
-
-
-void Run_All_Blocks_From_Queue(void)
+void Run_All_Blocks_From_Queue_san_xanh(void)
 {
     Packet_t pkt;
 
     while (Queue_Pop(&pkt))
     {
-        move   = pkt.move;
-        action = pkt.action;
-        take_data_block = pkt.id_block;
+        ActionFunc f = DoNothing;
 
-        if (move < MAX_MOVE &&
-            action < MAX_ACTION &&
-            take_data_block < MAX_ID)
+        if (pkt.move   >= MAX_MOVE   ||
+            pkt.action >= MAX_ACTION ||
+            pkt.id_block >= MAX_ID)
         {
-            action_table[move][action][take_data_block]();
+            f();
+            continue;
         }
-        else
+
+        switch(pkt.state_rb)
         {
-            DoNothing();
+            case 2: // VUOT RUNG
+                f = action_table[pkt.move][pkt.action][pkt.id_block];
+                break;
+
+            case 3:   // DAT KHOI LEN BUC	
+                f = zone3_table[pkt.move][pkt.action][pkt.id_block];
+                break;
+
+            default:
+                break;
         }
+
+        f();
     }
 
     has_active_block = 0;
 }
 
-
-//void chaytudong_esp_now(void)
-//{
-//    Take_Next_Block_From_Queue();
-
-//    if (has_active_block)
-//    {
-//        // ?? x? lý move, action, take_data_block ? dây
-
-//				if (move == 0 && take_data_block == 2 ) {
-//					Vao_rung_mai_2(); 	
-//					Finish_Current_Block();
-//					}
-//				else if (move == 1 && take_data_block == 2) {
-//					Leo_bac_200();
-//					Finish_Current_Block();
-//					}
-//				else if (take_data_block == 5) {
-//					Leo_bac_200();
-//					Finish_Current_Block();
-//					}
-//				else if (take_data_block == 8) {
-//					Leo_bac_200();
-//					Finish_Current_Block();
-//					}
-//				else if (take_data_block == 11) {
-//					Xuong_bac_200();
-//					Finish_Current_Block();
-//					}
-//				else if (take_data_block == 1) {
-//					Leo_bac_200();
-//					Finish_Current_Block();
-//					}
-//				else if (take_data_block == 4) {
-//					Phai_do(517,463,553,161);
-//					Finish_Current_Block();
-//					}
-//				else if (take_data_block == 7) {
-//					Phai_do(618,575,725,150); 
-//					Finish_Current_Block();
-//					}
-//				else if (take_data_block == 10) {
-//					Phai_do(685,658,553,161); 
-//					Finish_Current_Block();
-//					}
-//				else if (take_data_block == 2) {
-//					vtri1vs2do(302,307,553,161);
-//					Finish_Current_Block();					
-//					}
-//				else if (take_data_block == 11) {
-//					vtri11do(725,150);
-//					Finish_Current_Block();
-//					}
-//							}
-//}
 
 //******************************* DatKFSxanh **************************
 void DatKFSxanh(int vitri)
@@ -535,7 +457,10 @@ void DatKFSxanh(int vitri)
 				speed_chan_sau =180;
 				speed_chan_truoc = 250;
 				target_chan_truoc = 300, target_chan_sau = 300;
-
+	for(i=0;i<250;i++)	
+	{
+		while(bientrochansauValue < 300)	{vTaskDelay(5); if(!wantExit())	break;}
+	}
 		robotRunAngle(1800,40,-900,0.1);
 		for(i=0;i<550;i++)	
 	{	
@@ -580,9 +505,6 @@ void DatKFSxanh(int vitri)
 	
 	robotRunAngle(0,20,0,0.7);
 
-//	robotRun(-450,20);
-//	robotRotate(0,-0.9,0);
-//	
 	while(_robotIMUAngle < -50)	
 				{
 					vTaskDelay (5); 
@@ -662,7 +584,7 @@ void dat_qua_o_1(void) {
 	speed_chan_sau = 100;
 	speed_chan_truoc = 140;
 	
-	target_chan_truoc = 660, target_chan_sau = 660;
+	target_chan_truoc = 560, target_chan_sau = 560;
 	Tay3_day_ra;
 	Tay1_day_ra;
 	Tay2_day_ra;
@@ -685,16 +607,16 @@ void dat_qua_o_1(void) {
 		while(HT_qua_1 == 0)	{vTaskDelay(5); if(!wantExit())	break;}
 		}
 		vTaskDelay(5000);
-		for(i=0;i<5;i++)	
-		{
-		speed_tay_xoay = 150;
-		target_xoay_tay = 618 - 20;
-		vTaskDelay(12000);
-		speed_tay_xoay = 150;
-		target_xoay_tay = 618 + 20;
-		vTaskDelay(12000);
-		}
-		target_xoay_tay= 618;
+//		for(i=0;i<5;i++)	
+//		{
+//		speed_tay_xoay = 150;
+//		target_xoay_tay = 618 - 20;
+//		vTaskDelay(12000);
+//		speed_tay_xoay = 150;
+//		target_xoay_tay = 618 + 20;
+//		vTaskDelay(12000);
+//		}
+//		target_xoay_tay= 618;
 	}
 	
 	if (hoan_thanh_xoay_tay2 == 1) {
@@ -750,8 +672,8 @@ void dat_qua_o_1(void) {
 		target_xoay_tay= 410;
 		
 	}
-			robotRunAngle(150 , 8, 0, 0.2);
-			vTaskDelay(20000);
+			robotRunAngle(200 , 5, 0, 0.2);
+			vTaskDelay(7000);
 			robotStop(30);
 			robotRun(1800 , 5);
 			vTaskDelay(5000);
@@ -760,8 +682,9 @@ void dat_qua_o_1(void) {
 
 
 void tudonghoantoan(void) {
-Run_All_Blocks_From_Queue();
-if (hoan_thanh_chay_rung == 1 )DatKFSxanh(42),hoan_thanh_chay_rung = 2 ;
+Run_All_Blocks_From_Queue_san_xanh();
+vTaskDelay(7000);
+if (hoan_thanh_chay_rung == 1 )DatKFSxanh(45),hoan_thanh_chay_rung = 2 ;
 if (hoan_thanh_chay_rung== 2) xoay_tay_dat_qua(),hoan_thanh_chay_rung = 3;
 if (hoan_thanh_chay_rung== 3) dat_qua_o_1(),hoan_thanh_chay_rung = 4;
 

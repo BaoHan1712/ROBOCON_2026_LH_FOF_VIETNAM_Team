@@ -1,30 +1,34 @@
 import cv2
 import numpy as np
-import time
+from ultralytics import YOLO
 from config_uart.sent_uart import build_packet, send_packet_once, ser
 from gui_tkinter import set_state, STATE_IDLE
+import time
+
 
 # ================== CONFIG ==================
-IMAGE_PATH = r"matrix\image.png"
+MODEL_PATH = r"cover\models\kfs.onnx"
+
 ROWS = 3
 COLS = 3
-MIN_OBJECT_AREA = 1550
-SQUARE_RATIO_TOL = 0.5
-MIN_CELL_FILL_RATIO = 0.25
-time_sent_uart = 2000
+CONF_THRES = 0.43
 
 PTS = np.float32([
-    [245, 252],
-    [421, 252],
-    [431, 492],
-    [242, 499]
+    [139, 112],
+    [449, 123],
+    [449, 518],
+    [142, 521]
 ])
 
+model = YOLO(MODEL_PATH, task="detect")
 
 
-# ================== HELPER ==================
+# =================================================
+# HELPER
+# =================================================
 def lerp(p1, p2, t):
     return (1 - t) * p1 + t * p2
+
 
 def get_cell_polygon(TL, TR, BR, BL, r, c, rows, cols):
     t1 = r / rows
@@ -44,61 +48,10 @@ def get_cell_polygon(TL, TR, BR, BL, r, c, rows, cols):
 
     return np.array([p1, p2, p3, p4], dtype=np.int32)
 
-# ================== COLOR MASK ==================
-def get_red_blue_mask(hsv):
-    lower_blue = np.array([90, 80, 40])
-    upper_blue = np.array([140, 255, 255])
 
-    lower_red1 = np.array([0, 153, 69])
-    upper_red1 = np.array([5, 255, 255])
-    lower_red2 = np.array([170, 153, 69])
-    upper_red2 = np.array([180, 255, 255])
-
-    blue_mask = cv2.inRange(hsv, lower_blue, upper_blue)
-    red_mask = cv2.bitwise_or(
-        cv2.inRange(hsv, lower_red1, upper_red1),
-        cv2.inRange(hsv, lower_red2, upper_red2)
-    )
-
-    return cv2.bitwise_or(blue_mask, red_mask)
-
-def denoise_mask(mask):
-    kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (5, 5))
-    mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel, iterations=1)
-    mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel, iterations=2)
-    return mask
-
-# ================== SHAPE CHECK ==================
-def detect_square_object(hsv, cell_mask, cell_area):
-    color_mask = get_red_blue_mask(hsv)
-    color_mask = cv2.bitwise_and(color_mask, color_mask, mask=cell_mask)
-    color_mask = denoise_mask(color_mask)
-
-    contours, _ = cv2.findContours(
-        color_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE
-    )
-
-    for cnt in contours:
-        area = cv2.contourArea(cnt)
-        if area < MIN_OBJECT_AREA:
-            continue
-        if area / cell_area < MIN_CELL_FILL_RATIO:
-            continue
-
-        peri = cv2.arcLength(cnt, True)
-        approx = cv2.approxPolyDP(cnt, 0.04 * peri, True)
-        if len(approx) != 4:
-            continue
-
-        x, y, w, h = cv2.boundingRect(approx)
-        if abs(w / float(h) - 1.0) > SQUARE_RATIO_TOL:
-            continue
-
-        return True
-
-    return False
-
-# ================== SEND PACKETS ==================
+# =================================================
+# UART
+# =================================================
 def send_row_2_packet(cell_has_square):
     id_robot = 2
     state = 3
@@ -108,69 +61,94 @@ def send_row_2_packet(cell_has_square):
 
     col_data = []
     for c in range(COLS):
-        has_square = cell_has_square[row_detect][c]
-        col_data.append([4, 5, 6][c] if has_square else [40, 50, 60][c])
+        has_obj = cell_has_square[row_detect][c]
+        col_data.append([4, 5, 6][c] if has_obj else [14, 15, 16][c])
 
     packet = build_packet(id_robot, state, *col_data)
     send_packet_once(ser, packet)
-    print("Sent packet ROW 2:", list(packet))
 
-# ================== MAIN ==================
+    print("Sent packet:", list(packet))
+
+
+# =================================================
+# MAIN (IMAGE ONLY + STATE SAFE)
+# =================================================
 def matrix_camera_loop():
-    img = cv2.imread(IMAGE_PATH)
-    if img is None:
-        print("Khong tim thay anh")
+
+    # chỉ chạy khi state = 2
+    if set_state["value"] != 2:
+        return
+
+    TL, TR, BR, BL = PTS
+
+    # ================= CAPTURE 1 FRAME =================
+    cap = cv2.VideoCapture(0)
+
+    ret, img = cap.read()
+    cap.release()   # QUAN TRỌNG: đóng cam ngay
+
+    if not ret:
+        print("Camera read failed")
+        set_state["value"] = STATE_IDLE
         return
 
     img = cv2.resize(img, (640, 640))
     draw = img.copy()
-    hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
 
-    TL, TR, BR, BL = PTS
     cell_has_square = np.zeros((ROWS, COLS), dtype=bool)
 
-    # ===== Detect 1 lần =====
+    # ================= YOLO DETECT 1 LẦN =================
+    results = model(img, imgsz=640, conf=CONF_THRES, verbose=False)
+
+    centers = []
+
+    for r in results:
+        for box in r.boxes:
+            x1, y1, x2, y2 = map(int, box.xyxy[0])
+
+            cls_id = int(box.cls[0])
+            class_name = model.names[cls_id]
+            conf = float(box.conf[0])
+
+            cx = (x1 + x2) // 2
+            cy = (y1 + y2) // 2
+            centers.append((cx, cy))
+
+            cv2.rectangle(draw, (x1, y1), (x2, y2), (255, 0, 255), 2)
+            cv2.circle(draw, (cx, cy), 5, (0, 0, 255), -1)
+
+            label = f"{class_name} {conf:.2f}"
+            cv2.putText(draw, label, (x1, y1 - 8),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.6,
+                        (0, 255, 255), 2)
+
+    # ================= GRID CHECK =================
     for r in range(ROWS):
         for c in range(COLS):
             cell_poly = get_cell_polygon(TL, TR, BR, BL, r, c, ROWS, COLS)
-            cell_mask = np.zeros(img.shape[:2], dtype=np.uint8)
-            cv2.fillPoly(cell_mask, [cell_poly], 255)
 
-            cell_area = cv2.contourArea(cell_poly)
-            has_square = detect_square_object(hsv, cell_mask, cell_area)
-            cell_has_square[r][c] = has_square
+            for (cx, cy) in centers:
+                if cv2.pointPolygonTest(cell_poly, (cx, cy), False) >= 0:
+                    cell_has_square[r][c] = True
+                    break
 
-            color = (0,0,255) if has_square else (0,255,0)
+            color = (0, 0, 255) if cell_has_square[r][c] else (0, 255, 0)
             cv2.polylines(draw, [cell_poly], True, color, 2)
 
-            cx = int(np.mean(cell_poly[:, 0]))
-            cy = int(np.mean(cell_poly[:, 1]))
-            cell_id = (ROWS - 1 - r) * COLS + (c + 1)
-            cv2.putText(draw, str(cell_id), (cx - 10, cy),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.7, color, 2)
+    # ================= SEND 1 LẦN =================
+    send_row_2_packet(cell_has_square)
 
-    # ===== HIỂN THỊ + STATE + TIMER =====
-    start_ms = time.time() * 1000
-    sent = False
-
-    while True:
-        if set_state["value"] != 2:
-            break
-
-        # ESC → IDLE
-        if cv2.waitKey(1) & 0xFF == 27:
-            set_state["value"] = STATE_IDLE
-            break
-
-        now_ms = time.time() * 1000
-
-        # Sau 5 giây mới gửi
-        if not sent and now_ms - start_ms >= time_sent_uart:
-            send_row_2_packet(cell_has_square)
-            sent = True
-            set_state["value"] = STATE_IDLE # gửi xong về gốc
-            break
-
-        cv2.imshow("Grid + Square Detection", draw)
-
+    # ================= DEBUG SHOW (tuỳ chọn) =================
+    cv2.imshow("YOLO Snapshot Detect", draw)
+    cv2.waitKey(5000)  # xem 5s cho debug
     cv2.destroyAllWindows()
+
+    # ================= BACK TO IDLE =================
+    set_state["value"] = STATE_IDLE
+    print(">>> DONE -> STATE_IDLE")
+
+
+
+# # =================================================
+# if __name__ == "__main__":
+#     matrix_image_once()

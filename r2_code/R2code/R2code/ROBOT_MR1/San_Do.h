@@ -25,7 +25,7 @@ void Xuat_Phat_Lay_Vu_Khi_Do(int vu_khi, int goc_ve)
 					}
 				}
 			
-				target_chan_truoc = 586, target_chan_sau =585;
+				target_chan_truoc = 585, target_chan_sau =591;
 	
 				for(i=0;i<250;i++)
 				{
@@ -364,34 +364,7 @@ void Vao_rung_mai_3_san_Do(void)
 
 
 /// *********** ESP chay tu dong***************
-/* =====================================================
- *  DISPATCH TABLE: [move][action][block]
- *  input order: move, action, block
- * ===================================================== */
-
-//#define MAX_MOVE   30
-//#define MAX_ACTION 30
-//#define MAX_ID     13
-
-/* ================= TYPE ================= */
-
-//typedef void (*ActionFunc)(void);
-
-/* ================= PROTOTYPE ================= */
-
-//void DoNothing_san_do(void);
-
-/* ================= GLOBAL TABLE ================= */
-/* QUAN TRoNG: move truoc */
-//ActionFunc action_table[MAX_MOVE][MAX_ACTION][MAX_ID];
-
-
-/* ================= DEFAULT ================= */
-
-//void DoNothing_san_do(void) {}
-
-
-/* ================= INIT ================= */
+/* ================= INIT CUA STATE 2 VUOT RUNG SAN XANH ================= */
 
 void Init_Action_Table_san_do(void)
 {
@@ -414,9 +387,9 @@ void Init_Action_Table_san_do(void)
 	    /* =========================================
        move 20 , action 20 chay ra cua ra
        ========================================= */
-    action_table[20][20][10] = Xuong_bac_200;
-    action_table[20][20][11] = Xuong_bac_400;
-    action_table[20][20][12] = Xuong_bac_200;
+    action_table[20][20][10] = vuot_rung_ve_homeTay_bac_200;
+    action_table[20][20][11] = vuot_rung_ve_homeTay_bac_400;
+    action_table[20][20][12] = vuot_rung_ve_homeTay_bac_200;
 
 
     /* =========================================
@@ -425,58 +398,34 @@ void Init_Action_Table_san_do(void)
     action_table[0][1][1] = Lay_phia_truoc_bac_400;
     action_table[0][1][2] = Lay_phia_truoc_bac_200_tren;
     action_table[0][1][3] = Lay_phia_truoc_bac_400;
-		action_table[0][1][4] = Lay_phia_truoc_bac_200_tren;
+		action_table[0][1][4] = Lay_phia_truoc_bac_200_duoi;
 		action_table[0][1][5] = Lay_phia_truoc_bac_200_tren;
 		action_table[0][1][6] = Lay_phia_truoc_bac_200_tren;
 		action_table[0][1][7] = Lay_phia_truoc_bac_200_tren;
 		action_table[0][1][8] = Lay_phia_truoc_bac_200_tren;
-		action_table[0][1][9] = Lay_phia_truoc_bac_200_tren;
-//		action_table[0][1][10] = Lay_phia_truoc_bac_200;
-//		action_table[0][1][11] = Lay_phia_truoc_bac_200;
-//		action_table[0][1][12] = Lay_phia_truoc_bac_200;
+		action_table[0][1][9] = Lay_phia_truoc_bac_200_duoi;
+		action_table[0][1][10]= Lay_phia_truoc_bac_200_duoi;
+		action_table[0][1][11]= Lay_phia_truoc_bac_200_duoi;
+		action_table[0][1][12]= Lay_phia_truoc_bac_200_duoi;
 
 //    /* =========================================
 //       move 0 , action 2, dung lai de lay ben trai
 //       ========================================= */
-//    action_table[0][2][1] = Lay_phia_truoc_bac_400;
-//    action_table[0][2][2] = Lay_phia_truoc_bac_200;
-//    action_table[0][2][3] = Lay_phia_truoc_bac_400;
-//		action_table[0][2][4] = Lay_phia_truoc_bac_200;
-//		action_table[0][2][5] = Lay_phia_truoc_bac_200;
-//		action_table[0][2][6] = Lay_phia_truoc_bac_200;
-//		action_table[0][2][7] = Lay_phia_truoc_bac_200;
-//		action_table[0][2][8] = Lay_phia_truoc_bac_200;
-//		action_table[0][2][9] = Lay_phia_truoc_bac_200;
-////		action_table[0][2][10] = Lay_phia_truoc_bac_200;
-////		action_table[0][2][11] = Lay_phia_truoc_bac_200;
-////		action_table[0][2][12] = Lay_phia_truoc_bac_200;
 
 //    /* =========================================
 //       move 0 , action 3, dung lai de lay ben phai
 //       ========================================= */
-//    action_table[0][3][1] = Lay_phia_truoc_bac_400;
-//    action_table[0][3][2] = Lay_phia_truoc_bac_200;
-//    action_table[0][3][3] = Lay_phia_truoc_bac_400;
-//		action_table[0][3][4] = Lay_phia_truoc_bac_200;
-//		action_table[0][3][5] = Lay_phia_truoc_bac_200;
-//		action_table[0][3][6] = Lay_phia_truoc_bac_200;
-//		action_table[0][3][7] = Lay_phia_truoc_bac_200;
-//		action_table[0][3][8] = Lay_phia_truoc_bac_200;
-//		action_table[0][3][9] = Lay_phia_truoc_bac_200;
-////		action_table[0][3][10] = Lay_phia_truoc_bac_200;
-////		action_table[0][3][11] = Lay_phia_truoc_bac_200;
-////		action_table[0][3][12] = Lay_phia_truoc_bac_200;
 
     /* =========================================
        move 1 , action 4 chay thang
        ========================================= */
     action_table[1][4][1] = Leo_bac_400;
-    action_table[1][4][2] = Leo_bac_200;
+    action_table[1][4][2] = Leo_bac_200_bam_thanh_phai;
 		action_table[1][4][3] = Leo_bac_400;
-		action_table[1][4][4]  = Xuong_bac_200;
-    action_table[1][4][5] = Leo_bac_200;
+		action_table[1][4][4]  = Xuong_bac_200_encoder_bam_thanh_phai;
+    action_table[1][4][5] = Leo_bac_200_bam_thanh_phai;
     action_table[1][4][6] = Leo_bac_200;
-    action_table[1][4][7] = Leo_bac_200;
+    action_table[1][4][7] = Leo_bac_200_bam_thanh_phai_encoder;
     action_table[1][4][8] = Leo_bac_200;
     action_table[1][4][9]  = Xuong_bac_200;
     action_table[1][4][10] = Xuong_bac_200;
@@ -484,31 +433,55 @@ void Init_Action_Table_san_do(void)
 		action_table[1][4][12] = Xuong_bac_200;
 }
 
+/* ================= INIT CUA STATE 3 DAT KHOI TREN BUC ================= */
+void Init_Zone3_Table_san_do(void)
+{
+    int m,a,i;
+
+    for(m=0;m<MAX_MOVE;m++)
+        for(a=0;a<MAX_ACTION;a++)
+            for(i=0;i<MAX_ID;i++)
+                zone3_table[m][a][i] = DoNothing;
+
+//    zone3_table[5][1][1] = Zone3_Special_Run;
+}
+
 
 /* ================= RUN ================= */
+void Run_All_Blocks_From_Queue_san_do(void)
+{
+    Packet_t pkt;
 
-//void Run_All_Blocks_From_Queue(void)
-//{
-//    Packet_t pkt;
+    while (Queue_Pop(&pkt))
+    {
+        ActionFunc f = DoNothing;
 
-//    while (Queue_Pop(&pkt))
-//    {
-//        move   = pkt.move;
-//        action = pkt.action;
-//        take_data_block = pkt.id_block;
+        if (pkt.move   >= MAX_MOVE   ||
+            pkt.action >= MAX_ACTION ||
+            pkt.id_block >= MAX_ID)
+        {
+            f();
+            continue;
+        }
 
-//        if (move < MAX_MOVE &&
-//            action < MAX_ACTION &&
-//            take_data_block < MAX_ID)
-//        {
-//            action_table[move][action][take_data_block]();
-//        }
-//        else
-//        {
-//            DoNothing();
-//        }
-//    }
+        switch(pkt.state_rb)
+        {
+            case 2: // VUOT RUNG
+                f = action_table[pkt.move][pkt.action][pkt.id_block];
+                break;
 
-//    has_active_block = 0;
-//}
+            case 3:   // DAT KHOI
+                f = zone3_table[pkt.move][pkt.action][pkt.id_block];
+                break;
+
+            default:
+                break;
+        }
+
+        f();
+    }
+
+    has_active_block = 0;
+}
+
 

@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 
 # ================== CONFIG ==================
-IMAGE_PATH = r"matrix\image.png"
+IMAGE_PATH = r"matrix\real.jpg"
 ROWS = 3
 COLS = 3
 MIN_OBJECT_AREA = 1550        # dien tich toi thieu để nhận diện
@@ -10,10 +10,10 @@ SQUARE_RATIO_TOL = 0.5       # do lech ti le vuong
 
 # Thu tu: TL, TR, BR, BL
 PTS = np.float32([
-    [245, 252],
-    [421, 252],
-    [431, 492],
-    [242, 499]
+    [139, 112],
+    [449, 123],
+    [449, 518],
+    [142, 521]
 ])
 
 # ================== HELPER ==================

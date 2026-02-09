@@ -116,4 +116,4 @@ def process_grid(image_path):
 
 # ================== RUN ==================
 if __name__ == "__main__":
-    process_grid(r"matrix\image.png")
+    process_grid(r"matrix\real.jpg")

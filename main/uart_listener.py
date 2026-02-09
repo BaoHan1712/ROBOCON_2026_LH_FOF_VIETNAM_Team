@@ -1,6 +1,5 @@
 import time
-from gui_tkinter import set_state
-from main import STATE_IDLE, STATE_WEAPON, STATE_MATRIX, STATE_FOREST
+from gui_tkinter import STATE_SEE_R1, set_state, STATE_IDLE, STATE_MATRIX, STATE_FOREST
 
 uart_enable = {"value": True}
 
@@ -30,7 +29,7 @@ def uart_state_listener(ser):
                 continue
 
             if data == 1:
-                set_state["value"] = STATE_WEAPON
+                set_state["value"] = STATE_SEE_R1
             elif data == 2:
                 set_state["value"] = STATE_MATRIX
             elif data == 3:

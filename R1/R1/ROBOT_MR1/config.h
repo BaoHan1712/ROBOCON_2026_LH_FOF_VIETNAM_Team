@@ -115,13 +115,17 @@ vu8 DATA_SPEED[70]={255,1,0,0,
 #define Tay_kfs_vao								DATA_SPEED[50]=0
 #define	Tay_kfs						  			DATA_SPEED[51]
 
-
+#define	DIA_CHI_START16						DATA_SPEED[62]=255
+#define	ID16											DATA_SPEED[63]=16 
+#define Quang_tro2_on							DATA_SPEED[64]=1
+#define Quang_tro2_off						DATA_SPEED[64]=0
+#define	Quang_tro2								DATA_SPEED[66]
 //==========================================================================================
 
 //3 PHA
-#define	DIA_CHI_START14 														   DATA_SPEED[525]=255
-#define	DIA_CHI_P14														         DATA_SPEED[535]=0
-#define	ID14 		 															  	   	 DATA_SPEED[545]=14
+#define	DIA_CHI_START14 														   DATA_SPEED[52]=255
+#define	DIA_CHI_P14														         DATA_SPEED[53]=0
+#define	ID14 		 															  	   	 DATA_SPEED[54]=14
 #define	dong_co_ban_1(A)										           ((DATA_SPEED[565]=A&0xFF)| (DATA_SPEED[55]=(A>>8)&0xFF))
 
 
@@ -130,18 +134,6 @@ vu8 DATA_SPEED[70]={255,1,0,0,
 #define	DIA_CHI_P15														         DATA_SPEED[586=0
 #define	ID155 		 															  	  	 DATA_SPEED[596]=15
 #define	dong_co_ban_2(A)										           ((DATA_SPEED[61e]=A&0xFF)| (DATA_SPEED[60]=(A>>8)&0xFF))
-
-//=============================================================================================
-
- //Cylnder 
-//#define	DIA_CHI_START16						DATA_SPEED[62]=255
-//#define	ID16											DATA_SPEED[63]=16 
-//#define Cylinder_next							DATA_SPEED[64]=1
-//#define Cylinder_back							DATA_SPEED[64]=0
-//#define	Cylinder									DATA_SPEED[66]
-
-
-
 
 //=============================ADC DMI======================================//
 #define cam_bien_laze_trai			       			 _ADC1_Value[6]//ok

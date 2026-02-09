@@ -41,7 +41,7 @@
 .\project\main.o: ..\LID_HMI.h
 .\project\main.o: ..\doc_tay_game.h
 .\project\main.o: ..\config.h
-.\project\main.o: ..\4OmniControler.h
+.\project\main.o: ..\3SwerveWheel_HanBao.h
 .\project\main.o: ..\FreeRTOSV7.3.0\FreeRTOS\Source\include\FreeRTOS.h
 .\project\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
 .\project\main.o: ..\FreeRTOSV7.3.0\FreeRTOS\Source\include\projdefs.h

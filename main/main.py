@@ -1,20 +1,13 @@
 import threading
 import time
-from gui_tkinter import set_state, STATE_FOREST
+from gui_tkinter import set_state, STATE_FOREST, STATE_SEE_R1, STATE_IDLE, STATE_MATRIX
 from uart_listener import *
 from config_uart.sent_uart import ser
 
 from gui_tkinter import start_gui, set_state
-# from cam_detect import weapon_camera_loop
 from detect_matrix import matrix_camera_loop
 from algo_forest import SelectPlaceApp
-
-
-# ===== STATE DEFINE =====
-STATE_IDLE = 0
-STATE_WEAPON = 1
-STATE_MATRIX = 2
-STATE_FOREST = 3
+from see_R1 import detect_r1_snapshot_loop
 
 current_state = STATE_IDLE
 
@@ -37,8 +30,8 @@ def state_manager():
             time.sleep(0.02)
             continue
 
-        # if state == STATE_WEAPON:
-        #     weapon_camera_loop()
+        if state == STATE_SEE_R1:
+            detect_r1_snapshot_loop()
 
         elif state == STATE_MATRIX:
             matrix_camera_loop()

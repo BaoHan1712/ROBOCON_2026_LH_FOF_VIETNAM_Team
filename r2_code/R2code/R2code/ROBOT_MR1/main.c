@@ -178,10 +178,10 @@ static void taskMain(void *pvParameters)
 			if(CHON_SAN == 0)									//SAN DO
 			{
 				
-				Init_Action_Table_san_do(); 
-				if(O && L2 && !R2 && Vi_tri == 0)								Xuat_Phat_Lay_Vu_Khi_Do(34,1800),Vi_tri = 1 ;
-				if(TRIANGLE && L2 && !R2 && Vi_tri == 0)				Xuat_Phat_Lay_Vu_Khi_Do(53,1800),Vi_tri = 1;
-				if(SQUARE && L2 && !R2 && Vi_tri == 0)					Xuat_Phat_Lay_Vu_Khi_Do(72,-1750),Vi_tri = 1;
+				//Init_Action_Table_san_do(); 
+				if(O && L2 && !R2 && Vi_tri == 0)								Xuat_Phat_Lay_Vu_Khi_Do(31,1800),Vi_tri = 1 ;
+				if(TRIANGLE && L2 && !R2 && Vi_tri == 0)				Xuat_Phat_Lay_Vu_Khi_Do(52,1800),Vi_tri = 1;
+				if(SQUARE && L2 && !R2 && Vi_tri == 0)					Xuat_Phat_Lay_Vu_Khi_Do(71,-1750),Vi_tri = 1;
 				if(O && L2 && !R2 && Vi_tri == 1)								Vao_rung_mai_1_san_Do();
 
 				
@@ -202,14 +202,14 @@ static void taskMain(void *pvParameters)
 			}
 			else															//SAN XANH
 			{
-				Init_Action_Table(); 
+					Init_Action_Table_san_xanh(); 
 	//			if(O && L2 && !R2)							Xuong_bac_400();
 				if(O && L2 && !R2 && Vi_tri == 0)								Xuat_Phat_Lay_Vu_Khi_Xanh(19,-1750),Vi_tri = 1 ;
 				if(TRIANGLE && L2 && !R2 && Vi_tri == 0)				Xuat_Phat_Lay_Vu_Khi_Xanh(37,1750),Vi_tri = 1;
-				if(SQUARE && L2 && !R2 && Vi_tri == 0)					Xuat_Phat_Lay_Vu_Khi_Xanh(56,1700),Vi_tri = 1;
+				if(SQUARE && L2 && !R2 && Vi_tri == 0)					Xuat_Phat_Lay_Vu_Khi_Xanh(55,1700),Vi_tri = 1;
 //				
-				if(O && L2 && !R2 && Vi_tri == 1)								tudonghoantoan();
-				if(X && L2 && !R2 )	 														Vao_rung_mai_1();
+				if(X && L2 && !R2 )															tudonghoantoan();
+//				if(X && L2 && !R2 )	 														Vao_rung_mai_1();
 //				
 //					if(O && L2 && !R2 && Vi_tri == 1)						Run_All_Blocks_From_Queue();
 //				if(SQUARE && L2 && !R2 && Vi_tri == 1)				Lay_phia_truoc_bac_200();

@@ -3,16 +3,16 @@ import os
 
 # ===== STATE CONSTANTS =====
 STATE_IDLE   = 0
-STATE_WEAPON = 1
+STATE_SEE_R1 = 1
 STATE_MATRIX = 2
 STATE_FOREST = 3
 
 set_state = {"value": STATE_IDLE}
 
 # ===== STATE FUNCTIONS =====
-def set_weapon():
-    set_state["value"] = STATE_WEAPON
-    print(">> STATE = WEAPON DETECT")
+def set_see_r1():
+    set_state["value"] = STATE_SEE_R1
+    print(">> STATE = DETECT R1")
 
 def set_matrix():
     set_state["value"] = STATE_MATRIX
@@ -35,7 +35,7 @@ def on_close():
 def start_gui():
     root = tk.Tk()
     root.title("Robot Control Panel")
-    root.geometry("380x390")
+    root.geometry("380x430")
     root.resizable(False, False)
     root.configure(bg="#2b2b2b")
 
@@ -57,12 +57,12 @@ def start_gui():
         "bd": 0
     }
 
-    # tk.Button(
-    #     root, text="WEAPON DETECT",
-    #     command=set_weapon,
-    #     bg="#c0392b", fg="white",
-    #     **btn_cfg
-    # ).pack(pady=10)
+    tk.Button(
+        root, text="R1 DETECT",
+        command=set_see_r1,
+        bg="#c0392b", fg="white",
+        **btn_cfg
+    ).pack(pady=10)
 
     tk.Button(
         root, text="MATRIX DETECT",

@@ -996,7 +996,7 @@ void Leo_bac_200_bam_thanh_trai(void)
 {	
 	int i;
 			// nâng bánh trc lên 
-	speed_chan_sau = 100;
+	speed_chan_sau = 120;
 	speed_chan_truoc = 140;
 	
 	target_chan_truoc = 460, target_chan_sau = 460;
@@ -1084,7 +1084,7 @@ void Leo_bac_200_bam_thanh_trai(void)
 			}
 	}
 	robotStop(0);
-	speed_chan_sau = 100;
+	speed_chan_sau = 120;
 	speed_chan_truoc = 140;
 	
 	target_chan_truoc = 260, target_chan_sau = 260;
@@ -1095,7 +1095,7 @@ void Leo_bac_400(void)
 {	
 	int i;
 	
-	speed_chan_sau = 100;
+	speed_chan_sau = 120;
 	speed_chan_truoc = 140;
 	
 	target_chan_truoc = 690, target_chan_sau = 690;
@@ -1167,7 +1167,7 @@ void Leo_bac_400(void)
 void Xuong_bac_200(void)
 {	
 	int i;
-	speed_chan_sau = 100;
+	speed_chan_sau = 120;
 	speed_chan_truoc = 140;
 	
 	target_chan_truoc = 238, target_chan_sau = 238;
@@ -1217,7 +1217,7 @@ void Xuong_bac_200(void)
 	
 	for(i=0;i<250;i++)	
 	{
-		while(bientrochansauValue < 458)	{vTaskDelay(5); if(!wantExit())	break;}
+		while(bientrochansauValue < 450)	{vTaskDelay(5); if(!wantExit())	break;}
 	}
 	robotStop(0);
 
@@ -1235,7 +1235,7 @@ void Xuong_bac_200(void)
 void Xuong_bac_200_bam_thanh_phai(void)
 {	
 	int i;
-	speed_chan_sau = 100;
+	speed_chan_sau = 120;
 	speed_chan_truoc = 140;
 	
 	target_chan_truoc = 238, target_chan_sau = 238;
@@ -1319,7 +1319,7 @@ void Xuong_bac_200_bam_thanh_phai(void)
 			}
 	}
 	robotStop(0);
-	speed_chan_sau = 100;
+	speed_chan_sau = 120;
 	speed_chan_truoc = 140;
 	
 	target_chan_truoc = 260, target_chan_sau = 260;
@@ -1331,7 +1331,7 @@ void Xuong_bac_200_bam_thanh_phai(void)
 void Xuong_bac_200_bam_thanh_trai(void)
 {	
 	int i;
-	speed_chan_sau = 100;
+	speed_chan_sau = 120;
 	speed_chan_truoc = 140;
 	
 	target_chan_truoc = 238, target_chan_sau = 238;
@@ -1418,7 +1418,7 @@ void Xuong_bac_200_bam_thanh_trai(void)
 			}
 	}
 	robotStop(0);
-	speed_chan_sau = 100;
+	speed_chan_sau = 120;
 	speed_chan_truoc = 140;
 	
 	target_chan_truoc = 260, target_chan_sau = 260;
@@ -1429,7 +1429,7 @@ void Xuong_bac_200_bam_thanh_trai(void)
 void Xuong_bac_200_encoder_bam_thanh_phai(void)
 {	
 	int i;
-	speed_chan_sau = 100;
+	speed_chan_sau = 120;
 	speed_chan_truoc = 140;
 	
 	target_chan_truoc = 238, target_chan_sau = 238;
@@ -1476,7 +1476,7 @@ void Xuong_bac_200_encoder_bam_thanh_phai(void)
 			}
 	}
 	robotStop(0);
-	speed_chan_sau = 100;
+	speed_chan_sau = 120;
 	speed_chan_truoc = 140;
 	
 	target_chan_truoc = 260, target_chan_sau = 260;
@@ -1489,7 +1489,7 @@ void Xuong_bac_200_encoder_bam_thanh_phai(void)
 void Xuong_bac_200_encoder_bam_thanh_trai(void)
 {	
 	int i;
-	speed_chan_sau = 100;
+	speed_chan_sau = 120;
 	speed_chan_truoc = 140;
 	
 	target_chan_truoc = 238, target_chan_sau = 238;
@@ -1536,7 +1536,7 @@ void Xuong_bac_200_encoder_bam_thanh_trai(void)
 			}
 	}
 	robotStop(0);
-	speed_chan_sau = 100;
+	speed_chan_sau = 120;
 	speed_chan_truoc = 140;
 	
 	target_chan_truoc = 260, target_chan_sau = 260;
@@ -1549,7 +1549,7 @@ void Xuong_bac_200_encoder_bam_thanh_trai(void)
 	void Xuong_bac_400 (void)
 {	
 	int i;
-	speed_chan_sau = 100;
+	speed_chan_sau = 120;
 	speed_chan_truoc = 140;
 	
 	target_chan_truoc = 238, target_chan_sau = 238;
@@ -1740,7 +1740,7 @@ void leodoc2(void)
 	int i;
 	
 	speed_chan_sau = 100;
-	speed_chan_truoc = 140;
+	speed_chan_truoc = 160;
 	
 	target_chan_truoc = 270, target_chan_sau = 280;
 	
@@ -1888,7 +1888,7 @@ void kiem_tra_tay_gap1( int giatri_xoay) {
 		if(HT_qua_1 == 1)	
 		{
 			
-			target_xoay_tay = giatri_xoay + 8;
+			target_xoay_tay = giatri_xoay + 5;
 			vTaskDelay (3000);
 			
 			Tay_1_gap_kfs_xuong();
@@ -1904,7 +1904,7 @@ void kiem_tra_tay_gap1( int giatri_xoay) {
 
 		if(HT_qua_1 == 1)	
 		{
-			target_xoay_tay = giatri_xoay - 8;
+			target_xoay_tay = giatri_xoay - 5;
 			vTaskDelay (3000);
 			
 			Tay_1_gap_kfs_xuong();
@@ -2034,8 +2034,8 @@ extern int da_lay_tay3 ;
 void Lay_phia_truoc_bac_200_tren(void) {
 	
 	////******************* di len phia truoc ******************
-	speed_chan_sau = 100;
-	speed_chan_truoc = 150;
+	speed_chan_sau = 140;
+	speed_chan_truoc = 180;
 
 	target_chan_truoc = 475;
 	target_chan_sau = 475;	
@@ -2105,7 +2105,7 @@ void Lay_phia_truoc_bac_200_tren(void) {
 	}
 	
 	speed_chan_sau = 100;
-	speed_chan_truoc = 150;
+	speed_chan_truoc = 180;
 
 	target_chan_truoc = 300;
 	target_chan_sau = 300;
@@ -2131,7 +2131,7 @@ void Lay_phia_truoc_bac_200_tren(void) {
 
 		// nhac len ty cho tay 2
 	speed_chan_sau = 100;
-	speed_chan_truoc = 150;
+	speed_chan_truoc = 180;
 
 	target_chan_truoc = 485;
 	target_chan_sau = 485;
@@ -2179,7 +2179,7 @@ void Lay_phia_truoc_bac_200_tren(void) {
 	}
 	
 	speed_chan_sau = 100;
-	speed_chan_truoc = 150;
+	speed_chan_truoc = 180;
 
 	target_chan_truoc = 300;
 	target_chan_sau = 300;
@@ -2205,7 +2205,7 @@ void Lay_phia_truoc_bac_200_tren(void) {
 	
 	// nhac len ty cho tay 3
 		speed_chan_sau = 100;
-		speed_chan_truoc = 150;
+		speed_chan_truoc = 180;
 
 		target_chan_truoc = 485;
 		target_chan_sau = 485;	
@@ -2252,7 +2252,7 @@ void Lay_phia_truoc_bac_200_tren(void) {
 	}
 	
 	speed_chan_sau = 100;
-	speed_chan_truoc = 150;
+	speed_chan_truoc = 180;
 
 	target_chan_truoc = 300;
 	target_chan_sau = 300;
@@ -2285,7 +2285,7 @@ void Lay_phia_truoc_bac_400(void) {
 	// chay len phia truoc bac 400
 				
 	speed_chan_sau = 100;
-	speed_chan_truoc = 150;
+	speed_chan_truoc = 110;
 
 	target_chan_truoc = 690;
 	target_chan_sau = 690;
@@ -2318,7 +2318,7 @@ void Lay_phia_truoc_bac_400(void) {
 	/// xoay sang de tay 1 lay
 	
 	speed_tay_xoay = 150;
-	target_xoay_tay = 626;
+	target_xoay_tay = 620;
 	for(i=0;i<250;i++)	
 	{
 		while(bientroxoaytayValue < 620)	{vTaskDelay(5); if(!wantExit())	break;}
@@ -2346,8 +2346,8 @@ void Lay_phia_truoc_bac_400(void) {
 	}
 	
 	
-	speed_chan_sau = 180;
-	speed_chan_truoc = 250;
+	speed_chan_sau = 100;
+	speed_chan_truoc = 120;
 
 	target_chan_truoc = 400;
 	target_chan_sau = 400;
@@ -2382,7 +2382,7 @@ void Lay_phia_truoc_bac_200_duoi(void) {
 	// ********* di len phia truoc, cb dau cham thi dung lai  ******************
 	int i;
 	speed_chan_sau = 100;
-	speed_chan_truoc = 140;
+	speed_chan_truoc = 180;
 	
 	target_chan_truoc = 238, target_chan_sau = 238;
 	
