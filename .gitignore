@@ -1,0 +1,119 @@
+# =========================
+# Python cache
+# =========================
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg-info/
+dist/
+build/
+.eggs/
+*.egg
+
+# =========================
+# Virtual env
+# =========================
+venv/
+.env/
+.env*/
+.venv/
+.python-version
+
+# =========================
+# IDE
+# =========================
+.vscode/
+.idea/
+*.code-workspace
+
+# =========================
+# Logs
+# =========================
+logs/
+*.log
+*.txt
+
+# =========================
+# Models (AI weights)
+# =========================
+*.onnx
+*.pth
+*.engine
+*.weights
+*.tflite
+*.trt
+models/
+checkpoints/
+runs/
+
+# =========================
+# Dataset / media
+# =========================
+*.mp4
+*.avi
+*.mov
+*.mkv
+*.webm
+*.jpg
+*.jpeg
+*.png
+*.bmp
+
+dataset/
+data/
+images/
+videos/
+captures/
+recordings/
+
+# =========================
+# Export / training outputs
+# =========================
+runs/
+results/
+wandb/
+outputs/
+exp*/
+*.cache
+
+# =========================
+# Serial / temp / runtime
+# =========================
+tmp/
+temp/
+*.bin
+*.dat
+
+# =========================
+# EXE / build
+# =========================
+*.exe
+*.dll
+*.lib
+*.spec
+*.manifest
+build/
+dist/
+
+# =========================
+# OS
+# =========================
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# =========================
+# Jupyter
+# =========================
+.ipynb_checkpoints/
+
+# =========================
+# Large misc
+# =========================
+*.zip
+*.rar
+*.7z
+*.tar
+*.gz
