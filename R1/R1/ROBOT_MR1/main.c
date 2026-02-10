@@ -75,11 +75,15 @@ static void taskDieuKhienCoCau(void *pvParameters)
 	while (1)
 	{
 		
-		Rear_Left_Angle();
-		Rear_Right_Angle();
-		Front_Left_Angle();
-		Front_Right_Angle();
+//		Rear_Left_Angle();
+//		Rear_Right_Angle();
+//		Front_Left_Angle();
+//		Front_Right_Angle();
 		
+		Angle_0h();
+		Angle_4h();
+		Angle_8h();
+//		
 		vTaskDelay(3);
 	}
 }
@@ -120,10 +124,17 @@ static void taskMain(void *pvParameters)
 	// reset lai laban
 	robotResetIMU();
 	
-//	//---- reset he thong ve vi tri ban dautb
-	while(!Home_wheel_RL_Out() | !Home_wheel_RR_Out() | !Home_wheel_FR_Out() | !Home_wheel_FL_Out());
-	while(!Home_wheel_RL() | !Home_wheel_RR() | !Home_wheel_FR() | !Home_wheel_FL());
-////	
+//	//---- reset he thong ve vi tri ban dau
+
+while(!Home_wheel_0h_Out() | !Home_wheel_4h_Out() | !Home_wheel_8h_Out());
+while(!Home_wheel_0h()| !Home_wheel_4h() | !Home_wheel_8h());
+
+//while(!Home_wheel_4h_Out());
+//while(!Home_wheel_4h());
+
+//	while(!Home_wheel_RL_Out() | !Home_wheel_RR_Out() | !Home_wheel_FR_Out() | !Home_wheel_FL_Out());
+//	while(!Home_wheel_RL() | !Home_wheel_RR() | !Home_wheel_FR() | !Home_wheel_FL());
+//////	
 //	while(!Home_wheel_FR_Out());
 //	while(!Home_wheel_FR());
 //	while(!Home_wheel_FL_Out());
@@ -150,7 +161,7 @@ target_nang = BienTroNangValue;
 	{ 
 		while(SHARE) 
 		{			
-			robotGamePadControl(7,40);		
+			robotGamePadControl(30,70);		
 			//Take_Next_Block_From_Queue();
 			if (!R1 && !L2 && SQUARE && CB_Dau == 0) 
 				{ if(L1)	Chot_gay = 150,Chot_gay_vao;

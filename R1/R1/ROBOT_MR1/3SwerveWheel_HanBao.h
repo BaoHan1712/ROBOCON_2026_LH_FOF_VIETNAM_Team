@@ -283,31 +283,31 @@ int absI(int num)
 //------------------------------------------------------------------------------
 
 //------------ su dung cho ham gia toc, giam toc --------------
-float _robotY = 30;  //80
-float _robotX = 250;
-
-//int giaToc(int x)
-//{
-//	// ------ gia toc bac 1 -----------
-//	float y = (-_robotY/_robotX)*x + _robotY;
-//	
-//	return (int)y;
-//}
+float _robotY = 50;  //80
+float _robotX = 100;
 
 int giaToc(int x)
 {
-    float t;
-    float y;
-    const float maxY = _robotY;
-    const float maxX = _robotX;
+	// ------ gia toc bac 1 -----------
+	float y = (-_robotY/_robotX)*x + _robotY;
 	
-    t = (float)x / maxX;
-    if (t < 0.0f) t = 0.0f;
-    if (t > 1.0f) t = 1.0f;
-
-    y = maxY * t;
-    return (int)(y + 0.5f);
+	return (int)y;
 }
+
+//int giaToc(int x)
+//{
+//    float t;
+//    float y;
+//    const float maxY = _robotY;
+//    const float maxX = _robotX;
+//	
+//    t = (float)x / maxX;
+//    if (t < 0.0f) t = 0.0f;
+//    if (t > 1.0f) t = 1.0f;
+
+//    y = maxY * t;
+//    return (int)(y + 0.5f);
+//}
 
 
 int giamToc(int x)
@@ -459,8 +459,8 @@ extern float error_show;
 
 
 float FixOmegaFromIMU() {
-    float maxGain = 30.0f;   // Hệ số quay lớn nhất
-    float minGain = 10.0f;    // Hệ số quay nhỏ nhất
+    float maxGain = 100.0f;   // Hệ số quay lớn nhất
+    float minGain = 50.0f;    // Hệ số quay nhỏ nhất
     float omega = 0;
 		float gain;
 		int absError;

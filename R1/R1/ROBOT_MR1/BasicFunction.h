@@ -7,8 +7,9 @@ extern float _robotDirFL, _robotDirFR, _robotDirRL, _robotDirRR;
 extern int Vi_tri;
 int speed_temp = 0, speed, i;
 
-int Home_Encoder_RL = 374, Home_Encoder_RR = 3402 , Home_Encoder_FL = 1248 , Home_Encoder_FR = 1290;
-int	current_RL_Angle, current_RR_Angle, current_FL_Angle, current_FR_Angle;
+//int Home_Encoder_0h = 364, Home_Encoder_4h = 1325, Home_Encoder_8h = 1300;
+int Home_Encoder_0h = 2526, Home_Encoder_4h = 2449, Home_Encoder_8h = 1911;
+int	current_0h_Angle, current_4h_Angle, current_8h_Angle;
 //void veHome(){
 //		int bien1 = 0, bien2 = 0, bien3 = 0, bien4 = 0;
 //		int bienBuTruRR = 840, bienBuTruRL = 900, bienBuTruFR = 930, bienBuTruFL = 930 ;
@@ -75,22 +76,22 @@ void robotGamePadControl(vu8 speedMin , vu8 speedMax)
 
 	//--------- chay cac huong -----------
 	if (UP && !DOWN && !RIGHT && !LEFT && !R1 && !R2)
-		robotRun(0, tocdo);
-	else if (!UP && DOWN && !RIGHT && !LEFT)
 		robotRun(1800, tocdo);
+	else if (!UP && DOWN && !RIGHT && !LEFT)
+		robotRun(0, tocdo);
 	else if (!UP && !DOWN && RIGHT && !LEFT && !R1 && !R2)
-		robotRun(900, tocdo);
-	else if (!UP && !DOWN && !RIGHT && LEFT && !R1 && !R2)
 		robotRun(-900, tocdo);
+	else if (!UP && !DOWN && !RIGHT && LEFT && !R1 && !R2)
+		robotRun(900, tocdo);
 
 	else if (UP && !DOWN && RIGHT && !LEFT)
-		robotRun(450, tocdo);
-	else if (UP && !DOWN && !RIGHT && LEFT)
-		robotRun(-450, tocdo);
-	else if (!UP && DOWN && RIGHT && !LEFT)
-		robotRun(1350, tocdo);
-	else if (!UP && DOWN && !RIGHT && LEFT)
 		robotRun(-1350, tocdo);
+	else if (UP && !DOWN && !RIGHT && LEFT)
+		robotRun(1350, tocdo);
+	else if (!UP && DOWN && RIGHT && !LEFT)
+		robotRun(-450, tocdo);
+	else if (!UP && DOWN && !RIGHT && LEFT)
+		robotRun(450, tocdo);
 
 	//-------------- Dang chay va Khong chay nua, chi xoay ----------------
 	if (!UP && !DOWN && !RIGHT && !LEFT && rJoy_LR  && robotIsRun() && !LJOY)
@@ -118,170 +119,123 @@ void robotGamePadControl(vu8 speedMin , vu8 speedMax)
 		robotRotateStop();
 	
 }
-
-
-
 //************************************** home wheels ****************************************
-vu8 Home_wheel_RL_Out(void)
+//************************************** home wheels ****************************************
+vu8 Home_wheel_0h_Out(void)
 {
-	mor_rotate_rear_left_next;
+	mor_rotate_0h_next;
 	
-	if(Home_Rear_Left == 1){	mor_rotate_rear_left = 2; return 1;}
-	else										{	mor_rotate_rear_left = 100; return 0;}
+	if(Home_0h == 1)				{	mor_rotate_0h = 2; return 1;}
+	else										{	mor_rotate_0h = 100; return 0;}
 
 }
 
-vu8 Home_wheel_RL(void)
+vu8 Home_wheel_0h(void)
 {
-	mor_rotate_rear_left_next;
- 	if(Home_Rear_Left == 1 && SS_RL == 0){
-		mor_rotate_rear_left = 100; TIM3->CNT = 0; num_over_t3 = 0;return 0;
-	}
-	else if((abs(ENCODER_RL()) > Home_Encoder_RL) && SS_RL == 1){	
-		mor_rotate_rear_left = 2 ;return 1;
-	}
-	else{
-		mor_rotate_rear_left = 50; SS_RL = 1; return 0;
-	}			
+
+	if(Home_0h == 1 && SS_RL == 0)																			{	mor_rotate_0h = 100; TIM4->CNT = 0; num_over_t4 = 0;return 0;}
+	else if((abs(ENCODER_0h()) > Home_Encoder_0h) && SS_RL == 1)				{	mor_rotate_0h = 2 ;return 1;}
+	else 																																{	mor_rotate_0h = 30; SS_RL = 1; return 0;}			
 	
 }
 
 //************************************** home wheels ****************************************
-vu8 Home_wheel_RR_Out(void)
+vu8 Home_wheel_4h_Out(void)
 {
-	mor_rotate_rear_right_next;
+	mor_rotate_4h_next;
 	
-	if(Home_Rear_Right == 1){	mor_rotate_rear_right = 2; return 1;}
-	else										{	mor_rotate_rear_right = 100; return 0;}
+	if(Home_4h == 1)				{	mor_rotate_4h = 2; return 1;}
+	else										{	mor_rotate_4h = 100; return 0;}
 
 }
 
-vu8 Home_wheel_RR(void)
+vu8 Home_wheel_4h(void)
 {
 	
-	if(Home_Rear_Right == 1 && SS_RR == 0)																{	mor_rotate_rear_right = 100; TIM4->CNT = 0; num_over_t4 = 0;return 0;}
-	else if((abs(ENCODER_RR()) > Home_Encoder_RR) && SS_RR == 1)					{	mor_rotate_rear_right = 2 ;return 1;}
-	else 																																	{	mor_rotate_rear_right = 50; SS_RR = 1; return 0;}	
+	if(Home_4h == 1 && SS_RR == 0)																				{	mor_rotate_4h = 100; TIM2->CNT = 0; num_over_t2 = 0;return 0;}
+	else if((abs(ENCODER_4h()) > Home_Encoder_4h) && SS_RR == 1)					{	mor_rotate_4h = 2 ;return 1;}
+	else 																																	{	mor_rotate_4h = 30; SS_RR = 1; return 0;}	
 	
 }
 //************************************** home wheels ****************************************
-vu8 Home_wheel_FL_Out(void)
+vu8 Home_wheel_8h_Out(void)
 {
-	mor_rotate_front_left_next;
+	mor_rotate_8h_next;
 	
-	if(Home_Front_Left == 1){	mor_rotate_front_left = 2; return 1;}
-	else										{	mor_rotate_front_left = 100; return 0;}
+	if(Home_8h == 1)				{	mor_rotate_8h = 2; return 1;}
+	else										{	mor_rotate_8h = 100; return 0;}
 
 }
 
-vu8 Home_wheel_FL(void)
+vu8 Home_wheel_8h(void)
 {
-	mor_rotate_front_left_next;
-	if(Home_Front_Left == 1 && SS_FL == 0)															{	mor_rotate_front_left = 100; TIM2->CNT = 0; num_over_t2 = 0;return 0;}
-	else if((abs(ENCODER_FL()) > Home_Encoder_FL) && SS_FL == 1)				{	mor_rotate_front_left = 2 ;return 1;}
-	else 																																{	mor_rotate_front_left = 50; SS_FL = 1; return 0;}			
-	
-}
 
-//************************************** home wheels ****************************************
-vu8 Home_wheel_FR_Out(void)
-{
-	mor_rotate_front_right_next;
-	
-	if(Home_Front_Right == 1){	mor_rotate_front_right = 2; return 1;}
-	else										{	mor_rotate_front_right = 100; return 0;}
-
-}
-
-vu8 Home_wheel_FR(void)
-{
-	
-	if(Home_Front_Right == 1 && SS_FR == 0)																{	mor_rotate_front_right = 100; TIM5->CNT = 0; num_over_t5 = 0;return 0;}
-	else if((abs(ENCODER_FR()) > Home_Encoder_FR) && SS_FR == 1)					{	mor_rotate_front_right = 2 ;return 1;}
-	else 																																	{	mor_rotate_front_right = 50; SS_FR = 1; return 0;}	
+	if(Home_8h == 1 && SS_FL == 0)																			{	mor_rotate_8h = 100; TIM5->CNT = 0; num_over_t5 = 0;return 0;}
+	else if((abs(ENCODER_8h()) > Home_Encoder_8h) && SS_FL == 1)				{	mor_rotate_8h = 2 ;return 1;}
+	else 																																{	mor_rotate_8h = 30; SS_FL = 1; return 0;}			
 	
 }
 
 //**************************************************** giu goc banh xe sau trai ***************************************************************************
-void Rear_Left_Angle()
+void Angle_0h()
 {
-		if (abs(ENCODER_RL() - Rear_Left_Wheel_Angle) > 20)
+		if (abs(ENCODER_0h() - _0h_Wheel_Angle) > 0)
 	{
-		if (ENCODER_RL() > Rear_Left_Wheel_Angle)
-			mor_rotate_rear_left_back;
+		if (ENCODER_0h() > _0h_Wheel_Angle)
+			mor_rotate_0h_back;
 		else
-			mor_rotate_rear_left_next;
+			mor_rotate_0h_next;
 
-		speed_temp = (abs(ENCODER_RL() - Rear_Left_Wheel_Angle) * 4);
-		if (speed_temp > 250)
-			speed_temp = 250;
-		if (speed_temp < 150)
-			speed_temp = 150;
-		mor_rotate_rear_left = speed_temp;
+		speed_temp = (abs(ENCODER_0h() - _0h_Wheel_Angle) * 0.8);
+		if (speed_temp > 200)
+			speed_temp = 200;
+		if (speed_temp < 10)
+			speed_temp = 10;
+		mor_rotate_0h = speed_temp;
 	}
 	else
-		mor_rotate_rear_left = 2;
+		mor_rotate_0h = 2;
 }
 
 //**************************************************** giu goc banh xe sau phai ***************************************************************************
-void Rear_Right_Angle()
+void Angle_4h()
 {
-		if (abs(ENCODER_RR() - Rear_Right_Wheel_Angle) > 20)
+		if (abs(ENCODER_4h() - _4h_Wheel_Angle) > 0)
 	{
-		if (ENCODER_RR() > Rear_Right_Wheel_Angle)
-			mor_rotate_rear_right_back;
+		if (ENCODER_4h() > _4h_Wheel_Angle)
+			mor_rotate_4h_back;
 		else
-			mor_rotate_rear_right_next;
+			mor_rotate_4h_next;
 
-		speed_temp = (abs(ENCODER_RR() - Rear_Right_Wheel_Angle) * 4);
-		if (speed_temp > 250)
-			speed_temp = 250;
-		if (speed_temp < 150)
-			speed_temp = 150;
-		mor_rotate_rear_right = speed_temp;
+		speed_temp = (abs(ENCODER_4h() - _4h_Wheel_Angle) * 0.8);
+		if (speed_temp > 200)
+			speed_temp = 200;
+		if (speed_temp < 10)
+			speed_temp = 10;
+		mor_rotate_4h = speed_temp;
 	}
 	else
-		mor_rotate_rear_right = 2;
+		mor_rotate_4h = 2;
 }
 
 //**************************************************** giu goc banh xe truoc trai ***************************************************************************
-void Front_Left_Angle()
+void Angle_8h()
 {
-		if (abs(ENCODER_FL() - Front_Left_Wheel_Angle) > 20)
+		if (abs(ENCODER_8h() - _8h_Wheel_Angle) > 0)
 	{
-		if (ENCODER_FL() > Front_Left_Wheel_Angle)
-			mor_rotate_front_left_back;
+		if (ENCODER_8h() > _8h_Wheel_Angle)
+			mor_rotate_8h_back;
 		else
-			mor_rotate_front_left_next;
+			mor_rotate_8h_next;
 
-		speed_temp = (abs(ENCODER_FL() - Front_Left_Wheel_Angle) * 4);
-		if (speed_temp > 250)
-			speed_temp = 250;
-		if (speed_temp < 150)
-			speed_temp = 150;
-		mor_rotate_front_left = speed_temp;
+		speed_temp = (abs(ENCODER_8h() - _8h_Wheel_Angle) * 0.8);
+		if (speed_temp > 200)
+			speed_temp = 200;
+		if (speed_temp < 10)
+			speed_temp = 10;
+		mor_rotate_8h = speed_temp;
 	}
 	else
-		mor_rotate_front_left = 2;
+		mor_rotate_8h = 2;
 }
 
-//**************************************************** giu goc banh xe ***************************************************************************
-void Front_Right_Angle()
-{
-		if (abs(ENCODER_FR() - Front_Right_Wheel_Angle) > 20)
-	{
-		if (ENCODER_FR() > Front_Right_Wheel_Angle)
-			mor_rotate_front_right_back;
-		else
-			mor_rotate_front_right_next;
-
-		speed_temp = (abs(ENCODER_FR() - Front_Right_Wheel_Angle) * 4);
-		if (speed_temp > 250)
-			speed_temp = 250;
-		if (speed_temp < 150)
-			speed_temp = 150;
-		mor_rotate_front_right = speed_temp;
-	}
-	else
-		mor_rotate_front_right = 2;
-}

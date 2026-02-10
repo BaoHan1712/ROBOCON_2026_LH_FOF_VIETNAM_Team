@@ -27,57 +27,55 @@ vu8 DATA_SPEED[70]={255,1,0,0,
 ////////////////////// --KHAI BAO DINH NGHIA PWM 4 BANH XE-- /////////////////////////////////////
 #define	DIA_CHI_START1 												DATA_SPEED[0]=255
 #define	ID1 		 															DATA_SPEED[1]=1
-#define mor_rotate_rear_left_next 					 	DATA_SPEED[2]=0
-#define mor_rotate_rear_left_back							DATA_SPEED[2]=1
-#define	mor_rotate_rear_left			 		 				DATA_SPEED[3]
+#define mor_rotate_0h_next 					 					DATA_SPEED[2]=0
+#define mor_rotate_0h_back										DATA_SPEED[2]=1
+#define	mor_rotate_0h			 		 								DATA_SPEED[3]
 
 #define	DIA_CHI_START2 												DATA_SPEED[4]=255
 #define	ID2 		 															DATA_SPEED[5]=2
-#define Mor_RearLeft_next 										DATA_SPEED[6]=0
-#define Mor_RearLeft_back 										DATA_SPEED[6]=1
-#define	Mor_RearLeft													DATA_SPEED[7]
+#define Mor_0h_next 													DATA_SPEED[6]=0
+#define Mor_0h_back 													DATA_SPEED[6]=1
+#define	Mor_0h																DATA_SPEED[7]
 
 
+#define	DIA_CHI_STAR3 												DATA_SPEED[8]=255
+#define	ID3	 		 															DATA_SPEED[9]=3
+#define mor_rotate_8h_next										DATA_SPEED[10]=1
+#define mor_rotate_8h_back										DATA_SPEED[10]=0
+#define	mor_rotate_8h 												DATA_SPEED[11]
 
-#define	DIA_CHI_START3 												DATA_SPEED[8]=255
-#define	ID3 		 															DATA_SPEED[9]=3
-#define mor_rotate_rear_right_next 						DATA_SPEED[10]=0
-#define mor_rotate_rear_right_back						DATA_SPEED[10]=1
-#define	mor_rotate_rear_right 								DATA_SPEED[11]
-
-#define	DIA_CHI_START4												DATA_SPEED[12]=255
-#define	ID4	 																	DATA_SPEED[13]=4
-#define Mor_RearRight_next							 			DATA_SPEED[14]=1
-#define Mor_RearRight_back										DATA_SPEED[14]=0  
-#define	Mor_RearRight 		 										DATA_SPEED[15]
-
-
+#define	DIA_CHI_START4											  DATA_SPEED[12]=255
+#define	ID4																    DATA_SPEED[13]=4
+#define Mor_8h_next					 									DATA_SPEED[14]=1
+#define Mor_8h_back														DATA_SPEED[14]=0
+#define	Mor_8h		 														DATA_SPEED[15]
 
 #define	DIA_CHI_START5 												DATA_SPEED[16]=255
-#define	ID5	 		 															DATA_SPEED[17]=5
-#define mor_rotate_front_right_next						DATA_SPEED[18]=1
-#define mor_rotate_front_right_back						DATA_SPEED[18]=0
-#define	mor_rotate_front_right 								DATA_SPEED[19]
+#define	ID5 		 															DATA_SPEED[17]=5
+#define mor_rotate_4h_next 										DATA_SPEED[18]=0
+#define mor_rotate_4h_back										DATA_SPEED[18]=1
+#define	mor_rotate_4h 												DATA_SPEED[19]
 
-#define	DIA_CHI_START6											  DATA_SPEED[20]=255
-#define	ID6																    DATA_SPEED[21]=6
-#define Mor_FrontRight_next					 					DATA_SPEED[22]=1
-#define Mor_FrontRight_back										DATA_SPEED[22]=0
-#define	Mor_FrontRight		 										DATA_SPEED[23]
+#define	DIA_CHI_START6												DATA_SPEED[20]=255
+#define	ID6	 																	DATA_SPEED[21]=6
+#define Mor_4h_next							 							DATA_SPEED[22]=0
+#define Mor_4h_back														DATA_SPEED[22]=1   
+#define	Mor_4h 		 														DATA_SPEED[23]
 
 
 
-#define	DIA_CHI_START7											  DATA_SPEED[24]=255 // -- OK
-#define	ID7																    DATA_SPEED[25]=7 
-#define mor_rotate_front_left_next				 		DATA_SPEED[26]=0
-#define mor_rotate_front_left_back						DATA_SPEED[26]=1
-#define	mor_rotate_front_left	 								DATA_SPEED[27]
 
-#define	DIA_CHI_START8											  DATA_SPEED[28]=255 // -- OK
-#define	ID8																    DATA_SPEED[29]=8
-#define Mor_FrontLeft_next					 					DATA_SPEED[30]=1
-#define Mor_FrontLeft_back										DATA_SPEED[30]=0
-#define	Mor_FrontLeft	 												DATA_SPEED[31]
+//#define	DIA_CHI_START7											  DATA_SPEED[24]=255 // -- OK
+//#define	ID7																    DATA_SPEED[25]=7 
+//#define mor_rotate_front_left_next				 		DATA_SPEED[26]=0
+//#define mor_rotate_front_left_back						DATA_SPEED[26]=1
+//#define	mor_rotate_front_left	 								DATA_SPEED[27]
+
+//#define	DIA_CHI_START8											  DATA_SPEED[28]=255 // -- OK
+//#define	ID8																    DATA_SPEED[29]=8
+//#define Mor_FrontLeft_next					 					DATA_SPEED[30]=1
+//#define Mor_FrontLeft_back										DATA_SPEED[30]=0
+//#define	Mor_FrontLeft	 												DATA_SPEED[31]
 
 #define	DIA_CHI_START9												DATA_SPEED[32]=255
 #define	ID9																		DATA_SPEED[33]=9
@@ -205,11 +203,17 @@ vu8 DATA_SPEED[70]={255,1,0,0,
 #define  CB_CHAM_DUOI														GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_10)
 
 
-#define  Home_Rear_Left											GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_3) // -- OK
-#define  Home_Rear_Right										GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_1)
-#define  Home_Front_Left										GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_0)
-#define  Home_Front_Right										GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_2)
+//#define  Home_Rear_Left											GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_3) // -- OK
+//#define  Home_Rear_Right										GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_1)
+//#define  Home_Front_Left										GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_0)
+//#define  Home_Front_Right										GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_2)
+
+
+#define  Home_0h																GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_3) // -- OK
+#define  Home_4h																GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_0)
+#define  Home_8h																GPIO_ReadInputDataBit(GPIOC,GPIO_Pin_13)
 //NUT BAM
+
 #define		CHON_SAN												 	GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_1)
 #define  	NUT_START													GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_12)
 
@@ -234,14 +238,19 @@ vu8 DATA_SPEED[70]={255,1,0,0,
 #define CB_Line_T4				(CB_DO_LINE[0] & GP_MASK_7)
 //=============================ENCODER======================================
 
-#define Encoder_Chay			(vs32)((num_over_t1<<16) | TIM_GetCounter(TIM1))/5
+//#define Encoder_Chay			(vs32)((num_over_t1<<16) | TIM_GetCounter(TIM1))/5
 //#define Encoder_4h			(vs32)((num_over_t5<<16) | TIM_GetCounter(TIM5))/61.3 
 //#define Encoder_8h			(vs32)((num_over_t3<<16) | TIM_GetCounter(TIM3))/61.3 //TRONG78.32306
 //#define Encoder_0h			(vs32)((num_over_t2<<16) | TIM_GetCounter(TIM2))/61.3
-#define Encoder_Front_Left	(vs32)((num_over_t2<<16) | TIM_GetCounter(TIM2))/61.3
-#define Encoder_Front_Right	(vs32)((num_over_t5<<16)| TIM_GetCounter(TIM5))/61.3
-#define Encoder_Rear_Left		(vs32)((num_over_t3<<16) | TIM_GetCounter(TIM3))/61.3
-#define Encoder_Rear_Right	(vs32)((num_over_t4<<16) | TIM_GetCounter(TIM4))/61.3
+//#define Encoder_Front_Left	(vs32)((num_over_t2<<16) | TIM_GetCounter(TIM2))/61.3
+//#define Encoder_Front_Right	(vs32)((num_over_t5<<16)| TIM_GetCounter(TIM5))/61.3
+//#define Encoder_Rear_Left		(vs32)((num_over_t3<<16) | TIM_GetCounter(TIM3))/61.3
+//#define Encoder_Rear_Right	(vs32)((num_over_t4<<16) | TIM_GetCounter(TIM4))/61.3
+
+#define Encoder_Chay		(vs32)((num_over_t3<<16) | TIM_GetCounter(TIM3))/50
+#define Encoder_0h			(vs32)((num_over_t4<<16) | TIM_GetCounter(TIM4))/61.3 
+#define Encoder_8h			(vs32)((num_over_t5<<16) | TIM_GetCounter(TIM5))/61.3 //TRONG78.32306  // 61.3
+#define Encoder_4h			(vs32)((num_over_t2<<16) | TIM_GetCounter(TIM2))/61.3
 
 //#define Encoder_Run_Right		(vs32)((num_over_t1<<16) | TIM_GetCounter(TIM1
 
@@ -327,58 +336,58 @@ vs8 CB_line_trai, CB_line_phai, Nho_trai_truoc, Nho_trai_sau, Nho_phai_truoc, Nh
 char Do_Xanh;
 
 //////////////////////////chong nhieu encoder////////////////////
-vs32 ENCODER_FL()
-{
-	vs32 en, enOld = Encoder_Front_Left;
-	int i=0;
-	while( i < 2)
-	{
-		en = Encoder_Front_Left;
-		if(abs(en - enOld) < 5) i++;
-		enOld = en;
-	}
-	return en;
-}
+//vs32 ENCODER_FL()
+//{
+//	vs32 en, enOld = Encoder_Front_Left;
+//	int i=0;
+//	while( i < 2)
+//	{
+//		en = Encoder_Front_Left;
+//		if(abs(en - enOld) < 5) i++;
+//		enOld = en;
+//	}
+//	return en;
+//}
 
-vs32 ENCODER_FR()
-{
-	vs32 en, enOld = Encoder_Front_Right;
-	int i=0;
-	while( i < 2)
-	{
-		en = Encoder_Front_Right;
-		if(abs(en - enOld) < 5) i++;
-		enOld = en;
-	}
-	return -en;
-}
+//vs32 ENCODER_FR()
+//{
+//	vs32 en, enOld = Encoder_Front_Right;
+//	int i=0;
+//	while( i < 2)
+//	{
+//		en = Encoder_Front_Right;
+//		if(abs(en - enOld) < 5) i++;
+//		enOld = en;
+//	}
+//	return -en;
+//}
 
-vs32 ENCODER_RL()
-{
-	vs32 en, enOld = Encoder_Rear_Left;
-	int i=0;
-	while( i < 2)
-	{
-		en = Encoder_Rear_Left;
-		if(abs(en - enOld) < 5) i++;
-		enOld = en;
-	}
-	return en;
-}
+//vs32 ENCODER_RL()
+//{
+//	vs32 en, enOld = Encoder_Rear_Left;
+//	int i=0;
+//	while( i < 2)
+//	{
+//		en = Encoder_Rear_Left;
+//		if(abs(en - enOld) < 5) i++;
+//		enOld = en;
+//	}
+//	return en;
+//}
 
-//////////////////////////chong nhieu encoder////////////////////
-vs32 ENCODER_RR()
-{
-	vs32 en, enOld = Encoder_Rear_Right;
-	int i=0;
-	while( i < 2)
-	{
-		en = Encoder_Rear_Right;
-		if(abs(en - enOld) < 5) i++;
-		enOld = en;
-	}
-	return en;
-}
+////////////////////////////chong nhieu encoder////////////////////
+//vs32 ENCODER_RR()
+//{
+//	vs32 en, enOld = Encoder_Rear_Right;
+//	int i=0;
+//	while( i < 2)
+//	{
+//		en = Encoder_Rear_Right;
+//		if(abs(en - enOld) < 5) i++;
+//		enOld = en;
+//	}
+//	return en;
+//}
 
 vs32 ENCODER_CHAY()
 {
@@ -412,6 +421,62 @@ vs32 ENCODER_CHAY()
 //{
 //	return	Encoder_RunRight();
 //}
+
+
+//////////////////////////chong nhieu encoder////////////////////
+vs32 ENCODER_0h()
+{
+	vs32 en, enOld = Encoder_0h;
+	int i=0;
+	while( i < 2)
+	{
+		en = Encoder_0h;
+		if(abs(en - enOld) < 5) i++;
+		enOld = en;
+	}
+	return en;
+}
+
+vs32 ENCODER_4h()
+{
+	vs32 en, enOld = Encoder_4h;
+	int i=0;
+	while( i < 2)
+	{
+		en = Encoder_4h;
+		if(abs(en - enOld) < 5) i++;
+		enOld = en;
+	}
+	return en;
+}
+
+vs32 ENCODER_8h()
+{
+	vs32 en, enOld = Encoder_8h;
+	int i=0;
+	while( i < 2)
+	{
+		en = Encoder_8h;
+		if(abs(en - enOld) < 5) i++;
+		enOld = en;
+	}
+	return -en;
+}
+
+//vs32 ENCODER_XOAY()
+//{
+//	//return (vs32)((num_over_t2<<16)|TIM_GetCounter(TIM2))/100;
+//	vs32 en, enOld = Encoder_Xoay;
+//	int i=0;
+//	while( i < 2)
+//	{
+//		en = Encoder_Xoay;
+//		if(abs(en - enOld) < 50) i++;
+//		enOld = en;
+//	}
+//	return abs(en);
+//}
+
 
 //------------------------------------ DELAY MICROSECOND--------------------------------------------
 void delay_us(vu32 num)
@@ -1775,6 +1840,9 @@ void run_read_gyro_uart3(void)
 	dataTxGyro='z';
 }
 
+float error_show;
+float momen;
+
 //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 //---------------------------- TRUYEN DU LIEU VAO MANG-----------------------------
 void HMI_TRAN(vs32 _so_dong)
@@ -1813,27 +1881,27 @@ void HMI_TRAN(vs32 _so_dong)
 										HMI_DMI("Lazer trai:",lazeTraiValue,5);
 										break;
 									case 6:
-										HMI_DMI("ENCODER_FL ",ENCODER_FL(),6);
+										HMI_DMI("ENCODER_0h ",ENCODER_0h(),6);
 										break;
 									case 7:
-										HMI_DMI("ENCODER_FR ",ENCODER_FR(),7);
+										HMI_DMI("ENCODER_4h ",ENCODER_4h(),7);
 										break;
 									case 8:
-										HMI_DMI("ENCODER_RL ",ENCODER_RL(),8);
+										HMI_DMI("ENCODER_8h ",ENCODER_8h(),8);
 										break;
-									case 9:
-										HMI_DMI("ENCODER_RR ",ENCODER_RR(),9);
-										break;
+//									case 9:
+//										HMI_DMI("ENCODER_RR ",ENCODER_RR(),9);
+//										break;
 //										if(NUT_CHUYEN_SAN == 1){
 //											HMI_DMI("NUT CHUYEN SAN: DO",NUT_CHUYEN_SAN,9);
 //										}
 //										else{
 //											HMI_DMI("NUT CHUYEN SAN: XANH",NUT_CHUYEN_SAN,9);
 //										}
-										break;
-									case 10:	  
-										HMI_DMI("ENCODER_CHAY:",ENCODER_CHAY(),10);
-										break;
+//										break;
+//									case 10:	  
+//										HMI_DMI("ENCODER_CHAY:",ENCODER_CHAY(),10);
+//										break;
 									case 11:
 										HMI_DMI("BienTroNang:",BienTroNangValue,11);									
 										break;
