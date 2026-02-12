@@ -9,6 +9,8 @@ OUT_SIZE = 640   # resize về 640x640
 dragging_point = -1
 points = []
 
+img_path = r"matrix\real.jpg"
+
 # ================== MOUSE CALLBACK ==================
 def mouse_callback(event, x, y, flags, param):
     global dragging_point, points
@@ -32,7 +34,7 @@ def process_grid(image_path):
     global points
 
     img = cv2.imread(image_path)
-    img = cv2.resize(img, (640, 640))
+    img = cv2.resize(img, (640, 480))
     if img is None:
         print("Không tìm thấy ảnh!")
         return
@@ -69,11 +71,10 @@ def process_grid(image_path):
             for i, p in enumerate(points):
                 print(f"Point {i}: x={p[0]}, y={p[1]}")
             # format sẵn cho copy dán vào code
-            print("\nDang numpy array:")
-            print("src_points = np.float32([")
+            print("\nPTS = np.float32([")
             for p in points:
-                print(f" [{p[0]}, {p[1]}],")
-                print("])\n")
+                print(f"    [{p[0]}, {p[1]}],")
+            print("])\n")
             break
         elif key == 27:  # ESC
             cv2.destroyAllWindows()
@@ -107,7 +108,6 @@ def process_grid(image_path):
             cv2.rectangle(warped, (x1, y1), (x2, y2), (0,255,0), 2)
             cv2.putText(warped, f"{r},{c}", (x1+10, y1+30),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0,0,255), 2)
-            print("Cell:", r, c, "Coords:", x1, y1, x2, y2)
 
     cv2.imshow("Warped + Grid 3x3 (640x640)", warped)
     cv2.waitKey(0)
@@ -116,4 +116,4 @@ def process_grid(image_path):
 
 # ================== RUN ==================
 if __name__ == "__main__":
-    process_grid(r"matrix\real.jpg")
+    process_grid(img_path)
