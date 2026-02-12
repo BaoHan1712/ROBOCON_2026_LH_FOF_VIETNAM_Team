@@ -116,20 +116,18 @@ void Xuat_Phat_Lay_Vu_Khi_Do(int vu_khi, int goc_ve)
 }
 
 //********************************** vao rung mai 1 gap kfs ********************************************
-void Vao_rung_mai_1_san_Do(void)
+void Vao_rung_mai_1_do(void)
 {
 	speed_chan_sau = 15;
 	speed_chan_truoc = 60;
 
 	target_chan_truoc = 260;
 	target_chan_sau = 260;
-	
-	speed_tay_xoay = 100;
-	target_xoay_tay = 622;
+
 	
 	vTaskDelay(2000);
 	
-	robotRunAngle(900,35,900,0.2);
+	robotRunAngle(-1500,35,-900,0.2);
 	
 	for(i=0;i<250;i++)
 				{
@@ -142,68 +140,35 @@ void Vao_rung_mai_1_san_Do(void)
 				
 	for(i=0;i<250;i++)
 				{
-					while(lazePhaiValue > 190)	
+					while(lazeTraiValue > 175)	
 					{	
 						vTaskDelay (1);
 						if(!wantExit())	break;
 					}
 				}
-//				
-//	for(i=0;i<250;i++)
-//				{
-//					while(lazeTruocValue > 18)	
-//					{	
-//						Bam_thanh_laser_trai(15,-900,-880,152,2,160,15);//robotRun(-450,10);
-//						if(!wantExit())	break;
-//					}
-//				}
-//	robotStop(20);
-//				
-//				
-//	
-//	speed_chan_sau = 180;
-//	speed_chan_truoc = 250;
-
-//	target_chan_truoc = 690;
-//	target_chan_sau = 690;
-//				
-//	for(i=0;i<250;i++)	
-//	{
-//		while(bientrochantruocValue < 685)	{vTaskDelay(5); if(!wantExit())	break;}
-//	}			
-//				
-
-//	for(i=0;i<250;i++)	
-//	{
-//		while(CB_Ha_Dau == 1)	
-//			{	
-//						Bam_thanh_laser_trai(7,-900,-880,152,2,150,15);//robotRun(-450,10);
-//						if(!wantExit())	break;
-//			}
-//	}
-//	
-//	RESET_ENCODER();
-//	
-//	while(abs(ENCODER_RR()) + abs(ENCODER_RL()) < 540)	
-//	{	
-//		Bam_thanh_laser_trai(7,-900,-880,152,2,150,15);//robotRun(-450,10);
-//		if(!wantExit())	break;
-//	}
-//	
-//	robotStop(30);
+				
+	for(i=0;i<250;i++)
+				{
+					while(lazeTruocValue > 18)	
+					{	
+						Bam_thanh_laser_trai(15,-900,-880,164,2,200,15);//robotRun(-450,10);
+						if(!wantExit())	break;
+					}
+				}
+	robotStop(20);
+						
+				
 }
 
 //********************************** vao rung mai 2 gap kfs ********************************************
-void Vao_rung_mai_2_san_Do(void)
+void Vao_rung_mai_2_do(void)
 {
 	speed_chan_sau = 15;
 	speed_chan_truoc = 60;
 
 	target_chan_truoc = 260;
 	target_chan_sau = 260;
-	
-	speed_tay_xoay = 80;
-	target_xoay_tay = 615;
+
 	
 	vTaskDelay(2000);
 	
@@ -236,44 +201,12 @@ void Vao_rung_mai_2_san_Do(void)
 					}
 				}
 	robotStop(20);
-				
-				
-	speed_chan_sau = 180;
-	speed_chan_truoc = 250;
-
-	target_chan_truoc = 475;
-	target_chan_sau = 475;
-				
-	for(i=0;i<250;i++)	
-	{
-		while(bientrochantruocValue < 470)	{vTaskDelay(5); if(!wantExit())	break;}
-	}			
-				
-
-	for(i=0;i<250;i++)	
-	{
-		while(CB_Ha_Dau == 1)	
-			{	
-						Bam_thanh_laser_trai(7,-900,-880,271,2,150,15);//robotRun(-450,10);
-						if(!wantExit())	break;
-			}
-	}
-	
-	RESET_ENCODER();
-	
-	while(abs(ENCODER_RR()) + abs(ENCODER_RL()) < 540)	
-	{	
-		Bam_thanh_laser_trai(7,-900,-900,271,2,150,15);//robotRun(-450,10);
-		if(!wantExit())	break;
-	}
-	
-	robotStop(30);
-
+		
 }		
 
 
 //********************************** vao rung mai 3 gap kfs ********************************************
-void Vao_rung_mai_3_san_Do(void)
+void Vao_rung_mai_3_do(void)
 {
 	
 	 ////// chay toi gan cua vao
@@ -282,9 +215,9 @@ void Vao_rung_mai_3_san_Do(void)
 
 	target_chan_truoc = 260;
 	target_chan_sau = 260;
-	
-	speed_tay_xoay = 100;
-	target_xoay_tay = 623;
+//	
+//	speed_tay_xoay = 100;
+//	target_xoay_tay = 623;
 	
 	vTaskDelay(2000);
 	
@@ -303,7 +236,7 @@ void Vao_rung_mai_3_san_Do(void)
 				{
 					while(lazeTruocValue > 45)	
 					{	
-							Bam_thanh_laser_phai(30,-900,-880,135,2,160,15);//robotRun(-450,10);
+							Bam_thanh_laser_phai(30,-900,-880,132,2,160,15);//robotRun(-450,10);
 						vTaskDelay (1);
 						if(!wantExit())	break;
 					}
@@ -313,7 +246,7 @@ void Vao_rung_mai_3_san_Do(void)
 				{
 					while(lazeTruocValue > 21)	
 					{	
-						Bam_thanh_laser_phai(15,-900,-880,135,2, 160,15); //robotRun(-450,10);
+						Bam_thanh_laser_phai(15,-900,-880,132,2, 160,15); //robotRun(-450,10);
 						if(!wantExit())	break;
 					}
 				}
@@ -322,12 +255,13 @@ void Vao_rung_mai_3_san_Do(void)
 				{
 					while(lazeTruocValue > 20)	
 					{	
-						Bam_thanh_laser_phai(15,-900,-880,135,2,160,15);//robotRun(-450,10);
+						Bam_thanh_laser_phai(15,-900,-880,132,2,160,15);//robotRun(-450,10);
 						if(!wantExit())	break;
 					}
 				}
 	robotStop(20); 
-/////////						
+				
+/////////	do chân cao lên cua 3					
 	
 	speed_chan_sau = 180;
 	speed_chan_truoc = 250;
@@ -380,9 +314,9 @@ void Init_Action_Table_san_do(void)
     /* =========================================
        move 10 , action 10 chay toi cua vao
        ========================================= */
-    action_table[10][10][1] = Vao_rung_mai_1;
-    action_table[10][10][2] = Vao_rung_mai_2;
-    action_table[10][10][3] = Vao_rung_mai_3;
+    action_table[10][10][1] = Vao_rung_mai_1_do;
+    action_table[10][10][2] = Vao_rung_mai_2_do;
+    action_table[10][10][3] = Vao_rung_mai_3_do;
 	
 	    /* =========================================
        move 20 , action 20 chay ra cua ra
@@ -422,15 +356,41 @@ void Init_Action_Table_san_do(void)
     action_table[1][4][1] = Leo_bac_400;
     action_table[1][4][2] = Leo_bac_200_bam_thanh_phai;
 		action_table[1][4][3] = Leo_bac_400;
-		action_table[1][4][4]  = Xuong_bac_200_encoder_bam_thanh_phai;
-    action_table[1][4][5] = Leo_bac_200_bam_thanh_phai;
+		action_table[1][4][4]  = Xuong_bac_200_bam_thanh_trai;
+    action_table[1][4][5] = Leo_bac_200_bam_thanh_trai;
     action_table[1][4][6] = Leo_bac_200;
-    action_table[1][4][7] = Leo_bac_200_bam_thanh_phai_encoder;
+    action_table[1][4][7] = Leo_bac_200_bam_thanh_trai_encoder;
     action_table[1][4][8] = Leo_bac_200;
-    action_table[1][4][9]  = Xuong_bac_200;
+    action_table[1][4][9]  = Xuong_bac_200_encoder_bam_thanh_phai;
     action_table[1][4][10] = Xuong_bac_200;
     action_table[1][4][11] = Xuong_bac_200;
 		action_table[1][4][12] = Xuong_bac_200;
+		
+		/* =========================================
+//   move 2 , action 4,chay ben trai
+//   ========================================= */
+
+    action_table[2][4][2] = qua_trai_xuong_bac;
+		action_table[2][4][3] = qua_trai_len_bac;
+    action_table[2][4][5] = qua_trai_len_bac;
+    action_table[2][4][6] = qua_trai_len_bac;
+    action_table[2][4][8] = qua_trai_len_bac;
+    action_table[2][4][9] = qua_trai_xuong_bac;
+    action_table[2][4][11]= qua_trai_len_bac;
+		action_table[2][4][12]= qua_trai_xuong_bac;
+
+		/* =========================================
+//   move 3 , action 4,chay ben phai
+//   ========================================= */
+		action_table[3][4][1] = qua_phai_len_bac;
+    action_table[3][4][2] = qua_phai_xuong_bac;
+		action_table[3][4][4] =	qua_phai_xuong_bac;
+    action_table[3][4][5] = qua_phai_xuong_bac;
+    action_table[3][4][7] = qua_phai_xuong_bac;
+    action_table[3][4][8] = qua_phai_len_bac;
+    action_table[3][4][10]= qua_phai_xuong_bac;
+    action_table[3][4][11]= qua_phai_len_bac;
+		
 }
 
 /* ================= INIT CUA STATE 3 DAT KHOI TREN BUC ================= */
@@ -443,7 +403,12 @@ void Init_Zone3_Table_san_do(void)
             for(i=0;i<MAX_ID;i++)
                 zone3_table[m][a][i] = DoNothing;
 
-//    zone3_table[5][1][1] = Zone3_Special_Run;
+//    zone3_table[4][15][16] = Zone3_Special_Run; 	//O 4 BI DAT , o 5,6 trong
+//    zone3_table[14][5][16] = Zone3_Special_Run;		//O 5 BI DAT , o 4 6 trong
+//    zone3_table[14][15][6] = Zone3_Special_Run;		//O 6 BI DAT , o 4 5 trong
+//    zone3_table[4][5][16] = Zone3_Special_Run; 		//O 4 5 BI DAT , O 6 trong
+//    zone3_table[4][15][6] = Zone3_Special_Run;		//O 4 6 BI DAT , o 5 trong
+//    zone3_table[14][5][6] = Zone3_Special_Run;		//O 5 6 BI DAT , o 4 trong
 }
 
 

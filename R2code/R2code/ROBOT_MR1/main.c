@@ -178,11 +178,11 @@ static void taskMain(void *pvParameters)
 			if(CHON_SAN == 0)									//SAN DO
 			{
 				
-				//Init_Action_Table_san_do(); 
+				Init_Action_Table_san_do(); 
 				if(O && L2 && !R2 && Vi_tri == 0)								Xuat_Phat_Lay_Vu_Khi_Do(31,1800),Vi_tri = 1 ;
 				if(TRIANGLE && L2 && !R2 && Vi_tri == 0)				Xuat_Phat_Lay_Vu_Khi_Do(52,1800),Vi_tri = 1;
 				if(SQUARE && L2 && !R2 && Vi_tri == 0)					Xuat_Phat_Lay_Vu_Khi_Do(71,-1750),Vi_tri = 1;
-				if(O && L2 && !R2 && Vi_tri == 1)								Vao_rung_mai_1_san_Do();
+				if(O && L2 && !R2 && Vi_tri == 1)								Vao_rung_mai_1_do();
 
 				
 //				if(O)	Kep = 250, Nang_Ha_Kep = 250;

@@ -1528,6 +1528,10 @@ void Finish_Current_Block(void)
 }
 
 
+uint8_t lechtrai = 0;
+uint8_t lechphai = 0;
+uint8_t gapvukhi = 0;
+
 void ProcessReceivedData_2(void)
 {
 	uint8_t calc_checksum =
@@ -1544,8 +1548,6 @@ void ProcessReceivedData_2(void)
     if (RX_UART4[7] != 0x03) return;
 
     // Tính checksum
-    
-
     if (calc_checksum == RX_UART4[6])
     {
         id_rb    = RX_UART4[1];
@@ -1553,10 +1555,21 @@ void ProcessReceivedData_2(void)
         move     = RX_UART4[3];
         action   = RX_UART4[4];
         id_block = RX_UART4[5];
-
-        // Push vào FIFO
+			
+			// trang thai ghep vu khi
+			if (state_rb == 1) {
+				lechtrai = move;
+				lechphai = action;
+				gapvukhi = id_block;
+			}
+			
+			// trang thai vuot rung
+			else if (state_rb == 2 || state_rb == 3) {
+				 // Push vào FIFO
         Queue_Push(state_rb, move, action, id_block);
+			}
 
+			
     }
     else
     {

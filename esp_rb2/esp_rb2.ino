@@ -1,40 +1,29 @@
 #include <WiFi.h>
 #include <esp_now.h>
 
-/* ===================== CONFIG ===================== */
-
-uint8_t peerAddress[] = {0x68, 0xFE, 0x71, 0xF8, 0x20, 0x8C};
-
-
-// uint8_t peerAddress[] = {0x68, 0xFE, 0x71, 0xFA, 0xC5, 0xE4};
-
+/* ================= CONFIG ================= */
 
 #define UART_BAUDRATE 115200
-#define PACKET_SIZE  8
+#define PACKET_SIZE   8
 
 #define START_BYTE 0x02
 #define END_BYTE   0x03
 
+#define UART_PC_RX 3
+#define UART_PC_TX 1
+
+#define UART_STM_RX 16
+#define UART_STM_TX 17
+
 #define LED_PIN 2
-#define LED_BLINK_TIME 100
+#define QUEUE_SIZE 32
 
-#define UART1_RX 3
-#define UART1_TX 1
-#define UART2_RX 16
-#define UART2_TX 17
 
-/* ===================== ESP-NOW RETRY CONFIG ===================== */
+/* =================================================
+   ================= STRUCT =================
+   ================================================= */
 
-#define ESPNOW_MAX_RETRY     5
-#define ESPNOW_RETRY_DELAY  1000  // ms
-
-uint8_t espnow_fail_count = 0;
-bool espnow_ready = false;
-unsigned long last_retry_time = 0;
-
-/* ===================== DATA STRUCT ===================== */
-
-typedef struct __attribute__((packed)) {
+struct Packet {
   uint8_t start;
   uint8_t id_rb;
   uint8_t state;
@@ -43,183 +32,217 @@ typedef struct __attribute__((packed)) {
   uint8_t block_id;
   uint8_t checksum;
   uint8_t end;
-} Packet;
+} __attribute__((packed));
 
-/* ===================== LED ===================== */
 
-bool ledBlinking = false;
-unsigned long ledTimestamp = 0;
+struct PacketQueue {
+  Packet buf[QUEUE_SIZE];
+  volatile uint8_t head = 0;
+  volatile uint8_t tail = 0;
+};
 
-/* ===================== FUNCTION DECLARE ===================== */
 
-bool readPacketUART(HardwareSerial &uart, Packet &pkt);
-bool validatePacket(const Packet &pkt);
-uint8_t calcChecksum(const Packet &pkt);
+/* ================= GLOBAL ================= */
 
-void blinkLED();
-void updateLED();
+PacketQueue q_toSTM;
+PacketQueue q_toESPNow;
+PacketQueue q_toPC;
 
-void initESPNow();
-void retryESPNow();
+bool led_on = false;
+unsigned long led_start = 0;
 
-/* ===================== ESP-NOW CALLBACK ===================== */
+uint8_t peerAddress[] = {0x68,0xFE,0x71,0xFA,0xC5,0xE4};
+bool espnow_ready = true;
 
-void OnDataSent(const wifi_tx_info_t *tx_info, esp_now_send_status_t status)
+
+/* =================================================
+   ================= LED =================
+   ================================================= */
+
+void triggerLED()
 {
-  if (status == ESP_NOW_SEND_SUCCESS) {
-    espnow_fail_count = 0;
-    espnow_ready = true;
-  } else {
-    espnow_fail_count++;
-    espnow_ready = false;
-  }
+  digitalWrite(LED_PIN, HIGH);
+  led_on = true;
+  led_start = millis();
 }
 
-
-/* ===================== ESP-NOW INIT ===================== */
-
-void initESPNow()
+void updateLED()
 {
-  esp_now_deinit();
-
-  if (esp_now_init() != ESP_OK) {
-    espnow_ready = false;
-    return;
+  if (led_on && millis() - led_start > 100)
+  {
+    digitalWrite(LED_PIN, LOW);
+    led_on = false;
   }
-
-  esp_now_register_send_cb(OnDataSent);
-
-  esp_now_peer_info_t peerInfo = {};
-  memcpy(peerInfo.peer_addr, peerAddress, 6);
-  peerInfo.channel = 0;
-  peerInfo.encrypt = false;
-
-  if (esp_now_add_peer(&peerInfo) != ESP_OK) {
-    espnow_ready = false;
-    return;
-  }
-
-  espnow_fail_count = 0;
-  espnow_ready = true;
-
-  Serial.println("ESP-NOW reinitialized");
 }
 
-/* ===================== ESP-NOW RETRY ===================== */
 
-void retryESPNow()
+/* =================================================
+   ================= QUEUE =================
+   ================================================= */
+
+bool qPush(PacketQueue &q, const Packet &p)
 {
-  if (espnow_ready) return;
+  uint8_t next = (q.head + 1) % QUEUE_SIZE;
+  if (next == q.tail) return false;
 
-  if (millis() - last_retry_time < ESPNOW_RETRY_DELAY)
-    return;
-
-  last_retry_time = millis();
-
-  Serial.println("ESP-NOW retry...");
-  initESPNow();
+  q.buf[q.head] = p;
+  q.head = next;
+  return true;
 }
 
-/* ===================== SETUP ===================== */
+bool qPop(PacketQueue &q, Packet &p)
+{
+  if (q.head == q.tail) return false;
 
-void setup() {
-  Serial.begin(115200);
-  Serial1.begin(UART_BAUDRATE, SERIAL_8N1, UART1_RX, UART1_TX);
-  Serial2.begin(UART_BAUDRATE, SERIAL_8N1, UART2_RX, UART2_TX);
-
-  pinMode(LED_PIN, OUTPUT);
-  digitalWrite(LED_PIN, LOW);
-
-  WiFi.mode(WIFI_STA);
-  WiFi.disconnect();
-
-  initESPNow();
+  p = q.buf[q.tail];
+  q.tail = (q.tail + 1) % QUEUE_SIZE;
+  return true;
 }
 
-/* ===================== LOOP ===================== */
 
-void loop() {
-  Packet pkt;
+/* =================================================
+   ================= CHECK =================
+   ================================================= */
 
-  // Retry ESP-NOW nếu mất
-  if (espnow_fail_count >= ESPNOW_MAX_RETRY) {
-    espnow_ready = false;
-    retryESPNow();
-  }
-
-  // 👉 NHẬN TỪ SERIAL1
-  if (readPacketUART(Serial1, pkt)) {
-    blinkLED();
-
-    if (!validatePacket(pkt)) return;
-
-    if (pkt.id_rb == 1) {
-      // ➜ ESP-NOW
-      if (espnow_ready) {
-        esp_now_send(peerAddress, (uint8_t*)&pkt, sizeof(Packet));
-      }
-    }
-    else if (pkt.id_rb == 2) {
-      // ➜ UART2
-      Serial2.write((uint8_t*)&pkt, sizeof(Packet));
-    }
-  }
-
-  updateLED();
+uint8_t calcChecksum(const Packet &p)
+{
+  return (p.start + p.id_rb + p.state +
+          p.move + p.action + p.block_id) & 0xFF;
 }
 
-/* ===================== UART PARSER ===================== */
+bool validatePacket(const Packet &p)
+{
+  return p.start == START_BYTE &&
+         p.end   == END_BYTE &&
+         p.checksum == calcChecksum(p);
+}
 
-bool readPacketUART(HardwareSerial &uart, Packet &pkt) {
-  static uint8_t buffer[PACKET_SIZE];
-  static uint8_t index = 0;
 
-  while (uart.available()) {
+/* =================================================
+   ================= UART PARSER =================
+   ================================================= */
+
+bool readPacketUART(HardwareSerial &uart, Packet &pkt)
+{
+  static uint8_t buf[PACKET_SIZE];
+  static uint8_t idx = 0;
+
+  while (uart.available())
+  {
     uint8_t b = uart.read();
 
-    if (index == 0 && b != START_BYTE) continue;
+    if (idx == 0 && b != START_BYTE) continue;
 
-    buffer[index++] = b;
+    buf[idx++] = b;
 
-    if (index == PACKET_SIZE) {
-      index = 0;
-      memcpy(&pkt, buffer, PACKET_SIZE);
-
-      if (pkt.start != START_BYTE) return false;
-      if (pkt.end   != END_BYTE)   return false;
-
+    if (idx == PACKET_SIZE)
+    {
+      idx = 0;
+      memcpy(&pkt, buf, PACKET_SIZE);
       return true;
     }
   }
   return false;
 }
 
-/* ===================== CHECKSUM ===================== */
 
-bool validatePacket(const Packet &pkt) {
-  return pkt.checksum == calcChecksum(pkt);
+/* =================================================
+   ================= ESP NOW =================
+   ================================================= */
+
+void onDataSent(const wifi_tx_info_t*, esp_now_send_status_t s)
+{
+  espnow_ready = (s == ESP_NOW_SEND_SUCCESS);
 }
 
-uint8_t calcChecksum(const Packet &pkt) {
-  return (pkt.start +
-          pkt.id_rb +
-          pkt.state +
-          pkt.move +
-          pkt.action +
-          pkt.block_id) & 0xFF;
-}
+void onDataRecv(const esp_now_recv_info* info,
+                const uint8_t* data,
+                int len)
+{
+  if (len == sizeof(Packet))
+  {
+    Packet p;
+    memcpy(&p, data, sizeof(Packet));
 
-/* ===================== LED ===================== */
-
-void blinkLED() {
-  digitalWrite(LED_PIN, HIGH);
-  ledBlinking = true;
-  ledTimestamp = millis();
-}
-
-void updateLED() {
-  if (ledBlinking && millis() - ledTimestamp > LED_BLINK_TIME) {
-    digitalWrite(LED_PIN, LOW);
-    ledBlinking = false;
+    if (validatePacket(p))
+      qPush(q_toPC, p);
   }
+}
+
+
+void initESPNow()
+{
+  esp_now_init();
+
+  esp_now_register_send_cb(onDataSent);
+  esp_now_register_recv_cb(onDataRecv);
+
+  esp_now_peer_info_t peer = {};
+  memcpy(peer.peer_addr, peerAddress, 6);
+  esp_now_add_peer(&peer);
+}
+
+
+/* =================================================
+   ================= SETUP =================
+   ================================================= */
+
+void setup()
+{
+  Serial.begin(UART_BAUDRATE);
+
+  Serial1.begin(UART_BAUDRATE, SERIAL_8N1, UART_PC_RX, UART_PC_TX);
+  Serial2.begin(UART_BAUDRATE, SERIAL_8N1, UART_STM_RX, UART_STM_TX);
+
+  pinMode(LED_PIN, OUTPUT);
+
+  WiFi.mode(WIFI_STA);
+  initESPNow();
+}
+
+
+/* =================================================
+   ================= LOOP (ROUTER) =================
+   ================================================= */
+
+void loop()
+{
+  Packet pkt;
+
+  /* -------- PC -> Router -------- */
+  if (readPacketUART(Serial1, pkt) && validatePacket(pkt))
+  {
+    triggerLED();
+
+    if (pkt.id_rb == 1)
+      qPush(q_toESPNow, pkt);
+    else if (pkt.id_rb == 2)
+      qPush(q_toSTM, pkt);
+  }
+
+
+  /* -------- STM -> Router -------- */
+  if (readPacketUART(Serial2, pkt) && validatePacket(pkt))
+  {
+    triggerLED();
+    qPush(q_toPC, pkt);
+  }
+
+
+  /* -------- SEND STM -------- */
+  if (qPop(q_toSTM, pkt))
+    Serial2.write((uint8_t*)&pkt, sizeof(Packet));
+
+
+  /* -------- SEND ESP-NOW -------- */
+  if (espnow_ready && qPop(q_toESPNow, pkt))
+    esp_now_send(peerAddress, (uint8_t*)&pkt, sizeof(Packet));
+
+
+  /* -------- SEND PC -------- */
+  if (qPop(q_toPC, pkt))
+    Serial1.write((uint8_t*)&pkt, sizeof(Packet));
+
+
+  updateLED();
 }

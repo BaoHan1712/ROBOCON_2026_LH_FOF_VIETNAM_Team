@@ -1194,6 +1194,44 @@ void Xuong_bac_200_encoder_bam_thanh_trai(void)
 	robotStop(30);
 }
 
+//============== Sang trái lên bac 200 ===================
+
+void qua_trai_len_bac(void) {
+	for(i=0;i<250;i++)
+				{
+					while(_robotIMUAngle < 1950)	
+					{	
+						robotRotateFree(-1.5, 0);
+						if(!wantExit())	break;
+					}
+				}
+}
+
+//============== Sang trái xuong bac 200 ===================
+
+void qua_trai_xuong_bac(void) {
+ robotRotate(1800,-1.5, 0);
+}
+
+//============== Sang phai lên bac 200 ===================
+
+void qua_phai_len_bac(void) {
+	for(i=0;i<250;i++)
+				{
+					while(_robotIMUAngle < 10)	
+					{	
+						robotRotateFree(1.5, 0);
+						if(!wantExit())	break;
+					}
+				}
+}
+
+//============== Sang phai xuong bac 200 ===================
+
+void qua_phai_xuong_bac(void) {
+ robotRotate(0,1.5, 0);
+
+}
 
 //********************************************* bam thanh laser phai ********************************************
 void Bam_thanh_laser_phai(int speed, int runangle, int AngleHead, int lazer_stable_phai, int num_change_stable, int fix_max,int rat)

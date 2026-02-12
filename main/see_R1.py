@@ -1,15 +1,15 @@
 import cv2
 import time
 from ultralytics import YOLO
-from config_uart.sent_uart import ser, build_packet
+# from config_uart.sent_uart import ser, build_packet
 from gui_tkinter import set_state, STATE_IDLE, STATE_SEE_R1
 
 
 # ================= UART =================
-def send_packet():
-    pkt = build_packet(2, 2, 5, 5, 5)
-    ser.write(pkt)
-    print(">>> SENT Robot Stop")
+# def send_packet():
+#     pkt = build_packet(2, 2, 5, 5, 5)
+#     ser.write(pkt)
+#     print(">>> SENT Robot Stop")
 
 
 # ================= YOLO =================
@@ -25,7 +25,7 @@ R1_INDEX = [k for k, v in class_names.items() if v == CLASS_R1][0]
 # =================================================
 def detect_r1_snapshot_loop(use_state=True):
 
-    cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+    cap = cv2.VideoCapture(0)
 
     if not cap.isOpened():
         print("Camera open failed")
@@ -49,7 +49,7 @@ def detect_r1_snapshot_loop(use_state=True):
             if not ret:
                 break
 
-            frame = cv2.resize(frame, (640, 640))
+            frame = cv2.resize(frame, (640, 480))
 
             # ================= YOLO TRACK =================
             results = model.track(
@@ -97,7 +97,7 @@ def detect_r1_snapshot_loop(use_state=True):
 
                 if duration >= DETECT_TIME:
                     print(">>> R1 HOLD OK -> SEND")
-                    send_packet()
+                    # send_packet()
                     break
             else:
                 r1_start_time = None
@@ -126,3 +126,7 @@ def detect_r1_snapshot_loop(use_state=True):
             set_state["value"] = STATE_IDLE
 
         print(">>> Camera OFF | STATE -> IDLE")
+
+
+# if __name__ == "__main__":
+#     detect_r1_snapshot_loop(use_state=False)

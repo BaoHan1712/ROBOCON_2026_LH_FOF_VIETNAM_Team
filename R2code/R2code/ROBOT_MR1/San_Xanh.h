@@ -5,8 +5,8 @@ extern int Vi_tri;
 void Xuat_Phat_Lay_Vu_Khi_Xanh(int vu_khi, int goc_ve)
  //				RESET_ENCODER(); 
 {					
-				speed_chan_sau =180;
-				speed_chan_truoc = 250;
+				speed_chan_sau =100;
+				speed_chan_truoc = 150;
 				target_chan_truoc = 460, target_chan_sau = 460;
 				Kep = 250;
 	
@@ -17,8 +17,6 @@ void Xuat_Phat_Lay_Vu_Khi_Xanh(int vu_khi, int goc_ve)
 					while(lazePhaiValue < vu_khi - 9)	
 					{
 						vTaskDelay (1);
-					//	if(lazePhaiValue > vu_khi-8)	target_chan_truoc = 578, target_chan_sau =578;
-					//Bam_thanh_laser_phai(30,0,0,vu_khi,1,750,30);//robotRun(-450,10); // 0,0,0,khoang cach vs thanh,0,0,0
 						if(!wantExit())	break;
 					}
 				}
@@ -113,7 +111,7 @@ void Xuat_Phat_Lay_Vu_Khi_Xanh(int vu_khi, int goc_ve)
 }
 
 //********************************** vao rung mai 1 gap kfs ********************************************
-void Vao_rung_mai_1(void)
+void Vao_rung_mai_1_xanh(void)
 {
 	speed_chan_sau = 15;
 	speed_chan_truoc = 60;
@@ -158,7 +156,7 @@ void Vao_rung_mai_1(void)
 }
 
 //********************************** vao rung mai 2 gap kfs ********************************************
-void Vao_rung_mai_2(void)
+void Vao_rung_mai_2_xanh(void)
 {
 	speed_chan_sau = 15;
 	speed_chan_truoc = 60;
@@ -203,7 +201,7 @@ void Vao_rung_mai_2(void)
 
 
 //********************************** vao rung mai 3 gap kfs ********************************************
-void Vao_rung_mai_3(void)
+void Vao_rung_mai_3_xanh(void)
 {
 	
 	 ////// chay toi gan cua vao
@@ -294,7 +292,6 @@ void Vao_rung_mai_3(void)
 }
 
 
-
 /// *********** ESP chay tu dong***************
 /* =====================================================
  *  DISPATCH TABLE: [move][action][block]
@@ -341,9 +338,9 @@ void Init_Action_Table_san_xanh(void)
     /* =========================================
        move 10 , action 10 chay toi cua vao
        ========================================= */
-    action_table[10][10][1] = Vao_rung_mai_1;
-    action_table[10][10][2] = Vao_rung_mai_2;
-    action_table[10][10][3] = Vao_rung_mai_3;
+    action_table[10][10][1] = Vao_rung_mai_1_xanh;
+    action_table[10][10][2] = Vao_rung_mai_2_xanh;
+    action_table[10][10][3] = Vao_rung_mai_3_xanh;
 	
 	    /* =========================================
        move 20 , action 20 chay ra cua ra
@@ -383,15 +380,40 @@ void Init_Action_Table_san_xanh(void)
     action_table[1][4][1] = Leo_bac_400;
     action_table[1][4][2] = Leo_bac_200_bam_thanh_phai;
 		action_table[1][4][3] = Leo_bac_400;
-		action_table[1][4][4]  = Xuong_bac_200_encoder_bam_thanh_phai;
+		action_table[1][4][4]  = Xuong_bac_200_bam_thanh_phai;
     action_table[1][4][5] = Leo_bac_200_bam_thanh_phai;
     action_table[1][4][6] = Leo_bac_200;
     action_table[1][4][7] = Leo_bac_200_bam_thanh_phai_encoder;
     action_table[1][4][8] = Leo_bac_200;
-    action_table[1][4][9]  = Xuong_bac_200;
+    action_table[1][4][9]  = Xuong_bac_200_encoder_bam_thanh_trai;
     action_table[1][4][10] = Xuong_bac_200;
     action_table[1][4][11] = Xuong_bac_200;
 		action_table[1][4][12] = Xuong_bac_200;
+		
+				/* =========================================
+//   move 2 , action 4,chay ben trai
+//   ========================================= */
+		action_table[2][4][1] = qua_trai_len_bac;
+    action_table[2][4][2] = qua_trai_xuong_bac;
+    action_table[2][4][4] = qua_trai_xuong_bac;
+    action_table[2][4][5] = qua_trai_xuong_bac;
+    action_table[2][4][7] = qua_trai_xuong_bac;
+    action_table[2][4][8]  = qua_trai_len_bac;
+    action_table[2][4][10] = qua_trai_xuong_bac;
+		action_table[2][4][11] = qua_trai_len_bac;
+
+		/* =========================================
+//   move 3 , action 4,chay ben phai
+//   ========================================= */
+    action_table[3][4][2] = qua_phai_xuong_bac;
+		action_table[3][4][3] = qua_phai_len_bac;
+		action_table[3][4][5]  =qua_phai_len_bac;
+    action_table[3][4][6] = qua_phai_len_bac;
+    action_table[3][4][8] = qua_phai_len_bac;
+    action_table[3][4][9] = qua_phai_xuong_bac;
+    action_table[3][4][11] = qua_phai_len_bac;
+    action_table[3][4][12] = qua_phai_xuong_bac;
+		
 }
 
 /* ================= INIT CUA STATE 3 DAT KHOI TREN BUC ================= */
