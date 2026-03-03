@@ -365,6 +365,13 @@ vu8 DATA_SPEED[80]={255,1,0,0,				// 1- ID = 1, DIRECT = 0, SPEED = 0
 #define Tay1_xa_on					Cylinder_ID8 |= bit_7_H
 #define Tay1_xa_off					Cylinder_ID8 &= bit_7_L
 
+//****************** BIÊN TOAN CUC ****************************//
+int da_lay_tay1 = 0;
+int da_lay_tay2 = 0;
+int da_lay_tay3 = 0;
+int da_lay_tay4 = 0;
+int hoan_thanh_chay_rung = 0;
+
 //Bien ham reset banh xe
 int bienBuTruRR = 900, bienBuTruRL = 0, bienBuTruFR = 0 , bienBuTruFL = 0;
 int bitVeHome = 1;
@@ -1908,10 +1915,7 @@ void run_read_gyro_uart3(void)
 	dataTxGyro='z';
 }
 
-int da_lay_tay1 = 0;
-int da_lay_tay2 = 0;
-int da_lay_tay3 = 0;
-int hoan_thanh_chay_rung = 0;
+
 
 //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 //---------------------------- TRUYEN DU LIEU VAO MANG-----------------------------

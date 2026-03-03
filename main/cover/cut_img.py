@@ -3,10 +3,10 @@ import os
 import time
 
 # Thư mục để lưu , tạo nếu k có
-if not os.path.exists('data_train2'):
-    os.makedirs('data_train2')
+if not os.path.exists('data_train'):
+    os.makedirs('data_train')
 
-video_path = r'cover\x4.mp4'
+video_path = r'video_20260303_111850.avi'
 
 
 cap = cv2.VideoCapture(video_path)
@@ -27,10 +27,10 @@ while True:
 
     elapsed_time = time.time() - start_time  
 
-    if elapsed_time >= 0.06: 
+    if elapsed_time >= 0.08: 
          
     # Thư mục sẽ lưu
-        file_name = f"data_train2/x4{count}.jpg"
+        file_name = f"data_train/x4{count}.jpg"
         
         cv2.imwrite(file_name, frame)
         print(f"Đã lưu {file_name}")

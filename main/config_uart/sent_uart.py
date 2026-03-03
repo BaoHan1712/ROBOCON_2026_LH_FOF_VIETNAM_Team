@@ -39,7 +39,7 @@ def send_packet_once(ser, packet):
 #     ser.write(packet)
 #     print(f"Đã gửi → move={move}, action={action}, id={block_id}, packet={packet}")
 
-# #     time.sleep(1)
+#     time.sleep(1)
 
 
 # id_rb    = 2

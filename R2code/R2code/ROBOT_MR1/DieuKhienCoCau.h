@@ -38,182 +38,13 @@ extern int Man_xoay_tay;
 
 void robotLineRunLeft(vu8 speed);
 void robotLineRunRight(vu8 speed);
-//=========================================BAN BONG==============================
 
-//void Ban_bong(void){
-////ban bong
-//if (!L1&&TOUCHPAD) {
-//            Ban_1 = Ban_2 = Ban_3 = force_F;
-//						Ban_1_next, Ban_2_next, Ban_3_next;
-//						vTaskDelay(15000); // Wait for 1.5 seconds
-//						Cylinder_L = 250; // Activate the cylinder
-//            vTaskDelay(20000);
-//            Ban_1=  Ban_2 = Ban_3 = 0;
-//            Cylinder_L = 0;
-//						XI_LANH_HA_NONG;
-//}	
-
-
-//			
-//				
-//	if(RJOY){
-//		Ban_1 =  Ban_2 =  Ban_3 = 40;
-//		Ban_1_back, Ban_2_back, Ban_3_back;
-//		vTaskDelay(20000);
-//		Ban_1 = 0, Ban_2 = 0, Ban_3 = 0;			
-
-//		
-//	}
-//}
-//void test(void)
-//{
-//if(LJOY)    Cylinder_L = 250;
-//else Cylinder_L = 0;
-//}
-
-// *****************************88 nang ha bo ban *********************************
-//void Nang_ha_bo_ban(vu8 speed)
-//{
-//	if(TRIANGLE)  Cylinder_next , Cylinder = speed;
-//	else if(X)		 Cylinder_back , Cylinder = speed;
-//	else Cylinder = 2;
-//}
-
-#include <math.h>
-
-#define OFFSET_TOLERANCE 1   
-#define CENTER 100
-#define MAX_SPEED 1
-#define MIN_SPEED 0.2
-#define K_FAR 0.005
-
-#define OFFSET_ARRAY_SIZE 20 
-
-int offsetArray[OFFSET_ARRAY_SIZE] = {0};  // M?ng luu giá tr? offset
-int offsetIndex = 0;  // Ch? m?c d? c?p nh?t m?ng
-
-// Hàm luu offset vào m?ng theo vòng tròn
-void saveOffset(int new_offset) {
-    offsetArray[offsetIndex] = new_offset;
-    offsetIndex = (offsetIndex + 1) % OFFSET_ARRAY_SIZE;  // C?p nh?t ch? m?c vòng l?p
-}
-
-// Hàm l?y giá tr? offset m?i nh?t t? m?ng
-int getLatestOffset() {
-    int latestIndex = (offsetIndex - 1 + OFFSET_ARRAY_SIZE) % OFFSET_ARRAY_SIZE;  
-    return offsetArray[latestIndex];
-}
-
-// Hàm tính t?c d? xoay d?a vào kho?ng cách v?i CENTER
-float calculateSpeed(int received_offset) {
-    float distanceFromCenter = abs(received_offset - CENTER);
-    
-    // S? d?ng hàm tanh d? tang t?c khi xa, gi?m t?c khi g?n
-    float speed = MIN_SPEED + (MAX_SPEED - MIN_SPEED) * tanh(0.05 * distanceFromCenter);
-
-    return speed;
-}
-void xoaytam(int received_offset) {  
-    int latest_offset;
-    float received_speed;
-
-    saveOffset(received_offset);
-
-
-   if (R2) {
-        latest_offset = getLatestOffset();  
-
-        // D?ng n?u offset dã v? g?n CENTER (98 - 100)
-        if (latest_offset >= 98 && latest_offset <= 102) {
-            robotRotateStop(0);
-        }
-
-        // Tính t?c d? xoay m?i nh?t
-        received_speed = calculateSpeed(latest_offset);
-
-        // Xoay v? CENTER
-        if (latest_offset < CENTER - OFFSET_TOLERANCE) {
-            robotRotateFree(-received_speed, 0);  // Xoay ph?i  
-        } else if (latest_offset > CENTER + OFFSET_TOLERANCE) {
-            robotRotateFree(received_speed, 0); // Xoay trái
-        }
-    }
-	}
-
-
-
-#define MOCCHUAN 4090  
-#define LUC_MOC 106
-#define GOC_MOC 600
-
-#define LUC_MAX1 250
-#define LUC_MIN1 50
-
-#define GOC_MAX1 600    
-#define GOC_MIN1 550    
-
-#define LUC_BETA 1.1  // H? s? phi tuy?n cho luc ban
-#define GOC_ALPHA 0.7
-
-int calculated_force;
-int calculated_distance;
-float result_Cam;
 	
 void Bam_thanh_laser_trai(int speed, int runangle, int AngleHead, int lazer_stable_phai, int num_change_stable, int fix_max,int rat);
 void Bam_thanh_laser_phai(int speed, int runangle, int AngleHead, int lazer_stable_phai, int num_change_stable, int fix_max,int rat);
 
 
-//void tinhlucban_depthcam(float received_distance) {
-//    float gocBanCam = 0;
-//    float lucBanCam = 0;
-//    // Tính l?c b?n v?i công th?c phi tuy?n
-//    lucBanCam = LUC_MOC * pow((received_distance / MOCCHUAN), LUC_BETA);
 
-//    // Gi?i h?n l?c b?n trong kho?ng cho phép
-//    if (lucBanCam > LUC_MAX1) {
-//        lucBanCam = LUC_MAX1;
-//    } else if (lucBanCam < LUC_MIN1) {
-//        lucBanCam = LUC_MIN1;
-//    }
-//    // Tính góc b?n v?i h? s? hi?u ch?nh và kho?ng d?ng
-//    lucBanCam = GOC_MOC + ((received_distance - MOCCHUAN) / MOCCHUAN) * (GOC_MAX1 - GOC_MIN1) * GOC_ALPHA;
-
-//    // Gi?i h?n góc b?n trong kho?ng cho phép
-//    if (lucBanCam > GOC_MAX1) {
-//        lucBanCam = GOC_MAX1;
-//    } else if (lucBanCam < GOC_MIN1) {
-//        lucBanCam = GOC_MIN1;
-//    }
-//    calculated_force = lucBanCam;
-//    calculated_distance = lucBanCam;
-//}
-
-
-
-#define MOCCU 2500       
-#define LUC_TAI_MOC 90
-
-
-#define LUC_MAX 250
-#define LUC_MIN 50
-
- void lucbanlazer(float received_distance) {
-    float gocBan = 0;
-    float lucBan = 0;
-	  float corrected_distance = sqrt((received_distance * received_distance));
-    lucBan = LUC_TAI_MOC * (corrected_distance / MOCCU);
-
-    if (lucBan > LUC_MAX) {
-        lucBan = LUC_MAX;
-    } else if (lucBan < LUC_MIN) {
-        lucBan = LUC_MIN;
-    }
-		
-    force_F = lucBan;
-		final_force = force_F;
-		final_force = force_F * (result)/10 ;
-		
-	}
 
 //**********************************************************************
 //void banxoay(void)
@@ -341,6 +172,8 @@ void ADCValue_Control(void)
 	static unsigned int bientroxoaytayCouter = 0, bientroxoaytay_SUM = 0;
 	static unsigned int bientrodaytayCouter = 0, bientrodaytay_SUM = 0;
 	static unsigned int bientronangtayCouter = 0, bientronangtay_SUM = 0;
+	
+	int cam_bien_laze_truoc_mapping = 0;
 	////----------------TINH TOAN LAZER---------------
 //	if (lazeSauCouter++ < 100)
 //	{
@@ -352,18 +185,23 @@ void ADCValue_Control(void)
 //		lazeSauCouter = 0;
 //		lazeSau_SUM = 0;
 //	}
-	//-------------------------------------------
+	//------------------------------ laze truoc --------------
 	if (lazeTruocCouter++ < 70)
 	{
-		lazeTruoc_SUM += cam_bien_laze_truoc;
+//		cam_bien_laze_truoc_mapping = (int)(10.02023 * cam_bien_laze_truoc + 183.290118);
+//		lazeTruoc_SUM += cam_bien_laze_truoc_mapping;
+			lazeTruoc_SUM += cam_bien_laze_truoc;
 	}
 	else
 	{
 		lazeTruocValue = lazeTruoc_SUM / 70;
+
 		lazeTruocCouter = 0;
 		lazeTruoc_SUM = 0;
 	}
-	//------------------------------ laze truoc--------------
+
+
+	//------------------------------ laze phai--------------
 	if (lazePhaiCouter++ < 70)
 	{
 		lazePhai_SUM += cam_bien_laze_phai;
@@ -385,7 +223,7 @@ void ADCValue_Control(void)
 		lazeTruocNhoCouter = 0;
 		lazeTruocNho_SUM = 0;
 	}
-	//----------------------------------------- laze sau-------------
+	//----------------------------------------- laze trai -------------
 	if (lazeTraiCouter++ < 70)
 	{
 		lazeTrai_SUM += cam_bien_laze_trai;
@@ -1650,6 +1488,7 @@ void kiem_tra_tay_gap3( int giatri_xoay) {
 extern int da_lay_tay1;
 extern int da_lay_tay2 ;
 extern int da_lay_tay3 ;
+extern int da_lay_tay4 ;
 
 void Lay_phia_truoc_bac_200_tren(void) {
 	

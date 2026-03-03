@@ -425,13 +425,14 @@ void Init_Zone3_Table_xan_xanh(void)
         for(a=0;a<MAX_ACTION;a++)
             for(i=0;i<MAX_ID;i++)
                 zone3_table[m][a][i] = DoNothing;
-
+//    zone3_table[14][15][16] = Zone3_Special_Run; 	// o 4, 5,6 trong
 //    zone3_table[4][15][16] = Zone3_Special_Run; 	//O 4 BI DAT , o 5,6 trong
 //    zone3_table[14][5][16] = Zone3_Special_Run;		//O 5 BI DAT , o 4 6 trong
 //    zone3_table[14][15][6] = Zone3_Special_Run;		//O 6 BI DAT , o 4 5 trong
 //    zone3_table[4][5][16] = Zone3_Special_Run; 		//O 4 5 BI DAT , O 6 trong
 //    zone3_table[4][15][6] = Zone3_Special_Run;		//O 4 6 BI DAT , o 5 trong
 //    zone3_table[14][5][6] = Zone3_Special_Run;		//O 5 6 BI DAT , o 4 trong
+//    zone3_table[4][5][6] = Zone3_Special_Run; 	// o 4, 5,6 bi dat
 }
 
 
@@ -476,9 +477,9 @@ void Run_All_Blocks_From_Queue_san_xanh(void)
 //******************************* DatKFSxanh **************************
 void DatKFSxanh(int vitri)
 {
-				speed_chan_sau =180;
-				speed_chan_truoc = 250;
-				target_chan_truoc = 300, target_chan_sau = 300;
+	speed_chan_sau =180;
+	speed_chan_truoc = 250;
+	target_chan_truoc = 300, target_chan_sau = 300;
 	for(i=0;i<250;i++)	
 	{
 		while(bientrochansauValue < 300)	{vTaskDelay(5); if(!wantExit())	break;}
@@ -524,6 +525,7 @@ void DatKFSxanh(int vitri)
 			}
 	}		
 	robotStop(0);
+//******* len buc va xoay dau vao cho dat khoi ********
 	
 	robotRunAngle(0,20,0,0.7);
 
@@ -534,6 +536,105 @@ void DatKFSxanh(int vitri)
 				}
 //	robotRotateStop();
 //				
+	robotRunAngle(0,40,0,0.1);
+		for(i=0;i<550;i++)	
+	{	
+			while(lazeTruocNhoValue > 400)	
+			{	
+				Bam_thanh_laser_trai(40,0,0,vitri,2,350,20);
+				vTaskDelay(5); 
+				if(!wantExit())	break;
+			}
+	}	
+	
+		for(i=0;i<550;i++)	
+	{	
+			while(lazeTruocNhoValue > 220)	
+			{	
+				Bam_thanh_laser_trai(20,0,0,vitri,2,350,20);
+				vTaskDelay(5); 
+				if(!wantExit())	break;
+			}
+	}	
+
+		for(i=0;i<550;i++)	
+	{	
+			while(lazeTruocNhoValue > 165)	
+			{	
+				Bam_thanh_laser_trai(8,0,0,vitri,2,350,20);
+				vTaskDelay(5); 
+				if(!wantExit())	break;
+			}
+	}	
+	robotStop(0);
+}
+
+//**************** Toi vi trí quyet dinh dat KFS o nao ***************************
+void quyet_dinh_KFSxanh(void)
+{
+	speed_chan_sau =180;
+	speed_chan_truoc = 250;
+	target_chan_truoc = 300, target_chan_sau = 300;
+	for(i=0;i<250;i++)	
+	{
+		while(bientrochansauValue < 300)	{vTaskDelay(5); if(!wantExit())	break;}
+	}
+		robotRunAngle(1800,40,-900,0.1);
+		for(i=0;i<550;i++)	
+	{	
+			while(lazeTraiValue > 64)	
+			{	
+				vTaskDelay(5); 
+				if(!wantExit())	break;
+			}
+	}	
+	robotStop(0);
+	
+		for(i=0;i<550;i++)	
+	{	
+			while(lazePhaiValue > 100)	
+			{	
+				Bam_thanh_laser_trai(30,-900,-900,64,2,150,20);
+				vTaskDelay(5); 
+				if(!wantExit())	break;
+			}
+	}	
+	
+		for(i=0;i<550;i++)	
+	{	
+			while(lazePhaiValue < 100)	
+			{	
+				Bam_thanh_laser_trai(30,-900,-900,64,2,150,20);
+				vTaskDelay(5); 
+				if(!wantExit())	break;
+			}
+	}		
+	
+	for(i=0;i<550;i++)	
+	{	
+			while(lazeTruocValue > 110)	
+			{	
+				Bam_thanh_laser_trai(30,-900,-900,64,2,150,20);
+				vTaskDelay(5); 
+				if(!wantExit())	break;
+			}
+	}		
+	robotStop(0);
+//******* len buc va xoay dau vao cho dat khoi ********
+	
+	robotRunAngle(0,20,0,0.7);
+
+	while(_robotIMUAngle < -50)	
+				{
+					vTaskDelay (5); 
+					if(!wantExit())	break;
+				}
+
+	robotStop(0);
+}
+
+void Dat_KFSxanh_vao_o(int vitri)
+{
 	robotRunAngle(0,40,0,0.1);
 		for(i=0;i<550;i++)	
 	{	
