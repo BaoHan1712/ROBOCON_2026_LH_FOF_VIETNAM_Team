@@ -2,6 +2,9 @@ import customtkinter as ctk
 import heapq
 import itertools
 import time
+import os       
+import json     
+from tkinter import simpledialog, messagebox
 from gui_tkinter import set_state, STATE_FOREST, STATE_IDLE 
 from config_uart.sent_uart import build_packet, send_packet_once, ser
 
@@ -24,7 +27,7 @@ class SelectPlaceApp:
         self.root.geometry("850x580") 
 
         # --- Cấu hình Sân ---
-        self.team_color = "RED"  # Mặc định là RED (Phải -> Trái)
+        self.team_color = "RED"  
 
         # --- Xử lý khi bấm nút X trên cửa sổ ---
         self.root.protocol("WM_DELETE_WINDOW", self.on_closing)
@@ -111,6 +114,22 @@ class SelectPlaceApp:
         )
         self.reset_btn.pack(side="left", padx=5)
 
+        # >>> THÊM 2 NÚT SO SÁNH & LƯU MAP TẠI ĐÂY <<<
+        self.compare_btn = ctk.CTkButton(
+            self.bottom_frame, text="So sánh", width=80, height=40,
+            fg_color="#8e44ad", hover_color="#732d91",
+            command=self.compare_saved_maps
+        )
+        self.compare_btn.pack(side="left", padx=5)
+
+        self.save_map_btn = ctk.CTkButton(
+            self.bottom_frame, text="Lưu map", width=80, height=40,
+            fg_color="#2c3e50", hover_color="#1a252f",
+            command=self.save_custom_map
+        )
+        self.save_map_btn.pack(side="left", padx=5)
+        # >>> KẾT THÚC THÊM NÚT <<<
+
         self.delete_btn = ctk.CTkButton(
             self.bottom_frame, text="Xóa", width=80, height=40,
             fg_color="#f0ad4e", hover_color="#ec971f",
@@ -152,6 +171,14 @@ class SelectPlaceApp:
         self.simulation_path = None
         self.best_targets_set = None
         self.best_ignored_set = []
+        self.best_targets_set = None
+        self.best_ignored_set = []
+
+        # >>> THÊM BIẾN CHO TÍNH NĂNG LƯU MAP <<<
+        self.matched_custom_packets = None
+        os.makedirs("saved_maps", exist_ok=True)  # Tạo thư mục nếu chưa có
+
+        
 
         # Cập nhật hiển thị ID lần đầu
         self.refresh_grid_ids()
@@ -310,6 +337,7 @@ class SelectPlaceApp:
         self.info_label.configure(text=f"Đặt khối {number} tại ({r},{c})")
 
     def reset_grid(self):
+        self.matched_custom_packets = None
         for r in range(ROWS):
             for c in range(COLS):
                 cell = self.grid_cells[r][c]
@@ -402,28 +430,12 @@ class SelectPlaceApp:
 
     def cost(self, r, c, virtual_grid=None):
         if not (0 <= r < ROWS and 0 <= c < COLS): return float('inf')
-        
-        # Kiểm tra xem ô này có nằm trong danh sách ĐƯỢC PHÉP ĐI QUA (đã phá/đã gắp) trong giả lập không
-        is_virtually_empty = False
-        if virtual_grid:
-            status = virtual_grid[r][c]
-            if status == "EMPTY" or status == "IGNORED":
-                is_virtually_empty = True
-
         cell = self.grid_cells[r][c]
-        
-        # --- LOGIC KHỐI 1 (SỬA ĐỔI): Chỉ cho phép đi qua nếu đã nằm trong danh sách IGNORED ---
         if cell["content"] and cell["content"]["number"] == 1:
-            if is_virtually_empty:
-                return 2  # Tốn chi phí để phá, nhưng đi được
-            else:
-                return float('inf')  # CẤM TUYỆT ĐỐI đi qua khối 1 thứ hai
-        
-        # Khối 3 luôn là tường
+            return 2  
         if cell["content"] and cell["content"]["number"] == 3:
             return float('inf')
-            
-        return 2  # Chi phí di chuyển bình thường
+        return 2  
 
     def dijkstra_astar(self, starts, targets, use_arm=False, virtual_grid=None):
         g_score = [[float("inf")]*COLS for _ in range(ROWS)]
@@ -533,6 +545,12 @@ class SelectPlaceApp:
                 for ov in self.grid_cells[r][c]["overlays"]: ov.destroy()
                 self.grid_cells[r][c]["overlays"].clear()
 
+        # >>> THÊM LOGIC CHẶN NẾU ĐÃ TÌM THẤY MAP TUỲ CHỈNH <<<
+        if self.matched_custom_packets is not None:
+            print("\n>>> TÌM THẤY MAP ĐÃ LƯU: BỎ QUA TÌM ĐƯỜNG, ĐANG GỬI GÓI TIN ĐÃ CÀI <<<")
+            self.send_custom_uart_packets()
+            return
+
         if self.selected_targets:
             print("\n>>> CHẾ ĐỘ THỦ CÔNG (MANUAL) <<<")
             self.solve_manual_targets()
@@ -573,7 +591,7 @@ class SelectPlaceApp:
             self.info_label.configure(text=f"Lỗi: Cần ít nhất 2 khối số 2 để chạy Auto.")
             return
 
-        print(f">>> Có {len(list_2s)} khối 2. Bắt đầu phân tích (Max 3 khối, Max 1 phá)...")
+        print(f">>> Có {len(list_2s)} khối 2. Bắt đầu phân tích chiến thuật...")
 
         # --- LỌC KHỐI ƯU TIÊN (HÀNG 3 - ID 1, 2, 3) ---
         priority_2s = [pos for pos in list_2s if pos[0] == 3]
@@ -608,64 +626,75 @@ class SelectPlaceApp:
                         min_1s_in_col = col_1_count
                         best_col_sequence = col_2s
 
-        # Kiểm tra ưu tiên hàng đáy cho cột
+        # --- KIỂM TRA LOGIC BẮT BUỘC ID 1,2,3 ---
         if best_col_sequence and has_priority:
             start_node = best_col_sequence[0]
             if start_node[0] != 3: 
+                print(f">>> Hủy chiến thuật cột vì không lấy khối ở ID 1,2,3 trước.")
                 best_col_sequence = None
 
         # --- 2. TẠO DANH SÁCH ĐƯỜNG ĐI ---
         if best_col_sequence:
-            main_col_idx = best_col_sequence[0][1]
-            print(f">>> [CHIẾN THUẬT CỘT] Cột {main_col_idx} có {len(best_col_sequence)} khối.")
+            main_col_idx = best_col_sequence[0][1] # Lấy index cột chính
+            print(f">>> [CHIẾN THUẬT CỘT] Đã chọn cột {main_col_idx} (Có {len(best_col_sequence)} khối).")
 
+            # 1. Tìm TẤT CẢ khối 2 nằm ở cột kề (main_col_idx +/- 1)
             adjacent_r2s = []
             for blk in list_2s:
                 if blk not in best_col_sequence: 
                     r, c = blk
-                    if abs(c - main_col_idx) == 1:
+                    if abs(c - main_col_idx) == 1: # Kiểm tra cột liền kề
                         adjacent_r2s.append(blk)
             
-            combined_sequence = list(best_col_sequence) + adjacent_r2s
-
-            # Sắp xếp: Hàng lớn đi trước, Cột chính đi trước
-            def sort_key(pos):
-                row = pos[0]
-                col = pos[1]
-                dist_to_main = abs(col - main_col_idx)
-                return (row, -dist_to_main)
-
-            combined_sequence.sort(key=sort_key, reverse=True)
-            
-            # --- [UPDATE] GIỚI HẠN TỐI ĐA 3 KHỐI ---
-            if len(combined_sequence) > 3:
-                print(f">>> [LIMIT] Cắt danh sách cột từ {len(combined_sequence)} xuống 3 khối.")
-                combined_sequence = combined_sequence[:3]
+            if adjacent_r2s:
+                print(f">>> [MỞ RỘNG] Phát hiện {len(adjacent_r2s)} khối ở cột bên cạnh. Gộp vào hành trình.")
                 
-            target_sequences.append(tuple(combined_sequence))
+                # Gộp cột chính và tất cả khối bên cạnh vào một danh sách
+                combined_sequence = list(best_col_sequence) + adjacent_r2s
+  
+                # --- SỬA CHỮA QUAN TRỌNG TẠI ĐÂY ---
+                # Sắp xếp ưu tiên:
+                # 1. Hàng (Row) lớn hơn đi trước (đi từ dưới lên).
+                # 2. Nếu cùng hàng, khối nằm ở CỘT CHÍNH (main_col_idx) đi trước.
+                #    Lý do: Phải gắp khối ở cột chính để "dọn đường" đứng vào đó, 
+                #    sau đó mới đứng ở cột chính gắp khối bên cạnh.
+                
+                def sort_key(pos):
+                    row = pos[0]
+                    col = pos[1]
+                    # Khoảng cách tới cột chính (0 là chính, 1 là cạnh)
+                    dist_to_main = abs(col - main_col_idx)
+                    # Sort tuple (Row giảm dần, Ưu tiên cột chính). 
+                    # Vì reverse=True (giảm dần), ta cần giá trị của Cột Chính lớn hơn Cột Phụ.
+                    # Main (dist=0), Side (dist=1). Ta dùng -dist: Main(0), Side(-1). 0 > -1.
+                    return (row, -dist_to_main)
+
+                combined_sequence.sort(key=sort_key, reverse=True)
+                
+                # Thêm phương án "Ăn tất cả" vào danh sách mục tiêu
+                target_sequences.append(tuple(combined_sequence))
+            else:
+                print(f">>> [GIỮ NGUYÊN] Cột bên cạnh không có khối 2. Chỉ ăn cột dọc.")
+                target_sequences.append(tuple(best_col_sequence))
+            # ------------------------------------------
 
         else:
-            # --- CHIẾN THUẬT TỰ DO (PERMUTATIONS) ---
-            # [UPDATE] Tìm tổ hợp 3 khối và 2 khối (Không tìm 4)
-            print(f">>> Tìm đường tự do (Tổ hợp 2 và 3 khối)...")
-            
-            raw_sequences = []
-            # Ưu tiên lấy 3 khối trước
-            if len(list_2s) >= 3:
-                raw_sequences.extend(list(itertools.permutations(list_2s, 3)))
-            # Sau đó xét trường hợp lấy 2 khối
-            if len(list_2s) >= 2:
-                raw_sequences.extend(list(itertools.permutations(list_2s, 2)))
-            
+            # Nếu không có cột ngon, chạy tìm kiếm cũ
             if has_priority:
-                print(f">>> BẮT BUỘC: Phải lấy khối ở hàng đáy (ID 1,2,3) đầu tiên!")
-                # Lọc: Chỉ giữ các chuỗi bắt đầu bằng khối ở hàng 3
-                target_sequences = [s for s in raw_sequences if s[0] in priority_2s]
+                print(f">>> BẮT BUỘC: Phải lấy khối ở hàng đáy (ID 1,2,3) trước!")
+                if len(priority_2s) >= 2:
+                    target_sequences = list(itertools.permutations(priority_2s, 2))
+                else:
+                    p_start = priority_2s[0]
+                    remaining = [b for b in list_2s if b != p_start]
+                    for second in remaining:
+                        target_sequences.append((p_start, second))
             else:
-                target_sequences = raw_sequences
-
+                print(f">>> Không có khối ID 1,2,3. Tìm đường tự do.")
+                target_sequences = list(itertools.permutations(list_2s, 2))
+        
         # --- PHẦN TÍNH TOÁN CHI PHÍ (GIỮ NGUYÊN) ---
-        potential_discards = [None] + list_1s # List này đảm bảo chỉ xét việc phá 0 hoặc 1 khối
+        potential_discards = [None] + list_1s
         best_cost = float('inf')
         best_sim = None
         best_targets_set = None
@@ -678,6 +707,7 @@ class SelectPlaceApp:
                 current_ignored = [discard_r1] if discard_r1 else []
                 first_target_col = active_targets[0][1]
                 
+                # Bắt buộc xuất phát từ hàng 3 của cột mục tiêu đầu tiên
                 forced_start = (3, first_target_col)
                 
                 cost, sim_data = self.simulate_sequence([forced_start], active_targets, current_ignored)
@@ -692,13 +722,19 @@ class SelectPlaceApp:
             final_ids = [self.get_cell_id(*p) for p in best_targets_set]
             ignored_ids = [self.get_cell_id(*p) for p in best_ignored_set]
             
-            mode_str = "AUTO (MAX 3)"
+            mode_str = "AUTO PRIORITY 1-2-3" if has_priority else "AUTO NORMAL"
+            if best_col_sequence:
+                if len(best_targets_set) > len(best_col_sequence):
+                    mode_str = "AUTO COLUMN + SIDE PICK" # Đã lấy thêm khối bên cạnh
+                else:
+                    mode_str = "AUTO COLUMN ONLY"
+
             print(f"-> {mode_str} ({self.team_color}): {final_ids}, Ignore: {ignored_ids}")
             self.visualize_result(best_sim, best_ignored_set)
             self.simulation_path = best_sim
             self.best_targets_set = best_targets_set
             self.best_ignored_set = best_ignored_set
-            self.info_label.configure(text=f"Đã tìm thấy đường (Max 3 khối): {final_ids}. Phá khối: {ignored_ids}")
+            self.info_label.configure(text=f"{mode_str}: {final_ids}. Sẵn sàng gửi UART.")
         else:
             self.info_label.configure(text="Không tìm thấy đường đi khả thi.")
             
@@ -817,12 +853,15 @@ class SelectPlaceApp:
                     time.sleep(0.1)
 
                 if entry_cell["content"] and entry_cell["content"]["number"] == 1:
-                    print(f"  │  ├─ Phát hiện KHỐI 1. Gửi lệnh PHÁ trước.")
+                    print(f"  │  ├─ Phát hiện KHỐI 1. Gửi lệnh PHÁ trước và check khối 1 đã được phá chưa.")
                     time.sleep(0.3)
                     packet = build_packet(1, 2, 0, 0, entry_id)
                     print(f"  │  └─ [BREAK BLOCK] id_rb=1, Move=2, Act=0, BlockID={entry_id}")
                     ser.write(packet)
-                    
+                    time.sleep(0.3)
+                    packet_check = build_packet(2, 2, 5, 5, entry_id) # Gửi gói kiểm tra sau khi phá (Move=5, Act=5 là gói kiểm tra đặc biệt)
+                    ser.write(packet_check)
+                
                     
                     # Vẽ búa nếu chưa có (để feedback thời gian thực)
                     if not any(isinstance(x, ctk.CTkLabel) and x.cget("text") == "🔨" for x in entry_cell["overlays"]):
@@ -886,11 +925,14 @@ class SelectPlaceApp:
                 cell_next = self.grid_cells[nr][nc]
                 
                 if cell_next["content"] and cell_next["content"]["number"] == 1:
-                    print(f"  │  ├─ ⚠ KHỐI 1 chắn đường tại ID={step_block_id}. Gửi lệnh PHÁ.")
+                    print(f"  │  ├─ ⚠ KHỐI 1 chắn đường tại ID={step_block_id}. Gửi lệnh PHÁ và check khối 1 đã được phá chưa.")
                     print(f"     └─ [BREAK] id_rb=1, Move=2, Act=0, BlockID={step_block_id}")
                     time.sleep(0.3)
                     packet = build_packet(1, 2, 0, 0, step_block_id)
                     ser.write(packet)
+                    time.sleep(0.3)
+                    packet_check = build_packet(2, 2, 5, 5, entry_id) # Gửi gói kiểm tra sau khi phá (Move=5, Act=5 là gói kiểm tra đặc biệt)
+                    ser.write(packet_check)
                     
                     # Vẽ búa nếu chưa có
                     if not any(isinstance(x, ctk.CTkLabel) and x.cget("text") == "🔨" for x in cell_next["overlays"]):
@@ -973,6 +1015,139 @@ class SelectPlaceApp:
         print(f"Tổng packet với id_rb=2 đã gửi: {count_rb2}")
         print("=" * 60)
         self.info_label.configure(text=f"Đã gửi xong ({self.team_color}). Tổng id_rb=2: {count_rb2}")
+
+    # ==========================================
+    # CÁC HÀM XỬ LÝ LƯU MAP & SO SÁNH (TÍNH NĂNG MỚI)
+    # ==========================================
+    def get_map_signature(self):
+        """Lấy sơ đồ hiện tại của map để lưu trữ và so sánh chính xác 100%"""
+        signature = {
+            "team": self.team_color,
+            "blocks_1": [],
+            "blocks_2": [],
+            "blocks_3": [],
+            "selected_path": list(self.selected_targets)
+        }
+        for r in range(ROWS):
+            for c in range(COLS):
+                content = self.grid_cells[r][c]["content"]
+                if content:
+                    num = content["number"]
+                    signature[f"blocks_{num}"].append((r, c))
+                    
+        # Sort lại để dù đặt khối theo thứ tự nào thì so sánh vẫn ra kết quả giống nhau
+        for key in ["blocks_1", "blocks_2", "blocks_3"]:
+            signature[key].sort()
+        return signature
+
+    def save_custom_map(self):
+        current_sig = self.get_map_signature()
+
+        # 1. Kiểm tra chống trùng lặp map
+        for filename in os.listdir("saved_maps"):
+            if filename.endswith(".json"):
+                try:
+                    with open(os.path.join("saved_maps", filename), "r") as f:
+                        data = json.load(f)
+                        saved_sig = data.get("signature", {})
+                        # Ép kiểu list về tuple để so sánh chính xác với signature trả về
+                        for k in ["blocks_1", "blocks_2", "blocks_3", "selected_path"]:
+                            if k in saved_sig:
+                                saved_sig[k] = [tuple(x) for x in saved_sig[k]]
+                        
+                        if saved_sig == current_sig:
+                            messagebox.showwarning("Cảnh báo", f"Map này đã trùng lặp với file đã lưu ({filename})!")
+                            return
+                except Exception as e:
+                    print(f"Lỗi đọc file {filename}: {e}")
+
+        # 2. Vòng lặp yêu cầu cài gói tin
+        packets_to_save = []
+        messagebox.showinfo("Cài đặt Map", "Bắt đầu cài đặt gói tin cho map này.\nNhập từng gói tin, nhấn Cancel hoặc để trống để hoàn thành.")
+        
+        while True:
+            pkt_str = simpledialog.askstring(
+                "Cài đặt gói tin UART", 
+                "Nhập gói tin định dạng: val1,val2,val3,val4,val5\n(Ví dụ: 2,1,11,11,11)\n\nNhấn OK để thêm gói tiếp.\nĐể trống hoặc nhấn Cancel để HOÀN THÀNH."
+            )
+            
+            if not pkt_str: # Nếu người dùng ấn Cancel hoặc để trống
+                break
+                
+            try:
+                parts = [int(x.strip()) for x in pkt_str.split(',')]
+                if len(parts) == 5:
+                    packets_to_save.append(parts)
+                    print(f">>> Đã thêm vào hàng đợi gói: {parts}")
+                else:
+                    messagebox.showerror("Lỗi", "Gói tin phải bao gồm đúng 5 chữ số cách nhau bằng dấu phẩy!")
+            except ValueError:
+                messagebox.showerror("Lỗi", "Chỉ chấp nhận số nguyên và dấu phẩy!")
+
+        # 3. Lưu thành file
+        if packets_to_save:
+            map_data = {
+                "signature": current_sig,
+                "packets": packets_to_save
+            }
+            timestamp = int(time.time())
+            save_path = os.path.join("saved_maps", f"map_team{self.team_color}_{timestamp}.json")
+            with open(save_path, "w") as f:
+                json.dump(map_data, f)
+            
+            messagebox.showinfo("Thành công", f"Đã lưu thành công hình ảnh map cùng {len(packets_to_save)} gói tin cài đặt!")
+        else:
+            messagebox.showinfo("Đã hủy", "Bạn chưa nhập gói tin nào nên Map không được lưu.")
+
+    def compare_saved_maps(self):
+        current_sig = self.get_map_signature()
+        self.matched_custom_packets = None
+
+        for filename in os.listdir("saved_maps"):
+            if filename.endswith(".json"):
+                try:
+                    with open(os.path.join("saved_maps", filename), "r") as f:
+                        data = json.load(f)
+                        saved_sig = data.get("signature", {})
+                        
+                        for k in ["blocks_1", "blocks_2", "blocks_3", "selected_path"]:
+                            if k in saved_sig:
+                                saved_sig[k] = [tuple(x) for x in saved_sig[k]]
+                        
+                        if saved_sig == current_sig:
+                            self.matched_custom_packets = data.get("packets", [])
+                            print(f"\n>>> [SO SÁNH] Map của bạn TRÙNG KHỚP với: {filename}")
+                            self.info_label.configure(text=f"Đã so sánh giống map đã lưu!\nBấm 'TÌM ĐƯỜNG' để gửi {len(self.matched_custom_packets)} gói cài sẵn.", text_color="green")
+                            messagebox.showinfo("Khớp Map!", "Đã nhận diện được map!\nNhấn TÌM ĐƯỜNG để truyền các gói tin đã cài đặt.")
+                            return
+                except Exception as e:
+                    print(f"Lỗi đọc file {filename}: {e}")
+        
+        self.info_label.configure(text="Không tìm thấy map đã lưu nào khớp với bàn cờ này.", text_color="red")
+        messagebox.showinfo("Không khớp", "Bàn cờ hiện tại chưa từng được lưu trong hệ thống.")
+
+    def send_custom_uart_packets(self):
+        if not ser or not ser.is_open:
+            print("[UART ERROR] Cổng UART không mở!")
+            self.info_label.configure(text="Lỗi UART: Port chưa kết nối")
+            return
+            
+        print("\n" + "=" * 60)
+        print("BẮT ĐẦU GỬI GÓI TIN ĐƯỢC CÀI ĐẶT RIÊNG (TỪ MAP LƯU TRỮ)")
+        print("=" * 60)
+        
+        for idx, pkt in enumerate(self.matched_custom_packets):
+            packet_bytes = build_packet(*pkt)
+            ser.write(packet_bytes)
+            print(f"  ├─ [CUSTOM PACKET {idx+1}] Đã gửi: {pkt}")
+            time.sleep(0.3) # Giãn cách một chút giữa các gói tự do
+            
+        print("=" * 60)
+        print("HOÀN THÀNH GỬI UART TUỲ CHỈNH")
+        print("=" * 60)
+        
+        self.info_label.configure(text=f"✓ Đã gửi thành công {len(self.matched_custom_packets)} gói tin cài sẵn!", text_color="black")
+        self.matched_custom_packets = None # Reset cờ sau khi gửi xong
 
     def run_algothism_forest(self):
         self.root.mainloop()
