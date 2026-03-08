@@ -8,6 +8,11 @@ from tkinter import simpledialog, messagebox
 from gui_tkinter import set_state, STATE_FOREST, STATE_IDLE 
 from config_uart.sent_uart import build_packet, send_packet_once, ser
 
+try:
+    from PIL import ImageGrab
+except ImportError:
+    ImageGrab = None
+
 
 ctk.set_appearance_mode("System")
 ctk.set_default_color_theme("blue")
@@ -177,6 +182,7 @@ class SelectPlaceApp:
         # >>> THÊM BIẾN CHO TÍNH NĂNG LƯU MAP <<<
         self.matched_custom_packets = None
         os.makedirs("saved_maps", exist_ok=True)  # Tạo thư mục nếu chưa có
+        os.makedirs(os.path.join("saved_maps", "images"), exist_ok=True)  # Tạo thư mục images
 
         
 
@@ -1019,10 +1025,12 @@ class SelectPlaceApp:
     # ==========================================
     # CÁC HÀM XỬ LÝ LƯU MAP & SO SÁNH (TÍNH NĂNG MỚI)
     # ==========================================
-    def get_map_signature(self):
+    def get_map_signature(self, team_color=None):
         """Lấy sơ đồ hiện tại của map để lưu trữ và so sánh chính xác 100%"""
+        if team_color is None:
+            team_color = self.team_color
         signature = {
-            "team": self.team_color,
+            "team": team_color,
             "blocks_1": [],
             "blocks_2": [],
             "blocks_3": [],
@@ -1040,28 +1048,22 @@ class SelectPlaceApp:
             signature[key].sort()
         return signature
 
+    def capture_screenshot(self, filename):
+        if ImageGrab is None:
+            messagebox.showerror("Lỗi", "Cần cài đặt PIL để lưu hình ảnh. Chạy: pip install pillow")
+            return
+        try:
+            x = self.root.winfo_rootx()
+            y = self.root.winfo_rooty()
+            width = self.root.winfo_width()
+            height = self.root.winfo_height()
+            img = ImageGrab.grab(bbox=(x, y, x + width, y + height))
+            img.save(filename)
+        except Exception as e:
+            messagebox.showerror("Lỗi", f"Không thể lưu hình ảnh: {e}")
+
     def save_custom_map(self):
-        current_sig = self.get_map_signature()
-
-        # 1. Kiểm tra chống trùng lặp map
-        for filename in os.listdir("saved_maps"):
-            if filename.endswith(".json"):
-                try:
-                    with open(os.path.join("saved_maps", filename), "r") as f:
-                        data = json.load(f)
-                        saved_sig = data.get("signature", {})
-                        # Ép kiểu list về tuple để so sánh chính xác với signature trả về
-                        for k in ["blocks_1", "blocks_2", "blocks_3", "selected_path"]:
-                            if k in saved_sig:
-                                saved_sig[k] = [tuple(x) for x in saved_sig[k]]
-                        
-                        if saved_sig == current_sig:
-                            messagebox.showwarning("Cảnh báo", f"Map này đã trùng lặp với file đã lưu ({filename})!")
-                            return
-                except Exception as e:
-                    print(f"Lỗi đọc file {filename}: {e}")
-
-        # 2. Vòng lặp yêu cầu cài gói tin
+        # 1. Vòng lặp yêu cầu cài gói tin
         packets_to_save = []
         messagebox.showinfo("Cài đặt Map", "Bắt đầu cài đặt gói tin cho map này.\nNhập từng gói tin, nhấn Cancel hoặc để trống để hoàn thành.")
         
@@ -1084,18 +1086,50 @@ class SelectPlaceApp:
             except ValueError:
                 messagebox.showerror("Lỗi", "Chỉ chấp nhận số nguyên và dấu phẩy!")
 
-        # 3. Lưu thành file
+        # 2. Lưu cho cả hai team nếu có packets
         if packets_to_save:
-            map_data = {
-                "signature": current_sig,
-                "packets": packets_to_save
-            }
             timestamp = int(time.time())
-            save_path = os.path.join("saved_maps", f"map_team{self.team_color}_{timestamp}.json")
-            with open(save_path, "w") as f:
-                json.dump(map_data, f)
+            saved_teams = []
+            for team in ["RED", "BLUE"]:
+                current_sig = self.get_map_signature(team)
+
+                # Kiểm tra chống trùng lặp map cho team này
+                duplicate = False
+                for filename in os.listdir("saved_maps"):
+                    if filename.endswith(".json"):
+                        try:
+                            with open(os.path.join("saved_maps", filename), "r") as f:
+                                data = json.load(f)
+                                saved_sig = data.get("signature", {})
+                                for k in ["blocks_1", "blocks_2", "blocks_3", "selected_path"]:
+                                    if k in saved_sig:
+                                        saved_sig[k] = [tuple(x) for x in saved_sig[k]]
+                                if saved_sig == current_sig:
+                                    messagebox.showwarning("Cảnh báo", f"Map cho {team} trùng lặp với {filename}!")
+                                    duplicate = True
+                                    break
+                        except Exception as e:
+                            print(f"Lỗi đọc file {filename}: {e}")
+                
+                if not duplicate:
+                    map_data = {
+                        "signature": current_sig,
+                        "packets": packets_to_save
+                    }
+                    save_path = os.path.join("saved_maps", f"map_team{team}_{timestamp}.json")
+                    with open(save_path, "w") as f:
+                        json.dump(map_data, f)
+                    
+                    # Lưu hình ảnh
+                    img_path = os.path.join("saved_maps", "images", f"map_team{team}_{timestamp}.png")
+                    self.capture_screenshot(img_path)
+                    
+                    saved_teams.append(team)
             
-            messagebox.showinfo("Thành công", f"Đã lưu thành công hình ảnh map cùng {len(packets_to_save)} gói tin cài đặt!")
+            if saved_teams:
+                messagebox.showinfo("Thành công", f"Đã lưu map cho {', '.join(saved_teams)} với {len(packets_to_save)} gói tin và hình ảnh!")
+            else:
+                messagebox.showinfo("Đã hủy", "Tất cả map đều trùng lặp, không lưu gì.")
         else:
             messagebox.showinfo("Đã hủy", "Bạn chưa nhập gói tin nào nên Map không được lưu.")
 
