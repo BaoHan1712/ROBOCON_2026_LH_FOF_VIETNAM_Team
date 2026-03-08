@@ -7,13 +7,13 @@ from gui_tkinter import set_state, STATE_IDLE, STATE_SEE_R1
 
 # ================= UART =================
 # def send_packet():
-#     pkt = build_packet(2, 2, 5, 5, 5)
+#     pkt = build_packet(2, 2, 5, 6, 5)
 #     ser.write(pkt)
 #     print(">>> SENT Robot Stop")
 
 
 # ================= YOLO =================
-model = YOLO(r"cover\models\kfs.onnx", task='detect')
+model = YOLO(r"main\cover\models\kfs_2.onnx", task='detect')
 
 CLASS_R1 = "R1"
 class_names = model.names
@@ -57,7 +57,7 @@ def detect_r1_snapshot_loop(use_state=True):
                 imgsz=640,
                 conf=0.5,
                 classes=[R1_INDEX],        # chỉ R1
-                tracker=r'cover\models\bytetrack.yaml',             # tracking
+                tracker=r'main\cover\models\bytetrack.yaml',             # tracking
                 verbose=False
             )
 

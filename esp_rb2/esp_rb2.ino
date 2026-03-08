@@ -204,7 +204,6 @@ void setup()
 /* =================================================
    ================= LOOP (ROUTER) =================
    ================================================= */
-
 void loop()
 {
   Packet pkt;
@@ -220,29 +219,29 @@ void loop()
       qPush(q_toSTM, pkt);
   }
 
-
-  /* -------- STM -> Router -------- */
-  if (readPacketUART(Serial2, pkt) && validatePacket(pkt))
+  /* -------- STM -> Router (2 BYTE MODE) -------- */
+  while (Serial2.available() >= 2)
   {
-    triggerLED();
-    qPush(q_toPC, pkt);
-  }
+    uint8_t b1 = Serial2.read();
+    uint8_t b2 = Serial2.read();
 
+    triggerLED();
+
+    Serial1.write(b1);
+    Serial1.write(b2);
+  }
 
   /* -------- SEND STM -------- */
   if (qPop(q_toSTM, pkt))
     Serial2.write((uint8_t*)&pkt, sizeof(Packet));
 
-
   /* -------- SEND ESP-NOW -------- */
   if (espnow_ready && qPop(q_toESPNow, pkt))
     esp_now_send(peerAddress, (uint8_t*)&pkt, sizeof(Packet));
 
-
   /* -------- SEND PC -------- */
   if (qPop(q_toPC, pkt))
     Serial1.write((uint8_t*)&pkt, sizeof(Packet));
-
 
   updateLED();
 }

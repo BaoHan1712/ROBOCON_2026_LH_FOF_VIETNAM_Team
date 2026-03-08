@@ -24,7 +24,7 @@ class SelectPlaceApp:
         self.root.geometry("850x580") 
 
         # --- Cấu hình Sân ---
-        self.team_color = "RED"  # Mặc định là RED (Phải -> Trái)
+        self.team_color = "RED"  
 
         # --- Xử lý khi bấm nút X trên cửa sổ ---
         self.root.protocol("WM_DELETE_WINDOW", self.on_closing)
@@ -819,12 +819,15 @@ class SelectPlaceApp:
                     time.sleep(0.1)
 
                 if entry_cell["content"] and entry_cell["content"]["number"] == 1:
-                    print(f"  │  ├─ Phát hiện KHỐI 1. Gửi lệnh PHÁ trước.")
+                    print(f"  │  ├─ Phát hiện KHỐI 1. Gửi lệnh PHÁ trước và check khối 1 đã được phá chưa.")
                     time.sleep(0.3)
                     packet = build_packet(1, 2, 0, 0, entry_id)
                     print(f"  │  └─ [BREAK BLOCK] id_rb=1, Move=2, Act=0, BlockID={entry_id}")
                     ser.write(packet)
-                    
+                    time.sleep(0.3)
+                    packet_check = build_packet(2, 2, 5, 5, entry_id) # Gửi gói kiểm tra sau khi phá (Move=5, Act=5 là gói kiểm tra đặc biệt)
+                    ser.write(packet_check)
+                
                     
                     # Vẽ búa nếu chưa có (để feedback thời gian thực)
                     if not any(isinstance(x, ctk.CTkLabel) and x.cget("text") == "🔨" for x in entry_cell["overlays"]):
@@ -888,11 +891,14 @@ class SelectPlaceApp:
                 cell_next = self.grid_cells[nr][nc]
                 
                 if cell_next["content"] and cell_next["content"]["number"] == 1:
-                    print(f"  │  ├─ ⚠ KHỐI 1 chắn đường tại ID={step_block_id}. Gửi lệnh PHÁ.")
+                    print(f"  │  ├─ ⚠ KHỐI 1 chắn đường tại ID={step_block_id}. Gửi lệnh PHÁ và check khối 1 đã được phá chưa.")
                     print(f"     └─ [BREAK] id_rb=1, Move=2, Act=0, BlockID={step_block_id}")
                     time.sleep(0.3)
                     packet = build_packet(1, 2, 0, 0, step_block_id)
                     ser.write(packet)
+                    time.sleep(0.3)
+                    packet_check = build_packet(2, 2, 5, 5, entry_id) # Gửi gói kiểm tra sau khi phá (Move=5, Act=5 là gói kiểm tra đặc biệt)
+                    ser.write(packet_check)
                     
                     # Vẽ búa nếu chưa có
                     if not any(isinstance(x, ctk.CTkLabel) and x.cget("text") == "🔨" for x in cell_next["overlays"]):
@@ -965,7 +971,7 @@ class SelectPlaceApp:
             last_pos = traveled_path[-1]
             last_id = self.get_cell_id(last_pos[0], last_pos[1])
             if last_id in [10, 11, 12]:
-                print(f"  ├─ [END PACKET] Gửi gói END (2,2,10,20) tới ID={last_id}")
+                print(f"  ├─ [END PACKET] Gửi gói END (2,2,20,20) tới ID={last_id}")
                 end_packet = build_packet(2, 2, 20, 20, last_id)
                 ser.write(end_packet)
                 time.sleep(0.1)
@@ -980,6 +986,6 @@ class SelectPlaceApp:
         self.root.mainloop()
 
 
-# if __name__ == "__main__":
-#     app = SelectPlaceApp()
-#     app.run_algothism_forest()
+if __name__ == "__main__":
+    app = SelectPlaceApp()
+    app.run_algothism_forest()

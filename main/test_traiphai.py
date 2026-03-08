@@ -2,7 +2,7 @@ import cv2
 import pyrealsense2 as rs
 import numpy as np
 from ultralytics import YOLO
-from config_uart.sent_uart import ser, build_packet
+# from config_uart.sent_uart import ser, build_packet
 import time
 
 # Tải mô hình YOLO
@@ -15,19 +15,19 @@ H = 480
 # ================= UART =================
 last_send_time = 0
 
-def send_packet(deviation_byte):
-    global last_send_time
+# def send_packet(deviation_byte):
+#     global last_send_time
 
-    now = time.time()
+#     now = time.time()
 
-    # gửi mỗi 2 giây
-    if now - last_send_time >= 1.0:
-        pkt = build_packet(2, 1, 10, deviation_byte, 10)
-        ser.write(pkt)
+#     # gửi mỗi 2 giây
+#     if now - last_send_time >= 1.0:
+#         pkt = build_packet(2, 1, 10, deviation_byte, 10)
+#         ser.write(pkt)
 
-        print(f">>> SENT Deviation byte: {deviation_byte}")
+#         print(f">>> SENT Deviation byte: {deviation_byte}")
 
-        last_send_time = now
+#         last_send_time = now
 
 # Cấu hình RealSense
 pipeline = rs.pipeline()
@@ -76,7 +76,7 @@ while True:
         continue
 
     frame = np.asanyarray(color_frame.get_data())
-    results = model.predict(source=frame, imgsz=640, conf=0.5, verbose=False, max_det=1)
+    results = model.predict(source=frame, imgsz=640, conf=0.3, verbose=False, max_det=1)
 
     for info in results:
         boxes = info.boxes
@@ -104,7 +104,7 @@ while True:
             deviation_byte, delta_pixel = map_deviation(center_x, W)
 
             print(f"Delta pixel: {delta_pixel} | Deviation byte: {deviation_byte}")
-            send_packet(deviation_byte)
+            # send_packet(deviation_byte)
 
             # ===============================
             # DEPTH MEDIAN

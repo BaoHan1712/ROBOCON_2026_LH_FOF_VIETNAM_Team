@@ -9,7 +9,7 @@
 
 bool ledBlinking = false;
 unsigned long ledTimestamp = 0;
-#define LED_BLINK_TIME 100   // ms
+#define LED_BLINK_TIME 1000   // ms
 
 
 /* ===================== DATA STRUCT ===================== */

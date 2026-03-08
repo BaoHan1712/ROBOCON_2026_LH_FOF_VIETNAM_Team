@@ -963,7 +963,7 @@ class SelectPlaceApp:
             last_pos = traveled_path[-1]
             last_id = self.get_cell_id(last_pos[0], last_pos[1])
             if last_id in [10, 11, 12]:
-                print(f"  ├─ [END PACKET] Gửi gói END (2,2,10,20) tới ID={last_id}")
+                print(f"  ├─ [END PACKET] Gửi gói END (2,2,20,20) tới ID={last_id}")
                 end_packet = build_packet(2, 2, 20, 20, last_id)
                 ser.write(end_packet)
                 time.sleep(0.1)

@@ -26,12 +26,12 @@ def send_packet_once(ser, packet):
     # Removed ser.close() to keep port open for shared use
 
 
-# # # --- Gửi liên tục ---
+# # # # --- Gửi liên tục ---
 # while True:
-#     id_rb    = 2
-#     state     = random.randint(1, 100)
-#     move     = random.randint(1, 100)
-#     action   = random.randint(1, 100)
+#     id_rb    = 2 
+#     state     = 2
+#     move     = random.randint(0, 3)
+#     action   = random.randint(1, 2)
 #     block_id = 2
 
 #     packet = build_packet(id_rb, state, move, action, block_id)
