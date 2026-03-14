@@ -20,16 +20,16 @@ ctk.set_default_color_theme("blue")
 
 ROWS = 4
 COLS = 3
-CELL_SIZE = 200
-width_cell = 70
-height_cell = 70
+CELL_SIZE = 210
+width_cell = 72
+height_cell = 72
 
 
 class SelectPlaceApp:
     def __init__(self):
         self.root = ctk.CTk()
         self.root.title("Robot Pathfinding: Hybrid & UART Control")
-        self.root.geometry("850x580") 
+        self.root.geometry("890x550") 
 
         # --- Cấu hình Sân ---
         self.team_color = "RED"  
@@ -938,6 +938,7 @@ class SelectPlaceApp:
                     ser.write(packet)
                     time.sleep(0.3)
                     packet_check = build_packet(2, 2, 5, 5, entry_id) # Gửi gói kiểm tra sau khi phá (Move=5, Act=5 là gói kiểm tra đặc biệt)
+                    print(f"     └─ [CHECK] id_rb=2, Move=5, Act=5, BlockID={step_block_id} (Kiểm tra sau phá)")
                     ser.write(packet_check)
                     
                     # Vẽ búa nếu chưa có
@@ -1022,9 +1023,6 @@ class SelectPlaceApp:
         print("=" * 60)
         self.info_label.configure(text=f"Đã gửi xong ({self.team_color}). Tổng id_rb=2: {count_rb2}")
 
-    # ==========================================
-    # CÁC HÀM XỬ LÝ LƯU MAP & SO SÁNH (TÍNH NĂNG MỚI)
-    # ==========================================
     def get_map_signature(self, team_color=None):
         """Lấy sơ đồ hiện tại của map để lưu trữ và so sánh chính xác 100%"""
         if team_color is None:
@@ -1062,6 +1060,21 @@ class SelectPlaceApp:
         except Exception as e:
             messagebox.showerror("Lỗi", f"Không thể lưu hình ảnh: {e}")
 
+    def get_mirrored_packet(self, pkt):
+        """
+        Đổi ID (vị trí thứ 5 trong mảng) sang vị trí đối xứng của sân kia.
+        Ví dụ: 1 <-> 3, 4 <-> 6, 7 <-> 9, 10 <-> 12. Ở giữa (2, 5, 8, 11) giữ nguyên.
+        """
+        new_pkt = list(pkt)
+        if len(new_pkt) >= 5:
+            target_id = new_pkt[4] # val5 (ID của ô)
+            if 1 <= target_id <= 12:
+                # Thuật toán lật ID đối xứng theo hàng
+                row_start = ((target_id - 1) // 3) * 3 + 1
+                offset = (target_id - 1) % 3
+                new_pkt[4] = row_start + (2 - offset)
+        return new_pkt
+
     def save_custom_map(self):
         # 1. Vòng lặp yêu cầu cài gói tin
         packets_to_save = []
@@ -1093,6 +1106,15 @@ class SelectPlaceApp:
             for team in ["RED", "BLUE"]:
                 current_sig = self.get_map_signature(team)
 
+                # >>> TỰ ĐỘNG ĐỔI ID GÓI TIN CHO SÂN ĐỐI DIỆN <<<
+                team_packets = []
+                if team != self.team_color:
+                    for pkt in packets_to_save:
+                        team_packets.append(self.get_mirrored_packet(pkt))
+                else:
+                    team_packets = packets_to_save
+                # >>> KẾT THÚC ĐỔI ID <<<
+
                 # Kiểm tra chống trùng lặp map cho team này
                 duplicate = False
                 for filename in os.listdir("saved_maps"):
@@ -1114,7 +1136,7 @@ class SelectPlaceApp:
                 if not duplicate:
                     map_data = {
                         "signature": current_sig,
-                        "packets": packets_to_save
+                        "packets": team_packets  # <--- Lưu mảng gói tin đã xử lý ID
                     }
                     save_path = os.path.join("saved_maps", f"map_team{team}_{timestamp}.json")
                     with open(save_path, "w") as f:

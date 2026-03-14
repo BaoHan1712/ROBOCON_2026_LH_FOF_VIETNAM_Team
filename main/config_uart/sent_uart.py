@@ -28,71 +28,57 @@ def send_packet_once(ser, packet):
 
 # # # # --- Gửi liên tục ---
 # while True:
-#     id_rb    = 2 
-#     state     = 2
-#     move     = random.randint(0, 3)
-#     action   = random.randint(1, 2)
-#     block_id = 2
+# #     id_rb    = 2 
+# #     state     = 2
+# #     move     = random.randint(0, 3)
+# #     action   = random.randint(1, 2)
+# #     block_id = 2
 
-#     packet = build_packet(id_rb, state, move, action, block_id)
+# #     packet = build_packet(id_rb, state, move, action, block_id)
 
-#     ser.write(packet)
-#     print(f"Đã gửi → move={move}, action={action}, id={block_id}, packet={packet}")
+# #     ser.write(packet)
+# #     print(f"Đã gửi → move={move}, action={action}, id={block_id}, packet={packet}")
 
-#     time.sleep(1)
+# #     time.sleep(1)
 
 
-# id_rb    = 2
-# packet = build_packet(2,2,10,10,2)
+# # [2, 2, 10, 10, 1], [2, 2, 0, 1, 1], [2, 2, 3, 10, 2], [2, 2, 0, 1, 2]
+
+
+# packet = build_packet(2, 2, 10, 10, 1)
 # ser.write(packet)
 # print(f"Đã gửi")
 # time.sleep(0.3)
 
 
-# packet = build_packet(id_rb, 2, 0, 1, 2)
+# packet = build_packet(2, 2, 0, 1, 1)
 # ser.write(packet)
 # print(f"Đã gửi")
 # time.sleep(0.3)
 
-# packet = build_packet(id_rb, 2, 1, 4, 2)
+# packet = build_packet(2, 2, 3, 10, 2)
 # ser.write(packet)
 # print(f"Đã gửi")
 # time.sleep(0.3)
 
-# packet = build_packet(id_rb, 2, 0, 1, 2)
+# packet = build_packet(2, 2, 3, 10, 3)
 # ser.write(packet)
 # print(f"Đã gửi")
 # time.sleep(0.3)
 
+# # # # leo bac
+# # packet = build_packet(2, 2, 1, 4, 2)
+# # ser.write(packet)
+# # print(f"Đã gửi")
+# # time.sleep(0.3)
 
+# # packet = build_packet(2, 2, 2, 10, 1)
+# # ser.write(packet)
+# # print(f"Đã gửi")
+# # time.sleep(0.3)
 
-# packet = build_packet(id_rb, 2, 1, 4, 3)
+# packet = build_packet(2, 2, 0, 1, 3)
 # ser.write(packet)
 # print(f"Đã gửi")
 # time.sleep(0.3)
-
-# packet = build_packet(id_rb, 2, 1, 4, 6)
-# ser.write(packet)
-# print(f"Đã gửi")
-# time.sleep(0.3)
-
-
-# packet = build_packet(id_rb, 2, 1, 4, 9)
-# ser.write(packet)
-# print(f"Đã gửi")
-# time.sleep(0.3)
-
-
-# packet = build_packet(id_rb, 2, 1, 4, 12)
-# ser.write(packet)
-# print(f"Đã gửi")
-# time.sleep(0.3)
-
-# packet = build_packet(id_rb, 2, 20, 20, 12)
-# ser.write(packet)
-# print(f"Đã gửi")
-# time.sleep(2)
-
-
-
 
