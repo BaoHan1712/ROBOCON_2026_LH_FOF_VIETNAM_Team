@@ -411,6 +411,7 @@ int TinHieu_ChuanBi_GapThang = 0;
 int TinHieu_ChuanBi_GapTrai = 0;
 int TinHieu_ChuanBi_GapPhai = 0;
 
+
 extern int _robotIMUAngle;
 int Vi_tri;
 int coVong = 0;
@@ -447,6 +448,8 @@ int vitri_tay23_phai_laser_GapQua = 161;
 
 int vitri_tay1home = 480;
 int vitri_tay2home = 480;
+
+int vi_tri_gap_ngang = 602;
 ///*********************************************************
 
 

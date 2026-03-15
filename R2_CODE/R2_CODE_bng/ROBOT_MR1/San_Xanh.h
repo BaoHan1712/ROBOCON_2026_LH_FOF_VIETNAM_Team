@@ -496,7 +496,19 @@ void Init_Action_Table_san_xanh(void)
 //    /* =========================================
 //       move 0 , action 2, dung lai de lay ben trai
 //       ========================================= */
-
+    action_table[0][2][1] = Lay_phia_truoc_bac_400_tren;
+    action_table[0][2][2] = Lay_phia_truoc_bac_200_tren;
+    action_table[0][2][3] = Lay_phia_truoc_bac_400_tren;
+		action_table[0][2][4] = Lay_phia_truoc_bac_200_duoi;
+		action_table[0][2][5] = Lay_phia_truoc_bac_200_tren;	
+		action_table[0][2][6] = Lay_phia_truoc_bac_200_tren;	
+		action_table[0][2][7] = Lay_phia_truoc_bac_200_tren;	
+		action_table[0][2][8] = Lay_phia_truoc_bac_200_tren;	
+		action_table[0][2][9] = Lay_phia_truoc_bac_200_duoi;
+		action_table[0][2][10]= Lay_phia_truoc_bac_200_duoi;
+		action_table[0][2][11]= Lay_phia_truoc_bac_200_duoi;
+		action_table[0][2][12]= Lay_phia_truoc_bac_200_duoi;
+		
 //    /* =========================================
 //       move 0 , action 3, dung lai de lay ben phai
 //       ========================================= */
@@ -626,42 +638,6 @@ void Run_All_Blocks_From_Queue_san_xanh(void)
     has_active_block = 0;
 }
 
-//void Run_All_Blocks_From_Queue_san_xanh(void)
-//{
-//    Packet_t pkt;
-
-//    while (Queue_Pop(&pkt))
-//    {
-//        ActionFunc f = DoNothing;
-
-//        if (pkt.move   >= MAX_MOVE   ||
-//            pkt.action >= MAX_ACTION ||
-//            pkt.id_block >= MAX_ID)
-//        {
-//            f();
-//            continue;
-//        }
-
-//        switch(pkt.state_rb)
-//        {
-//            case 2: // VUOT RUNG
-//                f = action_table[pkt.move][pkt.action][pkt.id_block];
-//                break;
-
-//            case 3:   // DAT KHOI LEN BUC	
-//                f = zone3_table[pkt.move][pkt.action][pkt.id_block];
-//                break;
-
-//            default:
-//                break;
-//        }
-
-//        f();
-//    }
-
-//    has_active_block = 0;
-//}
-
 
 
 //******************************* DatKFSxanh **************************
@@ -674,10 +650,10 @@ void DatKFSxanh(int vitri)
 	{
 		while(bientrochansauValue < 300)	{vTaskDelay(5); if(!wantExit())	break;}
 	}
-		robotRunAngle(1800,40,-900,0.1);
+		robotRunAngle(1800,20,-900,0.1);
 		for(i=0;i<550;i++)	
 	{	
-			while(lazeTraiValue > 64)	
+			while(lazePhaiValue > 64)	
 			{	
 				vTaskDelay(5); 
 				if(!wantExit())	break;
@@ -687,9 +663,9 @@ void DatKFSxanh(int vitri)
 	
 		for(i=0;i<550;i++)	
 	{	
-			while(lazePhaiValue > 100)	
+			while(lazeTraiValue > 100)	
 			{	
-				Bam_thanh_laser_trai(30,-900,-900,64,2,150,20);
+				Bam_thanh_laser_phai(30,-900,-900,64,2,150,20);
 				vTaskDelay(5); 
 				if(!wantExit())	break;
 			}
@@ -697,9 +673,9 @@ void DatKFSxanh(int vitri)
 	
 		for(i=0;i<550;i++)	
 	{	
-			while(lazePhaiValue < 100)	
+			while(lazeTraiValue < 100)	
 			{	
-				Bam_thanh_laser_trai(30,-900,-900,64,2,150,20);
+				Bam_thanh_laser_phai(30,-900,-900,64,2,150,20);
 				vTaskDelay(5); 
 				if(!wantExit())	break;
 			}
