@@ -582,6 +582,7 @@ class SelectPlaceApp:
         self.info_label.configure(text=f"Đã lưu đường đi thủ công ({len(self.selected_targets)} bước). Sẵn sàng GỬI UART.")
     
     #Hàm tính toán chạy tự động
+    #Hàm tính toán chạy tự động (ĐÃ SỬA THEO CHIẾN THUẬT ĐI THẲNG & GẮP 2 BÊN)
     def solve_auto_targets(self):
         list_1s = []
         list_2s = []
@@ -593,156 +594,95 @@ class SelectPlaceApp:
                     if content["number"] == 1: list_1s.append((r, c))
                     elif content["number"] == 2: list_2s.append((r, c))
         
-        if len(list_2s) < 2:
-            self.info_label.configure(text=f"Lỗi: Cần ít nhất 2 khối số 2 để chạy Auto.")
+        if not list_2s:
+            self.info_label.configure(text=f"Lỗi: Không có khối số 2 nào trên sân.")
             return
 
-        print(f">>> Có {len(list_2s)} khối 2. Bắt đầu phân tích chiến thuật...")
+        print(f">>> Có {len(list_2s)} khối 2. Bắt đầu phân tích chiến thuật AUTO ĐI THẲNG...")
 
-        # --- LỌC KHỐI ƯU TIÊN (HÀNG 3 - ID 1, 2, 3) ---
-        priority_2s = [pos for pos in list_2s if pos[0] == 3]
-        has_priority = len(priority_2s) > 0
-
-        target_sequences = []
-        
-        # --- 1. CHIẾN THUẬT QUÉT CỘT DỌC (VERTICAL SCAN) ---
-        best_col_sequence = None
-        max_2s_in_col = 0
-        min_1s_in_col = float('inf')
+        # --- 1. TÌM CỘT DỌC TỐT NHẤT ---
+        # Ưu tiên cột: 1. Không có khối 3 chặn đường. 2. Ăn được nhiều khối 2 nhất (gồm cả trái/phải)
+        best_col = -1
+        max_score = -1
 
         for c in range(COLS):
-            col_2s = []
-            col_1_count = 0
-            # Quét từ dưới lên (Row 3 -> 0)
-            for r in range(ROWS - 1, -1, -1):
-                content = self.grid_cells[r][c]["content"]
-                if content:
-                    if content["number"] == 2:
-                        col_2s.append((r, c))
-                    elif content["number"] == 1:
-                        col_1_count += 1
+            # Kiểm tra xem cột này có bị khối 3 (tường) chặn không
+            is_blocked = False
+            for r in range(ROWS):
+                if self.grid_cells[r][c]["content"] and self.grid_cells[r][c]["content"]["number"] == 3:
+                    is_blocked = True
+                    break
             
-            if len(col_2s) >= 2:
-                if len(col_2s) > max_2s_in_col:
-                    max_2s_in_col = len(col_2s)
-                    min_1s_in_col = col_1_count
-                    best_col_sequence = col_2s
-                elif len(col_2s) == max_2s_in_col:
-                    if col_1_count < min_1s_in_col:
-                        min_1s_in_col = col_1_count
-                        best_col_sequence = col_2s
+            if is_blocked:
+                continue # Bỏ qua cột này nếu bị chặn bởi khối 3
 
-        # --- KIỂM TRA LOGIC BẮT BUỘC ID 1,2,3 ---
-        if best_col_sequence and has_priority:
-            start_node = best_col_sequence[0]
-            if start_node[0] != 3: 
-                print(f">>> Hủy chiến thuật cột vì không lấy khối ở ID 1,2,3 trước.")
-                best_col_sequence = None
+            # Tính điểm (số khối 2 có thể gắp được nếu đi dọc cột này)
+            score = 0
+            for r in range(ROWS):
+                # Khối nằm ngay trên đường đi
+                if (r, c) in list_2s: score += 1
+                # Khối nằm bên trái
+                if c - 1 >= 0 and (r, c - 1) in list_2s: score += 1
+                # Khối nằm bên phải
+                if c + 1 < COLS and (r, c + 1) in list_2s: score += 1
 
-        # --- 2. TẠO DANH SÁCH ĐƯỜNG ĐI ---
-        if best_col_sequence:
-            main_col_idx = best_col_sequence[0][1] # Lấy index cột chính
-            print(f">>> [CHIẾN THUẬT CỘT] Đã chọn cột {main_col_idx} (Có {len(best_col_sequence)} khối).")
+            if score > max_score:
+                max_score = score
+                best_col = c
 
-            # 1. Tìm TẤT CẢ khối 2 nằm ở cột kề (main_col_idx +/- 1)
-            adjacent_r2s = []
-            for blk in list_2s:
-                if blk not in best_col_sequence: 
-                    r, c = blk
-                    if abs(c - main_col_idx) == 1: # Kiểm tra cột liền kề
-                        adjacent_r2s.append(blk)
-            
-            if adjacent_r2s:
-                print(f">>> [MỞ RỘNG] Phát hiện {len(adjacent_r2s)} khối ở cột bên cạnh. Gộp vào hành trình.")
+        if best_col == -1:
+            self.info_label.configure(text="LỖI: Tất cả các cột thẳng đều bị chặn bởi Khối 3. Không thể auto đi thẳng.")
+            return
+
+        print(f">>> Chọn cột đi thẳng: {best_col} (Có thể gắp tối đa {max_score} khối 2)")
+
+        # --- 2. TẠO HÀNH TRÌNH ĐI THẲNG VÀ GẮP ---
+        sim_path = []
+        path_accumulated = [(3, best_col)] # Bắt buộc xuất phát từ hàng đáy (hàng 3) của cột được chọn
+
+        # Đi từ dưới lên trên (Hàng 3 -> 0)
+        for r in range(3, -1, -1):
+            if r < 3: 
+                # Cập nhật tọa độ đi thẳng lên
+                path_accumulated.append((r, best_col))
+
+            # a. Xử lý gắp khối nằm chính giữa đường (nếu có)
+            if (r, best_col) in list_2s:
+                sim_path.append((list(path_accumulated), (r, best_col)))
+                path_accumulated = [(r, best_col)] # Reset chặng
+
+            # b. Quét 2 bên (Trái, Phải) xem có khối 2 không để thò tay ra gắp
+            for dc in [-1, 1]:
+                c_adj = best_col + dc
+                if 0 <= c_adj < COLS: # Đảm bảo không quét vọt ra ngoài bàn cờ
+                    if (r, c_adj) in list_2s:
+                        sim_path.append((list(path_accumulated), (r, c_adj)))
+                        path_accumulated = [(r, best_col)] # Reset chặng
+
+        # --- 3. CHẠY THẲNG LÊN ĐÍCH (HÀNG 0) ---
+        if path_accumulated[-1] != (0, best_col):
+            while path_accumulated[-1][0] > 0:
+                next_r = path_accumulated[-1][0] - 1
+                path_accumulated.append((next_r, best_col))
                 
-                # Gộp cột chính và tất cả khối bên cạnh vào một danh sách
-                combined_sequence = list(best_col_sequence) + adjacent_r2s
-  
-                # --- SỬA CHỮA QUAN TRỌNG TẠI ĐÂY ---
-                # Sắp xếp ưu tiên:
-                # 1. Hàng (Row) lớn hơn đi trước (đi từ dưới lên).
-                # 2. Nếu cùng hàng, khối nằm ở CỘT CHÍNH (main_col_idx) đi trước.
-                #    Lý do: Phải gắp khối ở cột chính để "dọn đường" đứng vào đó, 
-                #    sau đó mới đứng ở cột chính gắp khối bên cạnh.
-                
-                def sort_key(pos):
-                    row = pos[0]
-                    col = pos[1]
-                    # Khoảng cách tới cột chính (0 là chính, 1 là cạnh)
-                    dist_to_main = abs(col - main_col_idx)
-                    # Sort tuple (Row giảm dần, Ưu tiên cột chính). 
-                    # Vì reverse=True (giảm dần), ta cần giá trị của Cột Chính lớn hơn Cột Phụ.
-                    # Main (dist=0), Side (dist=1). Ta dùng -dist: Main(0), Side(-1). 0 > -1.
-                    return (row, -dist_to_main)
+        # Cắm cờ FINISH
+        sim_path.append((list(path_accumulated), "FINISH"))
 
-                combined_sequence.sort(key=sort_key, reverse=True)
-                
-                # Thêm phương án "Ăn tất cả" vào danh sách mục tiêu
-                target_sequences.append(tuple(combined_sequence))
-            else:
-                print(f">>> [GIỮ NGUYÊN] Cột bên cạnh không có khối 2. Chỉ ăn cột dọc.")
-                target_sequences.append(tuple(best_col_sequence))
-            # ------------------------------------------
-
-        else:
-            # Nếu không có cột ngon, chạy tìm kiếm cũ
-            if has_priority:
-                print(f">>> BẮT BUỘC: Phải lấy khối ở hàng đáy (ID 1,2,3) trước!")
-                if len(priority_2s) >= 2:
-                    target_sequences = list(itertools.permutations(priority_2s, 2))
-                else:
-                    p_start = priority_2s[0]
-                    remaining = [b for b in list_2s if b != p_start]
-                    for second in remaining:
-                        target_sequences.append((p_start, second))
-            else:
-                print(f">>> Không có khối ID 1,2,3. Tìm đường tự do.")
-                target_sequences = list(itertools.permutations(list_2s, 2))
+        # --- 4. GHI NHẬN VÀ XUẤT KẾT QUẢ ---
+        self.simulation_path = sim_path
+        self.best_ignored_set = []
         
-        # --- PHẦN TÍNH TOÁN CHI PHÍ (GIỮ NGUYÊN) ---
-        potential_discards = [None] + list_1s
-        best_cost = float('inf')
-        best_sim = None
-        best_targets_set = None
-        best_ignored_set = []
+        # Trích xuất ID các ô đã gắp để hiển thị text
+        final_ids = []
+        for segment, action in sim_path:
+            if action != "FINISH":
+                final_ids.append(self.get_cell_id(*action))
+
+        print(f"-> AUTO ĐI THẲNG ({self.team_color}): {final_ids}")
         
-        for ordered_targets in target_sequences:
-            active_targets = list(ordered_targets)
-            
-            for discard_r1 in potential_discards:
-                current_ignored = [discard_r1] if discard_r1 else []
-                first_target_col = active_targets[0][1]
-                
-                # Bắt buộc xuất phát từ hàng 3 của cột mục tiêu đầu tiên
-                forced_start = (3, first_target_col)
-                
-                cost, sim_data = self.simulate_sequence([forced_start], active_targets, current_ignored)
-                
-                if cost < best_cost:
-                    best_cost = cost
-                    best_sim = sim_data
-                    best_targets_set = active_targets
-                    best_ignored_set = current_ignored
-
-        if best_sim:
-            final_ids = [self.get_cell_id(*p) for p in best_targets_set]
-            ignored_ids = [self.get_cell_id(*p) for p in best_ignored_set]
-            
-            mode_str = "AUTO PRIORITY 1-2-3" if has_priority else "AUTO NORMAL"
-            if best_col_sequence:
-                if len(best_targets_set) > len(best_col_sequence):
-                    mode_str = "AUTO COLUMN + SIDE PICK" # Đã lấy thêm khối bên cạnh
-                else:
-                    mode_str = "AUTO COLUMN ONLY"
-
-            print(f"-> {mode_str} ({self.team_color}): {final_ids}, Ignore: {ignored_ids}")
-            self.visualize_result(best_sim, best_ignored_set)
-            self.simulation_path = best_sim
-            self.best_targets_set = best_targets_set
-            self.best_ignored_set = best_ignored_set
-            self.info_label.configure(text=f"{mode_str}: {final_ids}. Sẵn sàng gửi UART.")
-        else:
-            self.info_label.configure(text="Không tìm thấy đường đi khả thi.")
+        # Vẽ giao diện
+        self.visualize_result(sim_path, [])
+        self.info_label.configure(text=f"AUTO ĐI THẲNG. Đã chọn các ô: {final_ids}. Sẵn sàng gửi UART.")
             
     # --- HÀM VẼ GIAO DIỆN KẾT QUẢ (ĐÃ CẬP NHẬT VẼ BÚA) ---
     def visualize_result(self, simulation_path, ignored_blocks):
@@ -815,6 +755,7 @@ class SelectPlaceApp:
             cell["overlays"].append(lbl)
 
     # --- LOGIC GỬI UART ---
+    # --- LOGIC GỬI UART ---
     def process_and_send_uart(self, simulation_path):
         if not ser or not ser.is_open:
             print(f"\n[UART ERROR] UART port không sẵn sàng")
@@ -830,14 +771,14 @@ class SelectPlaceApp:
         print("=" * 60)
         
         is_first_entry = True
+        has_climbed = False # Cờ theo dõi: Robot đã leo lên bậc hay chưa
         traveled_path = []
         picked_blocks = []
-        count_rb2 = 0  # Counter for packets where id_rb == 2
+        count_rb2 = 0  
 
         for segment_idx, (segment_path, segment_action) in enumerate(simulation_path):
             print(f"\n[SEGMENT {segment_idx}] Action: {segment_action}")
             
-            # ALWAYS record traveled_path (include FINISH paths so we can detect exit gates)
             if not traveled_path:
                 traveled_path.extend(segment_path)
             else:
@@ -851,7 +792,6 @@ class SelectPlaceApp:
                 
                 print(f"  ├─ [ENTRY START] Kiểm tra ô ID={entry_id} (R:{entry_pos[0]}, C:{entry_pos[1]})")
 
-                # --- SEND START PACKET (2,2,10,10,entry_id) WHEN ENTERING FROM GATE 1/2/3 ---
                 if entry_id in [1, 2, 3]:
                     print(f"  │  ├─ [START PACKET] Gửi gói START (2,2,10,10) tới ID={entry_id}")
                     start_packet = build_packet(2, 2, 10, 10, entry_id)
@@ -865,11 +805,9 @@ class SelectPlaceApp:
                     print(f"  │  └─ [BREAK BLOCK] id_rb=1, Move=2, Act=0, BlockID={entry_id}")
                     ser.write(packet)
                     time.sleep(0.3)
-                    packet_check = build_packet(2, 2, 5, 5, entry_id) # Gửi gói kiểm tra sau khi phá (Move=5, Act=5 là gói kiểm tra đặc biệt)
+                    packet_check = build_packet(2, 2, 5, 5, entry_id) 
                     ser.write(packet_check)
                 
-                    
-                    # Vẽ búa nếu chưa có (để feedback thời gian thực)
                     if not any(isinstance(x, ctk.CTkLabel) and x.cget("text") == "🔨" for x in entry_cell["overlays"]):
                         lbl_break = ctk.CTkLabel(entry_cell["frame"], text="🔨",
                                            width=30, height=30, fg_color="#d35400", text_color="white",
@@ -895,13 +833,21 @@ class SelectPlaceApp:
                     entry_cell["overlays"].append(lbl_picked)
                     time.sleep(0.5)
 
-                time.sleep(0.3)
-                packet = build_packet(2, 2, 1, 4, entry_id)
-                count_rb2 += 1
-                ser.write(packet)
-                print(f"  ├─ [ENTRY MOVE] id_rb=2, Move=1, Act=4, BlockID={entry_id}")
-                time.sleep(0.1)
+                # ĐÃ XÓA LỆNH TỰ ĐỘNG LEO BẬC (2,2,1,4) TẠI ĐÂY ĐỂ CHỜ QUYẾT ĐỊNH
                 is_first_entry = False
+
+            # --- KIỂM TRA LEO BẬC THỰC SỰ ---
+            # Chỉ leo bậc (Act=4) khi đường đi thực sự chuyển từ hàng 3 (đất) lên hàng 2 (bậc)
+            if not has_climbed:
+                if len(segment_path) > 1 and segment_path[0][0] == 3 and segment_path[1][0] < 3:
+                    entry_id = self.get_cell_id(segment_path[0][0], segment_path[0][1])
+                    print(f"  ├─ [CLIMB STEP] Bắt đầu leo vào sa bàn tại ID={entry_id}")
+                    time.sleep(0.3)
+                    packet = build_packet(2, 2, 1, 4, entry_id)
+                    count_rb2 += 1
+                    ser.write(packet)
+                    has_climbed = True
+                    time.sleep(0.3)
 
             # --- XỬ LÝ DI CHUYỂN TRONG SEGMENT ---
             print(f"  ├─ [MOVE PHASE]")
@@ -926,29 +872,29 @@ class SelectPlaceApp:
                 else:
                     print(f"  │  ├─ [Warn] Yêu cầu quay 180 độ không hỗ trợ.")
                     continue 
+
+                # Nếu di chuyển dọc theo cửa (Cùng hàng 3), thì dùng Act=10 thay vì Act=4
+                act_cmd = 4 
+                if curr_pos[0] == 3 and next_pos[0] == 3:
+                    act_cmd = 10
+                    print(f"  │  ├─ [LATERAL DOOR] Di chuyển ngang ở cửa! Chuyển Act thành 10.")
                 
                 nr, nc = next_pos
                 cell_next = self.grid_cells[nr][nc]
                 
                 if cell_next["content"] and cell_next["content"]["number"] == 1:
-                    print(f"  │  ├─ ⚠ KHỐI 1 chắn đường tại ID={step_block_id}. Gửi lệnh PHÁ và check khối 1 đã được phá chưa.")
-                    print(f"     └─ [BREAK] id_rb=1, Move=2, Act=0, BlockID={step_block_id}")
+                    print(f"  │  ├─ ⚠ KHỐI 1 chắn đường tại ID={step_block_id}. Gửi lệnh PHÁ và check.")
                     time.sleep(0.3)
                     packet = build_packet(1, 2, 0, 0, step_block_id)
                     ser.write(packet)
                     time.sleep(0.3)
-                    packet_check = build_packet(2, 2, 5, 5, entry_id) # Gửi gói kiểm tra sau khi phá (Move=5, Act=5 là gói kiểm tra đặc biệt)
-                    print(f"     └─ [CHECK] id_rb=2, Move=5, Act=5, BlockID={step_block_id} (Kiểm tra sau phá)")
+                    packet_check = build_packet(2, 2, 5, 5, step_block_id) 
                     ser.write(packet_check)
                     
-                    # Vẽ búa nếu chưa có
                     if not any(isinstance(x, ctk.CTkLabel) and x.cget("text") == "🔨" for x in cell_next["overlays"]):
-                        lbl_break = ctk.CTkLabel(cell_next["frame"], text="🔨",
-                                           width=30, height=30, fg_color="#d35400", text_color="white",
-                                           corner_radius=15, font=("Arial", 18, "bold"))
+                        lbl_break = ctk.CTkLabel(cell_next["frame"], text="🔨", width=30, height=30, fg_color="#d35400", corner_radius=15)
                         lbl_break.place(relx=0.8, rely=0.5, anchor="center")
                         cell_next["overlays"].append(lbl_break)
-
                     time.sleep(0.3)
                     
                 elif cell_next["content"] and cell_next["content"]["number"] == 2:
@@ -961,19 +907,17 @@ class SelectPlaceApp:
                         ser.write(packet)
                         picked_blocks.append(step_block_id)
 
-                        lbl_picked = ctk.CTkLabel(cell_next["frame"], text="✓",
-                                           width=24, height=24, fg_color="#ff5555",
-                                           corner_radius=12, font=("Arial", 14, "bold"))
+                        lbl_picked = ctk.CTkLabel(cell_next["frame"], text="✓", width=24, height=24, fg_color="#ff5555", corner_radius=12)
                         lbl_picked.place(relx=0.85, rely=0.15, anchor="center")
                         cell_next["overlays"].append(lbl_picked)
                         time.sleep(0.5)
 
                 time.sleep(0.3)
-                packet = build_packet(2, 2, move_cmd, 4, step_block_id)
+                packet = build_packet(2, 2, move_cmd, act_cmd, step_block_id)
                 count_rb2 += 1
                 ser.write(packet)
                 move_desc = ["?", "Đi thẳng", "Rẽ trái", "Rẽ phải"][move_cmd]
-                print(f"  │  ├─ [MOVE] id_rb=2, Move={move_cmd} ({move_desc}), Act=4, BlockID={step_block_id}")
+                print(f"  │  ├─ [MOVE] id_rb=2, Move={move_cmd} ({move_desc}), Act={act_cmd}, BlockID={step_block_id}")
                 time.sleep(0.1) 
             
             # --- ACTION PHASE (CUỐI SEGMENT) ---
@@ -982,9 +926,9 @@ class SelectPlaceApp:
                 action_block_id = self.get_cell_id(target_pos[0], target_pos[1])
                 
                 if action_block_id in picked_blocks:
-                    print(f"  └─ [SKIP ACTION] BlockID={action_block_id} đã được gắp trong quá trình di chuyển.")
+                    print(f"  └─ [SKIP ACTION] BlockID={action_block_id} đã được gắp.")
                 else:
-                    print(f"  └─ [ACTION PHASE] Gắp tại đích (Chưa được gắp trước đó)")
+                    print(f"  └─ [ACTION PHASE] Xử lý gắp tại đích...")
                     robot_pos = segment_path[-1] 
                     
                     dr_act = target_pos[0] - robot_pos[0]
@@ -997,15 +941,31 @@ class SelectPlaceApp:
                         elif act_vec == left_turn_map[current_facing]: action_cmd = 2 
                         elif act_vec == right_turn_map[current_facing]: action_cmd = 3 
                     
-                    time.sleep(0.3)
-                    packet = build_packet(2, 2, 0, action_cmd, action_block_id)
-                    count_rb2 += 1
-                    ser.write(packet)
+                    # LOGIC QUAN TRỌNG NHẤT CHO YÊU CẦU CỦA BẠN NẰM TẠI ĐÂY:
+                    if not has_climbed and robot_pos[0] == 3 and target_pos[0] == 3 and robot_pos != target_pos:
+                        # Nếu robot chưa leo (còn ở cửa) và cần lấy khối trái/phải -> Gửi lệnh chạy ngang Act=10
+                        lateral_cmd = 2 if action_cmd == 2 else 3
+                        
+                        time.sleep(0.3)
+                        packet = build_packet(2, 2, lateral_cmd, 10, action_block_id)
+                        count_rb2 += 1
+                        ser.write(packet)
+                        
+                        desc = "Ngang Trái (Ở Cửa)" if lateral_cmd == 2 else "Ngang Phải (Ở Cửa)"
+                        print(f"     └─ [ACTION SPECIAL] id_rb=2, Move={lateral_cmd}, Act=10 ({desc}), BlockID={action_block_id}")
+                        time.sleep(0.3)
+                    else:
+                        # Hành động gắp bình thường khi đã ở trên sa bàn
+                        time.sleep(0.3)
+                        packet = build_packet(2, 2, 0, action_cmd, action_block_id)
+                        count_rb2 += 1
+                        ser.write(packet)
+                        
+                        act_desc = ["?", "Gắp thẳng", "Gắp trái", "Gắp phải", "Gắp tại chỗ"][action_cmd]
+                        print(f"     └─ [ACTION NORMAL] id_rb=2, Move=0, Act={action_cmd} ({act_desc}), BlockID={action_block_id}")
+                        time.sleep(0.3)
+                        
                     picked_blocks.append(action_block_id)
-                    
-                    act_desc = ["?", "Gắp thẳng", "Gắp trái", "Gắp phải", "Gắp tại chỗ"][action_cmd]
-                    print(f"     └─ [ACTION] id_rb=2, Move=0, Act={action_cmd} ({act_desc}), BlockID={action_block_id}")
-                    time.sleep(0.3)
 
         # --- SEND END PACKET IF EXITED AT GATE 10/11/12 ---
         if traveled_path:
@@ -1022,7 +982,7 @@ class SelectPlaceApp:
         print(f"Tổng packet với id_rb=2 đã gửi: {count_rb2}")
         print("=" * 60)
         self.info_label.configure(text=f"Đã gửi xong ({self.team_color}). Tổng id_rb=2: {count_rb2}")
-
+        
     def get_map_signature(self, team_color=None):
         """Lấy sơ đồ hiện tại của map để lưu trữ và so sánh chính xác 100%"""
         if team_color is None:
