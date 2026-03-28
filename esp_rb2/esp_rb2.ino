@@ -18,7 +18,6 @@
 #define LED_PIN 2
 #define QUEUE_SIZE 32
 
-
 /* =================================================
    ================= STRUCT =================
    ================================================= */
@@ -34,13 +33,16 @@ struct Packet {
   uint8_t end;
 } __attribute__((packed));
 
-
 struct PacketQueue {
   Packet buf[QUEUE_SIZE];
   volatile uint8_t head = 0;
   volatile uint8_t tail = 0;
 };
 
+struct UARTParser {
+  uint8_t buf[PACKET_SIZE];
+  uint8_t idx = 0;
+};
 
 /* ================= GLOBAL ================= */
 
@@ -48,12 +50,14 @@ PacketQueue q_toSTM;
 PacketQueue q_toESPNow;
 PacketQueue q_toPC;
 
+UARTParser parserPC;
+UARTParser parserSTM;
+
 bool led_on = false;
 unsigned long led_start = 0;
 
-uint8_t peerAddress[] = {0x68,0xFE,0x71,0xFA,0xC5,0xE4};
+uint8_t peerAddress[] = {0x68, 0xFE, 0x71, 0xF8, 0x20, 0x8C};
 bool espnow_ready = true;
-
 
 /* =================================================
    ================= LED =================
@@ -74,7 +78,6 @@ void updateLED()
     led_on = false;
   }
 }
-
 
 /* =================================================
    ================= QUEUE =================
@@ -99,7 +102,6 @@ bool qPop(PacketQueue &q, Packet &p)
   return true;
 }
 
-
 /* =================================================
    ================= CHECK =================
    ================================================= */
@@ -117,34 +119,38 @@ bool validatePacket(const Packet &p)
          p.checksum == calcChecksum(p);
 }
 
-
 /* =================================================
    ================= UART PARSER =================
    ================================================= */
 
-bool readPacketUART(HardwareSerial &uart, Packet &pkt)
+bool readPacketUART(HardwareSerial &uart, UARTParser &parser, Packet &pkt)
 {
-  static uint8_t buf[PACKET_SIZE];
-  static uint8_t idx = 0;
-
   while (uart.available())
   {
     uint8_t b = uart.read();
 
-    if (idx == 0 && b != START_BYTE) continue;
-
-    buf[idx++] = b;
-
-    if (idx == PACKET_SIZE)
+    // đợi START
+    if (parser.idx == 0)
     {
-      idx = 0;
-      memcpy(&pkt, buf, PACKET_SIZE);
+      if (b != START_BYTE) continue;
+    }
+
+    parser.buf[parser.idx++] = b;
+
+    if (parser.idx == PACKET_SIZE)
+    {
+      parser.idx = 0;
+
+      // check END để tránh lệch frame
+      if (parser.buf[PACKET_SIZE - 1] != END_BYTE)
+        return false;
+
+      memcpy(&pkt, parser.buf, PACKET_SIZE);
       return true;
     }
   }
   return false;
 }
-
 
 /* =================================================
    ================= ESP NOW =================
@@ -165,10 +171,14 @@ void onDataRecv(const esp_now_recv_info* info,
     memcpy(&p, data, sizeof(Packet));
 
     if (validatePacket(p))
-      qPush(q_toPC, p);
+    {
+      if (!qPush(q_toPC, p))
+      {
+        // queue full -> drop
+      }
+    }
   }
 }
-
 
 void initESPNow()
 {
@@ -181,7 +191,6 @@ void initESPNow()
   memcpy(peer.peer_addr, peerAddress, 6);
   esp_now_add_peer(&peer);
 }
-
 
 /* =================================================
    ================= SETUP =================
@@ -200,35 +209,41 @@ void setup()
   initESPNow();
 }
 
-
 /* =================================================
-   ================= LOOP (ROUTER) =================
+   ================= LOOP =================
    ================================================= */
+
 void loop()
 {
   Packet pkt;
 
   /* -------- PC -> Router -------- */
-  if (readPacketUART(Serial1, pkt) && validatePacket(pkt))
+  if (readPacketUART(Serial1, parserPC, pkt) && validatePacket(pkt))
   {
     triggerLED();
 
     if (pkt.id_rb == 1)
-      qPush(q_toESPNow, pkt);
+    {
+      if (!qPush(q_toESPNow, pkt)) {
+        // overflow
+      }
+    }
     else if (pkt.id_rb == 2)
-      qPush(q_toSTM, pkt);
+    {
+      if (!qPush(q_toSTM, pkt)) {
+        // overflow
+      }
+    }
   }
 
-  /* -------- STM -> Router (2 BYTE MODE) -------- */
-  while (Serial2.available() >= 2)
+  /* -------- STM -> Router -------- */
+  if (readPacketUART(Serial2, parserSTM, pkt) && validatePacket(pkt))
   {
-    uint8_t b1 = Serial2.read();
-    uint8_t b2 = Serial2.read();
-
     triggerLED();
 
-    Serial1.write(b1);
-    Serial1.write(b2);
+    if (!qPush(q_toPC, pkt)) {
+      // overflow
+    }
   }
 
   /* -------- SEND STM -------- */

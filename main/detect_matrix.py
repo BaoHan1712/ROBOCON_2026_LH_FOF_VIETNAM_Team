@@ -7,7 +7,7 @@ import time
 
 
 # ================== CONFIG ==================
-MODEL_PATH = r"main\cover\models\kfs_2.onnx"
+MODEL_PATH = r"cover\models\kfs_2.onnx"
 
 ROWS = 3
 COLS = 3

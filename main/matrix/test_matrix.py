@@ -4,7 +4,7 @@ from ultralytics import YOLO
 
 
 # ================== CONFIG ==================
-MODEL_PATH = r"main\cover\models\kfs_2.onnx"
+MODEL_PATH = r"cover\models\kfs_2.onnx"
 img_path = r"main\matrix\real.jpg"
 
 ROWS = 3

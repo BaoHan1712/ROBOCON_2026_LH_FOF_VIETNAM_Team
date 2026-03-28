@@ -20,7 +20,7 @@ uint8_t peerAddress2[] = {0x68, 0xFE, 0x71, 0xFA, 0xC5, 0xE4};
 #define UART2_TX 17
 
 #define LED_PIN 2
-#define LED_BLINK_TIME 100
+#define LED_BLINK_TIME 1000
 
 /* =========================================================
    ESPNOW CONFIG

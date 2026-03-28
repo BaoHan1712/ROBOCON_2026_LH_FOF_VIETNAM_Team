@@ -1,19 +1,16 @@
 import serial
 
 ser = serial.Serial(
-    port="COM3",
+    port="COM3",   # sửa lại nếu khác
     baudrate=115200,
     timeout=1
 )
 
-print("Listening...")
+print("Listening from ESP32...")
 
 while True:
+    data = ser.read(1)   # đọc 1 byte
 
-    if ser.in_waiting >= 2:      # đợi đủ 2 byte
-        data = ser.read(2)       # đọc 2 byte
-
-        byte1 = data[0]
-        byte2 = data[1]
-
-        print("Byte1:", byte1, "Byte2:", byte2)
+    if data:
+        byte = data[0]
+        print(f"da nhan Byte: {byte} (0x{byte:02X})")
