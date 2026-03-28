@@ -1750,37 +1750,7 @@ uint8_t Check_Next1_Block_For_Prepare(void)
     return 0;
 }
 
-////////////// ************** CHAY TU DONG
-void Run_All_Blocks_From_Queue_san_xanh(void)
-{
-    Packet_t pkt;
-
-    if (count_data_uart4 == 0)
-        return;
-
-    while (count_data_uart4 > 0)
-    {
-        /* luôn nhìn tru?c 1 block tru?c khi pop */
-        Check_Next1_Block_For_Prepare();
-
-        if (!Queue_Pop(&pkt))
-            break;
-
-        if (pkt.move < MAX_MOVE &&
-            pkt.action < MAX_ACTION &&
-            pkt.id_block < MAX_ID)
-        {
-            action_table[pkt.move][pkt.action][pkt.id_block]();
-        }
-						vTaskDelay(5000);
-				
-    }
-
-    has_active_block = 0;
-}
-
-//////////////////// CHAY BAN TU DONG
-
+//////////////// ************** CHAY TU DONG
 //void Run_All_Blocks_From_Queue_san_xanh(void)
 //{
 //    Packet_t pkt;
@@ -1788,21 +1758,51 @@ void Run_All_Blocks_From_Queue_san_xanh(void)
 //    if (count_data_uart4 == 0)
 //        return;
 
-//    /* nhìn truoc 1 block */
-//    Check_Next1_Block_For_Prepare();
-
-//    if (Queue_Pop(&pkt))
+//    while (count_data_uart4 > 0)
 //    {
+//        /* luôn nhìn tru?c 1 block tru?c khi pop */
+//        Check_Next1_Block_For_Prepare();
+
+//        if (!Queue_Pop(&pkt))
+//            break;
+
 //        if (pkt.move < MAX_MOVE &&
 //            pkt.action < MAX_ACTION &&
 //            pkt.id_block < MAX_ID)
-//        {	
+//        {
 //            action_table[pkt.move][pkt.action][pkt.id_block]();
 //        }
+//						vTaskDelay(5000);
+//				
 //    }
 
 //    has_active_block = 0;
 //}
+
+//////////////////// CHAY BAN TU DONG
+
+void Run_All_Blocks_From_Queue_san_xanh(void)
+{
+    Packet_t pkt;
+
+    if (count_data_uart4 == 0)
+        return;
+
+    /* nhìn truoc 1 block */
+    Check_Next1_Block_For_Prepare();
+
+    if (Queue_Pop(&pkt))
+    {
+        if (pkt.move < MAX_MOVE &&
+            pkt.action < MAX_ACTION &&
+            pkt.id_block < MAX_ID)
+        {	
+            action_table[pkt.move][pkt.action][pkt.id_block]();
+        }
+    }
+
+    has_active_block = 0;
+}
 
 
 //******************************* DatKFSxanh **************************

@@ -232,7 +232,7 @@ vTaskDelay(1000);
 //				target_chan_truoc = 350;
 //				target_chan_sau = 350;
 //////			}
-					if(TRIANGLE && L2 && !R2) 														tudonghoantoan();
+					if(TRIANGLE && L2 && !R2) 														Run_All_Blocks_From_Queue_san_xanh();
 //					if(SQUARE && L2 && !R2) 															dat_hop_vao_o();
 					if(X && L2 && !R2) 																			retry();
 					if ( O && L2 && !R2 ) 																vehome_xuat_phat();	
