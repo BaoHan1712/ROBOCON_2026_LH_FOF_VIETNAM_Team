@@ -21,23 +21,23 @@ ctk.set_default_color_theme("blue")
 ROWS = 4          # Số hàng sa bàn (không tính cửa)
 COLS = 3
 DOOR_ROW = ROWS   # Hàng cửa (row index = 4, phía dưới sa bàn)
-CELL_SIZE = 210
-width_cell = 72
-height_cell = 72
+CELL_SIZE = 250
+width_cell = 90
+height_cell = 90
 
 
 class SelectPlaceApp:
     def __init__(self):
         self.root = ctk.CTk()
         self.root.title("Robot Pathfinding: Hybrid & UART Control")
-        self.root.geometry("890x650")  # Tăng chiều cao để chứa hàng cửa
+        self.root.geometry("850x580")  # Compact layout
 
         self.team_color = "RED"  
 
         self.root.protocol("WM_DELETE_WINDOW", self.on_closing)
 
         self.main_frame = ctk.CTkFrame(self.root)
-        self.main_frame.pack(padx=20, pady=20, expand=True, fill="both")
+        self.main_frame.pack(padx=8, pady=5, expand=True, fill="both")
 
         # =====================================================================
         # KHỞI TẠO LƯỚI SA BÀN (ROWS hàng x COLS cột)
@@ -52,7 +52,7 @@ class SelectPlaceApp:
                     height=CELL_SIZE,
                     border_width=2
                 )
-                cell_frame.grid(row=i, column=j*2, padx=8, pady=8)
+                cell_frame.grid(row=i, column=j*2, padx=3, pady=3)
                 cell_frame.grid_propagate(False)
 
                 block_buttons = []
@@ -68,7 +68,7 @@ class SelectPlaceApp:
                         font=("Arial", 18),
                         command=lambda n=num, pos=(i, j): self.place_block(n, pos)
                     )
-                    btn.pack(side="left", expand=True, padx=5, pady=5)
+                    btn.pack(side="left", expand=True, padx=2, pady=2)
                     block_buttons.append(btn)
 
                 id_label = ctk.CTkLabel(
@@ -96,11 +96,11 @@ class SelectPlaceApp:
         # =====================================================================
         # ĐƯỜNG KẺ PHÂN CÁCH (Cột giữa các lane)
         # =====================================================================
-        sep1 = ctk.CTkFrame(self.main_frame, width=4, fg_color="#d32f2f")
-        sep1.grid(row=0, column=1, rowspan=ROWS+1, sticky="ns", pady=10)
+        sep1 = ctk.CTkFrame(self.main_frame, width=2, fg_color="#d32f2f")
+        sep1.grid(row=0, column=1, rowspan=ROWS+1, sticky="ns", pady=3)
         
-        sep2 = ctk.CTkFrame(self.main_frame, width=4, fg_color="#d32f2f") 
-        sep2.grid(row=0, column=3, rowspan=ROWS+1, sticky="ns", pady=10)
+        sep2 = ctk.CTkFrame(self.main_frame, width=2, fg_color="#d32f2f") 
+        sep2.grid(row=0, column=3, rowspan=ROWS+1, sticky="ns", pady=3)
 
         # =====================================================================
         # HÀNG CỬA (DOOR_ROW) — 3 ô đặc biệt, không có nút đặt khối
@@ -111,11 +111,11 @@ class SelectPlaceApp:
             door_frame = ctk.CTkFrame(
                 self.main_frame,
                 width=CELL_SIZE,
-                height=80,          # Ô cửa nhỏ hơn
+                height=40,          # Ô cửa nhỏ hơn
                 border_width=2,
                 fg_color="#1e3a5f"  # Màu xanh đậm để phân biệt
             )
-            door_frame.grid(row=ROWS, column=j*2, padx=8, pady=(0, 8))
+            door_frame.grid(row=ROWS, column=j*2, padx=3, pady=(0, 3))
             door_frame.grid_propagate(False)
 
             door_label = ctk.CTkLabel(
@@ -148,70 +148,70 @@ class SelectPlaceApp:
         # THANH CÔNG CỤ
         # =====================================================================
         self.bottom_frame = ctk.CTkFrame(self.root)
-        self.bottom_frame.pack(side="bottom", padx=20, pady=10, fill="x")
+        self.bottom_frame.pack(side="bottom", padx=10, pady=5, fill="x")
 
         self.team_btn = ctk.CTkButton(
             self.bottom_frame, text="Sân: ĐỎ (RED)", width=120, height=40,
             fg_color="#d32f2f", hover_color="#b71c1c",
             command=self.toggle_team
         )
-        self.team_btn.pack(side="left", padx=5)
+        self.team_btn.pack(side="left", padx=3)
 
         self.reset_btn = ctk.CTkButton(
             self.bottom_frame, text="Reset", width=80, height=40,
             fg_color="#d9534f", hover_color="#c9302c",
             command=self.reset_grid
         )
-        self.reset_btn.pack(side="left", padx=5)
+        self.reset_btn.pack(side="left", padx=3)
 
         self.compare_btn = ctk.CTkButton(
             self.bottom_frame, text="So sánh", width=80, height=40,
             fg_color="#8e44ad", hover_color="#732d91",
             command=self.compare_saved_maps
         )
-        self.compare_btn.pack(side="left", padx=5)
+        self.compare_btn.pack(side="left", padx=3)
 
         self.save_map_btn = ctk.CTkButton(
             self.bottom_frame, text="Lưu map", width=80, height=40,
             fg_color="#2c3e50", hover_color="#1a252f",
             command=self.save_custom_map
         )
-        self.save_map_btn.pack(side="left", padx=5)
+        self.save_map_btn.pack(side="left", padx=3)
 
         self.delete_btn = ctk.CTkButton(
             self.bottom_frame, text="Xóa", width=80, height=40,
             fg_color="#f0ad4e", hover_color="#ec971f",
             command=lambda: self.toggle_mode("DELETE", self.delete_btn)
         )
-        self.delete_btn.pack(side="left", padx=5)
+        self.delete_btn.pack(side="left", padx=3)
 
         self.select_btn = ctk.CTkButton(
             self.bottom_frame, text="Chọn ô", width=100, height=40,
             fg_color="#5bc0de", hover_color="#31b0d5",
             command=lambda: self.toggle_mode("SELECT", self.select_btn)
         )
-        self.select_btn.pack(side="left", padx=5)
+        self.select_btn.pack(side="left", padx=3)
 
         self.run_btn = ctk.CTkButton(
             self.bottom_frame, text="TÌM ĐƯỜNG", width=120, height=40,
             fg_color="#5cb85c", hover_color="#449d44",
             command=self.smart_run
         )
-        self.run_btn.pack(side="left", padx=5)
+        self.run_btn.pack(side="left", padx=3)
 
         self.send_btn = ctk.CTkButton(
             self.bottom_frame, text="GỬI UART", width=120, height=40,
             fg_color="#f0ad4e", hover_color="#ec971f",
             command=self.sent_and_close, 
         )
-        self.send_btn.pack(side="left", padx=5)
+        self.send_btn.pack(side="left", padx=3)
 
         self.info_label = ctk.CTkLabel(
             self.root,
             text="Chế độ: Đặt khối.\nBấm 'TÌM ĐƯỜNG' để tìm đường, sau đó 'GỬI UART' để truyền.",
-            width=250, height=60, wraplength=600, justify="left"
+            width=250, height=50, wraplength=600, justify="left", font=("Arial", 9)
         )
-        self.info_label.pack(pady=8)
+        self.info_label.pack(pady=3)
 
         self.mode = "PLACE"
         self.active_button = None
@@ -689,14 +689,25 @@ class SelectPlaceApp:
         #   Segment BOARD:      path leo lên + đi thẳng, action = khối trên sa bàn hoặc FINISH
 
         sim_path = []
-        door_start_col = 1          # Robot vào cửa giữa
-        current_door_col = door_start_col
+        # door_start_col = best_col        
+        # current_door_col = door_start_col
 
-        # Sắp xếp các khối bục theo thứ tự gần nhất (greedy)
+         # Sắp xếp các khối bục theo thứ tự gần nhất (greedy từ best_col)
         remaining_entry = list(list_2s_at_entry)
 
         def nearest(cur_col, candidates):
             return min(candidates, key=lambda p: abs(p[1] - cur_col)) if candidates else None
+
+        # === XÁC ĐỊNH ĐIỂM VÀO CỬA ĐẦU TIÊN ===
+        # Nếu có khối bục → vào cửa gần khối bục nhất so với best_col
+        # Nếu không có khối bục → vào thẳng best_col
+        if remaining_entry:
+            first_target = nearest(best_col, remaining_entry)
+            door_start_col = first_target[1]   # Cửa đầu tiên = cửa có khối bục gần best_col nhất
+        else:
+            door_start_col = best_col           # Không có khối bục → vào thẳng best_col
+
+        current_door_col = door_start_col
 
         # --- 2a. Các segment gắp khối ở bục (từ cửa, không leo) ---
         while remaining_entry:
@@ -930,7 +941,7 @@ class SelectPlaceApp:
             self.info_label.configure(text="Lỗi UART: Port không mở")
             return
 
-        current_facing = (-1, 0)   # Robot mặc định nhìn lên (hướng vào sa bàn)
+        current_facing = (-1, 0)
         right_turn_map = {(-1,0):(0,1), (0,1):(1,0), (1,0):(0,-1), (0,-1):(-1,0)}
         left_turn_map  = {(-1,0):(0,-1), (0,-1):(1,0), (1,0):(0,1), (0,1):(-1,0)}
 
@@ -938,56 +949,67 @@ class SelectPlaceApp:
         print(f"BẮT ĐẦU GỬI UART — TEAM {self.team_color}")
         print("=" * 60)
 
-        has_sent_start  = False     # Đã gửi START packet chưa
-        has_climbed     = False     # Đã leo lên sa bàn chưa (lần duy nhất)
-        traveled_path   = []
-        picked_blocks   = []        # ID đã gắp (tránh gắp lại)
-        count_rb2       = 0
+        has_sent_start = False
+        has_climbed    = False
+        traveled_path  = []
+        picked_blocks  = []
+        count_rb2      = 0
 
+        # =====================================================================
+        # TÍNH VÀ HIỂN THỊ GÓI TIN BẮT ĐẦU TRƯỚC KHI GỬI
+        # START packet = robot đi thẳng tới cửa đầu tiên (ID 1, 2, hoặc 3)
+        # Tìm cửa đầu tiên robot sẽ đến = cột đầu tiên xuất hiện ở DOOR_ROW
+        # =====================================================================
+        first_door_col = None
+        for seg_path, seg_act in simulation_path:
+            for pos in seg_path:
+                if pos[0] == DOOR_ROW:
+                    first_door_col = pos[1]
+                    break
+            if first_door_col is not None:
+                break
+
+        # Fallback nếu không tìm thấy DOOR_ROW trong path
+        if first_door_col is None:
+            first_door_col = self._best_col if hasattr(self, '_best_col') else 1
+
+        # ID luôn là 1, 2, hoặc 3 (ô bục hàng ROWS-1 tại cột first_door_col)
+        start_block_id = self.get_cell_id(ROWS - 1, first_door_col)
+
+        # Kiểm tra phòng thủ: đảm bảo đúng là 1, 2, hoặc 3
+        assert 1 <= start_block_id <= 3, f"START ID sai: {start_block_id} (col={first_door_col})"
+
+        start_packet_str = f"(2, 2, 10, 10, {start_block_id})"
+        print(f"\n>>> GÓI TIN BẮT ĐẦU: {start_packet_str}")
+        print(f"    Robot đi thẳng tới cửa ID={start_block_id} (cột {first_door_col})")
+
+        self.info_label.configure(
+            text=f"GÓI BẮT ĐẦU: {start_packet_str}\n"
+                 f"Robot đi thẳng tới cửa ID={start_block_id} (Sân {self.team_color})"
+        )
+        self.root.update()
+
+        # =================================================================
+        # GỬI START PACKET
+        # =================================================================
+        print(f"\n  ├─ [START PACKET] Gửi: {start_packet_str}")
+        ser.write(build_packet(2, 2, 10, 10, start_block_id))
+        time.sleep(0.3)
+        has_sent_start = True
+
+        # =================================================================
+        # XỬ LÝ TỪNG SEGMENT
+        # =================================================================
         for seg_idx, (segment_path, segment_action) in enumerate(simulation_path):
             print(f"\n[SEGMENT {seg_idx}] Action={segment_action} | Path={segment_path}")
 
-            # Tích lũy đường đi toàn cục
             if not traveled_path:
                 traveled_path.extend(segment_path)
             else:
                 traveled_path.extend(segment_path[1:])
 
-            picked_at_door_in_segment = False  # Track nếu gắp block ở cửa trong segment này
-
             # =================================================================
-            # GỬI START PACKET LẦN ĐẦU KHI TỚI CỬA
-            # START packet (2, 2, 10, 10, block_id) = Robot ở cửa block_id
-            # =================================================================
-            if not has_sent_start and segment_path and segment_path[0][0] == DOOR_ROW:
-                # Lấy block_id cần gắp từ action của segment này
-                if isinstance(segment_action, tuple) and 0 <= segment_action[0] < ROWS:
-                    start_block_id = self.get_cell_id(segment_action[0], segment_action[1])
-                else:
-                    start_block_id = self.get_cell_id(ROWS - 1, segment_path[0][1])
-                
-                print(f"  ├─ [START PACKET] Gửi: (2, 2, 10, 10, {start_block_id})")
-                time.sleep(0.3)
-                ser.write(build_packet(2, 2, 10, 10, start_block_id))
-                time.sleep(0.1)
-                has_sent_start = True
-
-                # =================================================================
-                # GẮP BLOCK Ở CỬA NGAY SAU START PACKET
-                # Nếu action của segment này là block ở hàng bục (cần gắp)
-                # =================================================================
-                if isinstance(segment_action, tuple) and segment_action[0] == ROWS - 1:
-                    pick_id = self.get_cell_id(segment_action[0], segment_action[1])
-                    print(f"  ├─ [PICK AT DOOR] Gửi: (2, 2, 0, 1, {pick_id}) — Gắp ở cửa")
-                    time.sleep(0.3)
-                    ser.write(build_packet(2, 2, 0, 1, pick_id))
-                    count_rb2 += 1
-                    time.sleep(0.3)
-                    picked_blocks.append(pick_id)
-                    picked_at_door_in_segment = True  # Mark đã gắp ở cửa
-
-            # =================================================================
-            # XỬ LÝ TỪNG BƯỚC DI CHUYỂN TRONG SEGMENT
+            # XỬ LÝ TỪNG BƯỚC DI CHUYỂN
             # =================================================================
             for i in range(len(segment_path) - 1):
                 curr_r, curr_c = segment_path[i]
@@ -996,58 +1018,50 @@ class SelectPlaceApp:
                 dr = next_r - curr_r
 
                 # -------------------------------------------------------------
-                # BƯỚC NGANG TRONG CỬA: cả curr và next đều ở DOOR_ROW
+                # BƯỚC NGANG TRONG CỬA (DOOR_ROW → DOOR_ROW)
                 # Gói tin: (2, 2, move_cmd, 10, door_id)
-                # Robot có thể đi ngang qua các cột khác nhau
-                # (Bỏ qua lần đầu vì START packet đã cover di chuyển tới cửa)
+                # door_id = ID ô bục (hàng ROWS-1) của cột ĐÍCH
                 # -------------------------------------------------------------
                 if curr_r == DOOR_ROW and next_r == DOOR_ROW:
-                    # Bỏ qua DOOR_LATERAL nếu vừa gắp block ở cửa (START packet đã cover)
-                    if picked_at_door_in_segment:
-                        continue
-                    
-                    move_cmd = 3 if dc > 0 else 2       # 3=phải, 2=trái
+                    move_cmd = 3 if dc > 0 else 2
                     door_id  = self._get_door_block_id(next_c)
                     time.sleep(0.3)
                     ser.write(build_packet(2, 2, move_cmd, 10, door_id))
                     count_rb2 += 1
-                    desc = "Đi Phải" if dc > 0 else "Đi Trái"
+                    desc = "→ Phải" if dc > 0 else "← Trái"
                     print(f"  ├─ [DOOR LATERAL] Gửi: (2, 2, {move_cmd}, 10, {door_id}) — {desc}")
                     time.sleep(0.1)
                     continue
 
                 # -------------------------------------------------------------
-                # BƯỚC LEO LÊN: curr ở DOOR_ROW, next ở ROWS-1 (bục)
-                # Chỉ xảy ra 1 lần duy nhất (khi vào sa bàn chính thức)
-                # Gói tin: (2, 2, 1, 4, id_buc) - move_cmd BẮT BUỘC = 1 (thẳng)
+                # BƯỚC LEO LÊN BỤC (DOOR_ROW → hàng ROWS-1)
+                # BẮT BUỘC Move=1 (thẳng), Act=4
+                # entry_id = ID ô bục đích
                 # -------------------------------------------------------------
                 if curr_r == DOOR_ROW and next_r == ROWS - 1:
                     entry_id = self.get_cell_id(next_r, next_c)
-                    move_cmd = 1  # BẮT BUỘC đi thẳng khi lên bục
-
-                    print(f"  ├─ [CLIMB] Gửi: (2, 2, {move_cmd}, 4, {entry_id}) — Leo bục thẳng")
                     time.sleep(0.3)
-                    ser.write(build_packet(2, 2, move_cmd, 4, entry_id))
+                    ser.write(build_packet(2, 2, 1, 4, entry_id))
                     count_rb2 += 1
                     has_climbed = True
+                    print(f"  ├─ [CLIMB] Gửi: (2, 2, 1, 4, {entry_id}) — Leo bục thẳng")
                     time.sleep(0.3)
                     continue
 
                 # -------------------------------------------------------------
-                # BƯỚC ĐI THẲNG TRÊN SA BÀN
+                # BƯỚC ĐI TRÊN SA BÀN (cả curr và next đều 0 ≤ r < ROWS)
                 # -------------------------------------------------------------
                 if 0 <= curr_r < ROWS and 0 <= next_r < ROWS:
                     step_id  = self.get_cell_id(next_r, next_c)
                     move_vec = (dr, dc)
 
-                    # Tính lệnh di chuyển
                     if move_vec == current_facing:
-                        move_cmd = 1                        # Thẳng
+                        move_cmd = 1
                     elif move_vec == left_turn_map[current_facing]:
-                        move_cmd = 2                        # Trái
+                        move_cmd = 2
                         current_facing = move_vec
                     elif move_vec == right_turn_map[current_facing]:
-                        move_cmd = 3                        # Phải
+                        move_cmd = 3
                         current_facing = move_vec
                     else:
                         print(f"  │  ├─ [Warn] 180° không hỗ trợ tại ID={step_id}")
@@ -1055,16 +1069,17 @@ class SelectPlaceApp:
 
                     cell_next = self.grid_cells[next_r][next_c]
 
-                    # Xử lý khối chắn đường trước khi di chuyển
+                    # Khối 1: phá trước
                     if cell_next["content"] and cell_next["content"]["number"] == 1:
                         print(f"  │  ├─ [KHỐI 1] Gửi: (1, 2, 0, 0, {step_id}) — Phá khối")
                         time.sleep(0.3)
                         ser.write(build_packet(1, 2, 0, 0, step_id))
                         time.sleep(0.3)
-                        print(f"  │  ├─ [PHÁ KHỐI] Gửi: (2, 2, 5, 5, {step_id}) — Kiểm tra")
+                        print(f"  │  ├─ [CHECK]  Gửi: (2, 2, 5, 5, {step_id}) — Kiểm tra phá")
                         ser.write(build_packet(2, 2, 5, 5, step_id))
                         time.sleep(0.3)
 
+                    # Khối 2: gắp trước nếu chưa gắp
                     elif cell_next["content"] and cell_next["content"]["number"] == 2:
                         if step_id not in picked_blocks:
                             print(f"  │  ├─ [KHỐI 2] Gửi: (2, 2, 0, {move_cmd}, {step_id}) — Gắp trước khi đi")
@@ -1079,15 +1094,14 @@ class SelectPlaceApp:
                     ser.write(build_packet(2, 2, move_cmd, 4, step_id))
                     count_rb2 += 1
                     desc = ["?", "Thẳng", "Trái", "Phải"][move_cmd]
-                    print(f"  │  ├─ [MOVE] Gửi: (2, 2, {move_cmd}, 4, {step_id}) — Di chuyển {desc}")
+                    print(f"  │  ├─ [MOVE]   Gửi: (2, 2, {move_cmd}, 4, {step_id}) — {desc}")
                     time.sleep(0.1)
 
             # =================================================================
-            # ACTION PHASE — Xử lý gắp khối ở cuối segment
+            # ACTION PHASE — Gắp khối mục tiêu cuối segment
             # =================================================================
             if segment_action == "FINISH":
                 continue
-
             if not isinstance(segment_action, tuple):
                 continue
 
@@ -1102,12 +1116,10 @@ class SelectPlaceApp:
             dr_act = tr - robot_r
             dc_act = tc - robot_c
 
-            # -----------------------------------------------------------------
-            # Case 1: Robot ở DOOR_ROW, khối ở hàng bục (ROWS-1)
-            # Sau DOOR_LATERAL, gắp block ở cửa
-            # -----------------------------------------------------------------
+            # Case A: Robot ở cửa (DOOR_ROW), khối ở hàng bục (ROWS-1), cùng cột
+            # → Vươn tay lên gắp: Act=1 (gắp thẳng lên)
             if robot_r == DOOR_ROW and tr == ROWS - 1 and robot_c == tc:
-                print(f"  ├─ [PICK AT DOOR] Gửi: (2, 2, 0, 1, {action_id}) — Gắp ở cửa")
+                print(f"  └─ [PICK DOOR] Gửi: (2, 2, 0, 1, {action_id}) — Vươn lên gắp từ cửa")
                 time.sleep(0.3)
                 ser.write(build_packet(2, 2, 0, 1, action_id))
                 count_rb2 += 1
@@ -1115,26 +1127,23 @@ class SelectPlaceApp:
                 picked_blocks.append(action_id)
                 continue
 
-            # -----------------------------------------------------------------
-            # Case 2: Robot trên sa bàn gắp khối
-            # -----------------------------------------------------------------
-            action_cmd = 4   # Mặc định: gắp tại chỗ
+            # Case B: Gắp bình thường trên sa bàn
+            action_cmd = 4
             if (dr_act, dc_act) == (0, 0):
                 action_cmd = 4
             elif (dr_act, dc_act) == current_facing:
-                action_cmd = 1   # Gắp thẳng
+                action_cmd = 1
             elif (dr_act, dc_act) == left_turn_map[current_facing]:
-                action_cmd = 2   # Gắp trái
+                action_cmd = 2
             elif (dr_act, dc_act) == right_turn_map[current_facing]:
-                action_cmd = 3   # Gắp phải
+                action_cmd = 3
 
             desc = ["?", "Thẳng", "Trái", "Phải", "Tại chỗ"][action_cmd]
-            print(f"  └─ [PICK] Gửi: (2, 2, 0, {action_cmd}, {action_id}) — Gắp {desc}")
+            print(f"  └─ [PICK]      Gửi: (2, 2, 0, {action_cmd}, {action_id}) — Gắp {desc}")
             time.sleep(0.3)
             ser.write(build_packet(2, 2, 0, action_cmd, action_id))
             count_rb2 += 1
             time.sleep(0.3)
-
             picked_blocks.append(action_id)
 
         # --- END PACKET ---
@@ -1148,10 +1157,12 @@ class SelectPlaceApp:
                     time.sleep(0.1)
 
         print("\n" + "=" * 60)
-        print(f"HOÀN THÀNH — Đã gửi {count_rb2} gói tin (id_rb=2)")
+        print(f"HOÀN THÀNH — {count_rb2} gói tin (id_rb=2)")
         print("=" * 60)
-        self.info_label.configure(text=f"✓ Gửi xong ({self.team_color}): {count_rb2} gói tin id_rb=2")
-
+        self.info_label.configure(
+            text=f"✓ Gửi xong ({self.team_color}): {count_rb2} gói\n"
+                 f"Gói bắt đầu: {start_packet_str}"
+        )
     def _get_door_block_id(self, col):
         """
         Trả về ID của ô ID 1/2/3 tương ứng với cột cửa.
@@ -1332,5 +1343,5 @@ class SelectPlaceApp:
 if __name__ == "__main__":
     app = SelectPlaceApp()
     app.run_algothism_forest()
-
+    
     

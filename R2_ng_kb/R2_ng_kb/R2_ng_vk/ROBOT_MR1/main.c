@@ -232,17 +232,17 @@ vTaskDelay(1000);
 //				target_chan_truoc = 350;
 //				target_chan_sau = 350;
 //////			}
-					if(TRIANGLE && L2 && !R2) 														Run_All_Blocks_From_Queue_san_xanh();
-//					if(SQUARE && L2 && !R2) 															dat_hop_vao_o();
-					if(X && L2 && !R2) 																			retry();
-					if ( O && L2 && !R2 ) 																vehome_xuat_phat();	
+//					if(TRIANGLE && L2 && !R2) 														Run_All_Blocks_From_Queue_san_xanh();
+////					if(SQUARE && L2 && !R2) 															dat_hop_vao_o();
+//					if(X && L2 && !R2) 																			retry();
+//					if ( O && L2 && !R2 ) 																vehome_xuat_phat();	
+//				
 				
-				
-//					if(TRIANGLE && L2 && !R2 )									Leo_bac_200_bam_thanh_phai();
-//					if(SQUARE && L2 && !R2 )										Lay_ben_trai_bac_200_duoi_xanh_5();
-//					if(X && L2 && !R2 )													Lay_ben_phai_bac_200_duoi_xanh_8();
-//					if ( O && L2 && !R2 ) 											su_dung_chan(565);
-//					if ( R2 && TRIANGLE  ) 											Xuong_bac_200(-900, 900);
+					if(TRIANGLE && L2 && !R2 )									auto_vao_rung_xanh_cua1();
+					if(SQUARE && L2 && !R2 )										Lay_phia_truoc_bac_400_tren();
+					if(X && L2 && !R2 )													Lay_ben_phai_bac_200_duoi_xanh_8();
+					if ( O && L2 && !R2 ) 											su_dung_chan(565);
+					if ( R2 && TRIANGLE  ) 											Xuong_bac_200(-900, 900);
 		
 ////Leo_bac_200
 //Leo_bac_400(-900, 900)	
