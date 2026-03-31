@@ -451,8 +451,8 @@ int cho_phep_chay = 0;
 
 /// **************** GIA TRI VI TRI DAT HOP ********************
 
-int vi_tri_dat_hop_1_2 = 410;
-int vi_tri_dat_hop_3_4 = 603;
+int vi_tri_dat_hop_1_2 = 404;
+int vi_tri_dat_hop_3_4 = 600;
 int tin_hieu_dat_hop_3_4 = 0;
 int tin_hieu_dat_hop_1_2 = 0;
 
@@ -462,7 +462,7 @@ int vi_tri_tay_4_dat_hop = 505;
 
 /// **************** GIA TRI VI TRI TAY ********************
 
-int vi_tri_tay_43 = 507;
+int vi_tri_tay_43 = 505;
 int vi_tri_tay_12 = 698;
 
 // VI TRI MAM XOAY LAY BEN PHAI 200 TREN
@@ -1635,6 +1635,8 @@ void Finish_Current_Block(void)
 
 int block_pha = 0;
 int co_vat_can = 1;
+int id_dat_hop = 0;
+	
 void pha_khoi_r1(void); // ham gui data toi rb1
 
 
@@ -1675,6 +1677,11 @@ void ProcessReceivedData_2(void)
 			else if (id_rb == 2 && state_rb == 2 ) {
 				 // Push vào FIFO
         Queue_Push(state_rb, move, action, id_block);
+			}
+			
+			// trang lai len zone 3 dat hop
+			else if (id_rb == 2 && state_rb == 3 ) {
+						id_dat_hop = id_block;
 			}
 
 			
@@ -2061,7 +2068,10 @@ int da_lay_tay4 = 0;
 int da_lay_tay4_duoi = 0;
 int hoan_thanh_chay_rung = 0;
 
-
+extern int Xoay_ok;
+int	KT_Ha_Tay;
+int	KT_Ha_Tay_phai;
+int KT_Ha_Tay_trai;
 //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 //---------------------------- TRUYEN DU LIEU VAO MANG-----------------------------
 void HMI_TRAN(vs32 _so_dong)
@@ -2126,10 +2136,10 @@ void HMI_TRAN(vs32 _so_dong)
 										HMI_DMI("ENCODER_FR ",ENCODER_FR(),13);
 										break;
 									case 14:
-										HMI_DMI("co_vat_can ",co_vat_can,14);
+										HMI_DMI("KT_Ha_Tay ",KT_Ha_Tay,14);
 										break;		
 									case 15:
-										HMI_DMI("block_pha ",block_pha,15);///
+										HMI_DMI("KT_Ha_Tay_phai ",KT_Ha_Tay_phai,15);///
 										break;	
 								  case 16:
 									//	hien thi phan ngo vao

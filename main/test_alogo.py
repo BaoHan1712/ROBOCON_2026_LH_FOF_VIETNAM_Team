@@ -30,7 +30,7 @@ class SelectPlaceApp:
     def __init__(self):
         self.root = ctk.CTk()
         self.root.title("Robot Pathfinding: Hybrid & UART Control")
-        self.root.geometry("850x580")  # Compact layout
+        self.root.geometry("870x580")  # Compact layout
 
         self.team_color = "RED"  
 
@@ -1040,6 +1040,20 @@ class SelectPlaceApp:
                 # -------------------------------------------------------------
                 if curr_r == DOOR_ROW and next_r == ROWS - 1:
                     entry_id = self.get_cell_id(next_r, next_c)
+                    cell_entry = self.grid_cells[next_r][next_c]
+
+                    # Nếu ô bục có khối 1 → phá trước khi leo
+                    if cell_entry["content"] and cell_entry["content"]["number"] == 1:
+                        if entry_id not in picked_blocks:
+                            print(f"  ├─ [KHỐI 1 BỤC] Gửi: (1, 2, 0, 0, {entry_id}) — Phá khối trên bục trước khi leo")
+                            time.sleep(0.3)
+                            ser.write(build_packet(1, 2, 0, 0, entry_id))
+                            time.sleep(0.3)
+                            # print(f"  ├─ [CHECK]       Gửi: (2, 2, 5, 5, {entry_id}) — Kiểm tra phá")
+                            # ser.write(build_packet(2, 2, 5, 5, entry_id))
+                            # time.sleep(0.3)
+                            picked_blocks.append(entry_id)
+
                     time.sleep(0.3)
                     ser.write(build_packet(2, 2, 1, 4, entry_id))
                     count_rb2 += 1
@@ -1068,34 +1082,36 @@ class SelectPlaceApp:
                         continue
 
                     cell_next = self.grid_cells[next_r][next_c]
-
-                    # Khối 1: phá trước
-                    if cell_next["content"] and cell_next["content"]["number"] == 1:
-                        print(f"  │  ├─ [KHỐI 1] Gửi: (1, 2, 0, 0, {step_id}) — Phá khối")
+                # ── Xử lý ô ĐÍCH (next) ──────────────────────────────────
+                if cell_next["content"] and cell_next["content"]["number"] == 1:
+                    # Khối 1 ngay trên đường đi → phá trước khi bước vào
+                    if step_id not in picked_blocks:
+                        print(f"  │  ├─ [KHỐI 1] Gửi: (1, 2, 0, {move_cmd}, {step_id}) — Phá khối trên đường")
                         time.sleep(0.3)
-                        ser.write(build_packet(1, 2, 0, 0, step_id))
+                        ser.write(build_packet(1, 2, 0, move_cmd, step_id))
                         time.sleep(0.3)
                         print(f"  │  ├─ [CHECK]  Gửi: (2, 2, 5, 5, {step_id}) — Kiểm tra phá")
                         ser.write(build_packet(2, 2, 5, 5, step_id))
                         time.sleep(0.3)
+                        picked_blocks.append(step_id)
 
+                elif cell_next["content"] and cell_next["content"]["number"] == 2:
                     # Khối 2: gắp trước nếu chưa gắp
-                    elif cell_next["content"] and cell_next["content"]["number"] == 2:
-                        if step_id not in picked_blocks:
-                            print(f"  │  ├─ [KHỐI 2] Gửi: (2, 2, 0, {move_cmd}, {step_id}) — Gắp trước khi đi")
-                            time.sleep(0.3)
-                            ser.write(build_packet(2, 2, 0, move_cmd, step_id))
-                            count_rb2 += 1
-                            picked_blocks.append(step_id)
-                            time.sleep(0.5)
+                    if step_id not in picked_blocks:
+                        print(f"  │  ├─ [KHỐI 2] Gửi: (2, 2, 0, {move_cmd}, {step_id}) — Gắp trước khi đi")
+                        time.sleep(0.3)
+                        ser.write(build_packet(2, 2, 0, move_cmd, step_id))
+                        count_rb2 += 1
+                        picked_blocks.append(step_id)
+                        time.sleep(0.5)
 
-                    # Di chuyển
-                    time.sleep(0.3)
-                    ser.write(build_packet(2, 2, move_cmd, 4, step_id))
-                    count_rb2 += 1
-                    desc = ["?", "Thẳng", "Trái", "Phải"][move_cmd]
-                    print(f"  │  ├─ [MOVE]   Gửi: (2, 2, {move_cmd}, 4, {step_id}) — {desc}")
-                    time.sleep(0.1)
+                # Di chuyển
+                time.sleep(0.3)
+                ser.write(build_packet(2, 2, move_cmd, 4, step_id))
+                count_rb2 += 1
+                desc = ["?", "Thẳng", "Trái", "Phải"][move_cmd]
+                print(f"  │  ├─ [MOVE]   Gửi: (2, 2, {move_cmd}, 4, {step_id}) — {desc}")
+                time.sleep(0.1)
 
             # =================================================================
             # ACTION PHASE — Gắp khối mục tiêu cuối segment

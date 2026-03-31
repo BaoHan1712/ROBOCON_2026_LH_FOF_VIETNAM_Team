@@ -5,7 +5,7 @@ from uart_listener import *
 from config_uart.sent_uart import ser
 
 from gui_tkinter import start_gui, set_state
-from detect_matrix import matrix_camera_loop
+from detect_matrix import ControlApp
 from algo_forest import SelectPlaceApp
 from see_R1 import detect_r1_snapshot_loop
 
@@ -15,6 +15,17 @@ def run_algothism_forest():
     print(">> STARTING FOREST UI...")
     app = SelectPlaceApp()
     app.run_algothism_forest()
+    
+    # Sau khi cửa sổ đóng, đảm bảo trạng thái về IDLE 
+    if set_state["value"] == STATE_FOREST:
+        set_state["value"] = STATE_IDLE
+    
+    print(">> FOREST UI CLOSED.")
+
+def retry_zone3():
+    print(">> STARTING retry zone 3...")
+    retry3 = ControlApp()
+    retry3.mainloop()
     
     # Sau khi cửa sổ đóng, đảm bảo trạng thái về IDLE 
     if set_state["value"] == STATE_FOREST:
@@ -34,7 +45,7 @@ def state_manager():
             detect_r1_snapshot_loop()
 
         elif state == STATE_MATRIX:
-            matrix_camera_loop()
+            retry_zone3()
 
         elif state == STATE_FOREST:
             run_algothism_forest()

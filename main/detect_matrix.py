@@ -1,154 +1,114 @@
-import cv2
-import numpy as np
-from ultralytics import YOLO
+import customtkinter as ctk
+import threading
 from config_uart.sent_uart import build_packet, send_packet_once, ser
-from gui_tkinter import set_state, STATE_IDLE
-import time
+
+# ================= UI CONFIG (2025 STYLE) =================
+ctk.set_appearance_mode("light")   # 🌞 sáng
+ctk.set_default_color_theme("blue")
 
 
-# ================== CONFIG ==================
-MODEL_PATH = r"cover\models\kfs_2.onnx"
+class ControlApp(ctk.CTk):
+    def __init__(self):
+        super().__init__()
 
-ROWS = 3
-COLS = 3
-CONF_THRES = 0.43
+        self.title("Manual Control Panel")
+        self.geometry("420x250")
+        self.configure(fg_color="#f5f7fb")  # nền sáng nhẹ
 
-PTS = np.float32([
-    [139, 112],
-    [449, 123],
-    [449, 518],
-    [142, 521]
-])
+        # ================= TITLE =================
+        self.title_label = ctk.CTkLabel(
+            self,
+            text="Select Position",
+            font=("Segoe UI", 22, "bold"),
+            text_color="#1e293b"
+        )
+        self.title_label.pack(pady=(25, 10))
 
-model = YOLO(MODEL_PATH, task="detect")
+        # ================= STATUS =================
+        self.status_label = ctk.CTkLabel(
+            self,
+            text="Ready",
+            font=("Segoe UI", 14),
+            text_color="#64748b"
+        )
+        self.status_label.pack(pady=(0, 1))
 
+        # ================= CARD FRAME =================
+        self.card = ctk.CTkFrame(
+            self,
+            corner_radius=20,
+            fg_color="#ffffff"
+        )
+        self.card.pack(padx=20, pady=10, fill="both", expand=True)
 
-# =================================================
-# HELPER
-# =================================================
-def lerp(p1, p2, t):
-    return (1 - t) * p1 + t * p2
+        # ================= BUTTON FRAME =================
+        self.button_frame = ctk.CTkFrame(
+            self.card,
+            fg_color="transparent"
+        )
+        self.button_frame.pack(expand=True)
 
+        # ================= BUTTON STYLE =================
+        btn_style = {
+            "width": 90,
+            "height": 90,
+            "corner_radius": 20,
+            "font": ("Segoe UI", 20, "bold"),
+            "fg_color": "#4f46e5",
+            "hover_color": "#6366f1",
+            "text_color": "white"
+        }
 
-def get_cell_polygon(TL, TR, BR, BL, r, c, rows, cols):
-    t1 = r / rows
-    t2 = (r + 1) / rows
-    s1 = c / cols
-    s2 = (c + 1) / cols
+        # ================= BUTTONS =================
+        self.btn1 = ctk.CTkButton(
+            self.button_frame,
+            text="1",
+            command=lambda: self.on_click(1),
+            **btn_style
+        )
+        self.btn1.grid(row=0, column=0, padx=15, pady=25)
 
-    left_top = lerp(TL, BL, t1)
-    left_bottom = lerp(TL, BL, t2)
-    right_top = lerp(TR, BR, t1)
-    right_bottom = lerp(TR, BR, t2)
+        self.btn2 = ctk.CTkButton(
+            self.button_frame,
+            text="2",
+            command=lambda: self.on_click(2),
+            **btn_style
+        )
+        self.btn2.grid(row=0, column=1, padx=15, pady=25)
 
-    p1 = lerp(left_top, right_top, s1)
-    p2 = lerp(left_top, right_top, s2)
-    p3 = lerp(left_bottom, right_bottom, s2)
-    p4 = lerp(left_bottom, right_bottom, s1)
+        self.btn3 = ctk.CTkButton(
+            self.button_frame,
+            text="3",
+            command=lambda: self.on_click(3),
+            **btn_style
+        )
+        self.btn3.grid(row=0, column=2, padx=15, pady=25)
 
-    return np.array([p1, p2, p3, p4], dtype=np.int32)
+    # ================= ACTION =================
+    def on_click(self, entry_id):
+        threading.Thread(target=self.send_uart, args=(entry_id,), daemon=True).start()
 
+    def send_uart(self, entry_id):
+        try:
+            packet = build_packet(2, 3, 3, 3, entry_id)
+            send_packet_once(ser, packet)
 
-# =================================================
-# UART
-# =================================================
-def send_row_2_packet(cell_has_square):
-    id_robot = 2
-    state = 3
-    row = 1
+            self.status_label.configure(
+                text=f"Sent: {entry_id}",
+                text_color="#16a34a"
+            )
 
-    row_detect = ROWS - 1 - row
+            print(f"[MANUAL] Sent: 2, 3, 3, 3, {entry_id}")
 
-    col_data = []
-    for c in range(COLS):
-        has_obj = cell_has_square[row_detect][c]
-        col_data.append([4, 5, 6][c] if has_obj else [14, 15, 16][c])
-
-    packet = build_packet(id_robot, state, *col_data)
-    send_packet_once(ser, packet)
-
-    print("Sent packet:", list(packet))
-
-
-# =================================================
-# MAIN (IMAGE ONLY + STATE SAFE)
-# =================================================
-def matrix_camera_loop():
-
-    # chỉ chạy khi state = 2
-    if set_state["value"] != 2:
-        return
-
-    TL, TR, BR, BL = PTS
-
-    # ================= CAPTURE 1 FRAME =================
-    cap = cv2.VideoCapture(0)
-
-    ret, img = cap.read()
-    cap.release()   # QUAN TRỌNG: đóng cam ngay
-
-    if not ret:
-        print("Camera read failed")
-        set_state["value"] = STATE_IDLE
-        return
-
-    img = cv2.resize(img, (640, 480))
-    draw = img.copy()
-
-    cell_has_square = np.zeros((ROWS, COLS), dtype=bool)
-
-    # ================= YOLO DETECT 1 LẦN =================
-    results = model(img, imgsz=640, conf=CONF_THRES, verbose=False)
-
-    centers = []
-
-    for r in results:
-        for box in r.boxes:
-            x1, y1, x2, y2 = map(int, box.xyxy[0])
-
-            cls_id = int(box.cls[0])
-            class_name = model.names[cls_id]
-            conf = float(box.conf[0])
-
-            cx = (x1 + x2) // 2
-            cy = (y1 + y2) // 2
-            centers.append((cx, cy))
-
-            cv2.rectangle(draw, (x1, y1), (x2, y2), (255, 0, 255), 2)
-            cv2.circle(draw, (cx, cy), 5, (0, 0, 255), -1)
-
-            label = f"{class_name} {conf:.2f}"
-            cv2.putText(draw, label, (x1, y1 - 8),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.6,
-                        (0, 255, 255), 2)
-
-    # ================= GRID CHECK =================
-    for r in range(ROWS):
-        for c in range(COLS):
-            cell_poly = get_cell_polygon(TL, TR, BR, BL, r, c, ROWS, COLS)
-
-            for (cx, cy) in centers:
-                if cv2.pointPolygonTest(cell_poly, (cx, cy), False) >= 0:
-                    cell_has_square[r][c] = True
-                    break
-
-            color = (0, 0, 255) if cell_has_square[r][c] else (0, 255, 0)
-            cv2.polylines(draw, [cell_poly], True, color, 2)
-
-    # ================= SEND 1 LẦN =================
-    send_row_2_packet(cell_has_square)
-
-    # ================= DEBUG SHOW (tuỳ chọn) =================
-    cv2.imshow("YOLO Snapshot Detect", draw)
-    cv2.waitKey(5000)  # xem 5s cho debug
-    cv2.destroyAllWindows()
-
-    # ================= BACK TO IDLE =================
-    set_state["value"] = STATE_IDLE
-    print(">>> DONE -> STATE_IDLE")
+        except Exception as e:
+            self.status_label.configure(
+                text="UART Error",
+                text_color="#dc2626"
+            )
+            print("UART Error:", e)
 
 
-
-# # =================================================
-# if __name__ == "__main__":
-#     matrix_image_once()
+# # ================= RUN =================
+if __name__ == "__main__":
+    app = ControlApp()
+    app.mainloop()

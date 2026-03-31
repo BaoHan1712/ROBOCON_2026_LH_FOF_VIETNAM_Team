@@ -29,6 +29,7 @@ int Man_xoay_tay = 0;
 int Man_gat1 = 0;
 int Man_gat2 = 0;
 
+
 void USART1_SendChar(char c) {
     while (USART_GetFlagStatus(USART1, USART_FLAG_TXE) == RESET);
     USART_SendData(USART1, c);
@@ -79,6 +80,9 @@ static void taskDieuKhienCoCau(void *pvParameters)
 
 	while (1)
 	{
+		if(KT_Ha_Tay == 1)	kiem_tra_huong_ha_tay_gap_phia_truoc();
+		if(KT_Ha_Tay_phai == 1)	kiem_tra_huong_ha_tay_gap_ben_phai();
+		if(KT_Ha_Tay_trai == 1)	kiem_tra_huong_ha_tay_gap_ben_phai();
 		
 		vTaskDelay(3);
 	}
@@ -144,23 +148,6 @@ static void taskMain(void *pvParameters)
 
 vTaskDelay(1000);
 	
-//	Tay_kep_mo;
-//	Tay_kep_dong;
-//	Tay_kep_len;
-//	Tay_kep_xuong;
-//	Tay2_len;
-//	Tay1_len;	
-//	Tay2_xuong;
-//	Tay1_xuong;
-//	Kep_phai_3_ra;
-//	Kep_phai_2_ra;
-//	Kep_phai_1_ra;
-
-	
-//	XI_LANH_KEP_MO;
-//	XI_LANH_HA_KEP;
-//	0
-//	
 	speed_chan_sau = 40;
 	speed_chan_truoc = 60;
 
@@ -208,7 +195,7 @@ vTaskDelay(1000);
 ////				if(X && R2 && !L2 )												Xuong_bac_200(900, -900);
 				
 				
-				if(TRIANGLE && L2 && !R2 )									Xuat_Phat_Lay_Vu_Khi_Do(161,1650,296);
+				if(TRIANGLE && L2 && !R2 )									Run_All_Blocks_From_Queue_san_do();
 				if(SQUARE && L2 && !R2 )										auto_vao_rung_do_cua1();
 				if(X && L2 && !R2 )													auto_vao_rung_do_cua2();
 				if(O && L2 && !R2 )													auto_vao_rung_do_cua3();
@@ -218,31 +205,23 @@ vTaskDelay(1000);
 			else															//SAN XANH
 			{
 					Init_Action_Table_san_xanh(); 
-//				if(X && L2 && !R2)							Ktra_vtri_kep3();
-//				if(SQUARE && L2 && !R2)					su_dung_chan(580);
-//				if(O && L2 && !R2)								Tay1_len;
-//				if(TRIANGLE&& L2 && !R2)					Test_gap();
 //			if(O && L2 && !R2)															Xuat_Phat_Lay_Vu_Khi_Xanh(171,-1700,233) ;
 //			if(TRIANGLE && L2 && !R2 && Vi_tri == 0)				Xuat_Phat_Lay_Vu_Khi_Xanh(205,1800,233),Vi_tri = 1;
 //			if(SQUARE && L2 && !R2 && Vi_tri == 0)					Xuat_Phat_Lay_Vu_Khi_Xanh(229,1700,233),Vi_tri = 1;
-//			if(TRIANGLE && !L2 && R2) 								
-//			{		speed_chan_sau = 40;
-//				speed_chan_truoc = 60;
 
-//				target_chan_truoc = 350;
-//				target_chan_sau = 350;
-//////			}
+	//				target_chan_truoc = 350;
+	//				target_chan_sau = 350;
+
 //					if(TRIANGLE && L2 && !R2) 														Run_All_Blocks_From_Queue_san_xanh();
-////					if(SQUARE && L2 && !R2) 															dat_hop_vao_o();
-//					if(X && L2 && !R2) 																			retry();
+//					if(SQUARE && L2 && !R2) 															DatKFSxanh(50);
+//					if(X && L2 && !R2) 																		retry_zone_2();
 //					if ( O && L2 && !R2 ) 																vehome_xuat_phat();	
 //				
 				
-					if(TRIANGLE && L2 && !R2 )									auto_vao_rung_xanh_cua1();
-					if(SQUARE && L2 && !R2 )										Lay_phia_truoc_bac_400_tren();
-					if(X && L2 && !R2 )													Lay_ben_phai_bac_200_duoi_xanh_8();
-					if ( O && L2 && !R2 ) 											su_dung_chan(565);
-					if ( R2 && TRIANGLE  ) 											Xuong_bac_200(-900, 900);
+					if(TRIANGLE && L2 && !R2) 														retry_zone_3(50);
+					if(SQUARE && L2 && !R2) 															dat_hop_vao_o();
+					if(X && L2 && !R2) 																		chuan_bi_dat_tang_3();
+					if ( O && L2 && !R2 ) 																dat_full_tang_2();	
 		
 ////Leo_bac_200
 //Leo_bac_400(-900, 900)	
