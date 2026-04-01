@@ -195,10 +195,10 @@ vTaskDelay(1000);
 ////				if(X && R2 && !L2 )												Xuong_bac_200(900, -900);
 				
 				
-				if(TRIANGLE && L2 && !R2 )									Run_All_Blocks_From_Queue_san_do();
-				if(SQUARE && L2 && !R2 )										auto_vao_rung_do_cua1();
-				if(X && L2 && !R2 )													auto_vao_rung_do_cua2();
-				if(O && L2 && !R2 )													auto_vao_rung_do_cua3();
+				if(TRIANGLE && L2 && !R2 )									Leo_bac_200(900,-900);
+				if(SQUARE && L2 && !R2 )										Leo_bac_400(900, -900);
+				if(X && L2 && !R2 )													Xuong_bac_200(900, -900);
+				if(O && L2 && !R2 )													Xuong_bac_400(900, -900);
 
 			
 			}
@@ -218,9 +218,9 @@ vTaskDelay(1000);
 //					if ( O && L2 && !R2 ) 																vehome_xuat_phat();	
 //				
 				
-					if(TRIANGLE && L2 && !R2) 														retry_zone_3(50);
+					if(TRIANGLE && L2 && !R2) 														chon_o_retry3();
 					if(SQUARE && L2 && !R2) 															dat_hop_vao_o();
-					if(X && L2 && !R2) 																		chuan_bi_dat_tang_3();
+					if(X && L2 && !R2) 																		retry_zone_3(154);
 					if ( O && L2 && !R2 ) 																dat_full_tang_2();	
 		
 ////Leo_bac_200

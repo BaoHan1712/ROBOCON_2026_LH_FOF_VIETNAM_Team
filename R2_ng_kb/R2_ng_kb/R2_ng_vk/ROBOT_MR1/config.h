@@ -239,10 +239,10 @@ vu8 DATA_SPEED[80]={255,1,0,0,				// 1- ID = 1, DIRECT = 0, SPEED = 0
 #define  CB_Ha_Sau													GPIO_ReadInputDataBit(GPIOA,GPIO_Pin_8)//ok
 #define  CB_tay_kep_vk_T										GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_15)//ok
 #define  CB_tay_kep_vk_P										GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_3)//ok
-#define  CB_ROI_1														GPIO_ReadInputDataBit(GPIOA,GPIO_Pin_12)//ok
+#define  CB_ROI_3														GPIO_ReadInputDataBit(GPIOA,GPIO_Pin_12)//ok
 #define  CB_ROI_2													GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_2)//ok
 #define  CB_kep													    GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_1)//ok
-#define  CB_ROI_3														GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_0)//ok
+#define  CB_ROI_1														GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_0)//ok
 #define  CB_ROI_4														GPIO_ReadInputDataBit(GPIOA,GPIO_Pin_11)//ok
 #define  CB_bung											    	GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_13)//ok
 #define  CB_bung_duoi												GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_0)//ok
@@ -478,7 +478,7 @@ int vi_tri_tay_3_phai_duoi = 600;
 /// VI TRI MAM XOAY LAY TRAI 200 
 int vi_tri_tay_4_trai_tren = 406;
 int vi_tri_tay_1_trai_tren = 602;
-int vi_tri_tay_2_trai_tren = 592;
+int vi_tri_tay_2_trai_tren = 600;
 int vi_tri_tay_3_trai_tren = 407;
 
 int vi_tri_tay_4_trai_duoi = 413;
@@ -2139,7 +2139,7 @@ void HMI_TRAN(vs32 _so_dong)
 										HMI_DMI("KT_Ha_Tay ",KT_Ha_Tay,14);
 										break;		
 									case 15:
-										HMI_DMI("KT_Ha_Tay_phai ",KT_Ha_Tay_phai,15);///
+										HMI_DMI("id_dat_hop ",id_dat_hop,15);
 										break;	
 								  case 16:
 									//	hien thi phan ngo vao
