@@ -192,12 +192,13 @@ vTaskDelay(1000);
 //				if(SQUARE && L2 && !R2 )									retry_san_do();
 ////			if(X && L2 && !R2 )												chon_o_retry3_do();
 //				if(O && L2 && !R2 )												vehome_xuat_phat();
-////			if(X && R2 && !L2 )												chon_o_retry3_do();
+////			if(X && R2 && !L2 )												nhat_hop_zone3_do();
+
 				
 				
-				if(TRIANGLE && L2 && !R2 )										su_dung_chan(400);
-				if(SQUARE && L2 && !R2 )											run_align_center();
-				if(X && L2 && !R2 )														nhat_hop_zone3();
+				if(TRIANGLE && L2 && !R2 )										nhat_hop_zone3_do();
+				if(SQUARE && L2 && !R2 )											testchieucao(520);
+				if(X && L2 && !R2 )														testchieucao(425);
 //				if(O && L2 && !R2 )													Xuong_bac_400(900, -900);
 
 			

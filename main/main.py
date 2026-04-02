@@ -36,15 +36,150 @@ def retry_zone3():
 
 def run_pick_block():
     print(">> STARTING PICK BLOCK...")
-    
-    # Lấy mode từ set_state nếu có, mặc định là 1
-    mode = set_state.get("pick_mode", 1)
-    run_pick_block_loop(mode=mode, use_state=True)
-    
+
+    mode_result = {"value": None}
+
+    def show_mode_dialog():
+        import customtkinter as ctk
+
+        ctk.set_appearance_mode("light")
+        ctk.set_default_color_theme("blue")
+
+        dialog = ctk.CTk()
+        dialog.title("Chọn Mode")
+        dialog.geometry("450x400")
+        dialog.configure(fg_color="#f5f7fb")
+
+        selected = {i: False for i in range(1, 7)}
+        buttons = {}
+
+        # ===== TITLE =====
+        ctk.CTkLabel(
+            dialog,
+            text="Select Blocks",
+            font=("Segoe UI", 22, "bold"),
+            text_color="#1e293b"
+        ).pack(pady=(20, 5))
+
+        status_label = ctk.CTkLabel(
+            dialog,
+            text="Ready",
+            font=("Segoe UI", 14),
+            text_color="#64748b"
+        )
+        status_label.pack(pady=(0, 5))
+
+        # ===== CARD =====
+        card = ctk.CTkFrame(dialog, corner_radius=20, fg_color="#ffffff")
+        card.pack(padx=20, pady=5, fill="both", expand=True)
+
+        btn_frame = ctk.CTkFrame(card, fg_color="transparent")
+        btn_frame.pack(expand=True, pady=15)
+
+        btn_style = {
+            "width": 80,
+            "height": 80,
+            "corner_radius": 16,
+            "font": ("Segoe UI", 22, "bold"),
+            "text_color": "white"
+        }
+
+        def toggle(n):
+            selected[n] = not selected[n]
+            if selected[n]:
+                buttons[n].configure(fg_color="#f59e0b", hover_color="#d97706")
+            else:
+                buttons[n].configure(fg_color="#4f46e5", hover_color="#6366f1")
+
+        # 4 5 6 hàng trên, 1 2 3 hàng dưới
+        for i in range(1, 7):
+            row = 1 if i <= 3 else 0
+            col = (i - 1) % 3
+
+            btn = ctk.CTkButton(
+                btn_frame,
+                text=str(i),
+                fg_color="#4f46e5",
+                hover_color="#6366f1",
+                command=lambda n=i: toggle(n),
+                **btn_style
+            )
+            btn.grid(row=row, column=col, padx=12, pady=8)
+            buttons[i] = btn
+
+        # ===== BOTTOM BUTTONS =====
+        bottom_frame = ctk.CTkFrame(dialog, fg_color="transparent")
+        bottom_frame.pack(pady=(5, 15))
+
+        def on_confirm():
+            # Lấy số nào được chọn (có thể chọn 1 trong mỗi cột)
+            # Ưu tiên hàng trên (4-6) nếu cùng cột
+            col_map = {1: 1, 2: 2, 3: 3, 4: 1, 5: 2, 6: 3}
+            entry = [0, 0, 0]
+            for n in range(1, 7):
+                if selected[n]:
+                    idx = col_map[n] - 1
+                    entry[idx] = n
+
+            mode_result["value"] = entry  # [e1, e2, e3]
+            dialog.destroy()
+
+        def on_reset():
+            for i in range(1, 7):
+                selected[i] = False
+                buttons[i].configure(fg_color="#4f46e5", hover_color="#6366f1")
+            status_label.configure(text="Reset", text_color="#64748b")
+
+        def on_close():
+            mode_result["value"] = None
+            dialog.destroy()
+
+        dialog.protocol("WM_DELETE_WINDOW", on_close)
+
+        ctk.CTkButton(
+            bottom_frame,
+            text="✔ Confirm",
+            width=180, height=45,
+            corner_radius=14,
+            font=("Segoe UI", 16, "bold"),
+            fg_color="#16a34a",
+            hover_color="#15803d",
+            command=on_confirm
+        ).grid(row=0, column=0, padx=10)
+
+        ctk.CTkButton(
+            bottom_frame,
+            text="↺ Reset",
+            width=120, height=45,
+            corner_radius=14,
+            font=("Segoe UI", 16, "bold"),
+            fg_color="#dc2626",
+            hover_color="#b91c1c",
+            command=on_reset
+        ).grid(row=0, column=1, padx=10)
+
+        dialog.mainloop()
+
+    t = threading.Thread(target=show_mode_dialog)
+    t.start()
+    t.join()
+
+    if mode_result["value"] is None:
+        print(">> Người dùng không chọn mode, hủy Pick Block.")
+        set_state["value"] = STATE_IDLE
+        return
+
+    e1, e2, e3 = mode_result["value"]
+    print(f">> Mode được chọn: entry1={e1} entry2={e2} entry3={e3}")
+
+    # Truyền e1 làm mode chính (hoặc tuỳ logic bạn)
+    run_pick_block_loop(mode=e1 or e2 or e3, use_state=True)
+
     if set_state["value"] == STATE_PICK_BLOCK:
         set_state["value"] = STATE_IDLE
-    
+
     print(">> PICK BLOCK CLOSED.")
+
     
 def state_manager():
     while True:

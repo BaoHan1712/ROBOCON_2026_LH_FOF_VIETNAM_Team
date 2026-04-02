@@ -53,7 +53,7 @@ void chinh_lai_vi_tri_VK_do(int vitri, int gia_tri_lap)
 		}   		
 	}
 
-	void chinh_lai_vi_tri_laser_phai_do(int vitri, int gia_tri_lap)
+void chinh_lai_vi_tri_laser_phai_do(int vitri, int gia_tri_lap)
 {
 	int speed ;
 	int dieuchinh;
