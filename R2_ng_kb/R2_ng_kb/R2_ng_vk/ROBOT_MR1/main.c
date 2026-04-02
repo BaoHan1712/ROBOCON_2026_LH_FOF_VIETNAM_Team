@@ -195,9 +195,9 @@ vTaskDelay(1000);
 ////			if(X && R2 && !L2 )												chon_o_retry3_do();
 				
 				
-				if(TRIANGLE && L2 && !R2 )										Run_All_Blocks_From_Queue_san_do();
-//				if(SQUARE && L2 && !R2 )										Run_All_Blocks_From_Queue_san_do(56);
-				if(X && L2 && !R2 )														su_dung_chan(710);
+				if(TRIANGLE && L2 && !R2 )										su_dung_chan(400);
+				if(SQUARE && L2 && !R2 )											run_align_center();
+				if(X && L2 && !R2 )														nhat_hop_zone3();
 //				if(O && L2 && !R2 )													Xuong_bac_400(900, -900);
 
 			

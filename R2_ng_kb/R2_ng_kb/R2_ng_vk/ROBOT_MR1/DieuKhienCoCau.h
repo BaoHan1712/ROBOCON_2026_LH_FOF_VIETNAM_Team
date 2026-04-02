@@ -3638,3 +3638,18 @@ void test_gui (void) {
 	count_data_uart4 = 3;
 }
 
+void kiem_tra_tay_co_qua (void) {
+			if (CB_kep_4_2 == 0 || CB_kep_4_1 == 0) {
+					da_lay_tay1 = 1;
+			}
+			if (CB_kep_1_2 == 0 || CB_kep_1_1 == 0) {
+					da_lay_tay2 = 1;
+			}
+			if (CB_kep_2_2 == 0 || CB_kep_2_1 == 0) {
+					da_lay_tay3 = 1;
+			}
+			if (CB_kep_3_2 == 0 || CB_kep_3_1 == 0) {
+					da_lay_tay4 = 1;
+			}
+
+}

@@ -1,6 +1,6 @@
 import threading
 import time
-from gui_tkinter import set_state, STATE_FOREST, STATE_SEE_R1, STATE_IDLE, STATE_MATRIX
+from gui_tkinter import set_state, STATE_FOREST, STATE_SEE_R1, STATE_IDLE, STATE_MATRIX, STATE_PICK_BLOCK
 from uart_listener import *
 from config_uart.sent_uart import ser
 
@@ -8,6 +8,7 @@ from gui_tkinter import start_gui, set_state
 from detect_matrix import ControlApp
 from algo_forest import SelectPlaceApp
 from see_R1 import detect_r1_snapshot_loop
+from pick_block import run_pick_block_loop
 
 current_state = STATE_IDLE
 
@@ -33,6 +34,18 @@ def retry_zone3():
     
     print(">> FOREST UI CLOSED.")
 
+def run_pick_block():
+    print(">> STARTING PICK BLOCK...")
+    
+    # Lấy mode từ set_state nếu có, mặc định là 1
+    mode = set_state.get("pick_mode", 1)
+    run_pick_block_loop(mode=mode, use_state=True)
+    
+    if set_state["value"] == STATE_PICK_BLOCK:
+        set_state["value"] = STATE_IDLE
+    
+    print(">> PICK BLOCK CLOSED.")
+    
 def state_manager():
     while True:
         state = set_state["value"]
@@ -49,6 +62,9 @@ def state_manager():
 
         elif state == STATE_FOREST:
             run_algothism_forest()
+
+        elif state == STATE_PICK_BLOCK:
+            run_pick_block()
 
         # 🔁 QUAY VỀ IDLE
         set_state["value"] = STATE_IDLE

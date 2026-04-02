@@ -171,6 +171,8 @@ vu8 DATA_SPEED[80]={255,1,0,0,				// 1- ID = 1, DIRECT = 0, SPEED = 0
 #define bien_tro_chan_sau								 	 	 _ADC1_Value[3]//AA5	 
 #define bien_tro_xoay_tay								 		 _ADC1_Value[4]//A6
 #define Quang_tro								 	 	 				 _ADC1_Value[5]//
+#define Quang_tro2								 	 	 				_ADC1_Value[6]//
+#define Quang_tro3								 	 	 				_ADC1_Value[7]//
 
 
 #define cam_bien_laze_phai			       			 _ADC1_Value[10]//ok
@@ -1636,6 +1638,11 @@ void Finish_Current_Block(void)
 int block_pha = 0;
 int co_vat_can = 1;
 int id_dat_hop = 0;
+
+//// nhat hop
+int do_lech = 0;
+int khoangcach = 0;
+int nhat_dat_hop = 0;
 	
 void pha_khoi_r1(void); // ham gui data toi rb1
 
@@ -1682,6 +1689,13 @@ void ProcessReceivedData_2(void)
 			// trang lai len zone 3 dat hop
 			else if (id_rb == 2 && state_rb == 3 ) {
 						id_dat_hop = id_block;
+			}
+			
+			// trang thai nhat hop tren zone 3
+			else if (id_rb == 2 && state_rb == 4 ) {
+						do_lech = move;
+						khoangcach = action;
+						nhat_dat_hop = id_block;
 			}
 
 			
@@ -2136,11 +2150,17 @@ void HMI_TRAN(vs32 _so_dong)
 										HMI_DMI("ENCODER_FR ",ENCODER_FR(),13);
 										break;
 									case 14:
-										HMI_DMI("KT_Ha_Tay ",KT_Ha_Tay,14);
+										HMI_DMI("do_lech ",do_lech,14);
 										break;		
 									case 15:
 										HMI_DMI("id_dat_hop ",id_dat_hop,15);
 										break;	
+//									case 14:
+//										HMI_DMI("Quang_tro_2 ",Quang_tro2,14);
+//										break;		
+//									case 15:
+//										HMI_DMI("Quang_tro_3 ",Quang_tro3,15);
+//										break;	
 								  case 16:
 									//	hien thi phan ngo vao
 
@@ -2203,7 +2223,13 @@ void HMI_TRAN(vs32 _so_dong)
 									case 20:
 										HMI_DMI("Lazer truoc ",lazeTruocValue,20);  
 										break;	
-
+//									case 19:
+//										HMI_DMI("Quang_tro_2 ",Quang_tro2,19);  
+//										break;	
+//									case 20:
+//										HMI_DMI("Quang_tro_3 ",Quang_tro3,20); 
+//										break;	
+//							
 						}
 }
 

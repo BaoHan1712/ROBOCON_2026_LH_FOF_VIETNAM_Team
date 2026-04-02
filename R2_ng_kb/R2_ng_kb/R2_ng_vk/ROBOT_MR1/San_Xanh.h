@@ -2164,6 +2164,10 @@ void mo_vk_san_xanh(void) {
 		}		
 }
 
+void vuot_rung_2_xanh (void) {
+		kiem_tra_tay_co_qua();
+		Run_All_Blocks_From_Queue_san_xanh();
+}
 
 void tudonghoantoan(void) {
 	// toi lay vk
@@ -2184,7 +2188,7 @@ void tudonghoantoan(void) {
 
 void retry_zone_2(void) {
 
-		Run_All_Blocks_From_Queue_san_xanh();
+		vuot_rung_2_xanh();
 
 	// len dat hop
 		if (hoan_thanh_chay_rung == 1 ) DatKFSxanh(50),hoan_thanh_chay_rung = 2 ;
