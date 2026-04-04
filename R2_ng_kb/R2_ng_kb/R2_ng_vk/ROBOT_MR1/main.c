@@ -120,6 +120,8 @@ static void taskMain(void *pvParameters)
 	// if (SysTick_Config(SystemCoreClock / 1000))while (1);// 1ms truyen du lieu usart den cac slever
 	UART6_DMA_RX(115200);
 	
+	//Config_ADC1_DMA(); // su dung  khi doc tin hieu laze hay cac t�n hieu ADC<3,3v
+	
 	// reset lai laban
 	robotResetIMU();
 	Vi_tri = 0;
@@ -179,8 +181,6 @@ vTaskDelay(1000);
 			go_qua();
 		
 				
-			
-			
 			if(quangTroValue < 35)					Tay_kep_mo;
 			if(OPTIONS) vehome();
 			if(CHON_SAN == 0)									//SAN DO
@@ -215,21 +215,21 @@ vTaskDelay(1000);
 
 					if(TRIANGLE && L2 && !R2) 														tudonghoantoan();
 //					if(SQUARE && L2 && !R2) 															retry_zone_2();
-//					if(X && L2 && !R2) 																		retry_zone_2();
+//					if(X && L2 && !R2) 																		retry_zone_3();
 					if ( O && L2 && !R2 ) 																vehome_xuat_phat();
 					if(X && R2 && !L2 )																		nhat_hop_zone3_xanh();
-				
+//				
 				
 //					if(TRIANGLE && L2 && !R2) 														be_len_dat_xanh();
 //					if(SQUARE && L2 && !R2) 															DatKFSxanh(54);
 //					if(X && L2 && !R2) 																		test_1();
 //					if ( O && L2 && !R2 ) 																tu_dong_dat_tang2_xanh();	
-//				
-//					if(TRIANGLE && L2 && !R2) 														tu_dong_dat_tang2_xanh();
-//					if(SQUARE && L2 && !R2) 															testchieucao(550);
+				
+//					if(TRIANGLE && L2 && !R2) 														Lay_phia_truoc_bac_200_duoi();
+//					if(SQUARE && L2 && !R2) 															testchieucao(565);
 //					if(X && L2 && !R2) 																		kiem_tra_so_qua_tren_tay();
 //					if ( O && L2 && !R2 ) 																xac_dinh_vi_tri_robot_xanh();	
-//		
+		
 ////Leo_bac_200
 //Leo_bac_400(-900, 900)	
 ////Xuong_bac_400	

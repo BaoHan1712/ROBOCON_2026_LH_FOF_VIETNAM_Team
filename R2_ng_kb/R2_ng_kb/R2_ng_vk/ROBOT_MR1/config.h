@@ -170,8 +170,10 @@ vu8 DATA_SPEED[80]={255,1,0,0,				// 1- ID = 1, DIRECT = 0, SPEED = 0
 #define bien_tro_chan_truoc									 _ADC1_Value[2]//A4	
 #define bien_tro_chan_sau								 	 	 _ADC1_Value[3]//AA5	 
 #define bien_tro_xoay_tay								 		 _ADC1_Value[4]//A6
-#define Quang_tro								 	 	 				 _ADC1_Value[5]//
-#define Quang_tro2								 	 	 				_ADC1_Value[8]//
+
+#define Quang_tro								 	 	 				 _ADC1_Value[5]//ok
+
+#define Quang_tro2								 	 	 				_ADC1_Value[8]//ok
 #define Quang_tro3								 	 	 				_ADC1_Value[7]//
 
 
@@ -266,6 +268,9 @@ vu8 DATA_SPEED[80]={255,1,0,0,				// 1- ID = 1, DIRECT = 0, SPEED = 0
 
 #define  CB_Nang_trai										GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_11)
 #define  CB_Nang_phai										GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_9)
+
+#define  QT4										GPIO_ReadInputDataBit(GPIOD,GPIO_Pin_0)
+#define  QT5										GPIO_ReadInputDataBit(GPIOD,GPIO_Pin_1)
 
 //================================INPUT==================================//
 
@@ -704,13 +709,13 @@ void Config_in_mode(void)
 	GPIO_Init(GPIOB, &GPIO_InitStructure);
 	
 	
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_2 ;
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_2;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
 	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 	GPIO_Init(GPIOC, &GPIO_InitStructure);
 
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_10 | GPIO_Pin_11| GPIO_Pin_14| GPIO_Pin_15;
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0 | GPIO_Pin_1 | GPIO_Pin_10 | GPIO_Pin_11| GPIO_Pin_14| GPIO_Pin_15;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
 	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
@@ -1278,6 +1283,7 @@ ADC_InitStructure.ADC_Resolution = ADC_Resolution_10b;//CH?NH DO PHAN GIAI
   /* Enable ADC1 */
   ADC_Cmd(ADC1, ENABLE);
  ADC_SoftwareStartConv(ADC1);
+
 }
 
 	//----------------------------------- config int uart1 ------------------------------
@@ -2164,13 +2170,13 @@ void HMI_TRAN(vs32 _so_dong)
 										HMI_DMI("ENCODER_FL ",ENCODER_FL(),12);
 										break;
 									case 13:
-										HMI_DMI("ENCODER_FR ",ENCODER_FR(),13);
+										HMI_DMI("tay_2_co_qua ",tay_2_co_qua,13);
 										break;
 									case 14:
-										HMI_DMI("tay_2_co_qua ",tay_2_co_qua,14);
+										HMI_DMI("Quang_tro_2 ",Quang_tro2,14);
 										break;		
 									case 15:
-										HMI_DMI("Quang_tro_2 ",Quang_tro2,15);
+										HMI_DMI("Quang_tro_3 ",QT5,15);
 										break;	
 //									case 14:
 //										HMI_DMI("Quang_tro_2 ",Quang_tro2,14);
