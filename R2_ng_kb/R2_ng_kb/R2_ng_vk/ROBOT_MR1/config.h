@@ -171,7 +171,7 @@ vu8 DATA_SPEED[80]={255,1,0,0,				// 1- ID = 1, DIRECT = 0, SPEED = 0
 #define bien_tro_chan_sau								 	 	 _ADC1_Value[3]//AA5	 
 #define bien_tro_xoay_tay								 		 _ADC1_Value[4]//A6
 #define Quang_tro								 	 	 				 _ADC1_Value[5]//
-#define Quang_tro2								 	 	 				_ADC1_Value[6]//
+#define Quang_tro2								 	 	 				_ADC1_Value[8]//
 #define Quang_tro3								 	 	 				_ADC1_Value[7]//
 
 
@@ -263,6 +263,9 @@ vu8 DATA_SPEED[80]={255,1,0,0,				// 1- ID = 1, DIRECT = 0, SPEED = 0
 
 #define  CB_vtri_leo_dau								GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_14)//OK KO NHAN = 1,NHAN = 0
 #define  CB_Cap_Thanh_Sau								GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_7)//OK  k nhan la 0, nhan la 1
+
+#define  CB_Nang_trai										GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_11)
+#define  CB_Nang_phai										GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_9)
 
 //================================INPUT==================================//
 
@@ -713,7 +716,13 @@ void Config_in_mode(void)
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 	GPIO_Init(GPIOD, &GPIO_InitStructure);
 	
-
+	
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_11 | GPIO_Pin_9;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
+	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+	GPIO_Init(GPIOE, &GPIO_InitStructure);
+	
 }
 
 	//============================ config timer6 1ms ===================================
@@ -2086,6 +2095,14 @@ extern int Xoay_ok;
 int	KT_Ha_Tay;
 int	KT_Ha_Tay_phai;
 int KT_Ha_Tay_trai;
+int nhay_den_lan_1 = 0;
+int so_qua_tren_tay = 0;
+uint8_t tay_1_co_qua = 0;
+uint8_t tay_2_co_qua = 0;
+uint8_t tay_3_co_qua = 0;
+uint8_t tay_4_co_qua = 0;
+
+uint8_t robot_position = 0;  // vi tri robot dat hop
 //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 //---------------------------- TRUYEN DU LIEU VAO MANG-----------------------------
 void HMI_TRAN(vs32 _so_dong)
@@ -2150,10 +2167,10 @@ void HMI_TRAN(vs32 _so_dong)
 										HMI_DMI("ENCODER_FR ",ENCODER_FR(),13);
 										break;
 									case 14:
-										HMI_DMI("do_lech ",do_lech,14);
+										HMI_DMI("tay_2_co_qua ",tay_2_co_qua,14);
 										break;		
 									case 15:
-										HMI_DMI("id_dat_hop ",id_dat_hop,15);
+										HMI_DMI("Quang_tro_2 ",Quang_tro2,15);
 										break;	
 //									case 14:
 //										HMI_DMI("Quang_tro_2 ",Quang_tro2,14);

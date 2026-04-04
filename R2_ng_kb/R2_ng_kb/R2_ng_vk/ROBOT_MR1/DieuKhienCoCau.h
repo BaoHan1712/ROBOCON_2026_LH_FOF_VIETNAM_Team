@@ -865,7 +865,7 @@ void Leo_bac_400(int Angle, int Robot_Angle)
 		while(CB_ROI_1 == 1  || CB_ROI_4 == 1)	{vTaskDelay(1); if(!wantExit())	break;}
 	}
 	speed_chan_sau = 150;
-	target_chan_sau = Min_chan_sau + 28;
+	target_chan_sau = Min_chan_sau + 30;
 	
 	robotRunAngle(Angle,15,Robot_Angle,0.5);
 	
@@ -2194,7 +2194,7 @@ void gap_tay4_duoi_trai_phai(int vi_tri)
 				}
 			
 			speed_tay_gat2 = 250;
-			target_tay_gat2 = Min_tay_gat2 + 40;
+			target_tay_gat2 = Min_tay_gat2 + 35;
 			Kep_phai_4_ra;
 			Tay2_len;
 			for(i=0;i<50;i++)	{ 
@@ -2203,7 +2203,7 @@ void gap_tay4_duoi_trai_phai(int vi_tri)
 			for(i=0;i<50;i++)	{ 
 							while(CB_xilanh_tay_2 == 1 )	{vTaskDelay(1); if(!wantExit())	break;}
 					}
-			vTaskDelay (1000);
+			vTaskDelay (2000);
 			if (TinHieu_ChuanBi_GapTrai == 1) {
 					Ktra_vtri_kep4_trai(); 
 					}
@@ -3293,7 +3293,7 @@ void chinh_lai_vi_tri_laser_trai(int vitri, int gia_tri_lap)
 		}   		
 	}
 
-	void chinh_lai_vi_tri_laser_phai(int vitri, int gia_tri_lap)
+void chinh_lai_vi_tri_laser_phai(int vitri, int gia_tri_lap)
 {
 	int speed ;
 	int dieuchinh;
@@ -3319,6 +3319,33 @@ void chinh_lai_vi_tri_laser_trai(int vitri, int gia_tri_lap)
 		}   		
 	}
 
+	
+void chinh_lai_vi_tri_laser_sau(int vitri, int gia_tri_lap)
+{
+	int speed ;
+	int dieuchinh;
+		for(i=0;i<gia_tri_lap;i++)
+				{
+		while(abs(lazeSauValue - vitri) > 1)	{
+			dieuchinh = lazeSauValue - vitri;
+			speed = custom_smooth_speed(dieuchinh, 4, 8);
+			
+					if  ((lazeSauValue - vitri)> 0 ) {
+							robotRunAngle(-900, speed, 900, 0.5);
+					}
+					else if ((lazeSauValue - vitri)< 0) {
+					
+					robotRunAngle(900, speed, 900, 0.5);
+					
+					}
+					else {
+								robotStop(0);
+								}
+				if(!wantExit())	break;
+			}
+		}   		
+	}
+
 void chinh_lai_vi_tri_laser_phai_custom(int vitri, int gia_tri_lap)
 {
 	int speed ;
@@ -3327,14 +3354,14 @@ void chinh_lai_vi_tri_laser_phai_custom(int vitri, int gia_tri_lap)
 				{
 		while(abs(lazePhaiValue - vitri) > 1)	{
 			dieuchinh = lazePhaiValue - vitri;
-			speed = custom_smooth_speed(dieuchinh, 4, 55);
+			speed = custom_smooth_speed(dieuchinh, 4, 50);
 			
 					if  ((lazePhaiValue - vitri)> 0 ) {
-							robotRunAngle(1800, speed, 900, 0.9);
+							robotRunAngle(1800, speed, 900, 0.7);
 					}
 					else if ((lazePhaiValue - vitri)< 0) {
 					
-					robotRunAngle(0, speed, 900, 0.9);
+					robotRunAngle(0, speed, 900, 0.7);
 					
 					}
 					else {
@@ -3375,32 +3402,7 @@ void chinh_lai_vi_tri_laser_phai_custom(int vitri, int gia_tri_lap)
 		}   		
 	}
 
-	
-void chinh_lai_vi_tri_laser_sau(int vitri, int gia_tri_lap)
-{
-	int speed ;
-	int dieuchinh;
-		for(i=0;i<gia_tri_lap;i++)
-				{
-		while(abs(lazeSauValue - vitri) > 1)	{
-			dieuchinh = lazeSauValue - vitri;
-			speed = smooth_speed(dieuchinh);
-			
-					if  ((lazeSauValue - vitri)> 0 ) {
-							robotRunAngle(-900, speed, 900, 0.5);
-					}
-					else if ((lazeSauValue - vitri)< 0) {
-					
-					robotRunAngle(900, speed, 900, 0.5);
-					
-					}
-					else {
-								robotStop(0);
-								}
-				if(!wantExit())	break;
-			}
-		}   		
-	}
+
 
 /////////////////////////////////////////////////////////
 void go_qua (void) {
@@ -3511,7 +3513,7 @@ void Ktra_vtri_kep3_trai (void) {
 						if(!wantExit())	break;
 					}
 				}
-				vTaskDelay (1200);
+				vTaskDelay (500);
 				robotStop(0);
 	
 	}

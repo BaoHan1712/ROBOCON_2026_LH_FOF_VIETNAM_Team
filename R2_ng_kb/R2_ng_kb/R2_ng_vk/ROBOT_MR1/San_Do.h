@@ -696,20 +696,12 @@ void DatKFS_do(int vitri)
 		robotStop(0);
 
 	// do chan len dat qua
-		su_dung_chan(467);
+		su_dung_chan(710);
 		for(i=0;i<150;i++)		
 	{
 		while(abs(bientrochansauValue - target_chan_sau) > 8)	{vTaskDelay(1); if(!wantExit())	break;}
 	}
-	vTaskDelay(2000);
-	Tay2_len;
-	for(i=0;i<50;i++)	{ 
-							while(CB_xilanh_tay_2 == 1 )	{vTaskDelay(1); if(!wantExit())	break;}
-					}
-	Tay1_len;
-	for(i=0;i<50;i++)	{ 
-							while(CB_xilanh_tay_1 == 1 )	{vTaskDelay(1); if(!wantExit())	break;}
-					}
+	
 	robotStop(0);
 }
 
@@ -717,7 +709,7 @@ void DatKFS_do(int vitri)
 void dat_qua_tay_1_2_do(void) {
 	if (CB_kep_1_2 == 0) {
 		speed_tay_gat1 = 250;
-		target_tay_gat1 = vitri_tay1home + 110;
+		target_tay_gat1 = vitri_tay1home + 115;
 	
 		for(i=0;i<50;i++)	{ 
 		while(abs(bientrodaytay1Value - target_tay_gat1) > (10) || abs(bientrodaytay2Value - target_tay_gat2) > 10 )	
@@ -729,7 +721,7 @@ void dat_qua_tay_1_2_do(void) {
 	
 	if (CB_kep_2_2 == 0) {
 			speed_tay_gat2 = 250;
-			target_tay_gat2 = vitri_tay2home + 110;
+			target_tay_gat2 = vitri_tay2home + 115;
 				
 			for(i=0;i<50;i++)	{ 
 				while(abs(bientrodaytay1Value - target_tay_gat1) > (10) || abs(bientrodaytay2Value - target_tay_gat2) > 10 )	
@@ -999,14 +991,14 @@ void mo_vk_san_do(void) {
 	
 		for(i=0;i<1000;i++)	
 	{
-		while(quangTroValue > 50)	{	
+		while(quangTroValue > 35)	{	
 		vTaskDelay (1);
 		if(!wantExit())	break;
 					}
 	}
 	
 	Tay_kep_mo;
-	vTaskDelay (35000);
+	vTaskDelay (40000);
 	da_lay_vk = 1;
 }
 
@@ -1021,10 +1013,12 @@ void kiem_tra_qua_tay_nao_do (void) {
 			target_xoay_tay = 410;
 			tin_hieu_dat_hop_3_4= 1;
 	}
+	
+	/// 2 qua o tay 1 2
 	else if (CB_kep_4_2 == 0 && CB_kep_4_1 == 0 && CB_kep_1_2 == 0 && CB_kep_1_1 == 0 && CB_kep_2_2 == 0 && CB_kep_2_1 == 0 && CB_kep_3_2 == 1 && CB_kep_3_1 == 1 )	{
 			speed_tay_xoay = 100;
-			target_xoay_tay = 410;
-			tin_hieu_dat_hop_3_4 = 1;
+			target_xoay_tay = 595;
+			tin_hieu_dat_hop_1_2 = 1;
 	}
 	else if (CB_kep_4_2 == 0 && CB_kep_4_1 == 0 && CB_kep_1_2 == 0 && CB_kep_1_1 == 0 && CB_kep_2_2 == 0 && CB_kep_2_1 == 0 && CB_kep_3_2 == 0 && CB_kep_3_1 == 0 )	{
 			speed_tay_xoay = 100;
@@ -1033,7 +1027,7 @@ void kiem_tra_qua_tay_nao_do (void) {
 	}
 	else {
 			speed_tay_xoay = 100;
-			target_xoay_tay = 590;
+			target_xoay_tay = 595;
 			tin_hieu_dat_hop_1_2 = 1;
 	}
 
@@ -1198,6 +1192,19 @@ void dat_hop_vao_o_do (void) {
 		}
 }
 
+void be_len_dat_do (void) {
+	kiem_tra_qua_tay_nao_do();
+		// cho nhay den thi dat
+	for(i=0;i<1000;i++)	
+	{
+		while(Quang_tro2 > 50)	{	
+		vTaskDelay (1);
+		if(!wantExit())	break;
+					}
+	}
+	dat_hop_vao_o_do();
+
+}
 
 
 void chon_o_retry3_do(void) {
@@ -1222,8 +1229,8 @@ void tudonghoantoan_san_do(void) {
 	// len dat hop
 		if (hoan_thanh_chay_rung == 1 ) DatKFS_do(105),hoan_thanh_chay_rung = 2 ;
 		if (hoan_thanh_chay_rung== 2  ) dat_hop_vao_o_do(),hoan_thanh_chay_rung = 3;
-		if (hoan_thanh_chay_rung== 3	) chuan_bi_dat_tang_3_do(),hoan_thanh_chay_rung = 4;
-		if (hoan_thanh_chay_rung== 4	) dat_full_tang_2_do(),hoan_thanh_chay_rung = 5;
+//		if (hoan_thanh_chay_rung== 3	) chuan_bi_dat_tang_3_do(),hoan_thanh_chay_rung = 4;
+//		if (hoan_thanh_chay_rung== 4	) dat_full_tang_2_do(),hoan_thanh_chay_rung = 5;
 }
 
 void retry_san_do(void) {
@@ -1233,8 +1240,8 @@ void retry_san_do(void) {
 	// len dat hop
 		if (hoan_thanh_chay_rung == 1 ) DatKFS_do(105),hoan_thanh_chay_rung = 2 ;
 		if (hoan_thanh_chay_rung== 2  ) dat_hop_vao_o_do(),hoan_thanh_chay_rung = 3;
-		if (hoan_thanh_chay_rung== 3	) chuan_bi_dat_tang_3_do(),hoan_thanh_chay_rung = 4;
-		if (hoan_thanh_chay_rung== 4	) dat_full_tang_2_do(),hoan_thanh_chay_rung = 5;
+//		if (hoan_thanh_chay_rung== 3	) chuan_bi_dat_tang_3_do(),hoan_thanh_chay_rung = 4;
+//		if (hoan_thanh_chay_rung== 4	) dat_full_tang_2_do(),hoan_thanh_chay_rung = 5;
 
 }
 
@@ -1299,7 +1306,7 @@ void chinh_lai_vi_tri_laser_phai_zone3_do(int vitri, int gia_tri_lap)
 		}   		
 	}
 
-
+// ham nhat lai hop roi dat vao o
 void chon_o_nhat_hop_do(void) {
 
 		if (nhat_dat_hop == 1) {
@@ -1339,35 +1346,20 @@ void chon_o_nhat_hop_do(void) {
 									while(CB_xilanh_tay_2 == 1 )	{vTaskDelay(1); if(!wantExit())	break;}
 							}
 			speed_tay_gat2 = 50;
-			target_tay_gat2 = vitri_tay2home - 120;			
+			target_tay_gat2 = vitri_tay2home - 120;
+			vTaskDelay(7000);
 
-				for(i=0;i<50;i++)	{ 
-					while(abs(bientrodaytay2Value - target_tay_gat2) > (5) )	
-					{vTaskDelay(1); if(!wantExit())	break;}
+			for(i=0;i<5;i++)	{  // kiem tra neu hop thap thi dua chan cao hon
+					if(abs(bientrodaytay2Value - target_tay_gat2) > (10) ){
+							su_dung_chan(495);
+							vTaskDelay(10); if(!wantExit())	break;}
 					}
 			
-//	
-////				dat_qua_tay_4_3_do();
-//								
-//			speed_tay_gat2 = 50;
-//			target_tay_gat2 = vitri_tay2home - 50;
-//			vTaskDelay(3000);					
-//								
-//		//		for(i=0;i<50;i++)	{ 
-//		//			while(abs(bientrodaytay2Value - target_tay_gat2) > (10) )	
-//		//			{vTaskDelay(1); if(!wantExit())	break;}
-//		//			}
-//								
-//			speed_tay_gat2 = 50;
-//			target_tay_gat2 = vitri_tay2home - 115;
-//				speed_chan_sau = 35;
-//				speed_chan_truoc = 53;
-//			target_chan_truoc = 420 ;
-//			target_chan_sau = 420;
-//			for(i=0;i<50;i++)	{ 
-//				while(abs(bientrochansauValue - target_chan_sau) > 3 || abs(bientrodaytay2Value - target_tay_gat2) > (10) )	
-//				{vTaskDelay(1); if(!wantExit())	break;}
-//				}
+			for(i=0;i<5;i++)	{ // kiem tra neu hop cao thi dua chan thap hon
+					if(abs(bientrodaytay2Value - target_tay_gat2) > (10) ){
+							su_dung_chan(465);
+							vTaskDelay(10); if(!wantExit())	break;}
+					}
 
 			Kep_phai_4_ra;
 	// dat xong ve home tay
@@ -1375,20 +1367,18 @@ void chon_o_nhat_hop_do(void) {
 		target_tay_gat1 = vitri_tay1home ;
 		speed_tay_gat2 = 250;
 		target_tay_gat2 = vitri_tay2home ;
-		
 		for(i=0;i<50;i++)	{ 
-				while(abs(bientrodaytay1Value - target_tay_gat1) > (10) || (abs(bientrochansauValue - target_chan_sau) > 10) )	
+				while(abs(bientrodaytay2Value - target_tay_gat2) > (30)  )	
 				{vTaskDelay(1); if(!wantExit())	break;}
 					}
-		
 						
-		}
+	}
 }			
 
 
 void testchieucao(int cc){
 	su_dung_chan(cc);
-	Tay2_len;
+//	Tay2_len;
 }
 
 void nhat_hop_zone3_do (void) {

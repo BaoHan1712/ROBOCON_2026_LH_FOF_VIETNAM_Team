@@ -104,7 +104,7 @@ static void taskMain(void *pvParameters)
 	//Config_pwm_time_t4(); // cai dat timer4 o che do dieu xung
 	// Config_pwm_time_t9();//cai dat timer9 o che do RC SEVOR
 	Config_encoder_timer2_timer3(); // doc encoder  timer 2, timer 3, timer 5 ,timer 9
-	Config_encoder_timer1();
+	//Config_encoder_timer1();
 	Config_encoder_timer5();
 	Config_encoder_timer4();
 	// ngat_ngoai();			//chuy�n dung de doc sieu am ket hop timer7, hoac co the dung lam nut nh�n
@@ -181,24 +181,24 @@ vTaskDelay(1000);
 				
 			
 			
-			if(quangTroValue < 40)					Tay_kep_mo;
+			if(quangTroValue < 35)					Tay_kep_mo;
 			if(OPTIONS) vehome();
 			if(CHON_SAN == 0)									//SAN DO
 			{
 				
 					Init_Action_Table_san_do(); 
 				
-//				if(TRIANGLE && L2 && !R2 )								tudonghoantoan_san_do();
-//				if(SQUARE && L2 && !R2 )									retry_san_do();
-////			if(X && L2 && !R2 )												chon_o_retry3_do();
-//				if(O && L2 && !R2 )												vehome_xuat_phat();
-////			if(X && R2 && !L2 )												nhat_hop_zone3_do();
+				if(TRIANGLE && L2 && !R2 )								tudonghoantoan_san_do();
+				if(SQUARE && L2 && !R2 )									retry_san_do();
+//			if(X && L2 && !R2 )												chon_o_retry3_do();
+				if(O && L2 && !R2 )												vehome_xuat_phat();
+//			if(X && R2 && !L2 )												nhat_hop_zone3_do();
 
 				
-				
-				if(TRIANGLE && L2 && !R2 )										nhat_hop_zone3_do();
-				if(SQUARE && L2 && !R2 )											testchieucao(520);
-				if(X && L2 && !R2 )														testchieucao(425);
+//				
+//				if(TRIANGLE && L2 && !R2 )										nhat_hop_zone3_do();
+//				if(SQUARE && L2 && !R2 )											testchieucao(520);
+//				if(X && L2 && !R2 )														testchieucao(425);
 //				if(O && L2 && !R2 )													Xuong_bac_400(900, -900);
 
 			
@@ -213,17 +213,23 @@ vTaskDelay(1000);
 	//				target_chan_truoc = 350;
 	//				target_chan_sau = 350;
 
-//					if(TRIANGLE && L2 && !R2) 														Run_All_Blocks_From_Queue_san_xanh();
-//					if(SQUARE && L2 && !R2) 															DatKFSxanh(50);
+					if(TRIANGLE && L2 && !R2) 														tudonghoantoan();
+//					if(SQUARE && L2 && !R2) 															retry_zone_2();
 //					if(X && L2 && !R2) 																		retry_zone_2();
-//					if ( O && L2 && !R2 ) 																vehome_xuat_phat();	
-//				
+					if ( O && L2 && !R2 ) 																vehome_xuat_phat();
+					if(X && R2 && !L2 )																		nhat_hop_zone3_xanh();
 				
-//					if(TRIANGLE && L2 && !R2) 														chon_o_retry3();
-					if(SQUARE && L2 && !R2) 															dat_hop_vao_o();
-//					if(X && L2 && !R2) 																		retry_zone_3(154);
-					if ( O && L2 && !R2 ) 																dat_full_tang_2();	
-		
+				
+//					if(TRIANGLE && L2 && !R2) 														be_len_dat_xanh();
+//					if(SQUARE && L2 && !R2) 															DatKFSxanh(54);
+//					if(X && L2 && !R2) 																		test_1();
+//					if ( O && L2 && !R2 ) 																tu_dong_dat_tang2_xanh();	
+//				
+//					if(TRIANGLE && L2 && !R2) 														tu_dong_dat_tang2_xanh();
+//					if(SQUARE && L2 && !R2) 															testchieucao(550);
+//					if(X && L2 && !R2) 																		kiem_tra_so_qua_tren_tay();
+//					if ( O && L2 && !R2 ) 																xac_dinh_vi_tri_robot_xanh();	
+//		
 ////Leo_bac_200
 //Leo_bac_400(-900, 900)	
 ////Xuong_bac_400	
@@ -232,6 +238,7 @@ vTaskDelay(1000);
 // Vao_rung_mai_3_xanh(308); tay 41, 371 tay  23
 ////  VI TRI LAZER CUA RUNG (note)
 // chuan_bi_gap_phai_200_tren
+// kiem_tra_so_qua_tren_tay();
 		}
 			
 		// tay 1 : 365, tay 2 : 365,mam : 603, lz trai 165, lz sau 52, 

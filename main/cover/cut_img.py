@@ -6,7 +6,7 @@ import time
 if not os.path.exists('data_train'):
     os.makedirs('data_train')
 
-video_path = r'video_20260303_111850.avi'
+video_path = r'lumlai.mp4'
 
 
 cap = cv2.VideoCapture(video_path)

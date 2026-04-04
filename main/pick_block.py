@@ -151,6 +151,12 @@ def run_camera(mode, use_state=True):
 
             if results[0].boxes is not None:
                 for b in results[0].boxes:
+                    # Lấy class_id của đối tượng hiện tại
+                    cls_id = int(b.cls[0])
+                    
+                    # CHỈ XỬ LÝ NẾU LÀ R2 (Class ID = 1)
+                    if cls_id != 1:
+                        continue
 
                     x1, y1, x2, y2 = map(int, b.xyxy[0])
 
@@ -172,6 +178,7 @@ def run_camera(mode, use_state=True):
                     if dist is None:
                         continue
 
+                    # Logic chọn khối R2 gần nhất để gắp
                     if dist < min_dist:
                         min_dist = dist
                         best_box = (x1, y1, x2, y2, cx, cy, dist)

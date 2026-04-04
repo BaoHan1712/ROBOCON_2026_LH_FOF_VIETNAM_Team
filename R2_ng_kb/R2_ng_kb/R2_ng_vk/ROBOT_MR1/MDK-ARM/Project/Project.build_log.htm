@@ -48,23 +48,23 @@ compiling main.c...
   	char k=0xff,i;
 ..\doc_tay_game.h(153): warning:  #1-D: last line of file ends without a newline
   }
-..\config.h(913): warning:  #177-D: variable "NVIC_InitStructure"  was declared but never referenced
+..\config.h(922): warning:  #177-D: variable "NVIC_InitStructure"  was declared but never referenced
   	NVIC_InitTypeDef NVIC_InitStructure;
-..\config.h(1836): warning:  #47-D: incompatible redefinition of macro "UART_BUFFER_SIZE"  (declared at line 1715)
+..\config.h(1845): warning:  #47-D: incompatible redefinition of macro "UART_BUFFER_SIZE"  (declared at line 1724)
   #define UART_BUFFER_SIZE 8
-..\config.h(2102): warning:  #188-D: enumerated type mixed with another type
+..\config.h(2119): warning:  #188-D: enumerated type mixed with another type
   											GPIO_WriteBit(GPIOC,GPIO_Pin_15,0);
-..\config.h(2106): warning:  #188-D: enumerated type mixed with another type
+..\config.h(2123): warning:  #188-D: enumerated type mixed with another type
   											GPIO_WriteBit(GPIOC,GPIO_Pin_15,1);
-..\config.h(2093): warning:  #177-D: variable "camera"  was declared but never referenced
+..\config.h(2110): warning:  #177-D: variable "camera"  was declared but never referenced
   		char*camera="11111111111111111111110111111111";
-..\config.h(2096): warning:  #550-D: variable "_chu_cac_bit"  was set but never used
+..\config.h(2113): warning:  #550-D: variable "_chu_cac_bit"  was set but never used
   									char _chu_cac_bit[40];
-..\config.h(2238): warning:  #177-D: variable "_k"  was declared but never referenced
+..\config.h(2255): warning:  #177-D: variable "_k"  was declared but never referenced
   	{int _k,_i;
-..\config.h(2238): warning:  #177-D: variable "_i"  was declared but never referenced
+..\config.h(2255): warning:  #177-D: variable "_i"  was declared but never referenced
   	{int _k,_i;
-..\config.h(2250): warning:  #1-D: last line of file ends without a newline
+..\config.h(2267): warning:  #1-D: last line of file ends without a newline
   }
 ..\4OmniControler.h(390): warning:  #1035-D: single-precision operand implicitly converted to double-precision
   			robotRotate(robotAngle, (abs(robotAngle - _robotIMUAngle) > 100? (robotAngle > _robotIMUAngle ? rotate: -rotate):(robotAngle - _robotIMUAngle)*0.005), 0);
@@ -92,27 +92,29 @@ compiling main.c...
   					ha_sat_xuong;
 ..\BasicFunction.h(54): warning:  #177-D: variable "td_x"  was declared but never referenced
   	int tocdo = 40, td_x = 5;
-..\San_Xanh.h(1004): warning:  #177-D: variable "vitri_tay41"  was declared but never referenced
+..\San_Xanh.h(1005): warning:  #177-D: variable "vitri_tay41"  was declared but never referenced
   	int vitri_tay41 = vitri_tay41_laser_trai_GapQua;
-..\San_Xanh.h(1090): warning:  #177-D: variable "vitri"  was declared but never referenced
+..\San_Xanh.h(1091): warning:  #177-D: variable "vitri"  was declared but never referenced
   		int vitri = 153;
-..\San_Xanh.h(1091): warning:  #177-D: variable "vitri_tay41"  was declared but never referenced
+..\San_Xanh.h(1092): warning:  #177-D: variable "vitri_tay41"  was declared but never referenced
   		int vitri_tay41 = vitri_tay41_laser_trai_GapQua;
-..\San_Xanh.h(1137): warning:  #177-D: variable "vitri_tay23"  was declared but never referenced
+..\San_Xanh.h(1138): warning:  #177-D: variable "vitri_tay23"  was declared but never referenced
   		int vitri_tay23 = vitri_tay23_laser_trai_GapQua;
-..\San_Xanh.h(1287): warning:  #177-D: variable "vitri_tay41"  was declared but never referenced
+..\San_Xanh.h(1288): warning:  #177-D: variable "vitri_tay41"  was declared but never referenced
   		int vitri_tay41 = vitri_tay41_laser_trai_GapQua;
-..\San_Xanh.h(1288): warning:  #177-D: variable "vitri_tay23"  was declared but never referenced
+..\San_Xanh.h(1289): warning:  #177-D: variable "vitri_tay23"  was declared but never referenced
   		int vitri_tay23 = vitri_tay23_laser_trai_GapQua;
-..\San_Xanh.h(1500): warning:  #177-D: variable "vitri_tay23"  was declared but never referenced
+..\San_Xanh.h(1501): warning:  #177-D: variable "vitri_tay23"  was declared but never referenced
   		int vitri_tay23 = vitri_tay23_phai_laser_GapQua;
+..\San_Xanh.h(2858): warning:  #1-D: last line of file ends without a newline
+  }
 ..\module_san_Do.h(1190): warning:  #177-D: variable "vitri_tay41"  was declared but never referenced
   	int vitri_tay41 = vitri_tay41_laser_trai_GapQua;
-..\main.c: 40 warnings, 0 errors
+..\main.c: 41 warnings, 0 errors
 linking...
-Program Size: Code=111904 RO-data=616 RW-data=1376 ZI-data=106288  
+Program Size: Code=114080 RO-data=616 RW-data=1392 ZI-data=106288  
 FromELF: creating hex file...
-".\Project\Project.axf" - 0 Error(s), 40 Warning(s).
+".\Project\Project.axf" - 0 Error(s), 41 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -134,7 +136,7 @@ Package Vendor: Keil
 <h2>Collection of Component Files used:</h2>
 
    * Component: ARM::CMSIS:CORE:6.1.0
-Build Time Elapsed:  00:00:02
+Build Time Elapsed:  00:00:01
 </pre>
 </body>
 </html>
