@@ -494,7 +494,7 @@ int vi_tri_tay_2_trai_tren = 590;
 int vi_tri_tay_3_trai_tren = 400;
 
 int vi_tri_tay_4_trai_duoi = 413;
-int vi_tri_tay_3_trai_duoi = 405;
+int vi_tri_tay_3_trai_duoi = 402;
 
 /// VI TRI LAZER LAY QUA THANG
 int vitri_tay41_laser_trai_GapQua = 153;
@@ -2253,17 +2253,20 @@ void HMI_TRAN(vs32 _so_dong)
 										HMI_DMI("count_data_uart4 ",count_data_uart4,18); 
 										break;	
 									case 19:
-										HMI_DMI("nhay_den_lan_1: ",nhay_den_lan_1,19);
+										HMI_DMI("block_pha: ",block_pha,19);
 										break;	
 									case 20:
-										HMI_DMI("block_pha ",block_pha,20);  
+										HMI_DMI("nhay_den_lan_1 ",nhay_den_lan_1,20);  
 										break;	
 									case 21:
-										HMI_DMI("Quang_tro_2 ",Quang_tro2,21);  
+										HMI_DMI("CB_Nang_trai ",CB_Nang_trai,21);  
 										break;	
 									case 22:
 										HMI_DMI("CB_Nang_phai",CB_Nang_phai,22); 
-										break;							
+										break;
+									case 23:
+										HMI_DMI("CB_Nang_phai",CB_Nang_phai,23); 
+										break;
 						}
 }
 

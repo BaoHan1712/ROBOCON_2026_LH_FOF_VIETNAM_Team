@@ -402,7 +402,7 @@ void chuan_bi_gap_trai_200_duoi_ko_thanh_do (void ) {
 						}
 			robotStop(0); 
 						
-			robotRunAngle(1800,5,-900,0.5);
+			robotRunAngle(0,5,-900,0.5);
 					for(i=0;i<150;i++)
 					{
 						while(CB_ROI_4 == 0)	
@@ -439,6 +439,7 @@ void chuan_bi_gap_trai_200_duoi_ko_thanh_do (void ) {
 				}
 		if (TinHieu_ChuanBi_GapThang == 1) { 
 					kiem_tra_huong_quay_tay_gap_phia_truoc();
+					vTaskDelay (7000);
 				// chay toi khi mat cam bien sau
 				robotRunAngle(900,8,-900,0.5);
 				for(i=0;i<1550;i++)
@@ -1674,9 +1675,9 @@ void xuong_bac_200_11_do(void) {
 			
 			}
 	
-//		else if (TinHieu_ChuanBi_GapTrai == 1 ) {
-//				chuan_bi_gap_trai_200_duoi_ko_thanh();
-//		}
+		else if (TinHieu_ChuanBi_GapTrai == 1 ) {
+				chuan_bi_gap_trai_200_duoi_ko_thanh_do();
+		}
 		// CO LENH GAP PHAI
 		else if (TinHieu_ChuanBi_GapPhai == 1 ) {
 					chuan_bi_gap_phai_200_duoi_ko_thanh_do();
