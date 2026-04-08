@@ -30,7 +30,7 @@ class SelectPlaceApp:
     def __init__(self):
         self.root = ctk.CTk()
         self.root.title("Robot Pathfinding: Hybrid & UART Control")
-        self.root.geometry("850x580")  # Compact layout
+        self.root.geometry("880x580")  # Compact layout
 
         self.team_color = "RED"  
 
@@ -206,6 +206,13 @@ class SelectPlaceApp:
         )
         self.send_btn.pack(side="left", padx=3)
 
+        self.mode_btn = ctk.CTkButton(
+            self.bottom_frame, text="Mode: Normal", width=120, height=40,
+            fg_color="#5bc0de", hover_color="#31b0d5",
+            command=self.toggle_forest_mode
+        )
+        self.mode_btn.pack(side="left", padx=3)
+
         self.info_label = ctk.CTkLabel(
             self.root,
             text="Chế độ: Đặt khối.\nBấm 'TÌM ĐƯỜNG' để tìm đường, sau đó 'GỬI UART' để truyền.",
@@ -220,6 +227,7 @@ class SelectPlaceApp:
         self.best_targets_set = None
         self.best_ignored_set = []
         self.matched_custom_packets = None
+        self.forest_mode = "normal"  # Mode gửi packet (normal hoặc retry2)
 
         os.makedirs("saved_maps", exist_ok=True)
         os.makedirs(os.path.join("saved_maps", "images"), exist_ok=True)
@@ -241,6 +249,20 @@ class SelectPlaceApp:
     def is_door_pos(self, r, c):
         """Kiểm tra xem vị trí (r,c) có phải ô cửa không."""
         return r == DOOR_ROW and 0 <= c < COLS
+
+    # =========================================================================
+    # TOGGLE FOREST MODE
+    # =========================================================================
+    def toggle_forest_mode(self):
+        if self.forest_mode == "normal":
+            self.forest_mode = "retry2"
+            self.mode_btn.configure(text="Mode: Retry2", fg_color="#f39c12", hover_color="#d68910")
+            self.info_label.configure(text="Chuyển sang Mode: Retry2")
+        else:
+            self.forest_mode = "normal"
+            self.mode_btn.configure(text="Mode: Normal", fg_color="#5bc0de", hover_color="#31b0d5")
+            self.info_label.configure(text="Chuyển sang Mode: Normal")
+        print(f">> Forest Mode: {self.forest_mode.upper()}")
 
     # =========================================================================
     # TOGGLE TEAM & REFRESH
@@ -304,6 +326,23 @@ class SelectPlaceApp:
         self.root.destroy()
 
     def sent_and_close(self):
+        print(f"\n>> FOREST MODE: {self.forest_mode.upper()} - Gửi gói tin...")
+        
+        # Gửi gói tin mode
+        if self.forest_mode == "normal":
+            print(">> Mode: Normal - Gửi packet (2, 10, 1, 1, 1)")
+            packet = build_packet(2, 10, 1, 1, 1)
+        else:  # retry2
+            print(">> Mode: Retry2 - Gửi packet (2, 10, 2, 2, 2)")
+            packet = build_packet(2, 10, 2, 2, 2)
+        
+        try:
+            send_packet_once(ser, packet)
+            print("[FOREST] Gửi packet mode thành công")
+        except Exception as e:
+            print(f"[FOREST] Lỗi gửi packet: {e}")
+        
+        # Gửi đường đi
         self.send_uart()
         print(">> Đã truyền UART thành công!")
         self.info_label.configure(text="✓ Đã gửi UART thành công! Bạn có thể đóng cửa sổ bằng nút X.")
@@ -1040,6 +1079,16 @@ class SelectPlaceApp:
                 # -------------------------------------------------------------
                 if curr_r == DOOR_ROW and next_r == ROWS - 1:
                     entry_id = self.get_cell_id(next_r, next_c)
+                    
+                    # ✅ THÊM: Kiểm tra khối 1 tại ô bục leo
+                    cell_entry = self.grid_cells[next_r][next_c]
+                    if cell_entry["content"] and cell_entry["content"]["number"] == 1:
+                        print(f"  ├─ [KHỐI 1 BỤC] Gửi: (1, 2, 0, 0, {entry_id}) — Phá khối tại bục")
+                        time.sleep(0.3)
+                        ser.write(build_packet(1, 2, 0, 0, entry_id))
+                        time.sleep(0.3)
+  
+                    
                     time.sleep(0.3)
                     ser.write(build_packet(2, 2, 1, 4, entry_id))
                     count_rb2 += 1
@@ -1074,9 +1123,6 @@ class SelectPlaceApp:
                         print(f"  │  ├─ [KHỐI 1] Gửi: (1, 2, 0, 0, {step_id}) — Phá khối")
                         time.sleep(0.3)
                         ser.write(build_packet(1, 2, 0, 0, step_id))
-                        time.sleep(0.3)
-                        print(f"  │  ├─ [CHECK]  Gửi: (2, 2, 5, 5, {step_id}) — Kiểm tra phá")
-                        ser.write(build_packet(2, 2, 5, 5, step_id))
                         time.sleep(0.3)
 
                     # Khối 2: gắp trước nếu chưa gắp

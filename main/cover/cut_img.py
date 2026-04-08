@@ -6,7 +6,7 @@ import time
 if not os.path.exists('data_train'):
     os.makedirs('data_train')
 
-video_path = r'lumlai.mp4'
+video_path = r'C:\AI_folder\ROBOCON_2026\main\r2.mp4'
 
 
 cap = cv2.VideoCapture(video_path)
@@ -27,7 +27,7 @@ while True:
 
     elapsed_time = time.time() - start_time  
 
-    if elapsed_time >= 0.08: 
+    if elapsed_time >= 0.1: 
          
     # Thư mục sẽ lưu
         file_name = f"data_train/x4{count}.jpg"
