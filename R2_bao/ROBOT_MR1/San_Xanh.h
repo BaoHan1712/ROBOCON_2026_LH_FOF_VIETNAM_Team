@@ -36,7 +36,7 @@ void Xuat_Phat_Lay_Vu_Khi_Xanh(int vu_khi, int goc_ve,int vitri)
 					}
 				}
 				Nang_cuc_nhanh();
-				target_chan_truoc = 610, target_chan_sau =610;
+				target_chan_truoc = 615, target_chan_sau =612;
 				for(i=0;i<50;i++)		
 				{
 				while(bientrochantruocValue < 470)	{
@@ -67,12 +67,10 @@ void Xuat_Phat_Lay_Vu_Khi_Xanh(int vu_khi, int goc_ve,int vitri)
 					}
 				}		
 				
-				vTaskDelay (2000);
+				vTaskDelay (1000);
 				
 				robotStop(50);
-				
-				vTaskDelay (2000);
-				
+						
 				for(i=0;i<500;i++)
 				{
 					while(CB_tay_kep_vk_T == 1 || CB_tay_kep_vk_P == 1)	
@@ -345,7 +343,7 @@ void Vao_rung_mai_1_xanh(int vitri)
 				target_tay_gat2 = vitri_tay2home - 220;		
 		}
 	
-			su_dung_chan(697);
+			su_dung_chan(700);
 		
 	if (TinHieu_ChuanBi_GapThang == 0) {
 			for(i=0;i<250;i++)
@@ -534,7 +532,7 @@ void Vao_rung_mai_3_xanh(int vitri)
 				target_tay_gat2 = vitri_tay2home - 200;		
 	}
 
-		su_dung_chan(697);
+		su_dung_chan(700);
 
 	if (TinHieu_ChuanBi_GapThang == 0) {
 			for(i=0;i<250;i++)
@@ -637,7 +635,7 @@ void chuan_bi_gap_thang_xanh_4(void) {
 	
 		su_dung_chan(510);
 			// chay toi khi laser sau cham 1
-			robotRunAngle(-900,8,900,0.5);
+			robotRunAngle(-900,10,900,0.5);
 			for(i=0;i<250;i++)	
 		{
 			while(abs(bientrochansauValue - target_chan_sau) > 10)	{
@@ -750,7 +748,7 @@ void chuan_bi_gap_phai_200_tren_4 (void ) {
 			chinh_lai_vi_tri_laser_trai(vitri_tay41_laser_trai_GapQua , 200);
 			su_dung_chan(510);
 			// chay toi khi laser sau cham 1
-			robotRunAngle(-900,8,900,0.5);
+			robotRunAngle(-900,10,900,0.5);
 				for(i=0;i<250;i++)	
 			{
 				while(abs(bientrochansauValue - target_chan_sau) > 10)	{vTaskDelay(1); if(!wantExit())	break;}
@@ -779,7 +777,7 @@ void chuan_bi_gap_phai_200_tren_4 (void ) {
 			chinh_lai_vi_tri_laser_trai(vitri_tay41_laser_trai_GapQua , 200);
 			su_dung_chan(510);
 			// chay toi khi laser sau cham 1
-			robotRunAngle(-900,8,900,0.5);
+			robotRunAngle(-900,10,900,0.5);
 				for(i=0;i<250;i++)	
 			{
 				while(abs(bientrochansauValue - target_chan_sau) > 10)	{vTaskDelay(1); if(!wantExit())	break;}
@@ -821,7 +819,7 @@ void chuan_bi_gap_trai_200_duoi_5 (void ) {
 						{
 							while(abs(bientrochansauValue - target_chan_sau) > 10)	{vTaskDelay(1); if(!wantExit())	break;}
 						}	
-					robotRunAngle(-900,5,900,0.5);
+					robotRunAngle(-900,10,900,0.5);
 						
 					for(i=0;i<1550;i++)
 						{
@@ -936,7 +934,7 @@ void chuan_bi_gap_trai_200_duoi_ko_thanh (void ) {
 			vTaskDelay (7000);
 			
 		// chay toi khi mat cam bien sau
-		robotRunAngle(-900,8,900,0.5);
+		robotRunAngle(-900,10,900,0.5);
 		for(i=0;i<1550;i++)
 				{
 						while(CB_vtri_leo == 0 || CB_Ha_Sau == 0)	
@@ -1016,7 +1014,7 @@ void chuan_bi_gap_phai_200_duoi_ko_thanh (void ) {
 		if (TinHieu_ChuanBi_GapThang == 1) { 
 			kiem_tra_huong_quay_tay_gap_phia_truoc();
 		// chay toi khi mat cam bien sau
-		robotRunAngle(-900,8,900,0.5);
+		robotRunAngle(-900,10,900,0.5);
 		for(i=0;i<1550;i++)
 				{
 						while(CB_vtri_leo == 0 || CB_Ha_Sau == 0)	
@@ -1046,7 +1044,7 @@ void Xuong_bac_200_xanh_4(void)
 		target_chan_truoc = Min_chan_truoc + 250;
 		target_chan_sau = Min_chan_sau + 240;
 		
-		robotRunAngle(-900,8,900,0.5);
+		robotRunAngle(-900,17,900,0.5);
 		for(i=0;i<250;i++)	
 	{
 		while(abs(bientrochansauValue - target_chan_sau) > 10)	{vTaskDelay(1); if(!wantExit())	break;}
@@ -1101,7 +1099,7 @@ void Lay_ben_trai_bac_200_duoi_xanh_ko_thanh(void) {
 			kiem_tra_huong_quay_tay_gap_phia_truoc();
 			vTaskDelay (7000);
 				// chay toi khi mat cam bien sau
-		robotRunAngle(-900,8,900,0.5);
+		robotRunAngle(-900,10,900,0.5);
 		for(i=0;i<1550;i++)
 				{
 						while(CB_vtri_leo == 0 || CB_Ha_Sau == 0)	
@@ -1136,7 +1134,7 @@ void Leo_bac_200_xanh_5(void)
 				target_chan_truoc = Min_chan_truoc + 250;
 				target_chan_sau = Min_chan_sau + 240;
 			
-				robotRunAngle(-900,8,900,0.5);
+				robotRunAngle(-900,17,900,0.5);
 	
 				for(i=0;i<1550;i++)
 						{
@@ -1180,7 +1178,7 @@ void chuan_bi_gap_thang_xanh_7(void) {
 				while(abs(bientrochansauValue - target_chan_sau) > 10)	{vTaskDelay(1); if(!wantExit())	break;}
 			}
 		
-		robotRunAngle(-900,8,900,0.5);
+		robotRunAngle(-900,10,900,0.5);
 		for(i=0;i<1550;i++)
 				{
 						while(CB_vtri_leo == 0 || CB_Ha_Sau == 0)	
@@ -1263,7 +1261,7 @@ void chuan_bi_gap_phai_200_tren_7_10 (void ) {
 					while(abs(bientrochansauValue - target_chan_sau) > 10)	{vTaskDelay(1); if(!wantExit())	break;}
 				}
 			// chay toi khi mat cam bien sau
-			robotRunAngle(-900,8,900,0.5);
+			robotRunAngle(-900,10,900,0.5);
 			for(i=0;i<250;i++)
 					{
 						while(CB_Ha_Sau == 0)	
@@ -1292,7 +1290,7 @@ void chuan_bi_gap_phai_200_tren_7_10 (void ) {
 					while(abs(bientrochansauValue - target_chan_sau) > 10)	{vTaskDelay(1); if(!wantExit())	break;}
 				}
 			// chay toi khi mat cam bien sau
-			robotRunAngle(-900,8,900,0.5);
+			robotRunAngle(-900,10,900,0.5);
 			for(i=0;i<250;i++)
 					{
 						while(CB_Ha_Sau == 0)	
@@ -1335,7 +1333,7 @@ void Leo_bac_200_xanh_7(void)  {
 				while(abs(bientrochansauValue - target_chan_sau) > 10)	{vTaskDelay(1); if(!wantExit())	break;}
 			}
 		// chay toi khi mat cam bien sau
-		robotRunAngle(-900,8,900,0.5);
+		robotRunAngle(-900,17,900,0.5);
 		for(i=0;i<1550;i++)
 				{
 						while(CB_vtri_leo == 0 || CB_Ha_Sau == 0)	
@@ -1372,7 +1370,7 @@ void chuan_bi_gap_thang_xanh_9 (void) {
 	
 		vTaskDelay(1000);
 		// chay toi khi mat cam bien sau
-		robotRunAngle(-900,8,900,0.5);
+		robotRunAngle(-900,10,900,0.5);
 		for(i=0;i<250;i++)
 				{
 					while(CB_vtri_leo == 0 || CB_Ha_Sau == 0 )
@@ -1432,7 +1430,7 @@ void chuan_bi_gap_trai_200_tren (void ) {
 				}	
 
 				// chay toi khi mat cb sau
-				robotRunAngle(-900,8,900,0.8);
+				robotRunAngle(-900,10,900,0.8);
 				for(i=0;i<1550;i++)
 							{
 								while(CB_Ha_Sau == 0  )	
@@ -1467,7 +1465,7 @@ void chuan_bi_gap_trai_200_tren (void ) {
 					while(abs(bientrochansauValue - target_chan_sau) > 10)	{vTaskDelay(1); if(!wantExit())	break;}
 				}	 
 				// chay toi khi mat cb sau
-				robotRunAngle(-900,8,900,0.8);
+				robotRunAngle(-900,10,900,0.8);
 				for(i=0;i<1550;i++)
 							{
 								while(CB_Ha_Sau == 0    )	
@@ -1546,7 +1544,7 @@ void Xuong_bac_200_xanh_9(void){
 			
 				vTaskDelay(1000);
 				// chay toi khi mat cam bien sau
-				robotRunAngle(-900,8,900,0.8);
+				robotRunAngle(-900,17,900,0.8);
 				for(i=0;i<250;i++)
 							{
 							while( CB_Ha_Sau == 0 ) {	vTaskDelay (1); if(!wantExit())	break;
@@ -1595,7 +1593,7 @@ void xuong_bac_200_xanh_12(void) {
 						while(abs(bientrochansauValue - target_chan_sau) > 10)	{vTaskDelay(1); if(!wantExit())	break;}
 					}
 				// chay toi khi mat cam bien sau
-				robotRunAngle(-900,10,900,0.8);
+				robotRunAngle(-900,15,900,0.8);
 				for(i=0;i<1550;i++)
 						{
 								while(CB_Ha_Sau == 0)	
@@ -1875,8 +1873,7 @@ void Run_All_Blocks_From_Queue_san_xanh(void)
 static int dang_o_nhom = 0; 
 
 void kiem_tra_qua_tay_nao(void) {
-    
-		
+	
     // 1. Tinh tong so qua hien co tren tung cum tay
     int so_qua_nhom_1_2 = tay_1_co_qua + tay_2_co_qua;
     int so_qua_nhom_3_4 = tay_3_co_qua + tay_4_co_qua;
@@ -1946,90 +1943,76 @@ void kiem_tra_qua_tay_nao(void) {
 }
 
 void kiem_tra_qua_tay_nao_xuong_rung (void) {
-	if (tay_4_co_qua == 1 && tay_1_co_qua == 0 && tay_2_co_qua == 0 && tay_3_co_qua == 0)	{
-			speed_tay_xoay = 100;
-			target_xoay_tay = vi_tri_dat_hop_3_4;
-			tin_hieu_dat_hop_3_4 = 1;
-	}
-	// moi tay 3 co qua
-	else if  (tay_4_co_qua == 0 && tay_1_co_qua == 0 && tay_2_co_qua == 0 && tay_3_co_qua == 1)	{
-			speed_tay_xoay = 100;
-			target_xoay_tay = vi_tri_dat_hop_3_4;
-			tin_hieu_dat_hop_3_4 = 1;
-	}
-	// moi tay 2 co qua
-	else if  (tay_4_co_qua == 0 && tay_1_co_qua == 0 && tay_2_co_qua == 1 && tay_3_co_qua == 0)	{
-			speed_tay_xoay = 100;
-			target_xoay_tay = vi_tri_dat_hop_1_2;
-			tin_hieu_dat_hop_1_2 = 1;
-	}
-	// moi tay 1 co qua
-	else if  (tay_4_co_qua == 0 && tay_1_co_qua == 1 && tay_2_co_qua == 0 && tay_3_co_qua == 0)	{
-			speed_tay_xoay = 100;
-			target_xoay_tay = vi_tri_dat_hop_1_2;
-			tin_hieu_dat_hop_1_2 = 1;
-	}
+		// 1. Tinh tong so qua hien co tren tung cum tay
+    int so_qua_nhom_1_2 = tay_1_co_qua + tay_2_co_qua;
+    int so_qua_nhom_3_4 = tay_3_co_qua + tay_4_co_qua;
+
+    int nhom_se_chon = 0;
+    int target_tam = -1;
+    kiem_tra_so_qua_tren_tay();
+
+
+    // --- LOGIC QUYET DINH DIEU HUONG ---
 	
-	// qua tay 4 1
-	else if (tay_4_co_qua == 1 && tay_1_co_qua == 1 && tay_2_co_qua == 0 && tay_3_co_qua == 0)	{
-			speed_tay_xoay = 100;
-			target_xoay_tay = vi_tri_dat_hop_1_2;
-			tin_hieu_dat_hop_1_2= 1;
-	}
-	// qua tay 4 1 2
-	else if ((tay_4_co_qua == 1 && tay_1_co_qua == 1 && tay_2_co_qua == 1 && tay_3_co_qua == 0))	{
-			speed_tay_xoay = 100;
-			target_xoay_tay = vi_tri_dat_hop_1_2;
-			tin_hieu_dat_hop_1_2 = 1;
-	}
-		// qua tay 4 1 2 3
-		else if (tay_4_co_qua == 1 && tay_1_co_qua == 1 && tay_2_co_qua == 1 && tay_3_co_qua == 1)	{
-			speed_tay_xoay = 100;
-			target_xoay_tay = vi_tri_dat_hop_1_2;
-			tin_hieu_dat_hop_1_2 = 1;
-	}
-		
-	// vua dat xong tay 1 con tay 2 va tay 4
-		else if (tay_4_co_qua == 1 && tay_1_co_qua == 0 && tay_2_co_qua == 1 && tay_3_co_qua == 0)	{
-			speed_tay_xoay = 100;
-			target_xoay_tay = vi_tri_dat_hop_1_2;
-			tin_hieu_dat_hop_1_2 = 1;
-	}
-		// qua con tay 3 4
-		else if (tay_4_co_qua == 1 && tay_1_co_qua == 0 && tay_2_co_qua == 0 && tay_3_co_qua == 1){
-			speed_tay_xoay = 100;
-			target_xoay_tay = vi_tri_dat_hop_3_4;
-			tin_hieu_dat_hop_3_4 = 1;
-			}
-				// qua con tay 1 2 3
-		else if (tay_4_co_qua == 0 && tay_1_co_qua == 1 && tay_2_co_qua == 1 && tay_3_co_qua == 1){
-			speed_tay_xoay = 100;
-			target_xoay_tay = vi_tri_dat_hop_1_2;
-			tin_hieu_dat_hop_1_2 = 1;
-			}
-		// qua con tay 1 2 
-		else if (tay_4_co_qua == 0 && tay_1_co_qua == 1 && tay_2_co_qua == 1 && tay_3_co_qua == 0){
-			speed_tay_xoay = 100;
-			target_xoay_tay = vi_tri_dat_hop_1_2;
-			tin_hieu_dat_hop_1_2 = 1;
-			}
-		
-		else {
-			speed_tay_xoay = 100;
-			target_xoay_tay = vi_tri_dat_hop_1_2;
-			tin_hieu_dat_hop_1_2 = 1;
-		
-		} 
+		// Vua dat xong tay 4 nhung tay 3 van con qua -> Khong xoay di dau ca
+    if (dang_o_nhom == 1 && so_qua_nhom_1_2 > 0) {
+        nhom_se_chon = 1;
+        target_tam = vi_tri_dat_hop_1_2;
+    } 
+    else if (dang_o_nhom == 2 && so_qua_nhom_3_4 > 0) {
+        nhom_se_chon = 2;
+        target_tam = vi_tri_dat_hop_3_4;
+    }
+    // UU TIEN 2: Neu nhom hien tai da het qua hoac chua chon nhom, tim ben co 2 qua
+    else if (so_qua_nhom_1_2 == 2) {
+        nhom_se_chon = 1;
+        target_tam = vi_tri_dat_hop_1_2;
+    }
+    else if (so_qua_nhom_3_4 == 2) {
+        nhom_se_chon = 2;
+        target_tam = vi_tri_dat_hop_3_4;
+    }
+    // UU TIEN 3: Neu khong ben nao co 2 qua, chon ben bat ky co it nhat 1 qua
+    else if (so_qua_nhom_1_2 > 0) {
+        nhom_se_chon = 1;
+        target_tam = vi_tri_dat_hop_1_2;
+    }
+    else if (so_qua_nhom_3_4 > 0) {
+        nhom_se_chon = 2;
+        target_tam = vi_tri_dat_hop_3_4;
+    }
+    else {
+        // Truong hop tat ca cac tay deu het qua
+        dang_o_nhom = 0; 
+        return;
+    }
+
+    // --- THUC HIEN HANH DONG XOAY ---
+    if (target_tam != -1) {
+        dang_o_nhom = nhom_se_chon;
+
+        speed_tay_xoay = 100;
+        target_xoay_tay = target_tam;
 
 
+        // Bat tin hieu kich hoat trinh tu dat hop 
+        if (dang_o_nhom == 1) {
+            tin_hieu_dat_hop_1_2 = 1;
+        } else {
+            tin_hieu_dat_hop_3_4 = 1;
+        }
+    }
 }
+
+
+
 
 void DatKFSxanh(int vitri)
 {
 	kiem_tra_so_qua_tren_tay();
 	kiem_tra_qua_tay_nao_xuong_rung(); // ham kiem tra co qua tay nao de dat
 	
-	Nang_thuong();
+	Nang_cuc_nhanh();
 	target_chan_truoc = 335;
 	target_chan_sau = 335;
 	
@@ -2085,12 +2068,7 @@ void DatKFSxanh(int vitri)
 				if(!wantExit())	break;
 			}
 	}
-
-		/// ngua ra sau ne hop
-		speed_tay_gat1 = 100;
-		target_tay_gat1 = vitri_tay1home -40;
-		speed_tay_gat2 = 100;
-		target_tay_gat2 = vitri_tay1home -40;
+		
 	
 	for(i=0;i<550;i++)	
 	{	
@@ -2112,7 +2090,7 @@ void DatKFSxanh(int vitri)
 		
 		robotStop(0);
 	// do chan len dat qua
-		su_dung_chan(710);
+		su_dung_chan(700);
 		for(i=0;i<150;i++)		
 	{
 		while(abs(bientrochansauValue - target_chan_sau) > 5)	{vTaskDelay(1); if(!wantExit())	break;}
@@ -3045,6 +3023,7 @@ void chon_o_nhat_hop_xanh(void) {
 }			
 
 void nhat_hop_zone3_xanh (void) {
+		su_dung_chan(350);
 		robotRunAngle(1800, 35, 0, 0.5);
 		for(i=0;i<550;i++)	
 		{	

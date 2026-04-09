@@ -499,7 +499,7 @@ int vi_tri_tay_3_trai_duoi = 402;
 /// VI TRI LAZER LAY QUA THANG
 int vitri_tay41_laser_trai_GapQua = 153;
 int vitri_tay23_laser_trai_GapQua = 224;
-int vitri_tay23_phai_laser_GapQua = 152;
+int vitri_tay23_phai_laser_GapQua = 153;
 
 
 int vitri_tay1home = 445;
@@ -1698,7 +1698,7 @@ void ProcessReceivedData_2(void)
 			// trang thai ghep vu khi
 			if (id_rb == 1 && state_rb == 2) {
 					block_pha = id_block;
-					pha_khoi_r1();
+//					pha_khoi_r1();
 			}
 			else if (id_rb == 2 && state_rb == 1) {
 							co_vat_can = 0;
@@ -2044,14 +2044,14 @@ void pha_khoi_r1(void)
 
     uint8_t checksum = (start + id_rb + state + move + action + block_pha) & 0xFF;
 
-    SEND_UART(6, start);
-    SEND_UART(6, id_rb);
-    SEND_UART(6, state);
-    SEND_UART(6, move);
-    SEND_UART(6, action);
-    SEND_UART(6, block_pha);
-    SEND_UART(6, checksum);
-    SEND_UART(6, end_byte);
+    SEND_UART(4, start);
+    SEND_UART(4, id_rb);
+    SEND_UART(4, state);
+    SEND_UART(4, move);
+    SEND_UART(4, action);
+    SEND_UART(4, block_pha);
+    SEND_UART(4, checksum);
+    SEND_UART(4, end_byte);
 }
 
 
@@ -2262,7 +2262,7 @@ void HMI_TRAN(vs32 _so_dong)
 										HMI_DMI("CB_Nang_trai ",CB_Nang_trai,21);  
 										break;	
 									case 22:
-										HMI_DMI("CB_Nang_phai",CB_Nang_phai,22); 
+										HMI_DMI("robot_position",robot_position,22); 
 										break;
 									case 23:
 										HMI_DMI("CB_Nang_phai",CB_Nang_phai,23); 
