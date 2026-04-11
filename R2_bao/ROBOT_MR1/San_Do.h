@@ -62,7 +62,7 @@ void Xuat_Phat_Lay_Vu_Khi_Do(int vu_khi, int goc_ve, int vitri)
 					}
 				}
 				Nang_cuc_nhanh();
-				target_chan_truoc = 612, target_chan_sau =612;
+				target_chan_truoc = 612, target_chan_sau =615;
 				for(i=0;i<50;i++)		
 				{
 				while(bientrochantruocValue < 470)	{
@@ -76,24 +76,24 @@ void Xuat_Phat_Lay_Vu_Khi_Do(int vu_khi, int goc_ve, int vitri)
 					while(lazeTruocValue > 27)	
 					{	
 	
-						Bam_thanh_laser_trai(23,0,0,vu_khi,1,-80,15);
+						Bam_thanh_laser_trai(23,0,0,vu_khi - 1,1,-80,15);
 						vTaskDelay(1); 
 						if(!wantExit())	break;
 					}
 				}
 				
-				Tay_kep_xuong;
 			
 				for(i=0;i<100;i++)
 				{
 					while(HT_1 == 0 && HT_2 == 0)	
-					{				
+					{			
+						if(lazeTruocValue < 14)	Tay_kep_xuong;
 						Bam_thanh_laser_trai(7,0,0,vu_khi,1,-50,15);
 						vTaskDelay(1); 
 						if(!wantExit())	break;
 					}
 				}
-				vTaskDelay (1000);
+				vTaskDelay (2000);
 				robotStop(50);
 
 				
@@ -109,10 +109,12 @@ void Xuat_Phat_Lay_Vu_Khi_Do(int vu_khi, int goc_ve, int vitri)
 					}
 				}
 				
-				robotStop(0);
+				robotRun(0,6);
 				Tay_kep_dong;
 				
-				vTaskDelay (2000);
+				vTaskDelay (2500);
+				
+				robotStop(30);
 				
 				KC_Vu_khi = lazeTraiValue;
 		
@@ -550,7 +552,7 @@ void Vao_rung_mai_1_do(int vitri)
 					
 					for(i=0;i<1550;i++)
 							{
-									while( CB_vtri_leo == 1 ||CB_Ha_Sau == 1 || CB_Cap_Thanh_Sau == 0)	
+									while( CB_Ha_Sau == 1 || CB_Cap_Thanh_Sau == 0)	
 								{	
 									Bam_thanh_laser_trai(8,900,-900,vitri + 25,2,150,10);
 									vTaskDelay (1);
@@ -574,7 +576,7 @@ void Vao_rung_mai_1_do(int vitri)
 					
 					for(i=0;i<1550;i++)
 							{
-									while( CB_vtri_leo == 1 ||CB_Ha_Sau == 1 )	
+									while( CB_Ha_Sau == 1 || CB_Cap_Thanh_Sau == 0)	
 								{	
 									Bam_thanh_laser_trai(8,900,-900,vitri ,2,150,30);
 									vTaskDelay (1);
