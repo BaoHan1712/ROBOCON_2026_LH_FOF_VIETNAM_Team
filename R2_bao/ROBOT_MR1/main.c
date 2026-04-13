@@ -82,7 +82,7 @@ static void taskDieuKhienCoCau(void *pvParameters)
 	{
 		if(KT_Ha_Tay == 1)	kiem_tra_huong_ha_tay_gap_phia_truoc();
 		if(KT_Ha_Tay_phai == 1)	kiem_tra_huong_ha_tay_gap_ben_phai();
-		if(KT_Ha_Tay_trai == 1)	kiem_tra_huong_ha_tay_gap_ben_phai();
+		if(KT_Ha_Tay_trai == 1)	kiem_tra_huong_ha_tay_gap_ben_trai();
 		
 		vTaskDelay(3);
 	}
@@ -216,8 +216,8 @@ vTaskDelay(1000);
 //			if(O && L2 && !R2)															Xuat_Phat_Lay_Vu_Khi_Xanh(169,-1650,233) ;
 
 
-					if(TRIANGLE && L2 && !R2) 												 	 		tudonghoantoan();
-//					if(SQUARE && L2 && !R2) 															Leo_bac_200_ko_thanh();
+					if(TRIANGLE && L2 && !R2) 												 	 		Run_All_Blocks_From_Queue_san_xanh();
+					if(SQUARE && L2 && !R2) 																Leo_bac_200(-900, 900);
 //					if(X && L2 && !R2) 																		Xuong_bac_200_xanh_9();
 //					if(O && L2 && !R2 ) 																	xuong_bac_200_xanh_12();
 //					if(X && R2  ) 																				Xuong_bac_200(-900, 900);
@@ -231,7 +231,7 @@ vTaskDelay(1000);
 //		
 ////Leo_bac_200
 //Leo_bac_400(-900, 900)	
-////Xuong_bac_400	
+////Xuong_bac_200	
  ///auto_vao_rung_xanh_cua1(); tay 41, 262 tay 23
 //Vao_rung_mai_2_xanh(460);  phai 410
 // Vao_rung_mai_3_xanh(308); tay 41, 371 tay  23

@@ -258,7 +258,7 @@ vu8 DATA_SPEED[80]={255,1,0,0,				// 1- ID = 1, DIRECT = 0, SPEED = 0
 #define  CB_kep_3_2											GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_14)//okP
 #define  CB_kep_4_1											GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_13)//OKT
 #define  CB_kep_4_2											GPIO_ReadInputDataBit(GPIOD,GPIO_Pin_11)//OKP
-#define  CB_vtri_leo										GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_6)
+#define  CB_vtri_leo										GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_6)  // con vang o dit
 
 #define  CB_xilanh_tay_1								GPIO_ReadInputDataBit(GPIOD,GPIO_Pin_15)//OK nhan la 0, khong nhan la 1
 #define  CB_xilanh_tay_2								GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_11)//OK
@@ -483,18 +483,11 @@ int vi_tri_tay_1_phai_tren = 420;
 int vi_tri_tay_2_phai_tren = 410;
 int vi_tri_tay_3_phai_tren = 600;
 
-int vi_tri_tay_4_phai_duoi = 607;
-int vi_tri_tay_3_phai_duoi = 600;
-
-
 /// VI TRI MAM XOAY LAY TRAI 200 
-int vi_tri_tay_4_trai_tren = 406;
-int vi_tri_tay_1_trai_tren = 602;
+int vi_tri_tay_4_trai_tren = 410;
+int vi_tri_tay_1_trai_tren = 605;
 int vi_tri_tay_2_trai_tren = 590;
-int vi_tri_tay_3_trai_tren = 400;
-
-int vi_tri_tay_4_trai_duoi = 413;
-int vi_tri_tay_3_trai_duoi = 402;
+int vi_tri_tay_3_trai_tren = 402;
 
 /// VI TRI LAZER LAY QUA THANG
 int vitri_tay41_laser_trai_GapQua = 153;
@@ -511,7 +504,7 @@ int vi_tri_gap_ngang_43 = 602;
 int vi_tri_cua_rung_xanh_1_lazer_phai_tay_41 = 308;
 int vi_tri_cua_rung_xanh_1_lazer_phai_tay_23 = 261;
 
-int vi_tri_cua_rung_xanh_2_lazer_phai_tay_41 = 406;
+int vi_tri_cua_rung_xanh_2_lazer_phai_tay_41 = 404;
 int vi_tri_cua_rung_xanh_2_lazer_trai_tay_41 = 428;
 int vi_tri_cua_rung_xanh_2_lazer_phai_tay_23 = 399;
 
