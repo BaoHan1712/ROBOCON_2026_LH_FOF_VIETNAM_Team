@@ -1102,7 +1102,7 @@ void chuan_bi_gap_trai_200_tren_do_4 (void ) {
 					{
 						while(abs(bientrochansauValue - target_chan_sau) > 10)	{vTaskDelay(1); if(!wantExit())	break;}
 					}		
-					KT_Ha_Tay_trai = 1;
+//					KT_Ha_Tay_trai = 1;
 					
 					for(i=0;i<1550;i++)
 								{
@@ -1130,7 +1130,7 @@ void chuan_bi_gap_trai_200_tren_do_4 (void ) {
 					{
 						while(abs(bientrochansauValue - target_chan_sau) > 10)	{vTaskDelay(1); if(!wantExit())	break;}
 					}		
-					KT_Ha_Tay_trai = 1;
+//					KT_Ha_Tay_trai = 1;
 					for(i=0;i<1550;i++)
 								{
 									while(CB_Ha_Sau == 1  )	
@@ -1162,7 +1162,7 @@ void chuan_bi_gap_trai_200_tren_do_4 (void ) {
 								}
 							}
 
-					KT_Ha_Tay_trai = 1;
+//					KT_Ha_Tay_trai = 1;
 					su_dung_chan(565);
 						for(i=0;i<250;i++)	
 					{
@@ -1185,7 +1185,7 @@ void chuan_bi_gap_trai_200_tren_do_4 (void ) {
 								}
 							}
 
-					KT_Ha_Tay_trai = 1;
+//					KT_Ha_Tay_trai = 1;
 					su_dung_chan(565);
 						for(i=0;i<250;i++)	
 					{
@@ -1434,7 +1434,7 @@ void chuan_bi_gap_thang_do_7(void) {
 }
 
 void chuan_bi_gap_trai_200_tren_do_7_10 (void ) {
-		KT_Ha_Tay_trai = 1;
+//		KT_Ha_Tay_trai = 1;
 	if (da_lay_tay1 == 0 && da_lay_tay2 == 0 && da_lay_tay3 == 0 && da_lay_tay4 == 0) {
 				su_dung_chan(265);
 					for(i=0;i<250;i++)	

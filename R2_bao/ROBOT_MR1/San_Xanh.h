@@ -1359,7 +1359,7 @@ void chuan_bi_gap_thang_xanh_9 (void) {
 
 
 void chuan_bi_gap_trai_200_tren (void ) {
-		KT_Ha_Tay_trai = 1;
+//		KT_Ha_Tay_trai = 1;
 	if (da_lay_tay1 == 0 && da_lay_tay2 == 0 && da_lay_tay3 == 0 && da_lay_tay4 == 0) {
 						su_dung_chan(265);
 						for(i=0;i<1550;i++) {
