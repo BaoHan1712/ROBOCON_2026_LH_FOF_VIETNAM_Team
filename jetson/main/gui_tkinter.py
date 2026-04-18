@@ -2,12 +2,14 @@ import tkinter as tk
 import os
 
 # ===== STATE CONSTANTS =====
-STATE_IDLE   = 0
-STATE_SEE_R1 = 1
-STATE_MATRIX = 2
-STATE_FOREST = 3
+STATE_IDLE       = 0
+STATE_SEE_R1     = 1
+STATE_MATRIX     = 2
+STATE_FOREST     = 3
+STATE_PICK_BLOCK = 4
 
 set_state = {"value": STATE_IDLE}
+
 
 # ===== STATE FUNCTIONS =====
 def set_see_r1():
@@ -22,6 +24,10 @@ def set_forest():
     set_state["value"] = STATE_FOREST
     print(">> STATE = FOREST DETECT")
 
+def set_pick_block():
+    set_state["value"] = STATE_PICK_BLOCK
+    print(">> STATE = PICK BLOCK")
+
 def set_idle():
     set_state["value"] = STATE_IDLE
     print(">> STATE = IDLE")
@@ -35,7 +41,7 @@ def on_close():
 def start_gui():
     root = tk.Tk()
     root.title("Robot Control Panel")
-    root.geometry("380x430")
+    root.geometry("350x730")
     root.resizable(False, False)
     root.configure(bg="#2b2b2b")
 
@@ -45,15 +51,15 @@ def start_gui():
     tk.Label(
         root,
         text="ROBOT CONTROL",
-        font=("Arial", 20, "bold"),
+        font=("Arial", 9, "bold"),
         fg="white",
         bg="#2b2b2b"
-    ).pack(pady=25)
+    ).pack(pady=15)
 
     btn_cfg = {
-        "width": 22,
+        "width": 9,
         "height": 2,
-        "font": ("Arial", 14, "bold"),
+        "font": ("Arial", 9, "bold"),
         "bd": 0
     }
 
@@ -75,6 +81,13 @@ def start_gui():
         root, text="FOREST DETECT",
         command=set_forest,
         bg="#27ae60", fg="white",
+        **btn_cfg
+    ).pack(pady=10)
+
+    tk.Button(
+        root, text="PICK BLOCK",
+        command=set_pick_block,
+        bg="#f39c12", fg="white",
         **btn_cfg
     ).pack(pady=10)
 

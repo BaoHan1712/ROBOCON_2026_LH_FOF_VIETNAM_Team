@@ -4,7 +4,6 @@ from gui_tkinter import STATE_SEE_R1, set_state, STATE_IDLE, STATE_MATRIX, STATE
 uart_enable = {"value": True}
 
 def uart_state_listener(ser):
-    buffer = bytearray()
     print(">> UART LISTENER STARTED")
 
     while True:
@@ -18,16 +17,11 @@ def uart_state_listener(ser):
             time.sleep(0.02)
             continue
 
+        # ===== đọc 1 byte =====
         if ser.in_waiting:
-            buffer += ser.read(ser.in_waiting)
+            data = ser.read(1)[0]  
 
-        while len(buffer) >= 2:
-            data = buffer.pop(0)
-            checksum = buffer.pop(0)
-
-            if checksum != (data ^ 0xFF):
-                continue
-
+            # ===== xử lý =====
             if data == 1:
                 set_state["value"] = STATE_SEE_R1
             elif data == 2:
@@ -39,8 +33,7 @@ def uart_state_listener(ser):
 
             print(f">> UART → STATE {data}")
 
-            # 🔴 KHÓA UART sau khi nhận
+            # 🔴 khóa UART sau khi nhận
             uart_enable["value"] = False
-            break
 
         time.sleep(0.005)

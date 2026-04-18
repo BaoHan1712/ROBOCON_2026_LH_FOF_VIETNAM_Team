@@ -1,25 +1,22 @@
 import cv2
 import numpy as np
 from ultralytics import YOLO
-from config_uart.sent_uart import build_packet, send_packet_once, ser
-from gui_tkinter import set_state, STATE_IDLE
-import time
 
 
 # ================== CONFIG ==================
-MODEL_PATH = r"main\cover\models\kfs_2.onnx"
+MODEL_PATH = r"cover/models/kfs_2.onnx"
+img_path = r"main\matrix\real.jpg"
 
 ROWS = 3
 COLS = 3
-CONF_THRES = 0.43
+CONF_THRES = 0.4 # Ngưỡng phát hiện
 
 PTS = np.float32([
-    [139, 112],
-    [449, 123],
-    [449, 518],
-    [142, 521]
+    [142, 86],
+    [447, 92],
+    [448, 386],
+    [138, 390],
 ])
-
 model = YOLO(MODEL_PATH, task="detect")
 
 
@@ -50,12 +47,11 @@ def get_cell_polygon(TL, TR, BR, BL, r, c, rows, cols):
 
 
 # =================================================
-# UART
+# UART (KHÔNG STATE)
 # =================================================
 def send_row_2_packet(cell_has_square):
     id_robot = 2
-    state = 3
-    row = 1
+    row = 1   # row giữa
 
     row_detect = ROWS - 1 - row
 
@@ -64,40 +60,23 @@ def send_row_2_packet(cell_has_square):
         has_obj = cell_has_square[row_detect][c]
         col_data.append([4, 5, 6][c] if has_obj else [14, 15, 16][c])
 
-    packet = build_packet(id_robot, state, *col_data)
-    send_packet_once(ser, packet)
-
-    print("Sent packet:", list(packet))
-
 
 # =================================================
-# MAIN (IMAGE ONLY + STATE SAFE)
+# MAIN (IMAGE INPUT ONLY)
 # =================================================
-def matrix_camera_loop():
-
-    # chỉ chạy khi state = 2
-    if set_state["value"] != 2:
-        return
-
-    TL, TR, BR, BL = PTS
-
-    # ================= CAPTURE 1 FRAME =================
-    cap = cv2.VideoCapture(0)
-
-    ret, img = cap.read()
-    cap.release()   # QUAN TRỌNG: đóng cam ngay
-
-    if not ret:
-        print("Camera read failed")
-        set_state["value"] = STATE_IDLE
-        return
+def process_image_and_send(img):
+    """
+    img: numpy image (cv2.imread hoặc frame)
+    """
 
     img = cv2.resize(img, (640, 480))
     draw = img.copy()
 
+    TL, TR, BR, BL = PTS
+
     cell_has_square = np.zeros((ROWS, COLS), dtype=bool)
 
-    # ================= YOLO DETECT 1 LẦN =================
+    # ================= YOLO =================
     results = model(img, imgsz=640, conf=CONF_THRES, verbose=False)
 
     centers = []
@@ -135,20 +114,19 @@ def matrix_camera_loop():
             color = (0, 0, 255) if cell_has_square[r][c] else (0, 255, 0)
             cv2.polylines(draw, [cell_poly], True, color, 2)
 
-    # ================= SEND 1 LẦN =================
+    # ================= UART SEND =================
     send_row_2_packet(cell_has_square)
 
-    # ================= DEBUG SHOW (tuỳ chọn) =================
-    cv2.imshow("YOLO Snapshot Detect", draw)
-    cv2.waitKey(5000)  # xem 5s cho debug
+    return draw
+
+
+# =================================================
+# RUN EXAMPLE
+# =================================================
+if __name__ == "__main__":
+    img = cv2.imread(img_path)
+    out = process_image_and_send(img)
+
+    cv2.imshow("Result", out)
+    cv2.waitKey(0)
     cv2.destroyAllWindows()
-
-    # ================= BACK TO IDLE =================
-    set_state["value"] = STATE_IDLE
-    print(">>> DONE -> STATE_IDLE")
-
-
-
-# # =================================================
-# if __name__ == "__main__":
-#     matrix_image_once()
