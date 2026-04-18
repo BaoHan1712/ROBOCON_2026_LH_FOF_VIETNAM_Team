@@ -2263,7 +2263,19 @@ void HMI_TRAN(vs32 _so_dong)
 										HMI_DMI("CB_Nang_phai",CB_Nang_phai,23); 
 										break;
 									case 24:
-										HMI_DMI("kiem_tra_loi",kiem_tra_loi,24); 
+										HMI_DMI("UP",UP,24); 
+										break;
+									case 25:
+										HMI_DMI("RIGHT",RIGHT,25); 
+										break;
+									case 26:
+										HMI_DMI("DOWN",DOWN,26); 
+										break;
+									case 27:
+										HMI_DMI("LEFT",LEFT,27); 
+										break;
+									case 28:
+										HMI_DMI("kiem_tra_loi",kiem_tra_loi,28); 
 										break;
 						}
 }
