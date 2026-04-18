@@ -150,8 +150,7 @@ static void taskMain(void *pvParameters)
 
 vTaskDelay(1000);
 	
-	speed_chan_sau = 40;
-	speed_chan_truoc = 60;
+	Nang_thuong();
 
 	target_chan_truoc = bientrochantruocValue;
 	target_chan_sau = bientrochansauValue;
@@ -195,14 +194,14 @@ vTaskDelay(1000);
 //			if(TRIANGLE && L2 && !R2 )												Xuat_Phat_Lay_Vu_Khi_Do(160,1550,290
 				
 //				
-//				if(TRIANGLE && L2 && !R2 )												tudonghoantoan_san_do();
-////				if(SQUARE && L2 && !R2) 													DatKFS_do(18);
-////				if(X && L2 && !R2) 																chon_o_retry3_do();
-////				if(O && L2 && !R2 ) 															vehome_xuat_phat();
+				if(TRIANGLE && L2 && !R2 )												Run_All_Blocks_From_Queue_san_do();
+				if(SQUARE && L2 && !R2) 													su_dung_chan(700);
+				if(X && L2 && !R2) 																Lay_phia_truoc_bac_400_tren();
+				if(O && L2 && !R2 ) 															phun_tay();
 //				if(X && R2 ) 																			nhat_hop_zone3_do();
 
 //			
-//				if(TRIANGLE && L2 && !R2 )										Leo_bac_200(900, -900);
+//				if(TRIANGLE && L2 && !R2 )										Leo_bac_400(900, -900);
 //				if(SQUARE && L2 && !R2 )											DatKFS_do(10);
 //				if(X && L2 && !R2 )														su_dung_chan(700);
 //				if(O && L2 && !R2 )														Xuong_bac_200(900, -900);
@@ -217,9 +216,9 @@ vTaskDelay(1000);
 
 
 					if(TRIANGLE && L2 && !R2) 												 	 		Run_All_Blocks_From_Queue_san_xanh();
-					if(SQUARE && L2 && !R2) 																Leo_bac_200(-900, 900);
-//					if(X && L2 && !R2) 																		Xuong_bac_200_xanh_9();
-//					if(O && L2 && !R2 ) 																	xuong_bac_200_xanh_12();
+					if(SQUARE && L2 && !R2) 																su_dung_chan(576);
+					if(X && L2 && !R2) 																			Lay_phia_truoc_bac_200_tren();
+					if(O && L2 && !R2 ) 																		phun_tay();
 //					if(X && R2  ) 																				Xuong_bac_200(-900, 900);
 
 //		

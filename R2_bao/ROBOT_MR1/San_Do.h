@@ -939,16 +939,16 @@ void Init_Action_Table_san_do(void)
     /* =========================================
        move 1 , action 4 chay thang
        ========================================= */
-    action_table[1][4][1] = Leo_bac_400_ko_thanh_do; 
-    action_table[1][4][2] = Leo_bac_200_bam_thanh_phai_do; 
-		action_table[1][4][3] = Leo_bac_400_co_thanh_do; 
-		action_table[1][4][4] = Xuong_bac_200_do_4;	 
-    action_table[1][4][5] = Leo_bac_200_do_5;		
-    action_table[1][4][6] = Leo_bac_200_ko_thanh_do;
-    action_table[1][4][7] = Leo_bac_200_do_7;  
-    action_table[1][4][8] = Leo_bac_200_ko_thanh_do;  
-    action_table[1][4][9]  = Xuong_bac_200_do_9; 		
-    action_table[1][4][10] = xuong_bac_200_do_10; 
+    action_table[1][4][1] = Leo_bac_400_ko_thanh_do;  //
+    action_table[1][4][2] = Leo_bac_200_bam_thanh_phai_do;  //
+		action_table[1][4][3] = Leo_bac_400_co_thanh_do; //
+		action_table[1][4][4] = Xuong_bac_200_do_4;	 //  
+    action_table[1][4][5] = Leo_bac_200_do_5;		 //
+    action_table[1][4][6] = Leo_bac_200_ko_thanh_do;//
+    action_table[1][4][7] = Leo_bac_200_do_7;   //
+    action_table[1][4][8] = Leo_bac_200_ko_thanh_do;  //
+    action_table[1][4][9]  = Xuong_bac_200_do_9; 	//	
+    action_table[1][4][10] = xuong_bac_200_do_10;  //
     action_table[1][4][11] = xuong_bac_200_11_do; 
 		action_table[1][4][12] = xuong_bac_200_do_12;
 		

@@ -490,21 +490,23 @@ int vi_tri_tay_2_trai_tren = 590;
 int vi_tri_tay_3_trai_tren = 402;
 
 /// VI TRI LAZER LAY QUA THANG
-int vitri_tay41_laser_trai_GapQua = 153;
+int vitri_tay41_laser_trai_GapQua = 154;
 int vitri_tay23_laser_trai_GapQua = 224;
-int vitri_tay23_phai_laser_GapQua = 153;
+int vitri_tay23_phai_laser_GapQua = 154;
 
 
 int vitri_tay1home = 445;
 int vitri_tay2home = 445;
 
 int vi_tri_gap_ngang_43 = 602;
+
+int kiem_tra_loi = 0;
 //// ******** VI TRI LAZER CUA RUNG XANH *********************
 
 int vi_tri_cua_rung_xanh_1_lazer_phai_tay_41 = 308;
 int vi_tri_cua_rung_xanh_1_lazer_phai_tay_23 = 261;
 
-int vi_tri_cua_rung_xanh_2_lazer_phai_tay_41 = 404;
+int vi_tri_cua_rung_xanh_2_lazer_phai_tay_41 = 400;
 int vi_tri_cua_rung_xanh_2_lazer_trai_tay_41 = 428;
 int vi_tri_cua_rung_xanh_2_lazer_phai_tay_23 = 399;
 
@@ -517,10 +519,10 @@ int vi_tri_cua_rung_xanh_3_lazer_phai_tay_41 = 474;
 int vi_tri_cua_rung_do_3_lazer_phai_tay_41 = 306;
 int vi_tri_cua_rung_do_3_lazer_phai_tay_23 = 262;
 
-int vi_tri_cua_rung_do_2_lazer_phai_tay_41 = 403;
+int vi_tri_cua_rung_do_2_lazer_phai_tay_41 = 400;
 int vi_tri_cua_rung_do_2_lazer_phai_tay_23 = 363;
 
-int vi_tri_cua_rung_do_1_lazer_phai_tay_41 = 481;
+int vi_tri_cua_rung_do_1_lazer_phai_tay_41 = 477;
 int vi_tri_cua_rung_do_1_lazer_phai_tay_23 = 451;
 
 int vi_tri_cua_rung_do_1_lazer_trai_tay_41 = 308;
@@ -2259,6 +2261,9 @@ void HMI_TRAN(vs32 _so_dong)
 										break;
 									case 23:
 										HMI_DMI("CB_Nang_phai",CB_Nang_phai,23); 
+										break;
+									case 24:
+										HMI_DMI("kiem_tra_loi",kiem_tra_loi,24); 
 										break;
 						}
 }
