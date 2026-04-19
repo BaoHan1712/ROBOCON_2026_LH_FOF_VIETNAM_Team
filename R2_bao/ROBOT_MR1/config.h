@@ -525,7 +525,7 @@ int vi_tri_cua_rung_do_2_lazer_phai_tay_23 = 363;
 int vi_tri_cua_rung_do_1_lazer_phai_tay_41 = 477;
 int vi_tri_cua_rung_do_1_lazer_phai_tay_23 = 451;
 
-int vi_tri_cua_rung_do_1_lazer_trai_tay_41 = 308;
+int vi_tri_cua_rung_do_1_lazer_trai_tay_41 = 310;
 int vi_tri_cua_rung_do_1_lazer_trai_tay_23 = 370;
 
 ///*********************************************************

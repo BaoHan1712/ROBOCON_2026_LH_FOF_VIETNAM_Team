@@ -53,7 +53,7 @@ void kiem_tra_huong_quay_tay_gap_ben_phai (void);
 int	Min_chan_truoc = 230, Max_chan_truoc = 710, target_chan_truoc;
 int	Min_chan_sau = 230, Max_chan_sau = 710, target_chan_sau;
 int	Min_xoay_tay = 250, Max_xoay_tay = 710, target_xoay_tay;
-int	Min_tay_gat1 = 96, Max_tay_gat1 = 782, target_tay_gat1;
+int	Min_tay_gat1 = 96, Max_tay_gat1 = 784, target_tay_gat1;
 int	Min_tay_gat2 = 95, Max_tay_gat2 = 782, target_tay_gat2;
 
 int	speed_chan_sau, speed_chan_truoc,speed_tay_xoay,speed_tay_gat1,speed_tay_gat2;
@@ -260,61 +260,195 @@ void ADCValue_Control(void)
 }
 
 
+//void Chan_truoc()
+//{
+////		if(BienTroNongBanValue < taget_BT_Xoay - 5 ){
+////			Cylinder = 0;
+////			return;
+////		}
+//	
+//	if (target_chan_truoc < Min_chan_truoc)
+//		target_chan_truoc = Min_chan_truoc;
+//	if (target_chan_truoc > Max_chan_truoc)
+//		target_chan_truoc = Max_chan_truoc;
+
+//	if (abs(bientrochantruocValue - target_chan_truoc) > 4)
+//	{
+//		if (bientrochantruocValue > target_chan_truoc)	mor_lift_front_down;
+//		else																						mor_lift_front_up;
+
+//		speed_temp = abs(bientrochantruocValue - target_chan_truoc)*2;
+////		if (speed_temp > 170)
+////				speed_temp = 170;
+//		if (speed_temp > speed_chan_truoc)
+//				speed_temp = speed_chan_truoc;
+//		if (speed_temp < 50)
+//				speed_temp = 50;
+//		
+//		mor_lift_front = speed_temp;
+//	}
+//	else mor_lift_front = 25, mor_lift_front_up;
+//}
+
+
+//void Chan_sau()
+//{
+//	if (target_chan_sau < Min_chan_sau)
+//		target_chan_sau = Min_chan_sau;
+//	if (target_chan_sau > Max_chan_sau)
+//		target_chan_sau = Max_chan_sau;
+
+//	if (abs(bientrochansauValue - target_chan_sau) > 5)
+//	{
+//		if (bientrochansauValue > target_chan_sau)			mor_lift_rear_down;
+//		else																						mor_lift_rear_up;
+
+//		speed_temp  = abs(bientrochansauValue - target_chan_sau)*2;
+//		if (speed_temp > speed_chan_sau)
+//				speed_temp = speed_chan_sau;
+//		if (speed_temp < 20)
+//				speed_temp = 20;
+//		
+//		mor_lift_rear = speed_temp;
+//	}
+//	else mor_lift_rear = 10, mor_lift_rear_up;
+//}
+
+// Dao dong/rung xung quanh target thi ||  Giam Kp, tang Kd
+
+
+// ===== PID Variables cho Chan Truoc =====
+float pid_kp_chan_truoc = 3.3f;
+float pid_ki_chan_truoc = 0.05f;
+float pid_kd_chan_truoc = 10.5f;
+
+float pid_integral_chan_truoc = 0.0f;
+float pid_prev_error_chan_truoc = 0.0f;
+float pid_output_chan_truoc = 0.0f;
+#define PID_INTEGRAL_LIMIT_CHAN_TRUOC  500.0f
+
 void Chan_truoc()
 {
-//		if(BienTroNongBanValue < taget_BT_Xoay - 5 ){
-//			Cylinder = 0;
-//			return;
-//		}
-	
-	if (target_chan_truoc < Min_chan_truoc)
-		target_chan_truoc = Min_chan_truoc;
-	if (target_chan_truoc > Max_chan_truoc)
-		target_chan_truoc = Max_chan_truoc;
+    float error = (float)(target_chan_truoc - bientrochantruocValue);
+    float i_term;
+    float d_term;
+    float p_term = pid_kp_chan_truoc * error;
 
-	if (abs(bientrochantruocValue - target_chan_truoc) > 4)
-	{
-		if (bientrochantruocValue > target_chan_truoc)	mor_lift_front_down;
-		else																						mor_lift_front_up;
+    if (target_chan_truoc < Min_chan_truoc)
+        target_chan_truoc = Min_chan_truoc;
+    if (target_chan_truoc > Max_chan_truoc)
+        target_chan_truoc = Max_chan_truoc;
 
-		speed_temp = abs(bientrochantruocValue - target_chan_truoc)*2;
-//		if (speed_temp > 170)
-//				speed_temp = 170;
-		if (speed_temp > speed_chan_truoc)
-				speed_temp = speed_chan_truoc;
-		if (speed_temp < 50)
-				speed_temp = 50;
-		
-		mor_lift_front = speed_temp;
-	}
-	else mor_lift_front = 25, mor_lift_front_up;
+    if (abs(error) > 5)
+    {
+        pid_integral_chan_truoc += error;
+        if (pid_integral_chan_truoc > PID_INTEGRAL_LIMIT_CHAN_TRUOC)
+            pid_integral_chan_truoc = PID_INTEGRAL_LIMIT_CHAN_TRUOC;
+        if (pid_integral_chan_truoc < -PID_INTEGRAL_LIMIT_CHAN_TRUOC)
+            pid_integral_chan_truoc = -PID_INTEGRAL_LIMIT_CHAN_TRUOC;
+
+        i_term = pid_ki_chan_truoc * pid_integral_chan_truoc;
+        d_term = pid_kd_chan_truoc * (error - pid_prev_error_chan_truoc);
+        pid_prev_error_chan_truoc = error;
+
+        pid_output_chan_truoc = p_term + i_term + d_term;
+
+        if (error < 0)
+            mor_lift_front_down;  // bientroc > target ? h? xu?ng
+        else
+            mor_lift_front_up;    // bientroc < target ? nâng lên
+
+        speed_temp = (uint16_t)abs(pid_output_chan_truoc);
+        if (speed_temp > speed_chan_truoc)
+            speed_temp = speed_chan_truoc;
+        if (speed_temp < 50)
+            speed_temp = 50;
+
+        mor_lift_front = speed_temp;
+    }
+    else
+    {
+        // Ðã den target ? t?t motor, reset integral
+        pid_integral_chan_truoc  = 0.0f;
+        pid_prev_error_chan_truoc = 0.0f;
+        mor_lift_front = 2;
+        mor_lift_front_up;
+    }
 }
 
+// ===== PID Variables cho Chan Sau =====
+float pid_kp_chan_sau = 3.3;
+float pid_ki_chan_sau = 0.05f;
+float pid_kd_chan_sau = 11.5f;
+
+float pid_integral_chan_sau = 0.0f;
+float pid_prev_error_chan_sau = 0.0f;
+float pid_output_chan_sau = 0.0f;
+
+// Gi?i h?n integral d? tránh windup
+#define PID_INTEGRAL_LIMIT_CHAN_SAU  500.0f
 
 void Chan_sau()
 {
-	if (target_chan_sau < Min_chan_sau)
-		target_chan_sau = Min_chan_sau;
-	if (target_chan_sau > Max_chan_sau)
-		target_chan_sau = Max_chan_sau;
+		float error = (float)(target_chan_sau - bientrochansauValue);
+		float i_term ;
+		float d_term;
+		        // === Tính PID ===
+    float p_term = pid_kp_chan_sau * error;
+	
+    if (target_chan_sau < Min_chan_sau)
+        target_chan_sau = Min_chan_sau;
+    if (target_chan_sau > Max_chan_sau)
+        target_chan_sau = Max_chan_sau;
 
-	if (abs(bientrochansauValue - target_chan_sau) > 5)
-	{
-		if (bientrochansauValue > target_chan_sau)			mor_lift_rear_down;
-		else																						mor_lift_rear_up;
+    if (abs(error) > 5)
+    {
+        pid_integral_chan_sau += error;
+        if (pid_integral_chan_sau > PID_INTEGRAL_LIMIT_CHAN_SAU)
+            pid_integral_chan_sau = PID_INTEGRAL_LIMIT_CHAN_SAU;
+        if (pid_integral_chan_sau < -PID_INTEGRAL_LIMIT_CHAN_SAU)
+            pid_integral_chan_sau = -PID_INTEGRAL_LIMIT_CHAN_SAU;
+        i_term = pid_ki_chan_sau * pid_integral_chan_sau;
 
-		speed_temp  = abs(bientrochansauValue - target_chan_sau)*2;
-		if (speed_temp > speed_chan_sau)
-				speed_temp = speed_chan_sau;
-		if (speed_temp < 20)
-				speed_temp = 20;
-		
-		mor_lift_rear = speed_temp;
-	}
-	else mor_lift_rear = 10, mor_lift_rear_up;
+				d_term = pid_kd_chan_sau * (error - pid_prev_error_chan_sau);
+        pid_prev_error_chan_sau = error;
+
+        // Tang output PID
+        pid_output_chan_sau = p_term + i_term + d_term;
+
+        if (error < 0)
+            mor_lift_rear_down;   // bientroc > target ha xu?ng
+        else
+            mor_lift_rear_up;     // bientroc < target nâng lên
+
+        // === Tính speed t? PID output ===
+        speed_temp = (uint16_t)abs(pid_output_chan_sau);
+
+        if (speed_temp > speed_chan_sau)
+            speed_temp = speed_chan_sau;
+
+        // Gioi han duoi motor không bi chet
+        if (speed_temp < 50)
+            speed_temp = 50;
+
+        mor_lift_rear = speed_temp;
+    }
+    else
+    {
+        // Ðã den target thi giu vi trí, reset integral
+        pid_integral_chan_sau = 0.0f;
+        pid_prev_error_chan_sau = 0.0f;
+        mor_lift_rear = 2;
+        mor_lift_rear_up;
+    }
 }
 
 
+void test_chan_sau (int toc, int target) {
+		speed_chan_sau = toc;
+		target_chan_truoc = target;
+
+}
 //************************************** gat1 **************************************
 void Gat_1()
 {
@@ -390,23 +524,23 @@ void Gat_2()
 
 //********************************Speed nang ****************************
 void Nang_cham	(void) {
-	speed_chan_sau = 37;
-	speed_chan_truoc = 37;
+	speed_chan_sau = 27;
+	speed_chan_truoc = 30;
 }
 
 void Nang_thuong	(void) {
-	speed_chan_sau = 61;
-	speed_chan_truoc = 68;
+	speed_chan_sau = 110;
+	speed_chan_truoc = 110;
 }
 
 void Nang_nhanh	(void) {
-	speed_chan_sau = 90;
-	speed_chan_truoc = 115;
+	speed_chan_sau = 190;
+	speed_chan_truoc = 192;
 }
 
 void Nang_cuc_nhanh	(void) {
-	speed_chan_sau = 110;
-	speed_chan_truoc = 130;
+	speed_chan_sau = 240;
+	speed_chan_truoc = 242;
 }
 
 
@@ -527,9 +661,9 @@ void Leo_bac_200(int Angle, int Robot_Angle)
 		while(CB_Ha_Sau == 1  || CB_Cap_Thanh_Sau == 0)	{vTaskDelay(1); if(!wantExit())	break;}
 	}
 	robotStop(0);
-	////	// nâng bánh sau lên 
-	speed_chan_sau = 100;
-	target_chan_sau = Min_chan_sau + 10;
+	//// nâng bánh sau lên 
+	speed_chan_sau = 230;
+	target_chan_sau = Min_chan_sau + 5;
 	for(i=0;i<50;i++)		
 	{
 			while(abs(bientrochansauValue - target_chan_sau) > 5)	{vTaskDelay(1); if(!wantExit())	break;}
@@ -546,7 +680,7 @@ void Leo_bac_200(int Angle, int Robot_Angle)
 	}
 	vTaskDelay(1500);
 	
-	speed_chan_sau =150;
+	speed_chan_sau =160;
 	target_chan_sau = Min_chan_sau + 30;
 	
 	robotRunAngle(Angle,14,Robot_Angle,0.8);
@@ -563,15 +697,13 @@ void Leo_bac_200(int Angle, int Robot_Angle)
 		while(CB_bung == 1)	{vTaskDelay(1); if(!wantExit())	break;}
 	}
 
-	//vTaskDelay(1000); 
-	
   robotStop(0);
-	speed_chan_truoc = 100;
+	speed_chan_truoc = 230;
 	target_chan_truoc = Min_chan_truoc + 3;
 	
 	vTaskDelay(1000);
 	
-	speed_chan_sau = 80;
+	speed_chan_sau = 180;
 	target_chan_sau = Min_chan_sau + 20;
 
 	for(i=0;i<250;i++)	
@@ -812,7 +944,7 @@ void Leo_bac_400(int Angle, int Robot_Angle)
 	
 	robotStop(0); 
 //	
-	speed_chan_sau = 140;
+	speed_chan_sau = 200;
 	target_chan_sau = Min_chan_sau ;
 
 	for(i=0;i<50;i++)		
@@ -1005,7 +1137,7 @@ void Xuong_bac_200(int Angle, int Robot_Angle)
 	}
 	
 	
-	robotRunAngle(Angle,12,Robot_Angle,1);
+	robotRunAngle(Angle,10,Robot_Angle,1);
 
 	for(i=0;i<500;i++)
 	{	
@@ -1013,19 +1145,19 @@ void Xuong_bac_200(int Angle, int Robot_Angle)
 	}
 	robotStop(7);
 //	
-	speed_chan_sau = 80;
+	speed_chan_sau = 230;
 	target_chan_sau = Min_chan_sau + 240;
 	
 	for(i=0;i<250;i++)		
 	{
-		while(abs(bientrochansauValue - target_chan_sau) > 80)	{vTaskDelay(1); if(!wantExit())	break;}
+		while(abs(bientrochansauValue - target_chan_sau) > 60)	{vTaskDelay(1); if(!wantExit())	break;}
 	}
 	
-	speed_chan_sau =30;
+	speed_chan_sau =100;
 	
 	for(i=0;i<250;i++)		
 	{
-		while(abs(bientrochansauValue - target_chan_sau) > 13)	{vTaskDelay(1); if(!wantExit())	break;}
+		while(abs(bientrochansauValue - target_chan_sau) > 15)	{vTaskDelay(1); if(!wantExit())	break;}
 	}
 	robotStop(0);
 	
@@ -1047,7 +1179,7 @@ void Xuong_bac_200(int Angle, int Robot_Angle)
 	
 	robotStop(0);
 	
-	speed_chan_truoc = 80;
+	speed_chan_truoc = 230;
 	target_chan_truoc = Min_chan_truoc + 250;
 	
 	for(i=0;i<250;i++)		
@@ -1055,7 +1187,7 @@ void Xuong_bac_200(int Angle, int Robot_Angle)
 		while(abs(bientrochantruocValue - target_chan_truoc) > 100)	{vTaskDelay(1); if(!wantExit())	break;}
 	}
 	
-	speed_chan_truoc = 40;
+	speed_chan_truoc = 100;
 	
 	for(i=0;i<50;i++)		
 	{
@@ -1236,10 +1368,10 @@ void qua_trai_len_bac_200_cua_vao(void) {
 		
 		else if  ( TinHieu_ChuanBi_GapThang == 0 ) {
 			if (chay_ngang_qua_o1_xanh == 0) {
-					chinh_lai_vi_tri_laser_phai_custom(vi_tri_cua_rung_xanh_2_lazer_phai_tay_41 - 15, 1000, 5, 50);
+					chinh_lai_vi_tri_laser_phai_custom(vi_tri_cua_rung_xanh_2_lazer_phai_tay_41 - 15, 1000, 5, 45);
 			}
 			else if (chay_ngang_qua_o1_xanh == 1) {
-					chinh_lai_vi_tri_laser_phai_custom(vi_tri_cua_rung_xanh_1_lazer_phai_tay_41 - 10, 1000, 5, 65);
+					chinh_lai_vi_tri_laser_phai_custom(vi_tri_cua_rung_xanh_1_lazer_phai_tay_41 - 10, 1000, 5, 55);
 					}
 				}
 		
@@ -1267,10 +1399,10 @@ void qua_phai_len_bac_200_cua_vao(void) {
 		
 		else if  ( TinHieu_ChuanBi_GapThang == 0 ) {
 			if (chay_ngang_qua_o3_xanh == 0) {
-					chinh_lai_vi_tri_laser_phai_custom(vi_tri_cua_rung_xanh_2_lazer_phai_tay_41 - 15, 1000, 5 , 50);
+					chinh_lai_vi_tri_laser_phai_custom(vi_tri_cua_rung_xanh_2_lazer_phai_tay_41 - 15, 1000, 5 , 45);
 			}
 			else if (chay_ngang_qua_o3_xanh == 1) {
-						chinh_lai_vi_tri_laser_phai_custom(vi_tri_cua_rung_xanh_3_lazer_phai_tay_23 + 10, 1000, 5,65);
+						chinh_lai_vi_tri_laser_phai_custom(vi_tri_cua_rung_xanh_3_lazer_phai_tay_23 + 10, 1000, 5,55);
 						}
 
 				}
@@ -1294,7 +1426,7 @@ void moqua(void) {
 	void Xuong_bac_400 (int Angle, int Robot_Angle)
 {	
 	int i;
-	Nang_nhanh();
+	Nang_cuc_nhanh();
 	
 	target_chan_truoc = Min_chan_truoc + 10, target_chan_sau = Min_chan_sau + 10;
 	for(i=0;i<50;i++)		
@@ -1320,7 +1452,7 @@ void moqua(void) {
 	
 	robotStop(0);
 		
-	speed_chan_sau = 170;
+	speed_chan_sau = 200;
 	target_chan_sau = Max_chan_sau - 10;
 	
 	for(i=0;i<50;i++)		
@@ -1328,7 +1460,7 @@ void moqua(void) {
 		while(abs(bientrochansauValue - target_chan_sau) > 100)	{vTaskDelay(1); if(!wantExit())	break;}
 	}
 	
-	speed_chan_sau = 25;
+	speed_chan_sau = 70;
 	
 	for(i=0;i<50;i++)		
 	{
@@ -1361,7 +1493,7 @@ void moqua(void) {
 		while(abs(bientrochantruocValue - target_chan_truoc) > 100)	{vTaskDelay(1); if(!wantExit())	break;}
 	}
 	
-	speed_chan_truoc = 40;
+	speed_chan_truoc = 70;
 	
 	for(i=0;i<250;i++)		
 	{
@@ -1921,7 +2053,7 @@ void gap_tay4_bac_400(void)
         speed_tay_gat2 = 250;
         target_tay_gat2 = vitri_tay2home;
         for(i=0; i<50; i++) { 
-            while(abs(bientrodaytay2Value - target_tay_gat2) > ((vitri_tay2home - Min_tay_gat2) / 1.5))    
+            while(abs(bientrodaytay2Value - target_tay_gat2) > ((vitri_tay2home - Min_tay_gat2) / 1.8))    
             { vTaskDelay(1); if(!wantExit()) break; }
         }
 
@@ -1942,7 +2074,7 @@ void gap_tay1_bac_400(void)
         Tay1_len;
     
         speed_tay_gat1 = 250;
-        target_tay_gat1 = (Max_tay_gat1 - 90);
+        target_tay_gat1 = (Max_tay_gat1 - 95);
         for(i = 0; i < 50; i++) { 
             while(abs(bientrodaytay1Value - target_tay_gat1) > 10) { vTaskDelay(1); if(!wantExit()) break; }
         }
@@ -1957,12 +2089,12 @@ void gap_tay1_bac_400(void)
         vTaskDelay(5000); 
         
         for(i = 0; i < 50; i++) { 
-            while(abs(bientrodaytay1Value - (Max_tay_gat1 - 45)) > 5) {
+            while(abs(bientrodaytay1Value - (Max_tay_gat1 - 45)) > 8) {
                 speed_tay_gat1 = 250;
-                target_tay_gat1 = Max_tay_gat1 - 90;
+                target_tay_gat1 = Max_tay_gat1 - 95;
                 
                 for(i = 0; i < 50; i++) { 
-                    while(abs(bientrodaytay1Value - target_tay_gat1) > 5) {
+                    while(abs(bientrodaytay1Value - target_tay_gat1) > 8) {
                         vTaskDelay(1); 
                         if(!wantExit()) break;
                     }
@@ -1987,7 +2119,7 @@ void gap_tay1_bac_400(void)
         speed_tay_gat1 = 150;
         target_tay_gat1 = vitri_tay1home;
         for(i = 0; i < 50; i++) { 
-            while(abs(bientrodaytay1Value - target_tay_gat1) > ((vitri_tay1home - Min_tay_gat1) / 1.5)) {
+            while(abs(bientrodaytay1Value - target_tay_gat1) > ((vitri_tay1home - Min_tay_gat1) / 1.8)) {
                 vTaskDelay(1); if(!wantExit()) break;
             }
         }
@@ -2059,7 +2191,7 @@ void gap_tay2_bac_400(void)
         speed_tay_gat2 = 250;
         target_tay_gat2 = vitri_tay2home;
         for(i = 0; i < 50; i++) { 
-            while(abs(bientrodaytay2Value - target_tay_gat2) > ((vitri_tay2home - Min_tay_gat2) / 1.6)) {
+            while(abs(bientrodaytay2Value - target_tay_gat2) > ((vitri_tay2home - Min_tay_gat2) / 1.8)) {
                 vTaskDelay(1); if(!wantExit()) break;
             }
         }
@@ -2180,7 +2312,7 @@ void gap_tay4(void)
         speed_tay_gat2 = 250;
         target_tay_gat2 = vitri_tay2home;
         for(i=0; i<50; i++) { 
-            while(abs(bientrodaytay2Value - target_tay_gat2) > ((vitri_tay2home - Min_tay_gat2) / 1.5))
+            while(abs(bientrodaytay2Value - target_tay_gat2) > ((vitri_tay2home - Min_tay_gat2) / 1.6))
             { vTaskDelay(1); if(!wantExit()) break; }
         }
 
@@ -2246,7 +2378,7 @@ void gap_tay1(void)
         speed_tay_gat1 = 250;
         target_tay_gat1 = vitri_tay1home;
         for(i=0; i<50; i++) { 
-            while(abs(bientrodaytay1Value - target_tay_gat1) > ((vitri_tay1home - Min_tay_gat1) / 1.5))
+            while(abs(bientrodaytay1Value - target_tay_gat1) > ((vitri_tay1home - Min_tay_gat1) / 1.6))
             { vTaskDelay(1); if(!wantExit()) break; }
         }
 
@@ -2313,7 +2445,7 @@ void gap_tay2(void)
         speed_tay_gat2 = 250;
         target_tay_gat2 = vitri_tay2home;
         for(i=0; i<50; i++) { 
-            while(abs(bientrodaytay2Value - target_tay_gat2) > ((vitri_tay2home - Min_tay_gat2) / 1.5))
+            while(abs(bientrodaytay2Value - target_tay_gat2) > ((vitri_tay2home - Min_tay_gat2) / 1.6))
             { vTaskDelay(1); if(!wantExit()) break; }
         }
 
@@ -2380,7 +2512,7 @@ void gap_tay3(void)
         speed_tay_gat1 = 250;
         target_tay_gat1 = vitri_tay1home;
         for(i=0; i<50; i++) { 
-            while(abs(bientrodaytay1Value - target_tay_gat1) > ((vitri_tay1home - Min_tay_gat1) / 1.5))
+            while(abs(bientrodaytay1Value - target_tay_gat1) > ((vitri_tay1home - Min_tay_gat1) / 1.6))
             { vTaskDelay(1); if(!wantExit()) break; }                
         }
 
@@ -2464,7 +2596,7 @@ void gap_tay4_duoi_trai_phai(int vi_tri)
         speed_tay_gat2 = 250;
         target_tay_gat2 = vitri_tay2home;
         for(i=0; i<50; i++) { 
-            while(abs(bientrodaytay2Value - target_tay_gat2) > ((vitri_tay2home - Min_tay_gat2) / 1.5))
+            while(abs(bientrodaytay2Value - target_tay_gat2) > ((vitri_tay2home - Min_tay_gat2) / 1.6))
             { vTaskDelay(1); if(!wantExit()) break; }
         }
 
@@ -2516,7 +2648,7 @@ void gap_tay1_duoi_trai_phai(int vi_tri)
         vTaskDelay(5000); 
 //        
         for(i=0; i<550; i++) { 
-            while(abs(bientrodaytay1Value - Max_tay_gat1) > 8) 
+            while(abs(bientrodaytay1Value - Max_tay_gat1) > 10) 
             {
                 speed_tay_gat1 = 250;
                 target_tay_gat1 =  Max_tay_gat1 - 45;
@@ -2546,7 +2678,7 @@ void gap_tay1_duoi_trai_phai(int vi_tri)
         speed_tay_gat1 = 250;
         target_tay_gat1 = vitri_tay1home;
         for(i=0; i<50; i++) { 
-            while(abs(bientrodaytay1Value - target_tay_gat1) > ((vitri_tay1home - Min_tay_gat1) / 1.5))
+            while(abs(bientrodaytay1Value - target_tay_gat1) > ((vitri_tay1home - Min_tay_gat1) / 1.6))
             { vTaskDelay(1); if(!wantExit()) break; }
         }
 
@@ -2622,7 +2754,7 @@ void gap_tay2_duoi_trai_phai(int vi_tri)
         speed_tay_gat2 = 250;
         target_tay_gat2 = vitri_tay1home;
         for(i=0; i<50; i++) { 
-            while(abs(bientrodaytay2Value - target_tay_gat2) > ((vitri_tay2home - Min_tay_gat2) / 1.5))
+            while(abs(bientrodaytay2Value - target_tay_gat2) > ((vitri_tay2home - Min_tay_gat2) / 1.6))
             { vTaskDelay(1); if(!wantExit()) break; }
         }
 
@@ -2698,7 +2830,7 @@ void gap_tay3_duoi_trai_phai(int vi_tri)
         speed_tay_gat1 = 250;
         target_tay_gat1 = vitri_tay1home;
         for(i=0; i<50; i++) { 
-            while(abs(bientrodaytay1Value - target_tay_gat1) > ((vitri_tay1home - Min_tay_gat1) / 1.5))
+            while(abs(bientrodaytay1Value - target_tay_gat1) > ((vitri_tay1home - Min_tay_gat1) / 1.6))
             { vTaskDelay(1); if(!wantExit()) break; }
         }
 
@@ -2880,7 +3012,7 @@ void gap_tay1_duoi(void)
         speed_tay_gat1 = 250;
         target_tay_gat1 = vitri_tay1home;
         for(i=0; i<50; i++) { 
-            while(abs(bientrodaytay1Value - target_tay_gat1) > ((vitri_tay1home - Min_tay_gat1) / 1.5)) {
+            while(abs(bientrodaytay1Value - target_tay_gat1) > ((vitri_tay1home - Min_tay_gat1) / 1.6)) {
                 vTaskDelay(1); 
                 if(!wantExit()) break;
             }
@@ -2968,7 +3100,7 @@ void gap_tay2_duoi(void)
         speed_tay_gat2 = 250;
         target_tay_gat2 = vitri_tay2home;
         for(i=0; i<50; i++) { 
-            while(abs(bientrodaytay2Value - target_tay_gat2) > ((vitri_tay2home - Min_tay_gat2) / 1.5)) {
+            while(abs(bientrodaytay2Value - target_tay_gat2) > ((vitri_tay2home - Min_tay_gat2) / 1.6)) {
                 vTaskDelay(1); if(!wantExit()) break;
             }
         }
@@ -3044,7 +3176,7 @@ void gap_tay3_duoi(void)
         speed_tay_gat1 = 250;
         target_tay_gat1 = vitri_tay1home;
         for(i=0; i<50; i++) { 
-            while(abs(bientrodaytay1Value - target_tay_gat1) > ((vitri_tay1home - Min_tay_gat1) / 1.5)) {
+            while(abs(bientrodaytay1Value - target_tay_gat1) > ((vitri_tay1home - Min_tay_gat1) / 1.6)) {
                 vTaskDelay(1); if(!wantExit()) break;
             }
         }
@@ -3361,6 +3493,9 @@ void Lay_phia_truoc_bac_200_tren (void) {
 					
 					da_lay_tay4 = 1;
 			}
+			Nang_thuong();
+			target_chan_truoc = Min_chan_truoc + 250;
+			target_chan_sau = Min_chan_sau + 250;
 			TinHieu_ChuanBi_GapThang = 0;
 			if(CHON_SAN == 0){
 					di_vao_giua_do();
@@ -3585,7 +3720,12 @@ void Lay_ben_phai_bac_200_tren_xanh_7(void) {
 	
 	if (TinHieu_ChuanBi_GapThang == 1) {
 			kiem_tra_huong_quay_tay_gap_phia_truoc();
-			vTaskDelay (7000);
+			vTaskDelay (4000);
+			su_dung_chan(265);
+			for(i=0;i<50;i++)		
+				{
+					while(abs(bientrochansauValue - target_chan_sau) > 10)	{vTaskDelay(1); if(!wantExit())	break;}
+				}
 			chuan_bi_gap_thang_xanh_7();
 		}
 			robotStop(0);
@@ -3609,7 +3749,7 @@ void Lay_ben_trai_bac_200_tren (void) {
 					}
 					gap_tay4();
 					if(CHON_SAN == 0) {	 // san do
-						robotRunAngle(1900,15,-900,0.8);
+						robotRunAngle(1950,15,-900,0.8);
 						vTaskDelay(5000);
 						}
 					else {  // san xanh
@@ -3628,7 +3768,7 @@ void Lay_ben_trai_bac_200_tren (void) {
 					}
 					gap_tay1();
 					if(CHON_SAN == 0) {	 // san do
-						robotRunAngle(1900,15,-900,0.8);
+						robotRunAngle(1950,15,-900,0.8);
 						vTaskDelay(5000);
 						}
 					else {  // san xanh
@@ -3807,7 +3947,6 @@ void Lay_ben_trai_bac_200_duoi (void) {
 //////////*******************************************************
 
 void di_vao_giua (void) {
-
 					// da dung tay 1 xong
 			if (da_lay_tay1 == 1 && da_lay_tay2 == 0 && da_lay_tay3 == 0 && da_lay_tay4 == 0) {
 					robotRunAngle(1650,10,900,0.3);
@@ -4331,14 +4470,14 @@ void Ktra_vtri_kep1_phai (void) {
 
 void nhac_dit(void) {
 			/// nhac dit len
-			Nang_thuong();
+			Nang_nhanh();
 			target_chan_truoc = 395;
 			target_chan_sau = 275;
 }
 
 void ha_sat_xuong(void) {
 			/// nhac dit len
-			Nang_thuong();
+			Nang_nhanh();
 			target_chan_truoc = 255;
 			target_chan_sau = 255;
 }
