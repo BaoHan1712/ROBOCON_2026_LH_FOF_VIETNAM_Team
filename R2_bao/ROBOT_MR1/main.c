@@ -127,22 +127,7 @@ static void taskMain(void *pvParameters)
 	Vi_tri = 0;
 	RESET_ENCODER(); 
 
-////	target_kep = 610;
-//	speed_tay_xoay = 100;
-	//
 	
-//	target_day_kep = 500;
-	
-
-//	target_chan_truoc = 230;
-//	target_chan_sau = 230;
-	
-//	tay_gat = 50,target_kep = 500;
-//	for(i=0;i<250;i++)	
-//	{
-//		while(bientronangtayValue < 495)	{vTaskDelay(5); if(wantExit())	break;}
-//	}
-//	tay_xoay = 50,target_tay_kep = 500;
 //	//-----------------------------------
 	xTaskCreate(taskRobotAnalytics, (signed char *)"taskRobotAnalytics", 256, NULL, 0, NULL);
 	xTaskCreate(taskDieuKhienCoCau, (signed char *)"taskDieuKhienCoCau", 256, NULL, 0, NULL);
@@ -175,13 +160,13 @@ vTaskDelay(1000);
 
 		while(SHARE) 
 		{	
-			
+//			
 			robotGamePadControl(5,30);
 			Nang_Ha_tay1_Manual(); 
 			Nang_Ha_tay2_Manual();
 			Xoay_tay_Manual();
 			go_qua();
-		
+//		
 				
 			if(quangTroValue < 100)					Tay_kep_mo;
 			if(OPTIONS) vehome();
@@ -194,10 +179,10 @@ vTaskDelay(1000);
 //			if(TRIANGLE && L2 && !R2 )												Xuat_Phat_Lay_Vu_Khi_Do(160,1550,290
 				
 //				
-				if(TRIANGLE && L2 && !R2 )												retry_zone2_do();
-//				if(SQUARE && L2 && !R2) 													su_dung_chan(700);
-//				if(X && L2 && !R2) 																Lay_phia_truoc_bac_400_tren();
-//				if(O && L2 && !R2 ) 															phun_tay();
+				if(TRIANGLE && L2 && !R2 )													Run_All_Blocks_From_Queue_san_do();
+				if(SQUARE && L2 && !R2) 														Leo_bac_200(900, -900);
+				if(X && L2 && !R2) 																	Xuong_bac_200(900, -900);
+////				if(O && L2 && !R2 ) 															phun_tay();
 ////				if(X && R2 ) 																			nhat_hop_zone3_do();
 
 //			
@@ -222,15 +207,15 @@ vTaskDelay(1000);
 //					if(X && R2  ) 																				Xuong_bac_200(-900, 900);
 
 //		
-//				
-//					if(TRIANGLE && L2 && !R2) 														tudonghoantoan();
-//					if(SQUARE && L2 && !R2) 															quyet_dinh_dat_hop_tang3();
+				
+					if(TRIANGLE && L2 && !R2) 														Run_All_Blocks_From_Queue_san_xanh();
+					if(SQUARE && L2 && !R2) 															quyet_dinh_dat_hop_tang3();
 //					if ( X && L2 && !R2 ) 																nhat_hop_zone3_xanh();
 //					if(O && L2 && !R2) 																		tu_dong_dat_tang2_xanh();
 //		
 ////Leo_bac_200
 //Leo_bac_400(-900, 900)	
-////Xuong_bac_200	
+////Xuong_bac_400	
  ///auto_vao_rung_xanh_cua1(); tay 41, 262 tay 23
 //Vao_rung_mai_2_xanh(460);  phai 410
 // Vao_rung_mai_3_xanh(308); tay 41, 371 tay  23

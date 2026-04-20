@@ -272,6 +272,14 @@ vu8 DATA_SPEED[80]={255,1,0,0,				// 1- ID = 1, DIRECT = 0, SPEED = 0
 #define  Start													GPIO_ReadInputDataBit(GPIOD,GPIO_Pin_0)
 #define  QT5														GPIO_ReadInputDataBit(GPIOD,GPIO_Pin_1)
 
+
+//// CB CHECK CO QUA TREN TAY HAY CHUA
+
+#define  check_hop_1										GPIO_ReadInputDataBit(GPIOC,GPIO_Pin_9) // 
+#define  check_hop_3										GPIO_ReadInputDataBit(GPIOC,GPIO_Pin_8)  //
+#define  check_hop_4										GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_6)  // 
+#define  check_hop_2										GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_5)  // dong la 0, bung la 1
+
 //================================INPUT==================================//
 
 
@@ -516,10 +524,10 @@ int vi_tri_cua_rung_xanh_3_lazer_phai_tay_23 = 446;
 int vi_tri_cua_rung_xanh_3_lazer_phai_tay_41 = 474;
 
 //// ******** VI TRI LAZER CUA RUNG DO *********************
-int vi_tri_cua_rung_do_3_lazer_phai_tay_41 = 306;
+int vi_tri_cua_rung_do_3_lazer_phai_tay_41 = 304;
 int vi_tri_cua_rung_do_3_lazer_phai_tay_23 = 262;
 
-int vi_tri_cua_rung_do_2_lazer_phai_tay_41 = 400;
+int vi_tri_cua_rung_do_2_lazer_phai_tay_41 = 309;
 int vi_tri_cua_rung_do_2_lazer_phai_tay_23 = 363;
 
 int vi_tri_cua_rung_do_1_lazer_phai_tay_41 = 477;
@@ -706,7 +714,7 @@ void Config_in_mode(void)
 	GPIO_Init(GPIOB, &GPIO_InitStructure);
 	
 	
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_2;
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_2 | GPIO_Pin_8 | GPIO_Pin_9;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
 	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
@@ -716,10 +724,10 @@ void Config_in_mode(void)
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
 	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-	GPIO_Init(GPIOD, &GPIO_InitStructure);
+	GPIO_Init(GPIOD, &GPIO_InitStructure); 
 	
 	
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_11 | GPIO_Pin_9;
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_11 | GPIO_Pin_9 | GPIO_Pin_5 | GPIO_Pin_6;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
 	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
@@ -2263,19 +2271,19 @@ void HMI_TRAN(vs32 _so_dong)
 										HMI_DMI("CB_Nang_phai",CB_Nang_phai,23); 
 										break;
 									case 24:
-										HMI_DMI("UP",UP,24); 
+										HMI_DMI("check_hop_1:",check_hop_1,24); 
 										break;
 									case 25:
-										HMI_DMI("RIGHT",RIGHT,25); 
+										HMI_DMI("check_hop_2: ",check_hop_2,25); 
 										break;
 									case 26:
-										HMI_DMI("DOWN",DOWN,26); 
+										HMI_DMI("check_hop_3: ",check_hop_3,26); 
 										break;
 									case 27:
-										HMI_DMI("LEFT",LEFT,27); 
+										HMI_DMI("check_hop_4: ",check_hop_4,27); 
 										break;
 									case 28:
-										HMI_DMI("kiem_tra_loi",kiem_tra_loi,28); 
+										HMI_DMI("mor_lift_rear",mor_lift_rear,28); 
 										break;
 						}
 }
