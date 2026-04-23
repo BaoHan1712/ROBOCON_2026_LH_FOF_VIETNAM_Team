@@ -660,6 +660,13 @@ void su_dung_chan (int value_chan) {
 	target_chan_sau = value_chan;
 }
 
+void su_dung_chan_cham (int value_chan) {
+	Nang_cham();
+
+	target_chan_truoc = value_chan ;
+	target_chan_sau = value_chan;
+}
+
 void su_dung_chan_thuong (int value_chan) {
 	Nang_thuong();
 
@@ -2513,7 +2520,7 @@ void gap_tay3(void)
         Tay1_len;
     
         speed_tay_gat1 = 200;
-        target_tay_gat1 = Min_tay_gat1 + 85;
+        target_tay_gat1 = Min_tay_gat1 + 95;
         for(i=0; i<50; i++) { 
             while(CB_xilanh_tay_1 == 1) { vTaskDelay(1); if(!wantExit()) break; }
         }
@@ -3134,13 +3141,13 @@ void gap_tay3_duoi(void)
 
 
 // ********** xoay toi goc tay tiep theo + mo kep
-
 void kiem_tra_huong_quay_tay_gap_phia_truoc (void) {
 	
 		if (da_lay_tay1 == 0 && da_lay_tay2 == 0 && da_lay_tay3 == 0 && da_lay_tay4 == 0) {
 				Kep_phai_4_ra;
-	
+				KT_Ha_Tay = 1;
 		}
+		
 		else if (da_lay_tay1 == 1 && da_lay_tay2 == 0 && da_lay_tay3 == 0 && da_lay_tay4 == 0) {
 			
 					// quay mam sang tay 1
@@ -3309,9 +3316,11 @@ void kiem_tra_huong_ha_tay_gap_ben_phai (void) {
 void kiem_tra_huong_ha_tay_gap_phia_truoc (void) {
 	
 		if (da_lay_tay1 == 0 && da_lay_tay2 == 0 && da_lay_tay3 == 0 && da_lay_tay4 == 0 && Xoay_ok == 1) {
+			if (abs(bientroxoaytayValue -   (vi_tri_tay_43 )) <= 5) {
 				Kep_phai_4_ra;
 				speed_tay_gat2 = 240;
-				target_tay_gat2 = Min_tay_gat2 + 75;
+				target_tay_gat2 = Min_tay_gat2 + 120;	
+			}
 
 		}
 		else if (da_lay_tay1 == 1 && da_lay_tay2 == 0 && da_lay_tay3 == 0 && da_lay_tay4 == 0 && Xoay_ok == 1) {
@@ -3459,7 +3468,7 @@ void Lay_phia_truoc_bac_200_tren (void) {
 						speed_tay_xoay = 100;
 						target_xoay_tay = vi_tri_tay_4_phai_tren;
 						for(i=0;i<550;i++)	{ 
-								while((abs(bientroxoaytayValue - target_xoay_tay) > 6) )	{vTaskDelay(1); if(!wantExit())	break;}
+								while((abs(bientroxoaytayValue - target_xoay_tay) > 8) )	{vTaskDelay(1); if(!wantExit())	break;}
 						}
 						vTaskDelay(1000);
 						gap_tay4();
@@ -3765,7 +3774,7 @@ void Lay_ben_trai_bac_200_tren (void) {
 						vTaskDelay(5000);
 						}
 					else {  // san xanh
-						robotRunAngle(-150,15,900,0.8);
+						robotRunAngle(-650,15,900,0.8);
 						vTaskDelay(5000);
 						}
 					da_lay_tay3 = 1;
@@ -3788,7 +3797,7 @@ void Lay_ben_trai_bac_200_tren (void) {
 						vTaskDelay(5000);
 						}
 					else {  // san xanh
-						robotRunAngle(-150,15,900,0.8);
+						robotRunAngle(-650,15,900,0.8);
 						vTaskDelay(5000);
 						}
 					

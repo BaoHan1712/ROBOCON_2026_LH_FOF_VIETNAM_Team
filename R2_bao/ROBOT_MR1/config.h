@@ -487,20 +487,20 @@ int vi_tri_tay_12 = 695;
 
 // VI TRI MAM XOAY LAY BEN PHAI 200 TREN
 int vi_tri_tay_4_phai_tren = 610;
-int vi_tri_tay_1_phai_tren = 420;
-int vi_tri_tay_2_phai_tren = 410;
+int vi_tri_tay_1_phai_tren = 410;
+int vi_tri_tay_2_phai_tren = 405;
 int vi_tri_tay_3_phai_tren = 600;
 
 /// VI TRI MAM XOAY LAY TRAI 200 
 int vi_tri_tay_4_trai_tren = 410;
 int vi_tri_tay_1_trai_tren = 605;
-int vi_tri_tay_2_trai_tren = 590;
+int vi_tri_tay_2_trai_tren = 595;
 int vi_tri_tay_3_trai_tren = 402;
 
 /// VI TRI LAZER LAY QUA THANG
-int vitri_tay41_laser_trai_GapQua = 155;
+int vitri_tay41_laser_trai_GapQua = 154;
 int vitri_tay23_laser_trai_GapQua = 224;
-int vitri_tay23_phai_laser_GapQua = 155;
+int vitri_tay23_phai_laser_GapQua = 154;
 
 
 int vitri_tay1home = 445;

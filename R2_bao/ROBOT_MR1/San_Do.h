@@ -287,7 +287,7 @@ void Xoay_dau_truoc_cua_do_1(void) {
 	
 	vTaskDelay(2000);
 
-	robotRunAngle(1550,20,-900,2);
+	robotRunAngle(1350,25,-900,2);
 			
 	while(_robotIMUAngle > -650)	
 	{
@@ -671,7 +671,7 @@ void DatKFS_do(int vitri)
 	chinh_lai_vi_tri_laser_trai_zone3_do(210, 1000);
 	
 
-		robotRunAngle(900,30,-900,0.5);
+		robotRunAngle(900,32,-900,0.5);
 		for(i=0;i<550;i++)	
 	{	
 			while(lazePhaiValue > 340)	
@@ -692,12 +692,12 @@ void DatKFS_do(int vitri)
 			}
 	}		
 	
-		vTaskDelay(5000); 
+		vTaskDelay(3000); 
 		
 	robotRunAngle(900,10,-900,0.5);
 	for(i=0;i<550;i++)	
 	{	
-			while(lazeSauValue > 30)	
+			while(lazeSauValue > 38)	
 			{	
 				vTaskDelay(1); 
 				if(!wantExit())	break;
@@ -708,7 +708,7 @@ void DatKFS_do(int vitri)
 	{	
 			while(lazePhaiValue > 440)	
 			{	
-				Bam_laser_sau(30,0,-900, vitri, 3, 100, 10);
+				Bam_laser_sau(30,0,-900, vitri, 3, 100, 15);
 				vTaskDelay(1); 
 				if(!wantExit())	break;
 			}
@@ -725,7 +725,7 @@ void DatKFS_do(int vitri)
 	
 	for(i=0;i<550;i++)	
 	{	
-			while(lazeTraiValue > 220)	
+			while(lazeTraiValue > 210)	
 			{	
 				Bam_laser_truoc(25,0,900, vitri + 32, 3, 300, 10);
 				vTaskDelay(5); 
@@ -734,9 +734,10 @@ void DatKFS_do(int vitri)
 	}
 	for(i=0;i<550;i++)	
 	{	
-			while(lazeTraiValue > 190)	
+			while(lazeTraiValue > 180)	
 			{	
-				Bam_laser_truoc(6,0,900, vitri + 32, 2, 150, 10);
+				Bam_laser_truoc(8,0,900, vitri + 32, 2, 150, 10);
+				su_dung_chan_cham(500);
 				vTaskDelay(1); 
 				if(!wantExit())	break;
 			}
@@ -745,21 +746,21 @@ void DatKFS_do(int vitri)
 
 		robotStop(0);
 
-	// xoay qua de be
-		robotRotate(895,0.2, 0);
-		while(robotFixAngle()){
-					vTaskDelay (1); 
-					if(!wantExit())	break;
-				}
-		robotStop(0);
+//	// xoay qua de be
+//		robotRotate(895,0.2, 0);
+//		while(robotFixAngle()){
+//					vTaskDelay (1); 
+//					if(!wantExit())	break;
+//				}
+//		robotStop(0);
 
 
-	// do chan len dat qua
-		su_dung_chan(700);
-		for(i=0;i<150;i++)		
-		{
-			while(abs(bientrochansauValue - target_chan_sau) > 8)	{vTaskDelay(1); if(!wantExit())	break;}
-		}
+//	// do chan len dat qua
+//		su_dung_chan(700);
+//		for(i=0;i<150;i++)		
+//		{
+//			while(abs(bientrochansauValue - target_chan_sau) > 8)	{vTaskDelay(1); if(!wantExit())	break;}
+//		}
 		
 	robotStop(0);
 }
@@ -1378,40 +1379,40 @@ void tu_dong_dat_tang2_do(void) {
         if (robot_position == 3) {
             chinh_lai_vi_tri_laser_sau(160, 100);
             robotStop(0);
-            chinh_lai_vi_tri_laser_trai(168, 1000);
+            chinh_lai_vi_tri_laser_trai(172, 1000);
         } 
         else if (robot_position == 2) {
             chinh_lai_vi_tri_laser_sau(107, 100);
             robotStop(0);
-            chinh_lai_vi_tri_laser_trai(168, 1000);
+            chinh_lai_vi_tri_laser_trai(172, 1000);
         } 
         else if (robot_position == 1) {
             chinh_lai_vi_tri_laser_sau(54, 100);
             robotStop(0);
-            chinh_lai_vi_tri_laser_trai(168, 1000);
+            chinh_lai_vi_tri_laser_trai(172, 1000);
         }
     } 
     else if (tay_2_co_qua || tay_3_co_qua) {
         if (robot_position == 3) {
-            chinh_lai_vi_tri_laser_sau(133, 100);
+            chinh_lai_vi_tri_laser_sau(114, 100);
             robotStop(0);
-            chinh_lai_vi_tri_laser_trai(168, 1000); /// trg hop tay 3 vi trí 1
+            chinh_lai_vi_tri_laser_trai(170, 1000); /// trg hop tay 3 vi trí 1
         } 
         else if (robot_position == 2) {
-            chinh_lai_vi_tri_laser_sau(95, 100);
+            chinh_lai_vi_tri_laser_sau(62, 100);
             robotStop(0);
-            chinh_lai_vi_tri_laser_trai(168, 1000);
+            chinh_lai_vi_tri_laser_trai(172, 1000);
         } 
         else if (robot_position == 1) {
-            chinh_lai_vi_tri_laser_sau(79, 100);
+            chinh_lai_vi_tri_laser_sau(7, 100);
             robotStop(0);
-            chinh_lai_vi_tri_laser_trai(168, 1000);
+            chinh_lai_vi_tri_laser_trai(192, 1000);
         }
     }
 		
 			robotStop(0);
 			// do chan len dat
-			su_dung_chan(510);
+			su_dung_chan(500);
 			for(i=0;i<250;i++)	{
 				while(abs(bientrochansauValue - target_chan_sau) > 10)	{ vTaskDelay(1); if(!wantExit())	break;}
 					}		
