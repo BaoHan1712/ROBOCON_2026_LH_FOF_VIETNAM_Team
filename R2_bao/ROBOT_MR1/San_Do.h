@@ -466,9 +466,10 @@ void Vao_rung_mai_2_do(int vitri)
 						chinh_lai_vi_tri_laser_phai_do(vitri - 15, 1000);
 	}
 	else if (TinHieu_ChuanBi_GapThang == 1) {
+					su_dung_chan(565);	
 					for(i=0;i<250;i++)
 					{
-						while(lazeSauValue > 10)	
+						while(lazeSauValue > 10 || (abs(bientrochansauValue - target_chan_sau) > 20))	
 						{	
 							Bam_thanh_laser_phai(20,900,-900,vitri ,2,-150,10);
 							vTaskDelay (1);
@@ -485,7 +486,6 @@ void Vao_rung_mai_2_do(int vitri)
 									vTaskDelay (1);
 								}
 							}
-							su_dung_chan(565);	
 							chinh_lai_vi_tri_laser_phai_do(vitri, 1000);
 	}
 	
@@ -1366,7 +1366,7 @@ void xac_dinh_vi_tri_robot_do(void) {
 
 
 void tu_dong_dat_tang2_do(void) {
-		robotRotate(900,0.3, 0);
+		robotRotate(860,0.3, 0);
 		while(robotFixAngle()){
 					vTaskDelay (1); 
 					if(!wantExit())	break;
@@ -1411,7 +1411,7 @@ void tu_dong_dat_tang2_do(void) {
 		
 			robotStop(0);
 			// do chan len dat
-			su_dung_chan(495);
+			su_dung_chan(510);
 			for(i=0;i<250;i++)	{
 				while(abs(bientrochansauValue - target_chan_sau) > 10)	{ vTaskDelay(1); if(!wantExit())	break;}
 					}		

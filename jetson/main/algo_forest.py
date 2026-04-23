@@ -2,10 +2,17 @@ import customtkinter as ctk
 import heapq
 import itertools
 import time
+import pyrealsense2 as rs
+import cv2
+import numpy as np
+import socketio      
+import threading     
+from pyzbar.pyzbar import decode
 from tkinter import simpledialog, messagebox
 from gui_tkinter import set_state, STATE_FOREST, STATE_IDLE 
 from config_uart.sent_uart import build_packet, send_packet_once, ser
-
+import threading
+SERVER_IP = "http://192.168.50.120:5000"
 ctk.set_appearance_mode("System")
 ctk.set_default_color_theme("blue")
 
@@ -150,42 +157,65 @@ class SelectPlaceApp:
         self.bottom_frame.pack(side="bottom", padx=10, pady=5, fill="x")
 
         self.team_btn = ctk.CTkButton(
-            self.bottom_frame, text="Sân: ĐỎ (RED)", width=120, height=40,
+            self.bottom_frame, text="Sân: ĐỎ (RED)", width=80, height=70,
             fg_color="#d32f2f", hover_color="#b71c1c",
             command=self.toggle_team
         )
         self.team_btn.pack(side="left", padx=3)
 
         self.reset_btn = ctk.CTkButton(
-            self.bottom_frame, text="Reset", width=80, height=40,
+            self.bottom_frame, text="Reset", width=80, height=70,
             fg_color="#d9534f", hover_color="#c9302c",
             command=self.reset_grid
         )
         self.reset_btn.pack(side="left", padx=3)
 
         self.select_btn = ctk.CTkButton(
-            self.bottom_frame, text="Chọn ô", width=100, height=40,
+            self.bottom_frame, text="Chọn ô", width=80, height=70,
             fg_color="#5bc0de", hover_color="#31b0d5",
             command=lambda: self.toggle_mode("SELECT", self.select_btn)
         )
         self.select_btn.pack(side="left", padx=3)
 
+# --- NÚT TÌM ĐƯỜNG ---
         self.run_btn = ctk.CTkButton(
-            self.bottom_frame, text="TÌM ĐƯỜNG", width=120, height=40,
+            self.bottom_frame, text="TÌM ĐƯỜNG", width=80, height=70,
             fg_color="#5cb85c", hover_color="#449d44",
             command=self.smart_run
         )
         self.run_btn.pack(side="left", padx=3)
 
+        # --- CỜ TRẠNG THÁI & KHỞI TẠO KẾT NỐI SOCKET ---
+        self.sync_mode = True  # Mặc định là nhận Live từ Laptop
+        self.sio = socketio.Client() #
+        self.connect_server_thread() #
+
+        # --- NÚT TOGGLE (THAY THẾ NÚT QUÉT QR CŨ) ---
+        self.toggle_sync_qr_btn = ctk.CTkButton(
+            self.bottom_frame, text="📡 ĐANG NHẬN LIVE", width=120, height=70,
+            fg_color="#00bcd4", hover_color="#0097a7",
+            command=self.toggle_sync_qr #
+        )
+        self.toggle_sync_qr_btn.pack(side="left", padx=5)
+
+        # --- NÚT GỬI UART ---
+        self.is_fast_attack = True # Mặc định ban đầu là Thắng nhanh (State 2)
+        
+        self.strategy_btn = ctk.CTkButton(
+            self.bottom_frame, text="🔥 THẮNG NHANH", width=110, height=70,
+            fg_color="#f59e0b", hover_color="#d97706",
+            command=self.toggle_strategy
+        )
+        self.strategy_btn.pack(side="left", padx=3)
         self.send_btn = ctk.CTkButton(
-            self.bottom_frame, text="GỬI UART", width=120, height=40,
+            self.bottom_frame, text="GỬI UART", width=80, height=70,
             fg_color="#f0ad4e", hover_color="#ec971f",
-            command=self.sent_and_close, 
+            command=self.sent_and_close
         )
         self.send_btn.pack(side="left", padx=3)
 
         self.mode_btn = ctk.CTkButton(
-            self.bottom_frame, text="Mode: Normal", width=120, height=40,
+            self.bottom_frame, text="Mode: Normal", width=80, height=70,
             fg_color="#5bc0de", hover_color="#31b0d5",
             command=self.toggle_forest_mode
         )
@@ -198,26 +228,79 @@ class SelectPlaceApp:
         )
         self.info_label.pack(pady=3)
 
-        self.mode = "PLACE"
-        self.active_button = None
-        self.selected_targets = []
-        self.simulation_path = None
-        self.best_targets_set = None
-        self.best_ignored_set = []
-        self.forest_mode = "normal"  # Mode gửi packet (normal hoặc retry2)
-
-        self.refresh_grid_ids()
+        self.mode = "PLACE" #
+        self.active_button = None #
+        self.selected_targets = [] #
+        self.simulation_path = None #
+        self.stop_qr = False #
+        self.best_targets_set = None #
+        self.best_ignored_set = [] #
+        self.forest_mode = "normal" #
+        self.refresh_grid_ids() #
+        
         import os
-        cache_ready = "normal" if os.path.exists("last_packet_cache.json") else "disabled"
+        cache_ready = "normal" if os.path.exists("last_packet_cache.json") else "disabled" #
 
-        # NÚT MỚI: PHÁT LẠI CACHE (Màu Xanh Cổ Vịt)
         self.replay_cache_btn = ctk.CTkButton(
-            self.bottom_frame, text="PHÁT LẠI CACHE", width=120, height=40,
-            fg_color="#00838f", hover_color="#006064", # Màu khác bọt hoàn toàn
-            state=cache_ready, # <--- Khóa nút nếu chưa có file
-            command=self.action_replay_cache # <--- Đổi tên hàm
+            self.bottom_frame, text="PHÁT LẠI CACHE", width=80, height=70,
+            fg_color="#00838f", hover_color="#006064",
+            state=cache_ready,
+            command=self.action_replay_cache #
         )
-        self.replay_cache_btn.pack(side="left", padx=3)       
+        self.replay_cache_btn.pack(side="left", padx=3)
+
+    # =========================================================================
+    # 📡 MODULE: SOCKET & LIVE MAP (HÀM XỬ LÝ)
+    # =========================================================================
+    def connect_server_thread(self):
+        @self.sio.on('sync_state')
+        def on_sync_state(data):
+            # CHỈ vẽ map nếu đang ở chế độ nhận Live
+            if self.sync_mode:
+                self.root.after(0, lambda: self.apply_server_state(data))
+
+        def attempt_connect():
+            try:
+                self.sio.connect(SERVER_IP)
+                print(f"[SOCKET] Đã kết nối tới Laptop tại {SERVER_IP}")
+            except Exception as e:
+                print(f"[SOCKET] Lỗi kết nối: {e}")
+
+        # Chạy ẩn để UI không bị đơ
+        threading.Thread(target=attempt_connect, daemon=True).start()
+
+    def apply_server_state(self, state):
+        team_server = state.get("team", "R")
+        grid_data = state.get("grid", [])
+
+        # Tự động đổi sân theo Laptop
+        if team_server == 'R' and self.team_color != "RED":
+            self.toggle_team()
+        elif team_server == 'B' and self.team_color != "BLUE":
+            self.toggle_team()
+
+        # Xóa sạch để vẽ lại map mới
+        self.reset_grid()
+
+        for r in range(min(ROWS, len(grid_data))):
+            for c in range(min(COLS, len(grid_data[r]))):
+                val = grid_data[r][c]
+                if val in [1, 2, 3]:
+                    self.place_block(val, (r, c))
+                    
+        self.info_label.configure(text=f"✓ Nhận MAP LIVE thành công!", text_color="green")
+
+    def toggle_sync_qr(self):
+        # Chuyển sang chế độ Quét QR (Tắt Live)
+        self.sync_mode = False
+        self.toggle_sync_qr_btn.configure(text="📸 ĐANG QUÉT QR", fg_color="#f39c12", hover_color="#d68910")
+        self.root.update()
+        
+        self.open_qr_scanner() # Mở Camera quét QR
+        
+        # Sau khi xong, tự động quay lại nhận Live
+        self.sync_mode = True
+        self.toggle_sync_qr_btn.configure(text="📡 ĐANG NHẬN LIVE", fg_color="#00bcd4", hover_color="#0097a7")       
     # =========================================================================
     # HELPER: Lấy ID cửa (Door row) theo cột
     # =========================================================================
@@ -240,7 +323,59 @@ class SelectPlaceApp:
             self.mode_btn.configure(text="Mode: Normal", fg_color="#5bc0de", hover_color="#31b0d5")
             self.info_label.configure(text="Chuyển sang Mode: Normal")
         print(f">> Forest Mode: {self.forest_mode.upper()}")
+    # =========================================================================
+    # ĐỔI CHIẾN THUẬT (LỆNH 9)
+    # =========================================================================
+    def toggle_strategy(self):
+        # Đảo trạng thái cờ
+        self.is_fast_attack = not self.is_fast_attack
+        
+        # Đổi màu nút & set giá trị (1 = Cày điểm, 2 = Thắng nhanh)
+        if self.is_fast_attack:
+            self.strategy_btn.configure(
+                text="🔥 THẮNG NHANH", 
+                fg_color="#f59e0b", 
+                hover_color="#d97706"
+            )
+            strat_val = 2 
+            self.info_label.configure(text="Chuyển chiến thuật: THẮNG NHANH", text_color="#d97706")
+        else:
+            self.strategy_btn.configure(
+                text="🎯 CÀY ĐIỂM", 
+                fg_color="#8b5cf6", 
+                hover_color="#7c3aed"
+            )
+            strat_val = 1
+            self.info_label.configure(text="Chuyển chiến thuật: CÀY ĐIỂM", text_color="#8b5cf6")
 
+        # Bắn UART ngầm để đéo đơ giao diện
+        threading.Thread(
+            target=self.send_strategy_uart,
+            args=(strat_val,),
+            daemon=True
+        ).start()
+
+    def send_strategy_uart(self, strat_val):
+        try:
+            # Gói tin: ID=2, CMD=9, Data1=strat, Data2=2, ID_Block=2
+            packet = build_packet(2, 9, strat_val, 2, 2)
+            send_packet_once(ser, packet)
+
+            strat_name = "THẮNG NHANH" if strat_val == 2 else "CÀY ĐIỂM"
+            
+            # Dùng root.after để update UI từ thread phụ cho an toàn
+            self.root.after(0, lambda: self.info_label.configure(
+                text=f"✓ Đã bắn UART chiến thuật: {strat_name} (Lệnh 9)", 
+                text_color="green"
+            ))
+            print(f"[UART] Đã gửi Chiến Thuật (CMD 9): {strat_val}")
+            
+        except Exception as e:
+            self.root.after(0, lambda: self.info_label.configure(
+                text=f"Lỗi gửi UART Chiến thuật: {e}", 
+                text_color="red"
+            ))
+            print("UART Strategy Error:", e)
     # =========================================================================
     # TOGGLE TEAM & REFRESH
     # =========================================================================
@@ -969,7 +1104,7 @@ class SelectPlaceApp:
                                corner_radius=14, font=("DejaVu Sans", 12, "bold"))
             lbl.place(relx=0.18, rely=0.85, anchor="center")
             cell["overlays"].append(lbl)
-
+            self.root.update_idletasks()
         # =====================================================================
         # 5. FIX LỖI CTKLABEL Ở CỬA
         # =====================================================================
@@ -1316,7 +1451,132 @@ class SelectPlaceApp:
         except Exception as e:
             print(f"[CACHE ERROR] Lỗi: {e}")
             self.info_label.configure(text=f"Lỗi khôi phục Cache: {e}")
+# ========================================================
+    # >>> KHỐI LOGIC: QUÉT VÀ GIẢI MÃ QR TỰ ĐỘNG
+    # ========================================================
+    def process_qr_payload(self, payload):
+        print(f"\n>>> [QR SCANNER] Bắt được chuỗi dữ liệu: {payload}")
+        parts = payload.split('|')
+        if len(parts) != 4:
+            print(">>> [LỖI] Mã QR đéo đúng định dạng hệ thống!")
+            return False
 
-# if __name__ == "__main__":
-#     app = SelectPlaceApp()
-#     app.run_algothism_forest()
+        team_qr, b1_str, b2_str, b3_str = parts
+
+        # 1. Đồng bộ Sân (Đỏ / Xanh) theo mã QR
+        if team_qr == 'R' and self.team_color != "RED":
+            self.toggle_team()
+        elif team_qr == 'B' and self.team_color != "BLUE":
+            self.toggle_team()
+
+        # 2. Xóa sạch rác trên sa bàn cũ
+        self.reset_grid()
+
+        # 3. Hàm dò ngược: Từ ID QR -> Map ra tọa độ (Row, Col) trên UI
+        def place_by_ids(id_string, block_num):
+            if not id_string: return
+            ids = [int(x) for x in id_string.split(',') if x.strip()]
+            for target_id in ids:
+                for r in range(ROWS):
+                    for c in range(COLS):
+                        # Lấy ID thực tế tại ô này ở thời điểm hiện tại
+                        current_id = self.get_cell_id(r, c)
+                        if current_id == target_id:
+                            self.place_block(block_num, (r, c))
+
+        # 4. Trải thảm khối 1, 2, 3 lên sa bàn
+        place_by_ids(b1_str, 1)
+        place_by_ids(b2_str, 2)
+        place_by_ids(b3_str, 3)
+
+        print(f">>> [QR SCANNER] Nạp Map thành công cho đội {team_qr}!")
+        return True
+
+    def cancel_qr(self):
+        """Hàm con để bật cờ dừng quét"""
+        print(">> [HỆ THỐNG] Đã nhận lệnh HỦY QUÉT từ người dùng.")
+        self.stop_qr = True
+
+    def open_qr_scanner(self):
+        self.stop_qr = False # Reset cờ trước khi bắt đầu
+        self.info_label.configure(text="Đang mở Cam... Đưa mã QR vào hoặc bấm 'DỪNG QUÉT'", text_color="blue")
+        
+        # 1. TẠO NÚT HỦY TẠM THỜI TRÊN GIAO DIỆN
+        self.btn_stop_scan = ctk.CTkButton(
+            self.bottom_frame, text="🛑 DỪNG QUÉT", width=120, height=40,
+            fg_color="#f44336", hover_color="#d32f2f",
+            command=self.cancel_qr
+        )
+        self.btn_stop_scan.pack(side="left", padx=5)
+        self.root.update()
+
+        # 2. KHỞI ĐỘNG CAMERA
+        pipeline = rs.pipeline()
+        config = rs.config()
+        config.enable_stream(rs.stream.color, 640, 480, rs.format.bgr8, 30)
+
+        try:
+            pipeline.start(config)
+        except Exception as e:
+            self.info_label.configure(text=f"Lỗi mở Cam: {e}", text_color="red")
+            self.btn_stop_scan.pack_forget()
+            return
+
+        win_name = f"QR SCANNER [{int(time.time())}]"
+        cv2.namedWindow(win_name, cv2.WINDOW_AUTOSIZE)
+        success = False
+        frame_counter = 0
+
+        try:
+            while True:
+                # 👉 KIỂM TRA LỆNH THOÁT TỪ NÚT BẤM HOẶC PHÍM ESC
+                self.root.update() # Rất quan trọng: Giúp Tkinter nhận lệnh bấm nút
+                if self.stop_qr: 
+                    print(">> Thoát quét QR theo lệnh người dùng.")
+                    break
+
+                frames = pipeline.wait_for_frames(timeout_ms=1000)
+                color_frame = frames.get_color_frame()
+                if not color_frame: continue
+
+                img = np.asanyarray(color_frame.get_data())
+                frame_counter += 1
+
+                # Quét QR (Skip frame để giảm tải CPU Jetson)
+                if frame_counter % 5 == 0:
+                    decoded_objs = decode(img)
+                    for obj in decoded_objs:
+                        qr_data = obj.data.decode("utf-8")
+                        cv2.putText(img, "CHECKING...", (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+                        cv2.imshow(win_name, img)
+                        cv2.waitKey(300)
+
+                        if self.process_qr_payload(qr_data):
+                            success = True
+                        break
+
+                cv2.imshow(win_name, img)
+
+                # Thoát nếu quét thành công hoặc bấm ESC trên cửa sổ Cam
+                if success or (cv2.waitKey(1) & 0xFF == 27): 
+                    break
+        finally:
+            # 3. DỌN DẸP SẠCH SẼ
+            try: pipeline.stop()
+            except: pass
+            
+            cv2.destroyWindow(win_name)
+            for _ in range(5): cv2.waitKey(1)
+            
+            # Xóa nút Dừng Quét khỏi giao diện để trả lại chỗ cũ
+            self.btn_stop_scan.pack_forget()
+            self.root.update()
+
+            if success:
+                self.info_label.configure(text="✓ Nạp Map thành công!", text_color="green")
+            else:
+                self.info_label.configure(text="Đã đóng quét QR.", text_color="black")
+                
+if __name__ == "__main__":
+    app = SelectPlaceApp()
+    app.run_algothism_forest()

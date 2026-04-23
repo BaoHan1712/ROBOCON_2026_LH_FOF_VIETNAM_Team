@@ -471,7 +471,7 @@ int cho_phep_chay = 0;
 
 /// **************** GIA TRI VI TRI DAT HOP ********************
 
-int vi_tri_dat_hop_1_2 = 404;
+int vi_tri_dat_hop_1_2 = 408;
 int vi_tri_dat_hop_3_4 = 600;
 int tin_hieu_dat_hop_3_4 = 0;
 int tin_hieu_dat_hop_1_2 = 0;
@@ -498,9 +498,9 @@ int vi_tri_tay_2_trai_tren = 590;
 int vi_tri_tay_3_trai_tren = 402;
 
 /// VI TRI LAZER LAY QUA THANG
-int vitri_tay41_laser_trai_GapQua = 154;
+int vitri_tay41_laser_trai_GapQua = 155;
 int vitri_tay23_laser_trai_GapQua = 224;
-int vitri_tay23_phai_laser_GapQua = 154;
+int vitri_tay23_phai_laser_GapQua = 155;
 
 
 int vitri_tay1home = 445;
@@ -527,7 +527,7 @@ int vi_tri_cua_rung_xanh_3_lazer_phai_tay_41 = 474;
 int vi_tri_cua_rung_do_3_lazer_phai_tay_41 = 304;
 int vi_tri_cua_rung_do_3_lazer_phai_tay_23 = 262;
 
-int vi_tri_cua_rung_do_2_lazer_phai_tay_41 = 309;
+int vi_tri_cua_rung_do_2_lazer_phai_tay_41 = 399;
 int vi_tri_cua_rung_do_2_lazer_phai_tay_23 = 363;
 
 int vi_tri_cua_rung_do_1_lazer_phai_tay_41 = 477;
@@ -1670,6 +1670,7 @@ int nhat_dat_hop = 0;
 /// cac mode chay robot
 int mode_chay_rung = 0;
 int mode_nhat_hop = 0;
+int mode_cay_diem = 0;
 
 void pha_khoi_r1(void); // ham gui data toi rb1
 
@@ -1713,6 +1714,14 @@ void ProcessReceivedData_2(void)
 				/// chon che do chay rung retry2
 			else if (id_rb == 2 && state_rb == 10 && move == 2) {
 							mode_chay_rung = 2;
+					}
+			/// chon che do len buc 3 cay diem
+			else if (id_rb == 2 && state_rb == 9 && move == 1) {
+							mode_cay_diem = 1;
+					}
+			/// chon che do len buc 3 danh nhanh
+			else if (id_rb == 2 && state_rb == 9 && move == 2) {
+							mode_cay_diem = 2;
 					}
 			
 			// trang thai vuot rung
@@ -2182,7 +2191,7 @@ void HMI_TRAN(vs32 _so_dong)
 										HMI_DMI("Tro day tay 2 ",bientrodaytay2Value,9); 
 										break;
 									case 10:
-										HMI_DMI("Start ",Start,10);  
+										HMI_DMI("mode bac 3 ",mode_cay_diem,10);  
 										break;
 									case 11:
 										HMI_DMI("Tro xoay tay ",bientroxoaytayValue,11);  \
