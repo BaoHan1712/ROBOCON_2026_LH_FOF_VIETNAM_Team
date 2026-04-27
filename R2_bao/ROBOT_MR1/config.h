@@ -509,6 +509,7 @@ int vitri_tay2home = 445;
 int vi_tri_gap_ngang_43 = 602;
 
 int kiem_tra_loi = 0;
+int tay_se_dung_tiep_theo = 0;
 //// ******** VI TRI LAZER CUA RUNG XANH *********************
 
 int vi_tri_cua_rung_xanh_1_lazer_phai_tay_41 = 308;
@@ -518,7 +519,7 @@ int vi_tri_cua_rung_xanh_2_lazer_phai_tay_41 = 400;
 int vi_tri_cua_rung_xanh_2_lazer_trai_tay_41 = 428;
 int vi_tri_cua_rung_xanh_2_lazer_phai_tay_23 = 399;
 
-int vi_tri_cua_rung_xanh_3_lazer_trai_tay_41 = 305;
+int vi_tri_cua_rung_xanh_3_lazer_trai_tay_41 = 304;
 int vi_tri_cua_rung_xanh_3_lazer_trai_tay_23 = 370;
 int vi_tri_cua_rung_xanh_3_lazer_phai_tay_23 = 446;
 int vi_tri_cua_rung_xanh_3_lazer_phai_tay_41 = 474;
@@ -1670,10 +1671,28 @@ int nhat_dat_hop = 0;
 /// cac mode chay robot
 int mode_chay_rung = 0;
 int mode_nhat_hop = 0;
-int mode_cay_diem = 0;
+int mode_cay_diem = 1;
+int mode_retry_zone_3 = 0;
 
 void pha_khoi_r1(void); // ham gui data toi rb1
 
+// Hàm chon id dat hop theo uu tiên:
+uint8_t Get_Id_Dat_Hop(uint8_t move, uint8_t action, uint8_t id_block)
+{
+    if(move >= 1 && move <= 6)
+    {
+        return move;
+    }
+    if(action >= 1 && action <= 6)
+    {
+        return action;
+    }
+    if(id_block >= 1 && id_block <= 6)
+    {
+        return id_block;
+    }
+    return 0;
+}
 
 void ProcessReceivedData_2(void)
 {
@@ -1730,9 +1749,14 @@ void ProcessReceivedData_2(void)
         Queue_Push(state_rb, move, action, id_block);
 			}
 			
-			// trang lai len zone 3 dat hop
-			else if (id_rb == 2 && state_rb == 3 ) {
-						id_dat_hop = id_block;
+			// trang thai len zone 3 dat hop
+			else if (id_rb == 2 && state_rb == 3) {
+					id_dat_hop = Get_Id_Dat_Hop(move, action, id_block);
+					
+					if(id_dat_hop != 0)
+					{
+							mode_retry_zone_3 = 1;
+					}
 			}
 			
 			// trang thai nhat hop tren zone 3
@@ -2268,7 +2292,7 @@ void HMI_TRAN(vs32 _so_dong)
 										HMI_DMI("block_pha: ",block_pha,19);
 										break;	
 									case 20:
-										HMI_DMI("nhay_den_lan_1 ",nhay_den_lan_1,20);  
+										HMI_DMI("id_dat_hop ",id_dat_hop,20);  
 										break;	
 									case 21:
 										HMI_DMI("CB_Nang_trai ",CB_Nang_trai,21);  

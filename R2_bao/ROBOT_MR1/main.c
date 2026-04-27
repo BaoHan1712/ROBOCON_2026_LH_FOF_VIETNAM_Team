@@ -151,7 +151,7 @@ vTaskDelay(1000);
 	
 	RESET_ENCODER();
 		
-	moqua();
+//	moqua();
 	vehome_xuat_phat();
 	
 	
@@ -161,14 +161,14 @@ vTaskDelay(1000);
 		while(SHARE) 
 		{	
 //			
-			robotGamePadControl(5,30);
+			robotGamePadControl(7,40);
 			Nang_Ha_tay1_Manual(); 
 			Nang_Ha_tay2_Manual();
 			Xoay_tay_Manual();
 			go_qua();
 //		
 				
-			if(quangTroValue < 100)					Tay_kep_mo;
+			if(quangTroValue < 200)					Tay_kep_mo;
 			if(OPTIONS) vehome();
 			if(CHON_SAN == 0)									//SAN DO
 			{
@@ -200,10 +200,11 @@ vTaskDelay(1000);
 //			if(O && L2 && !R2)															Xuat_Phat_Lay_Vu_Khi_Xanh(169,-1650,233) ;
 
 
-					if(TRIANGLE && L2 && !R2) 												 	 		Run_All_Blocks_From_Queue_san_xanh();
-					if(SQUARE && L2 && !R2) 																Xoay_dau_truoc_cua_xanh_2();
-//					if(X && L2 && !R2) 																			Xuong_bac_400(-900, 900);
-//					if(O && L2 && !R2 ) 																		su_dung_chan(700);
+//					if(TRIANGLE && L2 && !R2) 												 	 		lay_thong_so();
+						if(TRIANGLE && L2 && !R2) 												 	 		tudonghoantoan();
+						if(SQUARE && L2 && !R2) 																lay_thong_so();
+//						if(X && L2 && !R2) 																			Xuong_bac_200(-900,900);
+//					if(O && L2 && !R2 ) 																		test_dat_hop();
 //					if(X && R2  ) 																					Xuong_bac_200(-900, 900);
 
 //		
@@ -214,7 +215,7 @@ vTaskDelay(1000);
 //					if(O && L2 && !R2) 																		tu_dong_dat_tang2_xanh();
 		
 ////Leo_bac_200
-//Leo_bac_400(-900, 900)	
+//Xuong_bac_200	(-900, 900)	
 ////Xuong_bac_400	
  ///auto_vao_rung_xanh_cua1(); tay 41, 262 tay 23
 //Vao_rung_mai_2_xanh(460);  phai 410

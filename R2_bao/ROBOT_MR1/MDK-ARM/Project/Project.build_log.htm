@@ -48,23 +48,23 @@ compiling main.c...
   	char k=0xff,i;
 ..\doc_tay_game.h(153): warning:  #1-D: last line of file ends without a newline
   }
-..\config.h(932): warning:  #177-D: variable "NVIC_InitStructure"  was declared but never referenced
+..\config.h(933): warning:  #177-D: variable "NVIC_InitStructure"  was declared but never referenced
   	NVIC_InitTypeDef NVIC_InitStructure;
-..\config.h(1881): warning:  #47-D: incompatible redefinition of macro "UART_BUFFER_SIZE"  (declared at line 1760)
+..\config.h(1905): warning:  #47-D: incompatible redefinition of macro "UART_BUFFER_SIZE"  (declared at line 1784)
   #define UART_BUFFER_SIZE 8
-..\config.h(2155): warning:  #188-D: enumerated type mixed with another type
+..\config.h(2179): warning:  #188-D: enumerated type mixed with another type
   											GPIO_WriteBit(GPIOC,GPIO_Pin_15,0);
-..\config.h(2159): warning:  #188-D: enumerated type mixed with another type
+..\config.h(2183): warning:  #188-D: enumerated type mixed with another type
   											GPIO_WriteBit(GPIOC,GPIO_Pin_15,1);
-..\config.h(2146): warning:  #177-D: variable "camera"  was declared but never referenced
+..\config.h(2170): warning:  #177-D: variable "camera"  was declared but never referenced
   		char*camera="11111111111111111111110111111111";
-..\config.h(2149): warning:  #550-D: variable "_chu_cac_bit"  was set but never used
+..\config.h(2173): warning:  #550-D: variable "_chu_cac_bit"  was set but never used
   									char _chu_cac_bit[40];
-..\config.h(2302): warning:  #177-D: variable "_k"  was declared but never referenced
+..\config.h(2326): warning:  #177-D: variable "_k"  was declared but never referenced
   	{int _k,_i;
-..\config.h(2302): warning:  #177-D: variable "_i"  was declared but never referenced
+..\config.h(2326): warning:  #177-D: variable "_i"  was declared but never referenced
   	{int _k,_i;
-..\config.h(2314): warning:  #1-D: last line of file ends without a newline
+..\config.h(2338): warning:  #1-D: last line of file ends without a newline
   }
 ..\4OmniControler.h(390): warning:  #1035-D: single-precision operand implicitly converted to double-precision
   			robotRotate(robotAngle, (abs(robotAngle - _robotIMUAngle) > 100? (robotAngle > _robotIMUAngle ? rotate: -rotate):(robotAngle - _robotIMUAngle)*0.005), 0);
@@ -86,25 +86,33 @@ compiling main.c...
   	static unsigned int bientronangtayCouter = 0, bientronangtay_SUM = 0;
 ..\DieuKhienCoCau.h(119): warning:  #177-D: variable "bientronangtay_SUM"  was declared but never referenced
   	static unsigned int bientronangtayCouter = 0, bientronangtay_SUM = 0;
-..\DieuKhienCoCau.h(937): warning:  #174-D: expression has no effect
+..\DieuKhienCoCau.h(938): warning:  #174-D: expression has no effect
   			ha_sat_xuong;
-..\DieuKhienCoCau.h(957): warning:  #174-D: expression has no effect
+..\DieuKhienCoCau.h(958): warning:  #174-D: expression has no effect
   					ha_sat_xuong;
 ..\BasicFunction.h(54): warning:  #177-D: variable "td_x"  was declared but never referenced
   	int tocdo = 40, td_x = 5;
-..\San_Xanh.h(956): warning:  #177-D: variable "vitri_tay41"  was declared but never referenced
+..\San_Xanh.h(959): warning:  #177-D: variable "vitri_tay41"  was declared but never referenced
   	int vitri_tay41 = vitri_tay41_laser_trai_GapQua;
-..\San_Xanh.h(1045): warning:  #177-D: variable "vitri"  was declared but never referenced
+..\San_Xanh.h(1048): warning:  #177-D: variable "vitri"  was declared but never referenced
   		int vitri = 153;
-..\San_Xanh.h(1046): warning:  #177-D: variable "vitri_tay41"  was declared but never referenced
+..\San_Xanh.h(1049): warning:  #177-D: variable "vitri_tay41"  was declared but never referenced
   		int vitri_tay41 = vitri_tay41_laser_trai_GapQua;
-..\San_Xanh.h(1402): warning:  #177-D: variable "vitri_tay23"  was declared but never referenced
+..\San_Xanh.h(1407): warning:  #177-D: variable "vitri_tay23"  was declared but never referenced
   		int vitri_tay23 = vitri_tay23_phai_laser_GapQua;
-..\main.c: 36 warnings, 0 errors
+..\San_Xanh.h(2729): warning:  #550-D: variable "nhom_A"  was set but never used
+  		int nhom_A;
+..\San_Xanh.h(2730): warning:  #550-D: variable "nhom_B"  was set but never used
+  		int nhom_B ;
+..\San_Xanh.h(2785): warning:  #550-D: variable "nhom_A"  was set but never used
+  		int nhom_A;
+..\San_Xanh.h(2786): warning:  #550-D: variable "nhom_B"  was set but never used
+  		int nhom_B ;
+..\main.c: 40 warnings, 0 errors
 linking...
-Program Size: Code=127008 RO-data=616 RW-data=1476 ZI-data=106436  
+Program Size: Code=127304 RO-data=616 RW-data=1484 ZI-data=106436  
 FromELF: creating hex file...
-".\Project\Project.axf" - 0 Error(s), 36 Warning(s).
+".\Project\Project.axf" - 0 Error(s), 40 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -126,7 +134,7 @@ Package Vendor: Keil
 <h2>Collection of Component Files used:</h2>
 
    * Component: ARM::CMSIS:CORE:6.1.0
-Build Time Elapsed:  00:00:02
+Build Time Elapsed:  00:00:01
 </pre>
 </body>
 </html>

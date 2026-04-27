@@ -76,7 +76,7 @@ void Xuat_Phat_Lay_Vu_Khi_Do(int vu_khi, int goc_ve, int vitri)
 					while(lazeTruocValue > 27)	
 					{	
 	
-						Bam_thanh_laser_trai(23,0,0,vu_khi - 1,1,-80,15);
+						Bam_thanh_laser_trai(25,0,0,vu_khi - 1,1,-80,15);
 						vTaskDelay(1); 
 						if(!wantExit())	break;
 					}
@@ -88,7 +88,7 @@ void Xuat_Phat_Lay_Vu_Khi_Do(int vu_khi, int goc_ve, int vitri)
 					while(HT_1 == 0 && HT_2 == 0)	
 					{			
 						if(lazeTruocValue < 14)	Tay_kep_xuong;
-						Bam_thanh_laser_trai(7,0,0,vu_khi,1,-50,15);
+						Bam_thanh_laser_trai(10,0,0,vu_khi,1,-50,15);
 						vTaskDelay(1); 
 						if(!wantExit())	break;
 					}
@@ -101,8 +101,8 @@ void Xuat_Phat_Lay_Vu_Khi_Do(int vu_khi, int goc_ve, int vitri)
 				{
 					while(CB_tay_kep_vk_T == 1 || CB_tay_kep_vk_P == 1)	
 					{	
-						if	(CB_tay_kep_vk_T == 1) robotRun(870,6);
-						else if 	(CB_tay_kep_vk_P == 1) robotRun(-870,6);
+						if	(CB_tay_kep_vk_T == 1) robotRun(870,12);
+						else if 	(CB_tay_kep_vk_P == 1) robotRun(-870,12);
 						else		robotStop(0);				
 						vTaskDelay (1);
 						if(!wantExit())	break;
@@ -173,7 +173,7 @@ void Xuat_Phat_Lay_Vu_Khi_Do(int vu_khi, int goc_ve, int vitri)
 					}
 				}
 				vTaskDelay(2000);
-				chinh_lai_vi_tri_VK_do(vitri, 1000);
+//				chinh_lai_vi_tri_VK_do(vitri, 1000);
 				
 				robotStop(0);
 				
@@ -1067,7 +1067,7 @@ void mo_vk_san_do(void) {
 	
 		for(i=0;i<1000;i++)	
 	{
-		while(quangTroValue > 100)	{	
+		while(quangTroValue > 200)	{	
 		vTaskDelay (1);
 		if(!wantExit())	break;
 					}
@@ -1075,16 +1075,16 @@ void mo_vk_san_do(void) {
 	
 	Tay_kep_mo;
 	
-	vTaskDelay (8000);
+	vTaskDelay (4000);
 	
 	for(i=0;i<1000;i++)	
 	{
-		while(quangTroValue < 130)	{	
+		while(quangTroValue < 250)	{	
 		vTaskDelay (1);
 		if(!wantExit())	break;
 		}
 	}
-	vTaskDelay (8000);
+	vTaskDelay (4000);
 	da_lay_vk = 1;
 }
 
@@ -1496,14 +1496,14 @@ void run_align_center(void)
     if (do_lech < 85)
     {
         // lech trái  chay sang phai
-        robotRun(900, 9);
+        robotRun(900, 14);
 				RESET_ENCODER(); 
 				while(abs(ENCODER_FR()) + abs(ENCODER_FL()) < encoder_target)	{vTaskDelay (5); if(!wantExit())	break;}
     }
     else if (do_lech > 102)
     {
         // lech phai chay phai
-        robotRun(-900, 9);
+        robotRun(-900, 14);
 				RESET_ENCODER(); 
 				while(abs(ENCODER_RR()) + abs(ENCODER_RL()) < encoder_target)	{vTaskDelay (5); if(!wantExit())	break;}
     }
