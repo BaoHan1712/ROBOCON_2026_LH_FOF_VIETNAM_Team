@@ -471,7 +471,7 @@ int cho_phep_chay = 0;
 
 /// **************** GIA TRI VI TRI DAT HOP ********************
 
-int vi_tri_dat_hop_1_2 = 408;
+int vi_tri_dat_hop_1_2 = 410;
 int vi_tri_dat_hop_3_4 = 600;
 int tin_hieu_dat_hop_3_4 = 0;
 int tin_hieu_dat_hop_1_2 = 0;

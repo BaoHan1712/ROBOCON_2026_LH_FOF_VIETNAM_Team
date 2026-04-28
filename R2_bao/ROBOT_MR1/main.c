@@ -202,7 +202,7 @@ vTaskDelay(1000);
 
 //					if(TRIANGLE && L2 && !R2) 												 	 		lay_thong_so();
 						if(TRIANGLE && L2 && !R2) 												 	 		tudonghoantoan();
-						if(SQUARE && L2 && !R2) 																lay_thong_so();
+//						if(SQUARE && L2 && !R2) 																lay_thong_so();
 //						if(X && L2 && !R2) 																			Xuong_bac_200(-900,900);
 //					if(O && L2 && !R2 ) 																		test_dat_hop();
 //					if(X && R2  ) 																					Xuong_bac_200(-900, 900);
