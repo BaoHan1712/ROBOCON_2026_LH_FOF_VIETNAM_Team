@@ -243,34 +243,34 @@ vu8 DATA_SPEED[80]={255,1,0,0,				// 1- ID = 1, DIRECT = 0, SPEED = 0
 #define  CB_Ha_Sau													GPIO_ReadInputDataBit(GPIOA,GPIO_Pin_8)//ok
 #define  CB_tay_kep_vk_T										GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_15)//ok
 #define  CB_tay_kep_vk_P										GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_3)//ok
-#define  CB_ROI_3														GPIO_ReadInputDataBit(GPIOA,GPIO_Pin_12)//ok
-#define  CB_ROI_2													GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_2)//ok
+#define  CB_ROI_2														GPIO_ReadInputDataBit(GPIOA,GPIO_Pin_11)//OK
+#define  CB_ROI_3														GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_2)//ok
 #define  CB_kep													    GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_1)//ok
-#define  CB_ROI_1														GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_0)//ok
-#define  CB_ROI_4														GPIO_ReadInputDataBit(GPIOA,GPIO_Pin_11)//ok
+#define  CB_ROI_1														GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_7)//ok
+#define  CB_ROI_4														GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_0)//ok
 #define  CB_bung											    	GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_13)//ok
 #define  CB_bung_duoi												GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_0)//ok
-#define  CB_kep_1_1											GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_15)//okT
-#define  CB_kep_1_2											GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_10)//okP
-#define  CB_kep_2_1											GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_12)//okT
-#define  CB_kep_2_2											GPIO_ReadInputDataBit(GPIOD,GPIO_Pin_10)//okP
-#define  CB_kep_3_1											GPIO_ReadInputDataBit(GPIOD,GPIO_Pin_14)//okT
-#define  CB_kep_3_2											GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_14)//okP
-#define  CB_kep_4_1											GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_13)//OKT
-#define  CB_kep_4_2											GPIO_ReadInputDataBit(GPIOD,GPIO_Pin_11)//OKP
-#define  CB_vtri_leo										GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_6)  // con vang o dit
+#define  CB_kep_1_1													GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_15)//okT
+#define  CB_kep_1_2													GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_10)//okP
+#define  CB_kep_2_1													GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_12)//okT
+#define  CB_kep_2_2													GPIO_ReadInputDataBit(GPIOD,GPIO_Pin_10)//okP
+#define  CB_kep_3_1													GPIO_ReadInputDataBit(GPIOD,GPIO_Pin_14)//okT
+#define  CB_kep_3_2													GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_14)//okP
+#define  CB_kep_4_1													GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_13)//OKT
+#define  CB_kep_4_2													GPIO_ReadInputDataBit(GPIOD,GPIO_Pin_11)//OKP
+#define  CB_vtri_leo												GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_6)  // con vang o dit
 
-#define  CB_xilanh_tay_1								GPIO_ReadInputDataBit(GPIOD,GPIO_Pin_15)//OK nhan la 0, khong nhan la 1
-#define  CB_xilanh_tay_2								GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_11)//OK
+#define  CB_xilanh_tay_1										GPIO_ReadInputDataBit(GPIOD,GPIO_Pin_15)//OK nhan la 0, khong nhan la 1
+#define  CB_xilanh_tay_2										GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_11)//OK
 
-#define  CB_vtri_leo_dau								GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_14)//OK KO NHAN = 1,NHAN = 0
-#define  CB_Cap_Thanh_Sau								GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_7)//OK  k nhan la 0, nhan la 1
+#define  CB_vtri_leo_dau										GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_14)//OK KO NHAN = 1,NHAN = 0
+#define  CB_Cap_Thanh_Sau										GPIO_ReadInputDataBit(GPIOA,GPIO_Pin_12)//OK  k nhan la 0, nhan la 1
 
-#define  CB_Nang_trai										GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_11)
-#define  CB_Nang_phai										GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_9)
+#define  CB_Nang_trai												GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_11)//KB
+#define  CB_Nang_phai												GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_9)//KB
 
-#define  Start													GPIO_ReadInputDataBit(GPIOD,GPIO_Pin_0)
-#define  QT5														GPIO_ReadInputDataBit(GPIOD,GPIO_Pin_1)
+#define  Start															GPIO_ReadInputDataBit(GPIOD,GPIO_Pin_0)
+#define  QT5																GPIO_ReadInputDataBit(GPIOD,GPIO_Pin_1)
 
 
 //// CB CHECK CO QUA TREN TAY HAY CHUA
@@ -285,8 +285,8 @@ vu8 DATA_SPEED[80]={255,1,0,0,				// 1- ID = 1, DIRECT = 0, SPEED = 0
 
 #define  HT_1																GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_12)//ok
 #define  HT_2																GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_10)//ok
-#define  HT_3																GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_8)//ok
-#define  HT_4																GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_7)//ok
+#define  HT_3																GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_7)//ok
+#define  HT_4																GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_8)//ok
 #define  HT_qua_1														GPIO_ReadInputDataBit(GPIOA,GPIO_Pin_12)//ok
 #define  HT_qua_2														GPIO_ReadInputDataBit(GPIOD,GPIO_Pin_15)//ok
 #define  HT_qua_3														GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_10)//ok
@@ -487,7 +487,7 @@ int vi_tri_tay_12 = 695;
 
 // VI TRI MAM XOAY LAY BEN PHAI 200 TREN
 int vi_tri_tay_4_phai_tren = 610;
-int vi_tri_tay_1_phai_tren = 410;
+int vi_tri_tay_1_phai_tren = 415;
 int vi_tri_tay_2_phai_tren = 405;
 int vi_tri_tay_3_phai_tren = 600;
 
@@ -498,9 +498,9 @@ int vi_tri_tay_2_trai_tren = 595;
 int vi_tri_tay_3_trai_tren = 402;
 
 /// VI TRI LAZER LAY QUA THANG
-int vitri_tay41_laser_trai_GapQua = 154;
-int vitri_tay23_laser_trai_GapQua = 224;
-int vitri_tay23_phai_laser_GapQua = 154;
+int vitri_tay41_laser_trai_GapQua = 150;
+int vitri_tay23_laser_trai_GapQua = 222;
+int vitri_tay23_phai_laser_GapQua = 150;
 
 
 int vitri_tay1home = 445;
@@ -512,17 +512,15 @@ int kiem_tra_loi = 0;
 int tay_se_dung_tiep_theo = 0;
 //// ******** VI TRI LAZER CUA RUNG XANH *********************
 
-int vi_tri_cua_rung_xanh_1_lazer_phai_tay_41 = 308;
+int vi_tri_cua_rung_xanh_1_lazer_phai_tay_41 = 304;
 int vi_tri_cua_rung_xanh_1_lazer_phai_tay_23 = 261;
 
-int vi_tri_cua_rung_xanh_2_lazer_phai_tay_41 = 400;
-int vi_tri_cua_rung_xanh_2_lazer_trai_tay_41 = 428;
+int vi_tri_cua_rung_xanh_2_lazer_phai_tay_41 = 401;
 int vi_tri_cua_rung_xanh_2_lazer_phai_tay_23 = 399;
 
-int vi_tri_cua_rung_xanh_3_lazer_trai_tay_41 = 304;
-int vi_tri_cua_rung_xanh_3_lazer_trai_tay_23 = 370;
+int vi_tri_cua_rung_xanh_3_lazer_trai_tay_41 = 305;
 int vi_tri_cua_rung_xanh_3_lazer_phai_tay_23 = 446;
-int vi_tri_cua_rung_xanh_3_lazer_phai_tay_41 = 474;
+int vi_tri_cua_rung_xanh_3_lazer_phai_tay_41 = 477;
 
 //// ******** VI TRI LAZER CUA RUNG DO *********************
 int vi_tri_cua_rung_do_3_lazer_phai_tay_41 = 304;
@@ -539,6 +537,26 @@ int vi_tri_cua_rung_do_1_lazer_trai_tay_23 = 370;
 
 ///*********************************************************
 
+//// ******** VI TRI LAZER DAT HOP XANH *********************
+int vi_tri_dat_hop_1_tay41_xanh = 51; /// ** DUNG LAZER SAU**
+int vi_tri_dat_hop_2_tay41_xanh = 106;
+int vi_tri_dat_hop_3_tay41_xanh = 159;
+
+int vi_tri_dat_hop_1_tay23_xanh = 3;
+int vi_tri_dat_hop_2_tay23_xanh = 57;
+int vi_tri_dat_hop_3_tay23_xanh = 109;
+
+///
+//// ******** VI TRI LAZER DAT HOP DO *********************
+int vi_tri_dat_hop_1_tay41_do = 304;   /// ** DUNG LAZER SAU**
+int vi_tri_dat_hop_2_tay41_do = 310;
+int vi_tri_dat_hop_3_tay41_do = 370;
+
+int vi_tri_dat_hop_1_tay23_do = 304;   /// ** DUNG LAZER SAU**
+int vi_tri_dat_hop_2_tay23_do = 310;
+int vi_tri_dat_hop_3_tay23_do = 370;
+
+///
 
 int target_Nang_Ha = 600;
 int Min_Nang_Ha = 160 ;
@@ -2316,7 +2334,10 @@ void HMI_TRAN(vs32 _so_dong)
 										HMI_DMI("check_hop_4: ",check_hop_4,27); 
 										break;
 									case 28:
-										HMI_DMI("mor_lift_rear",mor_lift_rear,28); 
+										HMI_DMI("Start",Start,28); 
+										break;
+									case 29:
+										HMI_DMI("TinHieu_ChuanBi_GapPhai ",TinHieu_ChuanBi_GapPhai,29); 
 										break;
 						}
 }

@@ -69,8 +69,7 @@ static void taskDieuKhienCoCau1(void *pvParameters)
 		if(Man_xoay_tay == 0) Xoay_tay_kep(); 
 		if(Man_gat1 == 0) Gat_1(); 
 		if(Man_gat2 == 0) Gat_2(); 
-//		Nang_ha_tay_kep();
-//		Day_tay_kep();
+
 		vTaskDelay(3);
 	}
 }
@@ -135,10 +134,13 @@ static void taskMain(void *pvParameters)
 
 vTaskDelay(1000);
 	
-	Nang_nhanh();
+	Nang_thuong();
 
 	target_chan_truoc = bientrochantruocValue;
 	target_chan_sau = bientrochansauValue;
+	
+	target_tay_gat1 = bientrodaytay1Value;
+	target_tay_gat2 = bientrodaytay2Value;
 
 	speed_tay_xoay = 100;
 	target_xoay_tay = vi_tri_tay_43;
@@ -178,20 +180,13 @@ vTaskDelay(1000);
 				
 //			if(TRIANGLE && L2 && !R2 )												Xuat_Phat_Lay_Vu_Khi_Do(160,1550,290
 				
-//				
 				if(TRIANGLE && L2 && !R2 )													DatKFS_do(18);
 				if(SQUARE && L2 && !R2) 														Xoay_dau_truoc_cua_do_1();
 				if(X && L2 && !R2) 																	test_vi_tri();
 ////				if(O && L2 && !R2 ) 															phun_tay();
 ////				if(X && R2 ) 																			nhat_hop_zone3_do();
 
-//			
-//				if(TRIANGLE && L2 && !R2 )										Leo_bac_400(900, -900);
-//				if(SQUARE && L2 && !R2 )											DatKFS_do(10);
-//				if(X && L2 && !R2 )														su_dung_chan(700);
-//				if(O && L2 && !R2 )														Xuong_bac_200(900, -900);
-
-			
+	
 			}
 			else															//SAN XANH
 			{
@@ -199,11 +194,11 @@ vTaskDelay(1000);
 				bat_dau_chay_xanh();
 //			if(O && L2 && !R2)															Xuat_Phat_Lay_Vu_Khi_Xanh(169,-1650,233) ;
 
-
-//					if(TRIANGLE && L2 && !R2) 												 	 		lay_thong_so();
-						if(TRIANGLE && L2 && !R2) 												 	 		tudonghoantoan();
-//						if(SQUARE && L2 && !R2) 																lay_thong_so();
-//						if(X && L2 && !R2) 																			Xuong_bac_200(-900,900);
+ 
+//					if(TRIANGLE && L2 && !R2) 												 	 		Xuat_Phat_Lay_Vu_Khi_Xanh(168, -1670, 192);
+						if(TRIANGLE && L2 && !R2) 												 	 		Run_All_Blocks_From_Queue_san_xanh();
+						if(SQUARE && L2 && !R2) 																su_dung_chan(565);
+//						if(X && L2 && !R2) 																			auto_vao_rung_xanh_cua3();
 //					if(O && L2 && !R2 ) 																		test_dat_hop();
 //					if(X && R2  ) 																					Xuong_bac_200(-900, 900);
 

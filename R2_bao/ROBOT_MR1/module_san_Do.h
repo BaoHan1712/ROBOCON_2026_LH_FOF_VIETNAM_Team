@@ -573,7 +573,7 @@ void Leo_bac_200_ko_thanh_do(void)
 void Leo_bac_400_co_thanh_do(void) {
 		Leo_bac_400(900, -900);
 			
-	if (TinHieu_ChuanBi_GapThang == 0) {
+	if (TinHieu_ChuanBi_GapThang == 0 && TinHieu_ChuanBi_GapTrai == 0 && TinHieu_ChuanBi_GapPhai == 0) {
 		su_dung_chan(480);
 
 		// chay toi khi laser sau cham 1
@@ -869,7 +869,7 @@ void Leo_bac_400_ko_thanh_do(void)
 		Leo_bac_400(900, -900);
 
 		su_dung_chan(265);
-		if (TinHieu_ChuanBi_GapThang == 0 ) {
+				if (TinHieu_ChuanBi_GapThang == 0 && TinHieu_ChuanBi_GapTrai == 0 && TinHieu_ChuanBi_GapPhai == 0) {
 		// chay toi khi mat cam bien sau
 		robotRunAngle(900,18,-900,0.9);
 		for(i=0;i<250;i++)
@@ -910,7 +910,7 @@ void Leo_bac_200_bam_thanh_phai_do(void)
 	target_chan_truoc = Min_chan_truoc + 250;
 	target_chan_sau = Min_chan_sau + 250;
 	
-if (TinHieu_ChuanBi_GapThang == 0) {
+		if (TinHieu_ChuanBi_GapThang == 0 && TinHieu_ChuanBi_GapTrai == 0 && TinHieu_ChuanBi_GapPhai == 0) {
 			robotRunAngle(900,20,-900,0.7);
 			for(i=0;i<1550;i++)
 				{

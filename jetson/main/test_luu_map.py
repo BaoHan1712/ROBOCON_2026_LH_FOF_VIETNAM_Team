@@ -28,13 +28,49 @@ class SelectPlaceApp:
     def __init__(self):
         self.root = ctk.CTk()
         self.root.title("Robot Pathfinding: Hybrid & UART Control")
-        self.root.geometry("880x580")  # Compact layout
+        self.root.geometry("980x680")  # Đã nới rộng ra để chứa Tab cho đẹp
 
         self.team_color = "RED"  
-
         self.root.protocol("WM_DELETE_WINDOW", self.on_closing)
 
-        self.main_frame = ctk.CTkFrame(self.root)
+        self.last_received_grid = None  # Lưu mảng cũ để so sánh
+        self.calc_session_id = 0        # Mã đánh dấu luồng tính toán
+
+        # =====================================================================
+        # 1. TẠO HỆ THỐNG TAB VIEW (GỘP RỪNG & MATRIX)
+        # =====================================================================
+        self.tabview = ctk.CTkTabview(self.root)
+        self.tabview.pack(padx=10, pady=5, expand=True, fill="both")
+
+        # Tạo 2 cái thẻ (Tab)
+        self.tab_forest = self.tabview.add("🌲 Sa Bàn (Forest)")
+        self.tab_matrix = self.tabview.add("🔢 Vùng 3 (Matrix)")
+
+        # --- CỜ TRẠNG THÁI LẮNG NGHE ---
+        self.is_listening = False
+        try:
+            # Ép tắt lắng nghe khi mới mở giao diện để đồng bộ với nút
+            from uart_listener import uart_enable
+            uart_enable["value"] = False
+        except:
+            pass
+
+        # Nút Bật/Tắt Lắng Nghe (Gắn cố định góc phải)
+        self.listen_btn = ctk.CTkButton(
+            self.root, text="🎧 BẬT LẮNG NGHE (MAIN)", width=180, height=30,
+            fg_color="#8e44ad", hover_color="#732d91", 
+            command=self.toggle_main_listener # <--- Đổi tên hàm gọi
+        )
+        self.listen_btn.place(relx=0.98, rely=0.015, anchor="ne")
+
+        # Gọi hàm setup Tab Matrix (Hàm này tao viết ở Bước 3)
+        self.setup_matrix_tab()
+
+        # =====================================================================
+        # 2. KHỞI TẠO LƯỚI SA BÀN (NHÉT VÀO TAB FOREST)
+        # =====================================================================
+        # CHÚ Ý: Chữ self.root ở đây đã được đổi thành self.tab_forest
+        self.main_frame = ctk.CTkFrame(self.tab_forest)
         self.main_frame.pack(padx=8, pady=5, expand=True, fill="both")
 
         # =====================================================================
@@ -154,9 +190,9 @@ class SelectPlaceApp:
         # =====================================================================
         # THANH CÔNG CỤ
         # =====================================================================
-        self.bottom_frame = ctk.CTkFrame(self.root)
+        self.bottom_frame = ctk.CTkFrame(self.tab_forest)
         self.bottom_frame.pack(side="bottom", padx=10, pady=5, fill="x")
-
+      
         self.reset_btn = ctk.CTkButton(
             self.bottom_frame, text="Reset", width=80, height=70,
             fg_color="#d9534f", hover_color="#c9302c",
@@ -178,7 +214,23 @@ class SelectPlaceApp:
         )
         self.mode_btn.pack(side="left", padx=3)       
 
+        # =====================================================================
+        # ĐÈN LED BÁO KẾT NỐI SERVER (NHÁY XANH/ĐỎ) - CHUYỂN LÊN GÓC TRÊN
+        # =====================================================================
+        self.is_server_connected = False 
+        self.led_on = True               
+        
+        # Đổi parent thành self.root (thay vì self.bottom_frame) để nó nổi lên trên cùng
+        self.status_led = ctk.CTkLabel(
+            self.root, text="● SERVER", font=("DejaVu Sans", 12, "bold"),
+            text_color="gray", width=100
+        )
+        
+        # Nút Lắng nghe đang ở relx=0.98. Tao đặt đèn ở relx=0.78 để nó đứng ngay sát bên trái nút
+        self.status_led.place(relx=0.78, rely=0.015, anchor="ne")
 
+        # Bắt đầu vòng lặp nháy đèn
+        self.update_led_blink()
 # --- NÚT TÌM ĐƯỜNG ---
 # --- CỜ CHIẾN THUẬT MẶC ĐỊNH ---
         self.is_fast_attack = True  # True = Thắng Nhanh, False = Cày Điểm
@@ -192,8 +244,7 @@ class SelectPlaceApp:
         self.run_btn.pack(side="left", padx=3)
 
         self.info_label = ctk.CTkLabel(
-            self.root,
-            text="Chế độ: Đặt khối.\nBấm 'TÌM ĐƯỜNG' để tìm đường, sau đó 'GỬI UART' để truyền.",
+            self.tab_forest,            text="Chế độ: Đặt khối.\nBấm 'TÌM ĐƯỜNG' để tìm đường, sau đó 'GỬI UART' để truyền.",
             width=250, height=50, wraplength=600, justify="left", font=("DejaVu Sans", 9)
         )
         self.send_uart_btn = ctk.CTkButton(self.bottom_frame, text="GỬI UART", width=80, height=70, fg_color="#9c27b0", hover_color="#7b1fa2", command=self.sent_and_close)
@@ -218,13 +269,11 @@ class SelectPlaceApp:
             command=self.handle_sync_toggle
         )
         self.toggle_sync_live_btn.pack(side="left", padx=5)
-
-        # --- CỜ & NÚT CHIẾN THUẬT ---
+    # --- CỜ & NÚT CHIẾN THUẬT ---
 
 
 
         self.info_label.pack(pady=3)
-
         self.mode = "PLACE" #
         self.active_button = None #
         self.selected_targets = [] #
@@ -247,76 +296,104 @@ class SelectPlaceApp:
         self.replay_cache_btn.pack(side="left", padx=3)
 
 
-# =========================================================================
+    # =========================================================================
     # 📡 MODULE: SOCKET & LIVE MAP
     # =========================================================================
     def connect_server_thread(self):
+        @self.sio.on('connect')
+        def on_connect():
+            self.is_server_connected = True
+            print("[SOCKET] Kết nối Server thành công!")
+
+        @self.sio.on('disconnect')
+        def on_disconnect():
+            self.is_server_connected = False
+            print("[SOCKET] Mất kết nối Server!")
+
+        @self.sio.on('connect_error')
+        def on_error(data):
+            self.is_server_connected = False
+
         @self.sio.on('sync_state')
         def on_sync_state(data):
-            # CHỈ vẽ map nếu đang bật chế độ nhận Live
             if self.sync_mode:
-                self.root.after(0, lambda: self.apply_server_state(data))
+                new_grid = data.get('grid')
+                
+                if new_grid == self.last_received_grid:
+                    return
+                
+                self.last_received_grid = new_grid
+                
+                self.calc_session_id += 1
+                current_session = self.calc_session_id
+                
+                # SỬA DÒNG NÀY: Truyền explicitly current_session vào
+                self.root.after(0, lambda s=current_session: self.apply_server_state(data, s))
 
         def attempt_connect():
             try:
-                self.sio.connect(SERVER_IP)
-                print(f"[SOCKET] Đã kết nối tới Trạm Chỉ Huy tại {SERVER_IP}")
-            except Exception as e:
-                print(f"[SOCKET] Lỗi kết nối: {e}")
+                # Ép dùng websocket cho nhanh như anh em mình đã bàn
+                self.sio.connect(SERVER_IP, transports=['websocket'])
+            except Exception:
+                self.is_server_connected = False
 
-        # Chạy ẩn để UI không bị đơ
-        threading.Thread(target=attempt_connect, daemon=True).start()
+        threading.Thread(target=attempt_connect, daemon=True).start()      
+    def apply_server_state(self, state, session_id):
+        # --- CHỐT CHẶN: GIẾT LUỒNG CŨ ---
+        if session_id != self.calc_session_id:
+            return # Khai tử ngay để nhường chỗ cho mảng mới nhất
 
-#   def apply_server_state(self, state):
-#        team_server = state.get("team", "R")
-#       grid_data = state.get("grid", [])
-#
- #       # Tự động đổi sân theo Laptop
-  #      if team_server == 'R' and self.team_color != "RED":
-   #         self.toggle_team()
-    #    elif team_server == 'B' and self.team_color != "BLUE":
-     #       self.toggle_team()
-#
-        # Xóa sạch để vẽ lại map mới
- #       self.reset_grid()
-#
- #       for r in range(min(ROWS, len(grid_data))):
-  #          for c in range(min(COLS, len(grid_data[r]))):
-    #            val = grid_data[r][c]
-     #            if val in [1, 2, 3]:
-      #              self.place_block(val, (r, c))
-       #             
-        #self.info_label.configure(text=f"✓ Nhận MAP LIVE thành công!", text_color="green")
-        
-    def apply_server_state(self, state):
         team_server = state.get("team", "R")
         grid_data = state.get("grid", [])
 
-        # --- BỘ LỌC CHỐNG SPAM (CHỐNG TREO MÁY) ---
+        # --- BỘ LỌC CHỐNG SPAM ---
         if hasattr(self, 'last_team') and self.last_team == team_server:
             if hasattr(self, 'last_grid_data') and self.last_grid_data == grid_data:
-                return  # Nếu map y chang đợt trước thì bỏ qua, đéo vẽ lại!
+                return  # Đéo có gì mới thì nghỉ!
 
         self.last_team = team_server
         self.last_grid_data = grid_data
-        # ------------------------------------------
 
-        # Tự động đổi sân theo Laptop
+        # Đổi sân
         if team_server == 'R' and self.team_color != "RED":
             self.toggle_team()
         elif team_server == 'B' and self.team_color != "BLUE":
             self.toggle_team()
 
-        # Xóa sạch để vẽ lại map mới
-        self.reset_grid()
-
+        # ==========================================================
+        # CẬP NHẬT CỤC BỘ (CHỈ VẼ LẠI Ô BỊ THAY ĐỔI)
+        # ==========================================================
         for r in range(min(ROWS, len(grid_data))):
             for c in range(min(COLS, len(grid_data[r]))):
-                val = grid_data[r][c]
-                if val in [1, 2, 3]:
-                    self.place_block(val, (r, c))
+                new_val = grid_data[r][c]
+                cell = self.grid_cells[r][c]
+                
+                # Kiểm tra xem ô hiện tại đang chứa khối số mấy (0 là trống)
+                current_val = cell["content"]["number"] if cell["content"] else 0
+                
+                # NẾU GIỐNG HỆT NHAU -> BỎ QUA KHÔNG VẼ LẠI CHO ĐỠ LAG!
+                if current_val == new_val:
+                    continue
                     
-        self.info_label.configure(text=f"✓ Nhận MAP LIVE thành công! (Sân {team_server})", text_color="green")
+                # NẾU CÓ THAY ĐỔI -> Xóa khối cũ đi trước
+                if cell["content"]:
+                    cell["content"]["widget"].destroy()
+                    cell["content"] = None
+                    for btn in cell["buttons"]:
+                        btn.pack(side="left", expand=True, padx=2, pady=2)
+                    cell["id_label"].lift()
+                
+                # Rồi đặt khối mới vào
+                if new_val in [1, 2, 3]:
+                    self.place_block(new_val, (r, c))
+        # ==========================================================
+                    
+        self.info_label.configure(text=f"✓ Nhận MAP LIVE siêu tốc! (Sân {team_server}). Đang tự động tìm đường...", text_color="green")
+
+        # ==============================================================
+        # KÍCH HOẠT TỰ ĐỘNG TÌM ĐƯỜNG NGAY KHI CÓ DATA TỪ SERVER
+        # ==============================================================
+        self.smart_run()
 
     def toggle_sync_qr(self):
         # Chuyển sang chế độ Quét QR (Tắt Live)
@@ -509,6 +586,10 @@ class SelectPlaceApp:
                     btn.pack(side="left", expand=True, padx=2, pady=2)
                 cell["id_label"].lift()
                 self.info_label.configure(text=f"Đã xóa tại ({r},{c})")
+                
+                # THÊM DÒNG NÀY
+                if getattr(self, 'auto_update_path', False):
+                    self.smart_run()
             return
 
         # 2. NẾU ĐANG VẼ ĐƯỜNG MÀ CLICK LẠI VÀO Ô ĐÃ CHỌN -> XÓA NHANH ĐƯỜNG ĐÓ
@@ -555,6 +636,9 @@ class SelectPlaceApp:
                 btn.pack(side="left", expand=True, padx=2, pady=2)
             cell["id_label"].lift()
             self.info_label.configure(text=f"Đã XÓA nhanh khối tại ({r},{c}) bằng 1 Click")
+            if getattr(self, 'auto_update_path', False):
+                self.smart_run()
+            
     def place_block(self, number, position):
         r, c = position
         cell = self.grid_cells[r][c]
@@ -600,6 +684,8 @@ class SelectPlaceApp:
             
         cell["id_label"].lift()
         self.info_label.configure(text=f"Đặt khối {display_text} tại ({r},{c})")
+        if getattr(self, 'auto_update_path', False):
+            self.smart_run()
 
     def reset_grid(self):
         for r in range(ROWS):
@@ -628,7 +714,15 @@ class SelectPlaceApp:
             self.active_button.configure(fg_color=self.active_button.default_color)
             self.active_button = None
         self.info_label.configure(text="Lưới đã reset. Mời chọn lại chế độ.")
-
+        self.auto_update_path = False
+        
+        # =======================================================
+        # BƠM THÊM ĐOẠN NÀY ĐỂ TẨY NÃO, CHỐNG BỆNH "ĐIẾC" MAP
+        # =======================================================
+        self.last_received_grid = None
+        if hasattr(self, 'last_grid_data'):
+            self.last_grid_data = None
+        self.calc_session_id += 1 # Hủy luôn các tính toán tìm đường đang chạy dở
     # =========================================================================
     # ENGINE: PATHFINDING
     # =========================================================================
@@ -839,6 +933,9 @@ class SelectPlaceApp:
     # SMART RUN
     # =========================================================================
     def smart_run(self):
+        # THÊM DÒNG NÀY ĐỂ BẬT TÍNH NĂNG TỰ ĐỘNG CẬP NHẬT
+        self.auto_update_path = True 
+
         for r in range(ROWS):
             for c in range(COLS):
                 for ov in self.grid_cells[r][c]["overlays"]: ov.destroy()
@@ -880,54 +977,74 @@ class SelectPlaceApp:
         best_col = -1
         max_score = -1
         for c in range(COLS):
+            # Kiểm tra Khối 3 chặn
             is_blocked = any(
                 self.grid_cells[r][c]["content"] and self.grid_cells[r][c]["content"]["number"] == 3
                 for r in range(ROWS)
             )
             if is_blocked:
                 continue
+
+            # Kiểm tra R1: Cấm đi nếu cột có từ 2 cục R1 trở lên
+            r1_count = sum(
+                1 for r in range(ROWS)
+                if self.grid_cells[r][c]["content"] and self.grid_cells[r][c]["content"]["number"] == 1
+            )
+            if r1_count >= 2:
+                continue
+
+            # Tính điểm: Tổng R2 có thể gắp trên cột này và 2 cột kế bên
             score = sum(
                 1 for r in range(ROWS) for dc in [0, -1, 1]
                 if 0 <= c + dc < COLS and (r, c + dc) in list_2s
             )
+            
+            # =========================================================
+            # LOGIC CHỌN CỘT & ƯU TIÊN SÂN ĐẤU KHI BẰNG ĐIỂM
+            # =========================================================
             if score > max_score:
                 max_score = score
                 best_col = c
+            elif score == max_score and best_col != -1:
+                # Điểm bằng nhau -> Phân xử theo màu sân
+                if self.team_color == "RED":
+                    # ĐỎ ưu tiên cột C (Index lớn nhất)
+                    if c > best_col:
+                        best_col = c
+                elif self.team_color == "BLUE":
+                    # XANH ưu tiên cột A (Index nhỏ nhất) -> Không làm gì cả vì best_col cũ đã nhỏ hơn rồi
+                    pass 
+            # =========================================================
 
         if best_col == -1:
-            self.info_label.configure(text="LỖI: Tất cả các cột đều bị chặn bởi Khối 3.")
+            self.info_label.configure(text="LỖI: Tất cả các cột đều bị chặn (Bởi Khối 3 hoặc có >= 2 Khối 1).")
             return
 
-        print(f">>> Chọn cột đi thẳng: {best_col}")
+        print(f">>> Chọn cột đi thẳng: {best_col} (Max score: {max_score}, Team: {self.team_color})")
 
         # --- 2. XÂY DỰNG SIM_PATH ---
         sim_path = []
         remaining_entry = list(list_2s_at_entry)
 
-        # === TỐI ƯU HÓA THỨ TỰ GẮP BỤC BẰNG HOÁN VỊ TẤT CẢ TRƯỜNG HỢP ===
-        # Chọn thứ tự gắp bục sao cho quãng đường (đi ngang + quay về best_col) là ngắn nhất.
+        # =========================================================================
+        # LUẬT CỬA BỤC: BẮT BUỘC CHỈ LẤY 1 CỤC DUY NHẤT RỒI LÊN RỪNG
+        # =========================================================================
         if remaining_entry:
-            best_perm = None
-            min_dist = float('inf')
-            
-            for perm in itertools.permutations(remaining_entry):
-                dist = 0
-                curr_col = perm[0][1]
-                for target in perm[1:]:
-                    dist += abs(target[1] - curr_col)
-                    curr_col = target[1]
-                # Thêm khoảng cách từ điểm gắp cuối cùng đến best_col để chuẩn bị leo lên sa bàn
-                dist += abs(best_col - curr_col)
-                
-                if dist < min_dist:
-                    min_dist = dist
-                    best_perm = perm
-                    
-            ordered_entry = list(best_perm)
+            # Lấy cục R2 nằm gần cột best_col nhất
+            best_entry = min(remaining_entry, key=lambda x: abs(x[1] - best_col))
+            ordered_entry = [best_entry] # Ép mảng chỉ còn 1 mục tiêu
             door_start_col = ordered_entry[0][1]
+            print(f">>> Luật gắp bục: CHỈ CHỐT GẮP 1 CỤC tại {best_entry}")
+            
+            # Đẩy các cục không được gắp ở bục vào list trên rừng
+            # Để khi xe leo lên sa bàn nó tự động thò tay sang gắp
+            for entry in remaining_entry:
+                if entry != best_entry:
+                    list_2s_on_board.append(entry)
         else:
             ordered_entry = []
             door_start_col = best_col
+        # =========================================================================
 
         current_door_col = door_start_col
 
@@ -935,7 +1052,6 @@ class SelectPlaceApp:
         for target in ordered_entry:
             target_col = target[1]
 
-            # Đường đi ngang trong cửa từ current_door_col đến target_col
             door_path = [(DOOR_ROW, current_door_col)]
             c = current_door_col
             while c != target_col:
@@ -945,16 +1061,16 @@ class SelectPlaceApp:
             sim_path.append((door_path, target))
             current_door_col = target_col
 
-        # --- 2b. Segment leo lên sa bàn ---
+        # --- 2b. Segment leo lên sa bàn (Lên rừng) ---
         climb_door_path = [(DOOR_ROW, current_door_col)]
         c = current_door_col
         while c != best_col:
             c += 1 if best_col > c else -1
             climb_door_path.append((DOOR_ROW, c))
-        # Thêm điểm leo lên bục (ROWS-1, best_col) = điểm đầu tiên trên sa bàn
+        # Leo lên ô đầu tiên của sa bàn
         climb_door_path.append((ROWS - 1, best_col))
 
-        # --- 2c. Đường đi thẳng trên sa bàn ---
+        # --- 2c. Đường đi thẳng trên sa bàn & thò tay gắp ---
         board_entry = (ROWS - 1, best_col)
         board_accumulated = [board_entry] 
 
@@ -962,6 +1078,7 @@ class SelectPlaceApp:
             if r < ROWS - 1:
                 board_accumulated.append((r, best_col))
 
+            # Nếu có R2 nằm ngay trên cột đang đi
             if (r, best_col) in list_2s_on_board:
                 if not any(a not in ("FINISH",) and isinstance(a, tuple) and a[0] < ROWS - 1
                            for _, a in sim_path):
@@ -973,6 +1090,7 @@ class SelectPlaceApp:
                 board_accumulated = [(r, best_col)]
                 climb_door_path = [] 
 
+            # Quét tay sang gắp ở cột trái hoặc cột phải
             for dc in [-1, 1]:
                 c_adj = best_col + dc
                 if 0 <= c_adj < COLS and (r, c_adj) in list_2s_on_board:
@@ -986,6 +1104,7 @@ class SelectPlaceApp:
                     board_accumulated = [(r, best_col)]
                     climb_door_path = []
 
+        # Đi nốt quãng đường còn lại về đích
         while board_accumulated[-1][0] > 0:
             board_accumulated.append((board_accumulated[-1][0] - 1, best_col))
 
@@ -1003,7 +1122,7 @@ class SelectPlaceApp:
 
         picked_ids = [self.get_cell_id(*a) for _, a in sim_path
                       if isinstance(a, tuple) and 0 <= a[0] < ROWS]
-        entry_ids = [self.get_cell_id(*p) for p in list_2s_at_entry]
+        entry_ids = [self.get_cell_id(*p) for p in ordered_entry]
 
         print(f"-> Gắp bục: {entry_ids} | Gắp sa bàn: {[i for i in picked_ids if i not in entry_ids]}")
         print(f"-> Segments: {len(sim_path)}")
@@ -1370,7 +1489,7 @@ class SelectPlaceApp:
         cache_file = "map_cache_ui.json"
         
         if not os.path.exists(cache_file):
-            self.info_label.configure(text="[LỖI] Chưa có gói tin Cache nào!")
+            self.info_label.configure(text="[LỖI] Chưa có gói tin Cache UI nào!")
             return
             
         try:
@@ -1388,38 +1507,28 @@ class SelectPlaceApp:
                 self.team_btn.configure(text="Sân: XANH (BLUE)", fg_color="#1e88e5")
             self.refresh_grid_ids()
 
-            # --- 3. TỰ ĐỘNG ĐẶT LẠI CÁC KHỐI (1, 2, Fake) VỚI ĐÚNG MÀU ---
+            # --- 3. TẠM TẮT AUTO UPDATE ĐỂ XẾP MAP ĐỠ LAG ---
+            self.auto_update_path = False
+
+            # --- 4. TỰ ĐỘNG ĐẶT LẠI CÁC KHỐI TỪ CACHE ---
             for r, c, num in data.get("blocks", []):
                 self.place_block(num, (r, c))
 
-            # --- 4. KHÔI PHỤC BẢN VẼ ĐƯỜNG ĐI VÀ VẼ LÊN UI ---
-            restored_path = []
-            for seg_path_list, act in data["path"]:
-                seg_path = [tuple(pos) for pos in seg_path_list]
-                if isinstance(act, list): act = tuple(act)
-                restored_path.append((seg_path, act))
-                
-            restored_ignored = [tuple(pos) for pos in data.get("ignored", [])]
-            
-            # QUAN TRỌNG: Gán đường đi vào biến toàn cục để nút "GỬI UART" có thể dùng được
-            self.simulation_path = restored_path 
-            
-            self.visualize_result(restored_path, restored_ignored)
+            self.info_label.configure(text="Đang tải lại map từ Cache và tính toán đường đi...", text_color="blue")
             self.root.update()
-            
-            # --- 5. CHỈ HIỆN THÔNG BÁO, KHÔNG GỬI LỆNH ---
-            print("\n" + "=" * 60)
-            print(f">>> ĐÃ KHÔI PHỤC MAP TỪ CACHE - SẴN SÀNG BẮN UART <<<")
-            print("=" * 60)
+
+            # --- 5. TỰ ĐỘNG TÌM ĐƯỜNG LẠI (NHƯNG KHÔNG BẮN UART) ---
+            # Gọi smart_run để tính toán và sinh list CMD, sau đó hiển thị lên UI chờ mày xác nhận
+            self.smart_run()
             
             self.info_label.configure(
-                text="✓ Đã dựng lại UI từ Cache. Nhấn 'GỬI UART' để bắt đầu chạy!",
-                text_color="blue"
+                text="✓ Tải Cache & Tìm đường xong! Hãy kiểm tra và nhấn [GỬI LỆNH] khi sẵn sàng.",
+                text_color="green"
             )
-            
+
         except Exception as e:
             print(f"[CACHE ERROR] Lỗi: {e}")
-            self.info_label.configure(text=f"Lỗi khôi phục Cache: {e}")
+            self.info_label.configure(text=f"Lỗi khôi phục Cache: {e}", text_color="red")
 # ========================================================
     # >>> KHỐI LOGIC: QUÉT VÀ GIẢI MÃ QR TỰ ĐỘNG
     # ========================================================
@@ -1545,6 +1654,146 @@ class SelectPlaceApp:
                 self.info_label.configure(text="✓ Nạp Map thành công!", text_color="green")
             else:
                 self.info_label.configure(text="Đã đóng quét QR.", text_color="black")
+    # =========================================================================
+    # TAB 2: VÙNG 3 (MATRIX DETECT) - TÍCH HỢP TỪ MAIN
+    # =========================================================================
+    def setup_matrix_tab(self):
+        self.matrix_selected = {i: False for i in range(1, 7)}
+        self.matrix_buttons = {}
+
+        ctk.CTkLabel(
+            self.tab_matrix, text="Bảng Điều Khiển Gắp Khối Vùng 3",
+            font=("Segoe UI", 22, "bold"), text_color="#1e293b"
+        ).pack(pady=(20, 5))
+
+        self.matrix_status = ctk.CTkLabel(self.tab_matrix, text="Sẵn sàng gửi UART", font=("Segoe UI", 14), text_color="#64748b")
+        self.matrix_status.pack(pady=(0, 5))
+
+        card = ctk.CTkFrame(self.tab_matrix, corner_radius=20, fg_color="#ffffff")
+        card.pack(padx=20, pady=5, fill="both", expand=True)
+
+        btn_frame = ctk.CTkFrame(card, fg_color="transparent")
+        btn_frame.pack(expand=True, pady=15)
+
+        for i in range(1, 7):
+            row = 1 if i <= 3 else 0   
+            col = (i - 1) % 3
+            btn = ctk.CTkButton(
+                btn_frame, text=str(i), width=90, height=90, corner_radius=16,
+                font=("Segoe UI", 26, "bold"), text_color="white",
+                fg_color="#4f46e5", hover_color="#6366f1",
+                command=lambda n=i: self.toggle_matrix(n)
+            )
+            btn.grid(row=row, column=col, padx=15, pady=10)
+            self.matrix_buttons[i] = btn
+
+        bottom_frame = ctk.CTkFrame(self.tab_matrix, fg_color="transparent")
+        bottom_frame.pack(pady=(5, 15))
+
+        ctk.CTkButton(
+            bottom_frame, text="✔ CHỐT GỬI LỆNH", width=180, height=45, corner_radius=14,
+            font=("Segoe UI", 16, "bold"), fg_color="#16a34a", hover_color="#15803d",
+            command=self.on_matrix_confirm
+        ).grid(row=0, column=0, padx=10)
+
+        ctk.CTkButton(
+            bottom_frame, text="↺ Reset", width=120, height=45, corner_radius=14,
+            font=("Segoe UI", 16, "bold"), fg_color="#dc2626", hover_color="#b91c1c",
+            command=self.on_matrix_reset
+        ).grid(row=0, column=1, padx=10)
+
+    def toggle_matrix(self, n):
+        self.matrix_selected[n] = not self.matrix_selected[n]
+        if self.matrix_selected[n]:
+            self.matrix_buttons[n].configure(fg_color="#f59e0b", hover_color="#d97706")
+        else:
+            self.matrix_buttons[n].configure(fg_color="#4f46e5", hover_color="#6366f1")
+
+    def on_matrix_reset(self):
+        for i in range(1, 7):
+            self.matrix_selected[i] = False
+            self.matrix_buttons[i].configure(fg_color="#4f46e5", hover_color="#6366f1")
+        self.matrix_status.configure(text="Đã Reset lựa chọn", text_color="#64748b")
+
+    def on_matrix_confirm(self):
+        col_map = {1: 1, 2: 2, 3: 3, 4: 1, 5: 2, 6: 3}
+        entry = [0, 0, 0]
+        for n in range(1, 7):
+            if self.matrix_selected[n]:
+                idx = col_map[n] - 1
+                entry[idx] = n
+
+        threading.Thread(
+            target=self.send_uart_matrix,
+            args=(entry[0], entry[1], entry[2]),
+            daemon=True
+        ).start()
+
+    def send_uart_matrix(self, e1, e2, e3):
+        try:
+            packet = build_packet(2, 3, e1, e2, e3)
+            send_packet_once(ser, packet)
+            self.matrix_status.configure(text=f"Đã gửi UART Vùng 3: {e1} - {e2} - {e3}", text_color="#16a34a")
+            print(f"[MATRIX] Đã gửi lệnh Vùng 3: 2, 3, {e1}, {e2}, {e3}")
+        except Exception as e:
+            self.matrix_status.configure(text="LỖI UART: Kiểm tra cáp kết nối", text_color="#dc2626")
+            print("UART Error:", e)
+
+    # =========================================================================
+    # CÔNG TẮC BẬT/TẮT LẮNG NGHE UART (KHÔNG ĐẺ LUỒNG MỚI CHỐNG CRASH)
+    # =========================================================================
+    def toggle_main_listener(self):
+        try:
+            # Import cờ điều khiển từ file uart_listener của mày
+            from uart_listener import uart_enable
+            
+            # Đảo trạng thái công tắc
+            self.is_listening = not self.is_listening
+            
+            if self.is_listening:
+                # TRẠNG THÁI 1: BẬT
+                uart_enable["value"] = True
+                self.listen_btn.configure(
+                    text="🎧 ĐANG LẮNG NGHE...", 
+                    fg_color="#27ae60", hover_color="#2ecc71"
+                )
+                self.info_label.configure(text="✓ Đã MỞ kết nối Lắng nghe UART!", text_color="green")
+                print(">> [UART Algo] Đã MỞ van lắng nghe.")
+            else:
+                # TRẠNG THÁI 2: TẮT
+                uart_enable["value"] = False
+                self.listen_btn.configure(
+                    text="🎧 BẬT LẮNG NGHE (MAIN)", 
+                    fg_color="#8e44ad", hover_color="#732d91"
+                )
+                self.info_label.configure(text="⏸ Đã TẠM DỪNG Lắng nghe UART.", text_color="#f39c12")
+                print(">> [UART Algo] Đã ĐÓNG van lắng nghe.")
+                
+        except Exception as e:
+            self.info_label.configure(text=f"LỖI Công tắc Lắng Nghe: {e}", text_color="red")
+            print(f">> LỖI: {e}")
+    def update_led_blink(self):
+        """Hàm tạo hiệu ứng nháy đèn dựa trên trạng thái kết nối"""
+        self.led_on = not self.led_on # Đảo trạng thái sáng/tối
+        
+        if self.is_server_connected:
+            # NẾU CÓ KẾT NỐI: Nháy màu Xanh lá
+            color = "#2ecc71" if self.led_on else "#145a32" # Sáng xanh / Tối xanh
+            txt = "● SERVER OK"
+        else:
+            # NẾU MẤT KẾT NỐI: Nháy màu Đỏ rực
+            color = "#e74c3c" if self.led_on else "#641e16" # Sáng đỏ / Tối đỏ
+            txt = "● NO SERVER"
+
+        # Cập nhật lên giao diện
+        try:
+            self.status_led.configure(text=txt, text_color=color)
+        except:
+            return # Tránh lỗi khi đóng app
+
+        # Lặp lại sau mỗi 500ms (0.5 giây nháy 1 lần)
+        self.root.after(500, self.update_led_blink)
+        
 if __name__ == "__main__":
     app = SelectPlaceApp()
     app.run_algothism_forest()
