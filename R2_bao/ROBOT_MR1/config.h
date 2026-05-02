@@ -472,7 +472,7 @@ int cho_phep_chay = 0;
 /// **************** GIA TRI VI TRI DAT HOP ********************
 
 int vi_tri_dat_hop_1_2 = 410;
-int vi_tri_dat_hop_3_4 = 600;
+int vi_tri_dat_hop_3_4 = 602;
 int tin_hieu_dat_hop_3_4 = 0;
 int tin_hieu_dat_hop_1_2 = 0;
 
@@ -498,9 +498,9 @@ int vi_tri_tay_2_trai_tren = 595;
 int vi_tri_tay_3_trai_tren = 402;
 
 /// VI TRI LAZER LAY QUA THANG
-int vitri_tay41_laser_trai_GapQua = 150;
+int vitri_tay41_laser_trai_GapQua = 152;
 int vitri_tay23_laser_trai_GapQua = 222;
-int vitri_tay23_phai_laser_GapQua = 150;
+int vitri_tay23_phai_laser_GapQua = 152;
 
 
 int vitri_tay1home = 445;
@@ -529,21 +529,21 @@ int vi_tri_cua_rung_do_3_lazer_phai_tay_23 = 262;
 int vi_tri_cua_rung_do_2_lazer_phai_tay_41 = 399;
 int vi_tri_cua_rung_do_2_lazer_phai_tay_23 = 363;
 
-int vi_tri_cua_rung_do_1_lazer_phai_tay_41 = 477;
+int vi_tri_cua_rung_do_1_lazer_phai_tay_41 = 476;
 int vi_tri_cua_rung_do_1_lazer_phai_tay_23 = 451;
 
-int vi_tri_cua_rung_do_1_lazer_trai_tay_41 = 310;
+int vi_tri_cua_rung_do_1_lazer_trai_tay_41 = 306;
 int vi_tri_cua_rung_do_1_lazer_trai_tay_23 = 370;
 
 ///*********************************************************
 
 //// ******** VI TRI LAZER DAT HOP XANH *********************
-int vi_tri_dat_hop_1_tay41_xanh = 51; /// ** DUNG LAZER SAU**
+int vi_tri_dat_hop_1_tay41_xanh = 49; /// ** DUNG LAZER SAU**
 int vi_tri_dat_hop_2_tay41_xanh = 106;
 int vi_tri_dat_hop_3_tay41_xanh = 159;
 
-int vi_tri_dat_hop_1_tay23_xanh = 3;
-int vi_tri_dat_hop_2_tay23_xanh = 57;
+int vi_tri_dat_hop_1_tay23_xanh = 6;
+int vi_tri_dat_hop_2_tay23_xanh = 59;
 int vi_tri_dat_hop_3_tay23_xanh = 109;
 
 ///

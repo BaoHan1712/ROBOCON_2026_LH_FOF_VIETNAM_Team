@@ -13,7 +13,7 @@ from gui_tkinter import set_state, STATE_FOREST, STATE_IDLE
 from config_uart.sent_uart import build_packet, send_packet_once, ser
 import socketio
 import threading
-SERVER_IP = "http://192.168.50.120:5000"
+SERVER_IP = "http://127.0.0.1:5001"
 ctk.set_appearance_mode("System")
 ctk.set_default_color_theme("blue")
 
@@ -314,68 +314,56 @@ class SelectPlaceApp:
         def on_error(data):
             self.is_server_connected = False
 
+        # 1. LỖ TAI LẮNG NGHE CHỌT MAP (CHỈ VẼ LẠI MAP, TUYỆT ĐỐI KHÔNG CHẠY ALGO)
         @self.sio.on('sync_state')
         def on_sync_state(data):
             if self.sync_mode:
                 new_grid = data.get('grid')
-                
-                if new_grid == self.last_received_grid:
-                    return
-                
-                self.last_received_grid = new_grid
-                
                 self.calc_session_id += 1
                 current_session = self.calc_session_id
-                
-                # SỬA DÒNG NÀY: Truyền explicitly current_session vào
                 self.root.after(0, lambda s=current_session: self.apply_server_state(data, s))
+
+        # 2. LỖ TAI LẮNG NGHE NÚT CHỐT MAP TỪ WEB (TÌM ĐƯỜNG VÀ BẮN UART)
+        @self.sio.on('trigger_algo')
+        def on_trigger_algo(data=None):
+            if self.sync_mode:
+                print("\n>> 🚀 [SOCKET] ĐÃ NHẬN LỆNH CHỐT MAP TỪ WEB!")
+                self.info_label.configure(text="Đang tính đường & Gửi UART...", text_color="blue")
+                
+                # Tính đường đi
+                self.root.after(0, self.smart_run)
+                # Đợi 1.5 giây cho vẽ đường xong thì mới bắn UART
+                self.root.after(1500, self.sent_and_close)
 
         def attempt_connect():
             try:
-                # Ép dùng websocket cho nhanh như anh em mình đã bàn
-                self.sio.connect(SERVER_IP, transports=['websocket'])
+                self.sio.connect(SERVER_IP)
             except Exception:
                 self.is_server_connected = False
 
         threading.Thread(target=attempt_connect, daemon=True).start()      
+
     def apply_server_state(self, state, session_id):
-        # --- CHỐT CHẶN: GIẾT LUỒNG CŨ ---
         if session_id != self.calc_session_id:
-            return # Khai tử ngay để nhường chỗ cho mảng mới nhất
+            return 
 
         team_server = state.get("team", "R")
         grid_data = state.get("grid", [])
 
-        # --- BỘ LỌC CHỐNG SPAM ---
-        if hasattr(self, 'last_team') and self.last_team == team_server:
-            if hasattr(self, 'last_grid_data') and self.last_grid_data == grid_data:
-                return  # Đéo có gì mới thì nghỉ!
-
-        self.last_team = team_server
-        self.last_grid_data = grid_data
-
-        # Đổi sân
         if team_server == 'R' and self.team_color != "RED":
             self.toggle_team()
         elif team_server == 'B' and self.team_color != "BLUE":
             self.toggle_team()
 
-        # ==========================================================
-        # CẬP NHẬT CỤC BỘ (CHỈ VẼ LẠI Ô BỊ THAY ĐỔI)
-        # ==========================================================
         for r in range(min(ROWS, len(grid_data))):
             for c in range(min(COLS, len(grid_data[r]))):
                 new_val = grid_data[r][c]
                 cell = self.grid_cells[r][c]
-                
-                # Kiểm tra xem ô hiện tại đang chứa khối số mấy (0 là trống)
                 current_val = cell["content"]["number"] if cell["content"] else 0
                 
-                # NẾU GIỐNG HỆT NHAU -> BỎ QUA KHÔNG VẼ LẠI CHO ĐỠ LAG!
                 if current_val == new_val:
                     continue
                     
-                # NẾU CÓ THAY ĐỔI -> Xóa khối cũ đi trước
                 if cell["content"]:
                     cell["content"]["widget"].destroy()
                     cell["content"] = None
@@ -383,17 +371,11 @@ class SelectPlaceApp:
                         btn.pack(side="left", expand=True, padx=2, pady=2)
                     cell["id_label"].lift()
                 
-                # Rồi đặt khối mới vào
                 if new_val in [1, 2, 3]:
                     self.place_block(new_val, (r, c))
-        # ==========================================================
                     
-        self.info_label.configure(text=f"✓ Nhận MAP LIVE siêu tốc! (Sân {team_server}). Đang tự động tìm đường...", text_color="green")
-
-        # ==============================================================
-        # KÍCH HOẠT TỰ ĐỘNG TÌM ĐƯỜNG NGAY KHI CÓ DATA TỪ SERVER
-        # ==============================================================
-        self.smart_run()
+        self.info_label.configure(text=f"✓ Đã đồng bộ màu (Sân {team_server}). Đợi lệnh chốt từ Web...", text_color="green")
+        # ĐÃ CẮT BỎ CÒ TỰ ĐỘNG Ở ĐÂY. BÂY GIỜ NÓ CHỈ XẾP KHỐI RỒI IM RU!
 
     def toggle_sync_qr(self):
         # Chuyển sang chế độ Quét QR (Tắt Live)
@@ -531,28 +513,44 @@ class SelectPlaceApp:
         self.root.destroy()
 
     def sent_and_close(self):
-        print(f"\n>> FOREST MODE: {self.forest_mode.upper()} - Gửi gói tin...")
+        # 1. CHỐT CHẶN: TỰ ĐỘNG TÌM ĐƯỜNG NẾU CHƯA TÌM
+        if not self.simulation_path:
+            print(">> [HỆ THỐNG] Chưa có đường đi, tự động chạy TÌM ĐƯỜNG...")
+            self.smart_run()
+            import time
+            time.sleep(0.5) # Đợi nửa giây cho nó vẽ đường xong
+            
+        # 2. GỬI TOÀN BỘ ĐƯỜNG ĐI TRƯỚC (Hàm cũ)
+        self.send_uart()
         
-        if self.forest_mode == "normal":
-            print(">> Mode: Normal - Gửi packet (2, 10, 1, 1, 1)")
-            packet = build_packet(2, 10, 1, 1, 1)
-        else:
-            print(">> Mode: Retry2 - Gửi packet (2, 10, 2, 2, 2)")
-            packet = build_packet(2, 10, 2, 2, 2)
+        # 3. NGHỈ 1 CHÚT CHO MẠCH NUỐT KỊP LỆNH ĐƯỜNG ĐI
+        import time
+        time.sleep(0.5) 
+
+        # 4. GỬI GÓI CHIẾN THUẬT VÀO CUỐI MẢNG (THEO ĐÚNG FORM ẢNH)
+        # is_fast_attack = True -> Thắng nhanh (2), False -> Cày điểm (1)
+        strat_val = 2 if self.is_fast_attack else 1
+        strat_name = "THẮNG NHANH" if self.is_fast_attack else "CÀY ĐIỂM"
+        
+        print("\n" + "🔥anhbaokhung")
+        print(f"   GỬI GÓI CHIẾN THUẬT (CUỐI CÙNG): {strat_name}")
+        
+        # Ép đúng khuôn: (id=2, action=9, data1=Chiến_thuật, data2=2, data3=2)
+        packet_strat = build_packet(2, 9, strat_val, 2, 2)
+        print(f"   ├─ Lệnh UART: (2, 9, {strat_val}, 2, 2)")
         
         try:
-            send_packet_once(ser, packet)
-            print("[FOREST] Gửi packet mode thành công")
+            send_packet_once(ser, packet_strat)
+            print("   └─ [THÀNH CÔNG] Đã chốt hạ chiến thuật xuống mạch STM32!")
         except Exception as e:
-            print(f"[FOREST] Lỗi gửi packet: {e}")
+            print(f"   └─ [LỖI] Không thể gửi gói chiến thuật: {e}")
+        print("🔥" "\n")
         
-        self.send_uart()
-        print(">> Đã truyền UART thành công!")
-        self.info_label.configure(text="✓ Đã gửi UART thành công! Bạn có thể đóng cửa sổ bằng nút X.")
-
-    # =========================================================================
-    # UI: TOGGLE MODE, CELL CLICK, PLACE BLOCK, RESET
-    # =========================================================================
+        # Báo cáo lên màn hình giao diện
+        self.info_label.configure(
+            text=f"✓ Đã truyền Map & Chiến thuật ({strat_name}) thành công!", 
+            text_color="green"
+        )
     def toggle_mode(self, new_mode, button):
         if self.mode == new_mode:
             self.mode = "PLACE"
@@ -588,8 +586,8 @@ class SelectPlaceApp:
                 self.info_label.configure(text=f"Đã xóa tại ({r},{c})")
                 
                 # THÊM DÒNG NÀY
-                if getattr(self, 'auto_update_path', False):
-                    self.smart_run()
+               # if getattr(self, 'auto_update_path', False):
+                 #   self.smart_run()
             return
 
         # 2. NẾU ĐANG VẼ ĐƯỜNG MÀ CLICK LẠI VÀO Ô ĐÃ CHỌN -> XÓA NHANH ĐƯỜNG ĐÓ
@@ -636,8 +634,8 @@ class SelectPlaceApp:
                 btn.pack(side="left", expand=True, padx=2, pady=2)
             cell["id_label"].lift()
             self.info_label.configure(text=f"Đã XÓA nhanh khối tại ({r},{c}) bằng 1 Click")
-            if getattr(self, 'auto_update_path', False):
-                self.smart_run()
+            #if getattr(self, 'auto_update_path', False):
+                #self.smart_run()
             
     def place_block(self, number, position):
         r, c = position
@@ -1266,26 +1264,7 @@ class SelectPlaceApp:
         print("=" * 60)
         print(f"BẮT ĐẦU GỬI UART — TEAM {self.team_color}")
         print("=" * 60)
-        
-        # =====================================================================
-        # >>> BẮN GÓI TIN CHỌN MODE (STATE = 10) TRƯỚC KHI CHẠY <<<
-        # =====================================================================
-        # Dịch cái biến chữ của anh thành số cho STM32 hiểu
-        mode_val = 1 if hasattr(self, 'forest_mode') and self.forest_mode == "normal" else 2
-        
-        print(f"\n>>> [CONFIG MODE] Gửi lệnh cài đặt: (2, 10, {mode_val}, 2, 2)")
-        ser.write(build_packet(2, 10, mode_val, 2, 2))
-        time.sleep(0.3) # Nghỉ 0.3s cho STM32 kịp load não trước khi bắn lệnh chạy
-        # =====================================================================
-        strat_val = 2 if getattr(self, 'is_fast_attack', True) else 1
-        strat_name = "THẮNG NHANH" if strat_val == 2 else "CÀY ĐIỂM"
-        
-        print(f">>> [CHIẾN THUẬT] Gửi lệnh: (2, 9, {strat_val}, 2, 2) - {strat_name}")
-        ser.write(build_packet(2, 9, strat_val, 2, 2))
-        time.sleep(0.3) 
-        # ===============
 
-        self.packets_cache = []
         has_sent_start = False
         has_climbed    = False
         traveled_path  = []
@@ -1320,17 +1299,28 @@ class SelectPlaceApp:
 
         print(f"\n  ├─ [START PACKET] Gửi: {start_packet_str}")
         ser.write(build_packet(2, 2, 10, 10, start_block_id))
-        self.packets_cache.append([2, 2, 10, 10, start_block_id])
         time.sleep(0.3)
         has_sent_start = True
 
         for seg_idx, (segment_path, segment_action) in enumerate(simulation_path):
             print(f"\n[SEGMENT {seg_idx}] Action={segment_action} | Path={segment_path}")
 
+            # ========================================================
+            # VÁ LỖI TUYỆT ĐỐI: NỐI LẠI MẢNG ĐƯỜNG ĐI BỊ ĐỨT ĐOẠN
+            # ========================================================
             if not traveled_path:
                 traveled_path.extend(segment_path)
             else:
+                last_pos = traveled_path[-1]
+                first_pos = segment_path[0]
+                
+                # Nếu vị trí kết thúc của Segment trước KHÁC vị trí bắt đầu của Segment này
+                # -> Tự động chèn thêm bước cũ vào đầu mảng để sinh ra lệnh MOVE đi thẳng!
+                if last_pos != first_pos:
+                    segment_path.insert(0, last_pos)
+                    
                 traveled_path.extend(segment_path[1:])
+            # ========================================================
 
             for i in range(len(segment_path) - 1):
                 curr_r, curr_c = segment_path[i]
@@ -1358,7 +1348,16 @@ class SelectPlaceApp:
                         time.sleep(0.3)
                         ser.write(build_packet(1, 2, 0, 0, entry_id))
                         time.sleep(0.3)
-  
+                        
+                    elif cell_entry["content"] and cell_entry["content"]["number"] == 2:
+                        if entry_id not in picked_blocks:
+                            print(f"  ├─ [KHỐI 2 BỤC] Gửi: (2, 2, 0, 1, {entry_id}) — Gắp thẳng trước khi leo")
+                            time.sleep(0.3)
+                            ser.write(build_packet(2, 2, 0, 1, entry_id))
+                            count_rb2 += 1
+                            picked_blocks.append(entry_id)
+                            time.sleep(0.3)
+
                     time.sleep(0.3)
                     ser.write(build_packet(2, 2, 1, 4, entry_id))
                     count_rb2 += 1
@@ -1402,7 +1401,6 @@ class SelectPlaceApp:
 
                     time.sleep(0.3)
                     ser.write(build_packet(2, 2, move_cmd, 4, step_id))
-                    self.packets_cache.append([2, 2, move_cmd, 4, step_id])
                     count_rb2 += 1
                     desc = ["?", "Thẳng", "Trái", "Phải"][move_cmd]
                     print(f"  │  ├─ [MOVE]   Gửi: (2, 2, {move_cmd}, 4, {step_id}) — {desc}")
@@ -1433,9 +1431,10 @@ class SelectPlaceApp:
                 picked_blocks.append(action_id)
                 continue
 
-            action_cmd = 4
+            action_cmd = 1 # Mặc định là gắp Thẳng (1)
+            
             if (dr_act, dc_act) == (0, 0):
-                action_cmd = 4
+                action_cmd = 1
             elif (dr_act, dc_act) == current_facing:
                 action_cmd = 1
             elif (dr_act, dc_act) == left_turn_map[current_facing]:
@@ -1443,7 +1442,7 @@ class SelectPlaceApp:
             elif (dr_act, dc_act) == right_turn_map[current_facing]:
                 action_cmd = 3
 
-            desc = ["?", "Thẳng", "Trái", "Phải", "Tại chỗ"][action_cmd]
+            desc = ["?", "Thẳng", "Trái", "Phải", "0 Gắp"][action_cmd]
             print(f"  └─ [PICK]      Gửi: (2, 2, 0, {action_cmd}, {action_id}) — Gắp {desc}")
             time.sleep(0.3)
             ser.write(build_packet(2, 2, 0, action_cmd, action_id))
@@ -1452,21 +1451,13 @@ class SelectPlaceApp:
             picked_blocks.append(action_id)
 
         if traveled_path:
-            last_pos = traveled_path[-1]
-            last_id = self.get_cell_id(last_pos[0], last_pos[1])
-            if last_id in [10, 11, 12]:
-                print(f"  ├─ [END PACKET] Gửi gói END (2,2,20,20) tới ID={last_id}")
-                end_packet = build_packet(2, 2, 20, 20, last_id)
-                ser.write(end_packet)
-                self.packets_cache.append([2, 2, 20, 20, last_id]) # <--- LƯU GÓI CUỐI
-                time.sleep(0.1)
-        try:
-            import json
-            with open("last_packet_cache.json", "w") as f:
-                json.dump(self.packets_cache, f)
-            print(f"\n[CACHE] Đã lưu cứng {len(self.packets_cache)} gói tin vào Local Jetson!")
-        except Exception as e:
-            print(f"\n[CACHE ERROR] Không thể lưu file cache: {e}")      
+            last_r, last_c = traveled_path[-1]
+            if 0 <= last_r < ROWS and 0 <= last_c < COLS:
+                last_id = self.get_cell_id(last_r, last_c)
+                if last_id in [10, 11, 12]:
+                    print(f"\n  ├─ [END PACKET] Gửi: (2, 2, 20, 20, {last_id})")
+                    ser.write(build_packet(2, 2, 20, 20, last_id))
+                    time.sleep(0.1)
 
         print("\n" + "=" * 60)
         print(f"HOÀN THÀNH — {count_rb2} gói tin (id_rb=2)")
