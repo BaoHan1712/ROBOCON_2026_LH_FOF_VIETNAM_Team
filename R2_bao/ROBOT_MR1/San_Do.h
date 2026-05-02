@@ -42,12 +42,6 @@ void kiem_tra_qua_tay_nao_do (void);
 ///// *************************************************************************
 //**********************************SAN DO*************************************
 void Xuat_Phat_Lay_Vu_Khi_Do(int vu_khi, int goc_ve, int vitri) {					
-				speed_tay_gat1 = 150;
-				target_tay_gat1 = vitri_tay1home;
-	
-				speed_tay_gat2 = 250;
-				target_tay_gat2 = vitri_tay2home;
-	
 				Nang_cuc_nhanh();
 	
 				target_chan_truoc = 350, target_chan_sau = 350;
@@ -65,11 +59,11 @@ void Xuat_Phat_Lay_Vu_Khi_Do(int vu_khi, int goc_ve, int vitri) {
 					}
 				}
 				Nang_cuc_nhanh();
-				target_chan_truoc = 615, target_chan_sau =617;
+				target_chan_truoc = 615, target_chan_sau =618;
 				for(i=0;i<50;i++)		
 				{
 				while(bientrochantruocValue < 470)	{
-				Bam_thanh_laser_trai(30,0,0,vu_khi,1,-100,15);
+				Bam_thanh_laser_trai(32,0,0,vu_khi,1,-100,15);
 				vTaskDelay(1); 
 				if(!wantExit())	break;}
 				}
@@ -79,7 +73,7 @@ void Xuat_Phat_Lay_Vu_Khi_Do(int vu_khi, int goc_ve, int vitri) {
 					while(lazeTruocValue > 27)	
 					{	
 	
-						Bam_thanh_laser_trai(25,0,0,vu_khi - 1,1,-80,15);
+						Bam_thanh_laser_trai(26,0,0,vu_khi - 1,1,-80,15);
 						vTaskDelay(1); 
 						if(!wantExit())	break;
 					}
@@ -90,8 +84,8 @@ void Xuat_Phat_Lay_Vu_Khi_Do(int vu_khi, int goc_ve, int vitri) {
 				{
 					while(HT_1 == 0 && HT_2 == 0)	
 					{			
-						if(lazeTruocValue < 14)	Tay_kep_xuong;
-						Bam_thanh_laser_trai(10,0,0,vu_khi,1,-50,15);
+						if(lazeTruocValue < 25)	Tay_kep_xuong;
+						Bam_thanh_laser_trai(8,0,0,vu_khi,1,-50,15);
 						vTaskDelay(1); 
 						if(!wantExit())	break;
 					}
@@ -99,13 +93,12 @@ void Xuat_Phat_Lay_Vu_Khi_Do(int vu_khi, int goc_ve, int vitri) {
 				vTaskDelay (2000);
 				robotStop(50);
 
-				
 				for(i=0;i<500;i++)
 				{
 					while(CB_tay_kep_vk_T == 1 || CB_tay_kep_vk_P == 1)	
 					{	
-						if	(CB_tay_kep_vk_T == 1) robotRun(870,12);
-						else if 	(CB_tay_kep_vk_P == 1) robotRun(-870,12);
+						if	(CB_tay_kep_vk_T == 1) robotRun(870,11);
+						else if 	(CB_tay_kep_vk_P == 1) robotRun(-870,11);
 						else		robotStop(0);				
 						vTaskDelay (1);
 						if(!wantExit())	break;
@@ -135,8 +128,8 @@ void Xuat_Phat_Lay_Vu_Khi_Do(int vu_khi, int goc_ve, int vitri) {
 				
 				robotStop(0);
 			
-				speed_chan_sau =55;
-				speed_chan_truoc = 56;
+				speed_chan_sau =70;
+				speed_chan_truoc = 70;
 				
 				target_chan_truoc = 660, target_chan_sau = 650;
 				
@@ -153,19 +146,18 @@ void Xuat_Phat_Lay_Vu_Khi_Do(int vu_khi, int goc_ve, int vitri) {
 				Tay_kep_len; 
 				
 				robotRun(goc_ve + ((KC_Vu_khi - vu_khi)*5),30);
-
-				robotRotate(920,1.5,0);
+				robotRotate(900,2,0);
 							
 				Nang_cuc_nhanh();
 				
-				while(_robotIMUAngle < 750)	
+				while(_robotIMUAngle < 450)	
 				{
 					vTaskDelay (5); 
 					if(!wantExit())	break;
 					if(_robotIMUAngle > 450)		target_chan_truoc = 265, target_chan_sau = 265;
 				}
 
-				robotRunAngle(-900,7,900,0.5);
+				robotRunAngle(-900,10,900,0.7);
 				
 				for(i=0;i<100;i++)
 				{
@@ -175,22 +167,16 @@ void Xuat_Phat_Lay_Vu_Khi_Do(int vu_khi, int goc_ve, int vitri) {
 						if(!wantExit())	break;
 					}
 				}
-				vTaskDelay(2000);
-//				chinh_lai_vi_tri_VK_do(vitri, 1000);
-				
+				vTaskDelay(2500);
 				robotStop(0);
-				
-				robotRunAngle(-900,5,900,0.5);
-				
-				vTaskDelay(3000);
-				
-				
-				speed_chan_sau =20;
+				speed_chan_sau =45;
 				speed_chan_truoc = 45;
 				target_chan_truoc = 255, target_chan_sau = 255;	
 				robotStop(0);
-			
-				
+//				chinh_lai_vi_tri_VK_do(vitri, 1000);
+				robotRunAngle(-900,10,900,0.5);
+				vTaskDelay(3000);
+				robotStop(0);
 }
 //// ******************* VAO CUA RUNG SAN DO ************************
 

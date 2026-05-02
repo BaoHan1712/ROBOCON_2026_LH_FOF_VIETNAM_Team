@@ -39,7 +39,7 @@ void Xuat_Phat_Lay_Vu_Khi_Xanh(int vu_khi, int goc_ve,int vitri)
 					}
 				}
 				Nang_cuc_nhanh();
-				target_chan_truoc = 615, target_chan_sau =617;
+				target_chan_truoc = 615, target_chan_sau =618;
 				for(i=0;i<50;i++)		
 				{
 				while(bientrochantruocValue < 470)	{
@@ -53,7 +53,7 @@ void Xuat_Phat_Lay_Vu_Khi_Xanh(int vu_khi, int goc_ve,int vitri)
 					while(lazeTruocValue > 18)	
 					{	
 	
-						Bam_thanh_laser_phai(30,0,0,vu_khi,2,80,15);//robotRun(-450,10);
+						Bam_thanh_laser_phai(30,0,0,vu_khi,2,80,15);
 						
 						if(!wantExit())	break;
 					}
@@ -64,8 +64,8 @@ void Xuat_Phat_Lay_Vu_Khi_Xanh(int vu_khi, int goc_ve,int vitri)
 				{
 					while(HT_1 == 0 && HT_2 == 0)	
 					{				
-						if(lazeTruocValue < 12)	Tay_kep_xuong;
-						Bam_thanh_laser_phai(12,0,0,vu_khi,3,70,15);//robotRun(-450,10);
+						if(lazeTruocValue < 17)	Tay_kep_xuong;
+						Bam_thanh_laser_phai(12,0,0,vu_khi,3,70,15);
 						if(!wantExit())	break;
 					}
 				}
@@ -739,7 +739,7 @@ void chuan_bi_gap_trai_200_tren_1 (void ) {
 	if (da_lay_tay1 == 0 && da_lay_tay2 == 0 && da_lay_tay3 == 0 && da_lay_tay4 == 0) {
 			su_dung_chan_thuong(565);	
 			for(i=0;i<1550;i++) {
-						while( lazeSauValue > 0 )	
+						while( lazeSauValue > 1 )	
 						{	
 						if(lazePhaiValue > vitri_tay23_phai_laser_GapQua)			robotRunAngle(-1550,14,900,0.7);
 						else																									robotRunAngle(-900,10,900,0.7);
@@ -748,12 +748,20 @@ void chuan_bi_gap_trai_200_tren_1 (void ) {
 									}
 							}
 				robotRunAngle(1800,10,900,0.1);
+				for(i=0;i<150;i++)
+					{
+						while(lazePhaiValue > vitri_tay23_phai_laser_GapQua)	
+						{	
+							vTaskDelay (1);
+							if(!wantExit())	break;
+						}
+					}
 				vTaskDelay(2000);
 		}
 	else if (da_lay_tay1 == 1 && da_lay_tay2 == 0 && da_lay_tay3 == 0 && da_lay_tay4 == 0) {
 			su_dung_chan_thuong(565);	
 			for(i=0;i<1550;i++) {
-						while( lazeSauValue > 0 )	
+						while( lazeSauValue > 1 )	
 						{	
 						if(lazePhaiValue > vitri_tay23_phai_laser_GapQua)			robotRunAngle(-1550,14,900,0.7);
 						else																									robotRunAngle(-900,10,900,0.7);
@@ -762,6 +770,14 @@ void chuan_bi_gap_trai_200_tren_1 (void ) {
 									}
 							}
 				robotRunAngle(1800,10,900,0.1);
+				for(i=0;i<150;i++)
+					{
+						while(lazePhaiValue > vitri_tay23_phai_laser_GapQua)	
+						{	
+							vTaskDelay (1);
+							if(!wantExit())	break;
+						}
+					}
 				vTaskDelay(2000);
 		}
 	else if (da_lay_tay1 == 1 && da_lay_tay2 == 1 && da_lay_tay3 == 0 && da_lay_tay4 == 0) {

@@ -180,9 +180,9 @@ vTaskDelay(1000);
 				
 //			if(TRIANGLE && L2 && !R2 )												Xuat_Phat_Lay_Vu_Khi_Do(162,1600,283);
 				
-				if(TRIANGLE && L2 && !R2 )													Xuat_Phat_Lay_Vu_Khi_Do(162,1600,283);
+				if(TRIANGLE && L2 && !R2 )													Xuat_Phat_Lay_Vu_Khi_Do(162,1500,215);
 				if(SQUARE && L2 && !R2) 														Run_All_Blocks_From_Queue_san_do();
-//				if(X && L2 && !R2) 																	auto_vao_rung_do_cua1();
+				if(X && L2 && !R2) 																	DatKFS_do(18);
 ////				if(O && L2 && !R2 ) 														auto_vao_rung_do_cua1();
 ////				if(X && R2 ) 																			nhat_hop_zone3_do();
 

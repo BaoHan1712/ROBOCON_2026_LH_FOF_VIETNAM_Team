@@ -498,9 +498,9 @@ int vi_tri_tay_2_trai_tren = 595;
 int vi_tri_tay_3_trai_tren = 402;
 
 /// VI TRI LAZER LAY QUA THANG
-int vitri_tay41_laser_trai_GapQua = 152;
+int vitri_tay41_laser_trai_GapQua = 151;
 int vitri_tay23_laser_trai_GapQua = 222;
-int vitri_tay23_phai_laser_GapQua = 152;
+int vitri_tay23_phai_laser_GapQua = 151;
 
 
 int vitri_tay1home = 445;

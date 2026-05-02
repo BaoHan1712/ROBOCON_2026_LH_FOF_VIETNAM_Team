@@ -35,7 +35,7 @@ void chinh_lai_vi_tri_VK_do(int vitri, int gia_tri_lap)
 	int dieuchinh;
 		for(i=0;i<gia_tri_lap;i++)
 				{
-		while(abs(lazeTraiValue - vitri) > 1)	{
+		while(abs(lazeTraiValue - vitri) > 0)	{
 			dieuchinh = lazeTraiValue - vitri;
 			speed = smooth_speed(dieuchinh);
 			
@@ -1016,35 +1016,51 @@ void chuan_bi_gap_trai_200_tren_2_do (void ) {
 	if (da_lay_tay1 == 0 && da_lay_tay2 == 0 && da_lay_tay3 == 0 && da_lay_tay4 == 0) {
 			su_dung_chan_thuong(565);	
 			for(i=0;i<1550;i++) {
-				while( lazeSauValue > 0 )	
+				while( lazeSauValue > 1 )	
 				{	
-				if(lazePhaiValue > vitri_tay23_phai_laser_GapQua)			robotRunAngle(450,14,-900,0.7);
+				if(lazePhaiValue > vitri_tay23_phai_laser_GapQua)			robotRunAngle(250,14,-900,0.7);
 				else																									robotRunAngle(900,10,-900,0.7);
 				vTaskDelay(1);
 				if(!wantExit()) break;
 						}
 				}
 				robotRunAngle(0,10,-900,0.1);
+				for(i=0;i<150;i++)
+					{
+						while(lazePhaiValue > vitri_tay23_phai_laser_GapQua)	
+						{	
+							vTaskDelay (1);
+							if(!wantExit())	break;
+						}
+					}
 				vTaskDelay(2000);
 		}
 	else if (da_lay_tay1 == 1 && da_lay_tay2 == 0 && da_lay_tay3 == 0 && da_lay_tay4 == 0) {
 			su_dung_chan_thuong(565);	
 			for(i=0;i<1550;i++) {
-				while( lazeSauValue > 0 )	
+				while( lazeSauValue > 1 )	
 				{	
-				if(lazePhaiValue > vitri_tay23_phai_laser_GapQua)			robotRunAngle(450,14,-900,0.7);
+				if(lazePhaiValue > vitri_tay23_phai_laser_GapQua)			robotRunAngle(250,14,-900,0.7);
 				else																									robotRunAngle(900,10,-900,0.7);
 				vTaskDelay(1);
 				if(!wantExit()) break;
 						}
 				}
 				robotRunAngle(0,10,-900,0.1);
+				for(i=0;i<150;i++)
+					{
+						while(lazePhaiValue > vitri_tay23_phai_laser_GapQua)	
+						{	
+							vTaskDelay (1);
+							if(!wantExit())	break;
+						}
+					}
 				vTaskDelay(2000);
 		}
 	else if (da_lay_tay1 == 1 && da_lay_tay2 == 1 && da_lay_tay3 == 0 && da_lay_tay4 == 0) {
 			su_dung_chan_thuong(565);	
 			robotRunAngle(-100,10,-900,0.5);
-					for(i=0;i<150;i++)
+			for(i=0;i<150;i++)
 					{
 						while(lazePhaiValue > vitri_tay23_phai_laser_GapQua)	
 						{	

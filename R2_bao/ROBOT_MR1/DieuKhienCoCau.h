@@ -3919,9 +3919,9 @@ void Lay_phia_truoc_bac_200_duoi (void) {
 }
 
 /// *********** HAM tracking vi tri bang laser ****************
-#define SPEED_FAST 10
+#define SPEED_FAST 15
 #define SPEED_MIN 4
-#define ERROR_MAX 60
+#define ERROR_MAX 50
 
 int smooth_speed(int error)
 {
@@ -3931,7 +3931,7 @@ int smooth_speed(int error)
     if(d > ERROR_MAX)
         d = ERROR_MAX;
 
-    if(d < 6)
+    if(d < 7)
         return SPEED_MIN;
 
     speed = SPEED_MIN + (SPEED_FAST - SPEED_MIN) * d * d / (ERROR_MAX * ERROR_MAX);
