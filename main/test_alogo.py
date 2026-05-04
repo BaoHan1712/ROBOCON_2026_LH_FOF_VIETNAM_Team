@@ -1083,6 +1083,6 @@ class SelectPlaceApp:
     def run_algothism_forest(self):
         self.root.mainloop()
 
-# if __name__ == "__main__":
-#     app = SelectPlaceApp()
-#     app.run_algothism_forest()
+if __name__ == "__main__":
+    app = SelectPlaceApp()
+    app.run_algothism_forest()

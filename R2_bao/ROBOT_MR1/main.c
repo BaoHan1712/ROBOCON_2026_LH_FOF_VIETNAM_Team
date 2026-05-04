@@ -163,7 +163,7 @@ vTaskDelay(1000);
 		while(SHARE) 
 		{	
 //			
-			robotGamePadControl(7,40);
+			robotGamePadControl(8,40);
 			Nang_Ha_tay1_Manual(); 
 			Nang_Ha_tay2_Manual();
 			Xoay_tay_Manual();
@@ -178,12 +178,12 @@ vTaskDelay(1000);
 				Init_Action_Table_san_do(); 
 				bat_dau_chay_do();
 				
-//			if(TRIANGLE && L2 && !R2 )												Xuat_Phat_Lay_Vu_Khi_Do(162,1600,283);
+//			if(TRIANGLE && L2 && !R2 )												Xuat_Phat_Lay_Vu_Khi_Do(162,1500,215);
 				
-				if(TRIANGLE && L2 && !R2 )													Xuat_Phat_Lay_Vu_Khi_Do(162,1500,215);
-				if(SQUARE && L2 && !R2) 														Run_All_Blocks_From_Queue_san_do();
-				if(X && L2 && !R2) 																	DatKFS_do(18);
-////				if(O && L2 && !R2 ) 														auto_vao_rung_do_cua1();
+					if(TRIANGLE && L2 && !R2 )														tudonghoantoan_san_do();
+					if(SQUARE && L2 && !R2) 															su_dung_chan(710);
+//					if(X && L2 && !R2) 																	Leo_bac_400(900, -900);
+//				if(O && L2 && !R2 ) 																	Lay_phia_truoc_bac_200_tren();
 ////				if(X && R2 ) 																			nhat_hop_zone3_do();
 
 	

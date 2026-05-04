@@ -523,7 +523,7 @@ void robotAnalytics(void)//-------- Dat trong Interup Timer ---------
         }
     }
     else  //-------- Robot duoc lenh Stop -----------
-        if(_robotCurrentSpeed > 0) ac_SpeedACC(_robotAccStop, -1); //-------- Giam toc do -----------
+        if(_robotCurrentSpeed > 0) ac_SpeedACC(_robotAccStop, -2); //-------- Giam toc do -----------
 				else{
 					ac_Stop();
 					return;

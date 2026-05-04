@@ -548,15 +548,36 @@ int vi_tri_dat_hop_3_tay23_xanh = 109;
 
 ///
 //// ******** VI TRI LAZER DAT HOP DO *********************
-int vi_tri_dat_hop_1_tay41_do = 304;   /// ** DUNG LAZER SAU**
-int vi_tri_dat_hop_2_tay41_do = 310;
-int vi_tri_dat_hop_3_tay41_do = 370;
+int vi_tri_dat_hop_1_tay41_do = 106;   /// ** DUNG LAZER truoc**
+int vi_tri_dat_hop_2_tay41_do = 53;
+int vi_tri_dat_hop_3_tay41_do = 2;
 
-int vi_tri_dat_hop_1_tay23_do = 304;   /// ** DUNG LAZER SAU**
-int vi_tri_dat_hop_2_tay23_do = 310;
-int vi_tri_dat_hop_3_tay23_do = 370;
+int vi_tri_dat_hop_1_tay23_do = 152;   /// ** DUNG LAZER truoc**
+int vi_tri_dat_hop_2_tay23_do = 98;
+int vi_tri_dat_hop_3_tay23_do = 45;
 
 ///
+
+/// ************* BIEN TOAN CUC *************
+int da_lay_tay1 = 0;
+int da_lay_tay2 = 0;
+int da_lay_tay3 = 0;
+int da_lay_tay4 = 0;
+int da_lay_tay4_duoi = 0;
+int hoan_thanh_chay_rung = 0;
+
+extern int Xoay_ok;
+int	KT_Ha_Tay;
+int	KT_Ha_Tay_phai;
+int KT_Ha_Tay_trai;
+int nhay_den_lan_1 = 0;
+int so_qua_tren_tay = 0;
+uint8_t tay_1_co_qua = 0;
+uint8_t tay_2_co_qua = 0;
+uint8_t tay_3_co_qua = 0;
+uint8_t tay_4_co_qua = 0;
+
+uint8_t robot_position = 0;  // vi tri robot dat hop
 
 int target_Nang_Ha = 600;
 int Min_Nang_Ha = 160 ;
@@ -1712,6 +1733,8 @@ uint8_t Get_Id_Dat_Hop(uint8_t move, uint8_t action, uint8_t id_block)
     return 0;
 }
 
+int dem_goi_tin_gap = 0; // check 2 lan gap thi cho lay cung phia
+
 void ProcessReceivedData_2(void)
 {
 	uint8_t calc_checksum =
@@ -1765,6 +1788,11 @@ void ProcessReceivedData_2(void)
 			else if (id_rb == 2 && state_rb == 2 ) {
 				 // Push vào FIFO
         Queue_Push(state_rb, move, action, id_block);
+				
+				// dem khi co 2 qua thi cho gap cung phia
+				 if (move == 0 && (action == 1 || action == 2 || action == 3)) {
+						 dem_goi_tin_gap++;
+				 }
 			}
 			
 			// trang thai len zone 3 dat hop
@@ -1797,6 +1825,17 @@ void ProcessReceivedData_2(void)
     }
 }
 
+	// Ham neu chi nhan 2 goi tin gap qua thi cho gap cung phia
+void Kiem_Tra_Ket_Qua_Gap(void)
+{
+    if (dem_goi_tin_gap == 2) {
+        da_lay_tay1 = 1;
+    } 
+    else {
+        da_lay_tay1 = 0; 
+    }
+    
+}
 //========================================================================
 //---------------------------- KHAI BAO UART 5-----------------------------
 #define UART_BUFFER_SIZE 10
@@ -2162,25 +2201,7 @@ void run_read_gyro_uart3(void)
 	dataTxGyro='z';
 }
 
-int da_lay_tay1 = 0;
-int da_lay_tay2 = 0;
-int da_lay_tay3 = 0;
-int da_lay_tay4 = 0;
-int da_lay_tay4_duoi = 0;
-int hoan_thanh_chay_rung = 0;
 
-extern int Xoay_ok;
-int	KT_Ha_Tay;
-int	KT_Ha_Tay_phai;
-int KT_Ha_Tay_trai;
-int nhay_den_lan_1 = 0;
-int so_qua_tren_tay = 0;
-uint8_t tay_1_co_qua = 0;
-uint8_t tay_2_co_qua = 0;
-uint8_t tay_3_co_qua = 0;
-uint8_t tay_4_co_qua = 0;
-
-uint8_t robot_position = 0;  // vi tri robot dat hop
 //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 //---------------------------- TRUYEN DU LIEU VAO MANG-----------------------------
 void HMI_TRAN(vs32 _so_dong)
@@ -2337,7 +2358,40 @@ void HMI_TRAN(vs32 _so_dong)
 										HMI_DMI("Start",Start,28); 
 										break;
 									case 29:
-										HMI_DMI("TinHieu_ChuanBi_GapPhai ",TinHieu_ChuanBi_GapPhai,29); 
+										HMI_DMI("ENCODER_FR() ",ENCODER_FR(),29); 
+										break;
+									case 30:
+										HMI_DMI("ENCODER_FL() ",ENCODER_FL(),30); 
+										break;
+									case 31:
+										HMI_DMI("ENCODER_RR() ",ENCODER_RR(),31); 
+										break;
+									case 32:
+										HMI_DMI("ENCODER_RL() ",ENCODER_RL(),32); 
+										break;
+									case 33:
+										HMI_DMI("dem_goi_tin_gap ",dem_goi_tin_gap,33); 
+										break;
+									case 34:
+										HMI_DMI("dem_goi_tin_gap ",dem_goi_tin_gap,34); 
+										break;
+									case 35:
+										HMI_DMI("dem_goi_tin_gap ",dem_goi_tin_gap,35); 
+										break;
+									case 36:
+										HMI_DMI("dem_goi_tin_gap ",dem_goi_tin_gap,36); 
+										break;
+									case 37:
+										HMI_DMI("dem_goi_tin_gap ",dem_goi_tin_gap,37); 
+										break;
+									case 38:
+										HMI_DMI("dem_goi_tin_gap ",dem_goi_tin_gap,38); 
+										break;
+									case 39:
+										HMI_DMI("dem_goi_tin_gap ",dem_goi_tin_gap,39); 
+										break;
+									case 40:
+										HMI_DMI("dem_goi_tin_gap ",dem_goi_tin_gap,40); 
 										break;
 						}
 }

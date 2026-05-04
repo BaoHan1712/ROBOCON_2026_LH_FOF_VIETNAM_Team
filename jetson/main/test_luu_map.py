@@ -5,13 +5,18 @@ import time
 import pyrealsense2 as rs
 import cv2
 import numpy as np
-import socketio      
+import socketio as client_sio      
 import threading     
 from pyzbar.pyzbar import decode
 from tkinter import simpledialog, messagebox
 from gui_tkinter import set_state, STATE_FOREST, STATE_IDLE 
 from config_uart.sent_uart import build_packet, send_packet_once, ser
 import socketio
+import threading
+from flask import Flask, render_template
+from flask_socketio import SocketIO, emit
+from flask_cors import CORS
+import socket
 import threading
 SERVER_IP = "http://127.0.0.1:5001"
 ctk.set_appearance_mode("System")
@@ -24,8 +29,115 @@ CELL_SIZE = 250
 width_cell = 90
 height_cell = 90
 
+app = Flask(__name__, static_folder='static', static_url_path='/static')
+CORS(app)
+socketio = SocketIO(app, cors_allowed_origins="*")
+
+# Dữ liệu dùng chung cho cả Web và Giao diện máy tính
+global_state = {str(i): 'EMPTY' for i in range(1, 13)}
+global_team = 'R'
+
+# --- CÁC XỬ LÝ SERVER (Bê từ test_server.py sang) ---
+@app.route('/')
+def home():
+    return render_template('index.html')
+
+@socketio.on('connect')
+def handle_connect():
+    emit('server_sync', {'state': global_state, 'team': global_team})
+
+@socketio.on('client_click')
+def handle_click(data):
+    global global_state
+    cell_id = str(data['id'])
+    if cell_id != "0": # Tránh ID rác
+        global_state[cell_id] = data['val']
+    
+    # Đã đổi socketio.emit thành emit chuẩn
+    payload = {"team": global_team, "grid": get_algo_matrix_internal()}
+    emit('server_sync', {'state': global_state, 'team': global_team}, broadcast=True)
+    emit('sync_state', payload, broadcast=True)
+
+@socketio.on('client_toggle_team')
+def handle_toggle_team():
+    global global_team, global_state
+    mirror_map = {'12':'10','10':'12','9':'7','7':'9','6':'4','4':'6','3':'1','1':'3','11':'11','8':'8','5':'5','2':'2'}
+    new_state = {mirror_map[old_id]: val for old_id, val in global_state.items()}
+    global_state = new_state
+    global_team = 'B' if global_team == 'R' else 'R'
+    payload = {"team": global_team, "grid": get_algo_matrix_internal()}
+    emit('server_sync', {'state': global_state, 'team': global_team}, broadcast=True)
+    emit('sync_state', payload, broadcast=True)
+
+@socketio.on('client_reset')
+def handle_reset():
+    global global_state
+    global_state = {str(i): 'EMPTY' for i in range(1, 13)}
+    payload = {"team": global_team, "grid": get_algo_matrix_internal()}
+    emit('server_sync', {'state': global_state, 'team': global_team}, broadcast=True)
+    emit('sync_state', payload, broadcast=True)
+
+@socketio.on('client_trigger_algo')
+def handle_trigger_algo():
+    emit('trigger_algo', {}, broadcast=True)
+
+def get_algo_matrix_internal():
+    val_map = {'1': 1, '2': 2, 'Fake': 3, 'EMPTY': 0, None: 0}
+    def get_v(cid): return val_map.get(global_state.get(str(cid)), 0)
+    if global_team == 'R':
+        return [[get_v(12), get_v(11), get_v(10)], [get_v(9), get_v(8), get_v(7)], [get_v(6), get_v(5), get_v(4)], [get_v(3), get_v(2), get_v(1)]]
+    else:
+        return [[get_v(10), get_v(11), get_v(12)], [get_v(7), get_v(8), get_v(9)], [get_v(4), get_v(5), get_v(6)], [get_v(1), get_v(2), get_v(3)]]
+
+@socketio.on('client_toggle_mode')
+def handle_toggle_mode():
+    print(">> [WEB] Lệnh đổi Mode (Normal/Retry2)")
+    emit('trigger_mode', {}, broadcast=True)
+
+@socketio.on('client_toggle_strategy')
+def handle_toggle_strategy():
+    print(">> [WEB] Lệnh đổi Chiến thuật (Thắng nhanh/Cày điểm)")
+    emit('trigger_strategy', {}, broadcast=True)
+
+@socketio.on('client_replay_cache')
+def handle_replay_cache():
+    print(">> [WEB] Lệnh Phát lại UART Cache")
+    emit('trigger_replay', {}, broadcast=True)
+
+@socketio.on('client_set_target')
+def handle_set_target(data):
+    print(f">> [WEB] Lệnh đổi TARGET: {data['target']} khối")
+    emit('trigger_target', data, broadcast=True)
+
+def get_local_ip():
+    try:
+        import subprocess
+        # Lệnh ép Ubuntu đọc thẳng IP của card mạng (thường là wlan0)
+        ip = subprocess.check_output("hostname -I", shell=True).decode().strip().split()[0]
+        return ip
+    except Exception:
+        # Nếu lỗi thì trả về IP mặc định của Ubuntu Hotspot
+        return "10.42.0.1"
+
+def run_server():
+    my_ip = get_local_ip()
+    print("\n" + "★"*55)
+    print("🚀 TRẠM CHỈ HUY (SERVER) ĐÃ KHỞI ĐỘNG CÙNG ALGO!")
+    print(f"📱 Cầm điện thoại bắt WiFi và truy cập link này:")
+    print(f"👉 http://{my_ip}:5001")
+    print("★"*55 + "\n")
+    # Tắt sạch log rác của Flask để Terminal sạch sẽ nhìn cho sướng
+    import logging
+    log = logging.getLogger('werkzeug')
+    log.setLevel(logging.ERROR)
+    
+    socketio.run(app, host='0.0.0.0', port=5001, debug=False, use_reloader=False)
+
 class SelectPlaceApp:
     def __init__(self):
+        # --- CỜ CHIẾN THUẬT MẶC ĐỊNH ---
+        self.is_fast_attack = True  # True = Thắng Nhanh, False = Cày Điểm
+        self.target_blocks = 4      # MẶC ĐỊNH ĂN FULL 4 KHỐI <--- (THÊM DÒNG NÀY)
         self.root = ctk.CTk()
         self.root.title("Robot Pathfinding: Hybrid & UART Control")
         self.root.geometry("980x680")  # Đã nới rộng ra để chứa Tab cho đẹp
@@ -46,6 +158,8 @@ class SelectPlaceApp:
         self.tab_forest = self.tabview.add("🌲 Sa Bàn (Forest)")
         self.tab_matrix = self.tabview.add("🔢 Vùng 3 (Matrix)")
 
+        self.tab_vision = self.tabview.add("👁️ Nhận Diện (Vision)")
+        self.setup_vision_tab()
         # --- CỜ TRẠNG THÁI LẮNG NGHE ---
         self.is_listening = False
         try:
@@ -225,12 +339,21 @@ class SelectPlaceApp:
             self.root, text="● SERVER", font=("DejaVu Sans", 12, "bold"),
             text_color="gray", width=100
         )
-        
         # Nút Lắng nghe đang ở relx=0.98. Tao đặt đèn ở relx=0.78 để nó đứng ngay sát bên trái nút
         self.status_led.place(relx=0.78, rely=0.015, anchor="ne")
-
-        # Bắt đầu vòng lặp nháy đèn
         self.update_led_blink()
+        # =====================================================================
+        # THÊM DÒNG HIỆN IP SERVER ĐỂ ĐIỀU KHIỂN TỪ XA
+        # =====================================================================
+        my_ip = get_local_ip() 
+        self.server_url_label = ctk.CTkLabel(
+            self.root, 
+            text=f"🌐 URL: http://{my_ip}:5001",
+            font=("DejaVu Sans", 13, "bold"),
+            text_color="black"
+        )
+        # Đặt sát về bên trái: relx=0.21, rely=0.015
+        self.server_url_label.place(relx=0.21, rely=0.015, anchor="ne")
 # --- NÚT TÌM ĐƯỜNG ---
 # --- CỜ CHIẾN THUẬT MẶC ĐỊNH ---
         self.is_fast_attack = True  # True = Thắng Nhanh, False = Cày Điểm
@@ -256,11 +379,81 @@ class SelectPlaceApp:
             command=self.toggle_strategy
         )
         self.strategy_btn.pack(side="left", padx=5)
-
         # --- CỜ TRẠNG THÁI & KHỞI TẠO KẾT NỐI SOCKET ---
-        self.sync_mode = False  # MẶC ĐỊNH LÀ TẮT (Cho mày rảnh tay xếp hình)
-        self.sio = socketio.Client() 
-        self.connect_server_thread() 
+        self.sync_mode = False  
+
+        # 1. BẬT SERVER CHẠY NGẦM
+       # threading.Thread(target=run_server, daemon=True).start()
+        
+        # 2. CHỜ 1 GIÂY CHO SERVER LÊN MÂM
+        #import time
+        #time.sleep(1)
+
+        # 3. KẾT NỐI ALGO VÀO SERVER NỘI BỘ
+        self.sio = client_sio.Client()
+        
+        # =======================================================
+        # LẮNG NGHE LỆNH TỪ WEB (ĐÃ BỔ SUNG LỖ TAI ĐỒNG BỘ MAP)
+        # =======================================================
+        @self.sio.on('trigger_target')
+        def on_trigger_target(data=None):
+            if data and 'target' in data:
+                self.target_blocks = data['target'] # Lưu biến vào class
+                print(f"\n>> [CHIẾN THUẬT] ĐÃ CHỐT MỤC TIÊU: Chỉ ăn {self.target_blocks} khối R2!")
+
+        @self.sio.on('connect')
+        def on_connect():
+            self.is_server_connected = True
+
+        @self.sio.on('disconnect')
+        def on_disconnect():
+            self.is_server_connected = False
+
+        # Lỗ tai đồng bộ màu sắc sa bàn (Chỗ bị thiếu lúc nãy)
+        @self.sio.on('sync_state')
+        def on_sync_state(data):
+            if self.sync_mode:
+                # Ép tăng ID luồng để gọi hàm cập nhật
+                self.calc_session_id += 1
+                current_session = self.calc_session_id
+                self.root.after(0, lambda s=current_session: self.apply_server_state(data, s))
+        @self.sio.on('trigger_algo')
+        def on_trigger_algo(data=None):
+            print("\n" + "🚀"*20)
+            print(">> [WEB] ĐÃ NHẬN LỆNH BÓP CÒ: Đang tính toán và bắn UART...")
+            self.root.after(0, self.smart_run)
+            # Chờ 1 giây để Algo vẽ xong đường rồi mới vả UART
+            self.root.after(1000, self.sent_and_close)
+
+        @self.sio.on('trigger_mode')
+        def on_trigger_mode(data=None):
+            self.root.after(0, self.toggle_forest_mode)
+
+        @self.sio.on('trigger_strategy')
+        def on_trigger_strategy(data=None):
+            self.root.after(0, self.toggle_strategy)
+
+        @self.sio.on('trigger_replay')
+        def on_trigger_replay(data=None):
+            self.root.after(0, self.action_replay_cache)
+
+        # =======================================================
+        # === NHÉT THÊM CỤC LỖ TAI NÀY VÀO ===
+        # =======================================================
+        @self.sio.on('trigger_reset')
+        def on_trigger_reset(data=None):
+            print("\n>> [WEB] ĐÃ NHẬN LỆNH XÓA MAP: Đang dọn dẹp sa bàn...")
+            self.root.after(0, self.reset_grid)
+
+        # 4. KẾT NỐI SAU KHI ĐÃ GẮN ĐỦ LỖ TAI
+        try:
+            self.sio.connect('http://127.0.0.1:5001', transports=['websocket'])
+            print(">> 🟢 ALGO ĐÃ KẾT NỐI VỚI SERVER THÀNH CÔNG!")
+        except Exception as e:
+            print(">> 🔴 LỖI KẾT NỐI SERVER NỘI BỘ:", e)
+
+        # 5. TỰ ĐỘNG BẬT "NHẬN LIVE" ĐỂ MÀY KHỎI PHẢI BẤM BẰNG TAY!
+        self.root.after(1000, self.handle_sync_toggle)
 
         # --- NÚT TOGGLE LIVE (THAY THẾ NÚT QUÉT QR CŨ) ---
         self.toggle_sync_live_btn = ctk.CTkButton(
@@ -294,8 +487,6 @@ class SelectPlaceApp:
             command=self.action_replay_cache #
         )
         self.replay_cache_btn.pack(side="left", padx=3)
-
-
     # =========================================================================
     # 📡 MODULE: SOCKET & LIVE MAP
     # =========================================================================
@@ -314,56 +505,70 @@ class SelectPlaceApp:
         def on_error(data):
             self.is_server_connected = False
 
-        # 1. LỖ TAI LẮNG NGHE CHỌT MAP (CHỈ VẼ LẠI MAP, TUYỆT ĐỐI KHÔNG CHẠY ALGO)
         @self.sio.on('sync_state')
         def on_sync_state(data):
             if self.sync_mode:
                 new_grid = data.get('grid')
+                
+                if new_grid == self.last_received_grid:
+                    return
+                
+                self.last_received_grid = new_grid
+                
                 self.calc_session_id += 1
                 current_session = self.calc_session_id
-                self.root.after(0, lambda s=current_session: self.apply_server_state(data, s))
-
-        # 2. LỖ TAI LẮNG NGHE NÚT CHỐT MAP TỪ WEB (TÌM ĐƯỜNG VÀ BẮN UART)
-        @self.sio.on('trigger_algo')
-        def on_trigger_algo(data=None):
-            if self.sync_mode:
-                print("\n>> 🚀 [SOCKET] ĐÃ NHẬN LỆNH CHỐT MAP TỪ WEB!")
-                self.info_label.configure(text="Đang tính đường & Gửi UART...", text_color="blue")
                 
-                # Tính đường đi
-                self.root.after(0, self.smart_run)
-                # Đợi 1.5 giây cho vẽ đường xong thì mới bắn UART
-                self.root.after(1500, self.sent_and_close)
+                # SỬA DÒNG NÀY: Truyền explicitly current_session vào
+                self.root.after(0, lambda s=current_session: self.apply_server_state(data, s))
 
         def attempt_connect():
             try:
-                self.sio.connect(SERVER_IP)
+                # Ép dùng websocket cho nhanh như anh em mình đã bàn
+                self.sio.connect(SERVER_IP, transports=['websocket'])
             except Exception:
                 self.is_server_connected = False
 
-        threading.Thread(target=attempt_connect, daemon=True).start()      
-
+        threading.Thread(target=attempt_connect, daemon=True).start()
     def apply_server_state(self, state, session_id):
+        # --- CHỐT CHẶN: GIẾT LUỒNG CŨ ---
         if session_id != self.calc_session_id:
             return 
 
         team_server = state.get("team", "R")
         grid_data = state.get("grid", [])
 
+        # --- BỘ LỌC CHỐNG SPAM CHUẨN MỰC ---
+        # Chỉ từ chối nếu CẢ SÂN VÀ MAP đều giống y xì đúc lần trước
+        if hasattr(self, 'last_team') and self.last_team == team_server:
+            if hasattr(self, 'last_grid_data') and self.last_grid_data == grid_data:
+                return  
+
+        self.last_team = team_server
+        self.last_grid_data = grid_data
+
+        # ==========================================================
+        # 1. XỬ LÝ ĐỔI SÂN (RED <-> BLUE) ƯU TIÊN SỐ 1
+        # ==========================================================
         if team_server == 'R' and self.team_color != "RED":
             self.toggle_team()
         elif team_server == 'B' and self.team_color != "BLUE":
             self.toggle_team()
 
+        # ==========================================================
+        # 2. CẬP NHẬT CỤC BỘ MAP (CHỈ VẼ LẠI Ô BỊ THAY ĐỔI)
+        # ==========================================================
         for r in range(min(ROWS, len(grid_data))):
             for c in range(min(COLS, len(grid_data[r]))):
                 new_val = grid_data[r][c]
                 cell = self.grid_cells[r][c]
+                
                 current_val = cell["content"]["number"] if cell["content"] else 0
                 
+                # NẾU GIỐNG HỆT NHAU -> BỎ QUA CHO ĐỠ LAG!
                 if current_val == new_val:
                     continue
                     
+                # NẾU CÓ THAY ĐỔI -> Xóa khối cũ
                 if cell["content"]:
                     cell["content"]["widget"].destroy()
                     cell["content"] = None
@@ -371,11 +576,12 @@ class SelectPlaceApp:
                         btn.pack(side="left", expand=True, padx=2, pady=2)
                     cell["id_label"].lift()
                 
+                # Đặt khối mới vào
                 if new_val in [1, 2, 3]:
                     self.place_block(new_val, (r, c))
                     
-        self.info_label.configure(text=f"✓ Đã đồng bộ màu (Sân {team_server}). Đợi lệnh chốt từ Web...", text_color="green")
-        # ĐÃ CẮT BỎ CÒ TỰ ĐỘNG Ở ĐÂY. BÂY GIỜ NÓ CHỈ XẾP KHỐI RỒI IM RU!
+        self.info_label.configure(text=f"✓ Đã đồng bộ Sân ({team_server}) & Map. Chờ lệnh GỬI.", text_color="blue")
+
 
     def toggle_sync_qr(self):
         # Chuyển sang chế độ Quét QR (Tắt Live)
@@ -471,7 +677,9 @@ class SelectPlaceApp:
             for c in range(COLS):
                 for ov in self.grid_cells[r][c]["overlays"]: ov.destroy()
                 self.grid_cells[r][c]["overlays"].clear()
-
+        if hasattr(self, 'vision_team_var'):
+            self.vision_team_var.set(self.team_color)
+            self.vision_seg_btn.configure(selected_color="#d32f2f" if self.team_color == "RED" else "#1e88e5")
     def refresh_grid_ids(self):
         for r in range(ROWS):
             for c in range(COLS):
@@ -513,29 +721,48 @@ class SelectPlaceApp:
         self.root.destroy()
 
     def sent_and_close(self):
-        # 1. CHỐT CHẶN: TỰ ĐỘNG TÌM ĐƯỜNG NẾU CHƯA TÌM
+        # 1. Tự động tìm đường nếu chưa có
         if not self.simulation_path:
             print(">> [HỆ THỐNG] Chưa có đường đi, tự động chạy TÌM ĐƯỜNG...")
             self.smart_run()
             import time
-            time.sleep(0.5) # Đợi nửa giây cho nó vẽ đường xong
-            
-        # 2. GỬI TOÀN BỘ ĐƯỜNG ĐI TRƯỚC (Hàm cũ)
-        self.send_uart()
+            time.sleep(0.5)
+
+        # =========================================================
+        # 2. GỬI GÓI MODE RỪNG TRƯỚC TIÊN (MÃ 10 THEO ẢNH CỦA MÀY)
+        # =========================================================
+        # Normal = 1, Retry2 = 2
+        mode_val = 1 if self.forest_mode == "normal" else 2
+        mode_name = "BÌNH THƯỜNG" if mode_val == 1 else "RETRY ZONE 2"
         
-        # 3. NGHỈ 1 CHÚT CHO MẠCH NUỐT KỊP LỆNH ĐƯỜNG ĐI
+        print(f"   GỬI GÓI MODE RỪNG (ĐẦU TIÊN): {mode_name}")
+        
+        # Form: (ID=2, Action=10, Data1=Mode, Data2=0, Data3=2)
+        packet_mode = build_packet(2, 10, mode_val, 2, 2)
+        print(f"   ├─ Lệnh UART: (2, 10, {mode_val}, 2, 2)")
+        
+        try:
+            send_packet_once(ser, packet_mode)
+            print("   └─ [THÀNH CÔNG] Đã nạp Mode Rừng xuống mạch!")
+        except Exception as e:
+            print(f"   └─ [LỖI] Không thể gửi gói Mode: {e}")
+            
+        import time
+        time.sleep(0.5) 
+            
+        # 3. Gửi toàn bộ mảng đường đi
+        self.send_uart()
         import time
         time.sleep(0.5) 
 
-        # 4. GỬI GÓI CHIẾN THUẬT VÀO CUỐI MẢNG (THEO ĐÚNG FORM ẢNH)
-        # is_fast_attack = True -> Thắng nhanh (2), False -> Cày điểm (1)
+        # =========================================================
+        # 4. GỬI GÓI CHIẾN THUẬT VÀO CUỐI MẢNG (MÃ 9)
+        # =========================================================
         strat_val = 2 if self.is_fast_attack else 1
         strat_name = "THẮNG NHANH" if self.is_fast_attack else "CÀY ĐIỂM"
         
-        print("\n" + "🔥anhbaokhung")
         print(f"   GỬI GÓI CHIẾN THUẬT (CUỐI CÙNG): {strat_name}")
         
-        # Ép đúng khuôn: (id=2, action=9, data1=Chiến_thuật, data2=2, data3=2)
         packet_strat = build_packet(2, 9, strat_val, 2, 2)
         print(f"   ├─ Lệnh UART: (2, 9, {strat_val}, 2, 2)")
         
@@ -544,13 +771,15 @@ class SelectPlaceApp:
             print("   └─ [THÀNH CÔNG] Đã chốt hạ chiến thuật xuống mạch STM32!")
         except Exception as e:
             print(f"   └─ [LỖI] Không thể gửi gói chiến thuật: {e}")
-        print("🔥" "\n")
         
-        # Báo cáo lên màn hình giao diện
         self.info_label.configure(
-            text=f"✓ Đã truyền Map & Chiến thuật ({strat_name}) thành công!", 
+            text=f"✓ Đã truyền Mode ({mode_name}) & Chiến thuật ({strat_name}) thành công!", 
             text_color="green"
         )
+
+    # =========================================================================
+    # UI: TOGGLE MODE, CELL CLICK, PLACE BLOCK, RESET
+    # =========================================================================
     def toggle_mode(self, new_mode, button):
         if self.mode == new_mode:
             self.mode = "PLACE"
@@ -586,8 +815,8 @@ class SelectPlaceApp:
                 self.info_label.configure(text=f"Đã xóa tại ({r},{c})")
                 
                 # THÊM DÒNG NÀY
-               # if getattr(self, 'auto_update_path', False):
-                 #   self.smart_run()
+                if getattr(self, 'auto_update_path', False):
+                    self.smart_run()
             return
 
         # 2. NẾU ĐANG VẼ ĐƯỜNG MÀ CLICK LẠI VÀO Ô ĐÃ CHỌN -> XÓA NHANH ĐƯỜNG ĐÓ
@@ -634,8 +863,8 @@ class SelectPlaceApp:
                 btn.pack(side="left", expand=True, padx=2, pady=2)
             cell["id_label"].lift()
             self.info_label.configure(text=f"Đã XÓA nhanh khối tại ({r},{c}) bằng 1 Click")
-            #if getattr(self, 'auto_update_path', False):
-                #self.smart_run()
+            if getattr(self, 'auto_update_path', False):
+                self.smart_run()
             
     def place_block(self, number, position):
         r, c = position
@@ -945,7 +1174,7 @@ class SelectPlaceApp:
         else:
             print("\n>>> CHẾ ĐỘ TỰ ĐỘNG (AUTO) <<<")
             self.solve_auto_targets()
-
+    
     def solve_auto_targets(self):
         list_1s = []
         list_2s = []
@@ -1020,6 +1249,42 @@ class SelectPlaceApp:
 
         print(f">>> Chọn cột đi thẳng: {best_col} (Max score: {max_score}, Team: {self.team_color})")
 
+        # =========================================================================
+        # 🎯 LOGIC TARGET TỪ WEB: ƯU TIÊN GẮP KHỐI CẢN ĐƯỜNG TRƯỚC (V.PRO)
+        # =========================================================================
+        total_target = getattr(self, 'target_blocks', 4)
+        num_door_picks = 1 if list_2s_at_entry else 0
+        num_forest_picks = total_target - num_door_picks
+        
+        # 1. Tách khối trên rừng thành 2 loại:
+        # - BẮT BUỘC: Nằm ngay trên cột đi thẳng (best_col), xe đi ngang qua buộc phải dẫm lên -> PHẢI GẮP!
+        mandatory_blocks = [pos for pos in list_2s_on_board if pos[1] == best_col]
+        # - TÙY CHỌN: Nằm ở 2 bên cột trái/phải (xe phải chủ động thò tay ra gắp)
+        optional_blocks = [pos for pos in list_2s_on_board if pos[1] != best_col]
+        
+        # 2. Tính xem còn được phép "thò tay" gắp thêm bao nhiêu cục nữa
+        needed_extra = num_forest_picks - len(mandatory_blocks)
+        
+        # 3. Lọc lấy các khối tùy chọn gần nhất nếu vẫn còn thiếu chỉ tiêu
+        if needed_extra > 0 and len(optional_blocks) > 0:
+            def dist_to_entry(pos):
+                r, c = pos
+                return abs(r - (ROWS - 1)) + abs(c - best_col)
+            optional_blocks.sort(key=dist_to_entry)
+            taken_optional = optional_blocks[:needed_extra]
+        else:
+            # Hết chỉ tiêu (hoặc bị âm chỉ tiêu do khối bắt buộc quá nhiều) -> Bơ đám xung quanh đi
+            taken_optional = [] 
+            
+        # 4. Chốt sổ danh sách trên rừng: Cản đường + Tùy chọn (nếu có)
+        list_2s_on_board = mandatory_blocks + taken_optional
+        
+        actual_total = num_door_picks + len(list_2s_on_board)
+        if actual_total > total_target:
+            print(f">>> [CHIẾN THUẬT] CHỌN {total_target} KHỐI, NHƯNG BỊ ÉP PHẢI LẤY {actual_total} KHỐI DO ĐỐI THỦ CẢN ĐƯỜNG!")
+        else:
+            print(f">>> [CHIẾN THUẬT] Đã chốt gắp chuẩn chỉ {actual_total} khối R2.")
+        # =========================================================================
         # --- 2. XÂY DỰNG SIM_PATH ---
         sim_path = []
         remaining_entry = list(list_2s_at_entry)
@@ -1256,11 +1521,30 @@ class SelectPlaceApp:
             print(f"\n[UART ERROR] UART port không sẵn sàng")
             self.info_label.configure(text="Lỗi UART: Port không mở")
             return
-
+        # ========================================================
+        # TRÍCH XUẤT "HÀNG CHỈ ĐỊNH" TỪ THUẬT TOÁN ĐỂ CHỐNG GẮP LÁO
+        # ========================================================
+        intended_targets = []
+        for seg_path, seg_act in simulation_path:
+            if isinstance(seg_act, tuple):
+                intended_targets.append(self.get_cell_id(seg_act[0], seg_act[1]))
+        
+        # Cái khối ở bục cửa đầu tiên cũng là một target hợp lệ
+        first_col_temp = None
+        for seg_path, seg_act in simulation_path:
+            for pos in seg_path:
+                if pos[0] == DOOR_ROW:
+                    first_col_temp = pos[1]
+                    break
+            if first_col_temp is not None: break
+            
+        if first_col_temp is None: first_col_temp = self._best_col if hasattr(self, '_best_col') else 1
+        intended_targets.append(self.get_cell_id(ROWS - 1, first_col_temp))
+        # ========================================================
         current_facing = (-1, 0)
         right_turn_map = {(-1,0):(0,1), (0,1):(1,0), (1,0):(0,-1), (0,-1):(-1,0)}
         left_turn_map  = {(-1,0):(0,-1), (0,-1):(1,0), (1,0):(0,1), (0,1):(-1,0)}
-
+        
         print("=" * 60)
         print(f"BẮT ĐẦU GỬI UART — TEAM {self.team_color}")
         print("=" * 60)
@@ -1350,7 +1634,8 @@ class SelectPlaceApp:
                         time.sleep(0.3)
                         
                     elif cell_entry["content"] and cell_entry["content"]["number"] == 2:
-                        if entry_id not in picked_blocks:
+                        # ĐÃ THÊM: entry_id in intended_targets
+                        if entry_id in intended_targets and entry_id not in picked_blocks:
                             print(f"  ├─ [KHỐI 2 BỤC] Gửi: (2, 2, 0, 1, {entry_id}) — Gắp thẳng trước khi leo")
                             time.sleep(0.3)
                             ser.write(build_packet(2, 2, 0, 1, entry_id))
@@ -1391,7 +1676,8 @@ class SelectPlaceApp:
                         time.sleep(0.3)
 
                     elif cell_next["content"] and cell_next["content"]["number"] == 2:
-                        if step_id not in picked_blocks:
+                        # ĐÃ THÊM: step_id in intended_targets
+                        if step_id in intended_targets and step_id not in picked_blocks:
                             print(f"  │  ├─ [KHỐI 2] Gửi: (2, 2, 0, {move_cmd}, {step_id}) — Gắp trước khi đi")
                             time.sleep(0.3)
                             ser.write(build_packet(2, 2, 0, move_cmd, step_id))
@@ -1784,6 +2070,175 @@ class SelectPlaceApp:
 
         # Lặp lại sau mỗi 500ms (0.5 giây nháy 1 lần)
         self.root.after(500, self.update_led_blink)
+    # =========================================================================
+    # TAB 3: NHẬN DIỆN MỤC TIÊU (VISION / CAMERA) - BẢN GẮP KHỐI RƠI HOÀN HẢO
+    # =========================================================================
+    # =========================================================================
+    # TAB 3: NHẬN DIỆN MỤC TIÊU (VISION / CAMERA) - BẢN GIAO DIỆN CHUẨN 6 Ô
+    # =========================================================================
+    def setup_vision_tab(self):
+        # 1. CHỌN SÂN ĐỒNG BỘ
+        ctk.CTkLabel(
+            self.tab_vision, text="CHỌN SÂN ĐỂ LỌC ID CAMERA", 
+            font=("Segoe UI", 16, "bold")
+        ).pack(pady=(10, 5))
+        
+        self.vision_team_var = ctk.StringVar(value=self.team_color)
+        def on_vision_team_change(choice):
+            if choice == "RED" and self.team_color != "RED":
+                self.toggle_team()
+            elif choice == "BLUE" and self.team_color != "BLUE":
+                self.toggle_team()
+                
+        self.vision_seg_btn = ctk.CTkSegmentedButton(
+            self.tab_vision, values=["RED", "BLUE"],
+            variable=self.vision_team_var,
+            command=on_vision_team_change,
+            width=250, height=35, font=("Segoe UI", 14, "bold"),
+            selected_color="#d32f2f" if self.team_color == "RED" else "#1e88e5"
+        )
+        self.vision_seg_btn.pack(pady=5)
+
+        # 2. KHUNG GIAO DIỆN 6 NÚT Y HỆT VÙNG 3
+        self.vision_matrix_selected = {i: False for i in range(1, 7)}
+        self.vision_matrix_buttons = {}
+
+        card = ctk.CTkFrame(self.tab_vision, corner_radius=20, fg_color="#ffffff")
+        card.pack(padx=20, pady=10, fill="both", expand=True)
+
+        ctk.CTkLabel(
+            card, text="CHỌN VỊ TRÍ TRÊN VÙNG 3 ĐỂ ĐẶT KHỐI RƠI", 
+            font=("Segoe UI", 18, "bold"), text_color="#1e293b"
+        ).pack(pady=(15, 0))
+
+        btn_frame = ctk.CTkFrame(card, fg_color="transparent")
+        btn_frame.pack(expand=True, pady=10)
+
+        # Vẽ 6 nút chà bá
+        for i in range(1, 7):
+            row = 1 if i <= 3 else 0   
+            col = (i - 1) % 3
+            btn = ctk.CTkButton(
+                btn_frame, text=str(i), width=90, height=90, corner_radius=16,
+                font=("Segoe UI", 26, "bold"), text_color="white",
+                fg_color="#4f46e5", hover_color="#6366f1",
+                command=lambda n=i: self.toggle_vision_matrix(n)
+            )
+            btn.grid(row=row, column=col, padx=15, pady=10)
+            self.vision_matrix_buttons[i] = btn
+
+        # 3. HÀNG NÚT KÍCH HOẠT: CHỐT LỆNH -> BẮN UART -> MỞ CAM
+        action_frame = ctk.CTkFrame(card, fg_color="transparent")
+        action_frame.pack(pady=(5, 15))
+
+        ctk.CTkButton(
+            action_frame, text="✔ CHỐT GỬI & TÌM R1", width=170, height=50, corner_radius=14,
+            font=("Segoe UI", 14, "bold"), fg_color="#0284c7", hover_color="#0369a1",
+            command=lambda: self.launch_vision_with_matrix(1)
+        ).grid(row=0, column=0, padx=10)
+
+        ctk.CTkButton(
+            action_frame, text="✔ CHỐT GỬI & TÌM R2", width=170, height=50, corner_radius=14,
+            font=("Segoe UI", 14, "bold"), fg_color="#f59e0b", hover_color="#d97706",
+            command=lambda: self.launch_vision_with_matrix(2)
+        ).grid(row=0, column=1, padx=10)
+
+        ctk.CTkButton(
+            action_frame, text="↺ RESET", width=100, height=50, corner_radius=14,
+            font=("Segoe UI", 14, "bold"), fg_color="#dc2626", hover_color="#b91c1c",
+            command=self.reset_vision_matrix
+        ).grid(row=0, column=2, padx=10)
+
+    # Các hàm logic nháy màu cho 6 nút
+    def toggle_vision_matrix(self, n):
+        self.vision_matrix_selected[n] = not self.vision_matrix_selected[n]
+        if self.vision_matrix_selected[n]:
+            self.vision_matrix_buttons[n].configure(fg_color="#f59e0b", hover_color="#d97706")
+        else:
+            self.vision_matrix_buttons[n].configure(fg_color="#4f46e5", hover_color="#6366f1")
+
+    def reset_vision_matrix(self):
+        for i in range(1, 7):
+            self.vision_matrix_selected[i] = False
+            self.vision_matrix_buttons[i].configure(fg_color="#4f46e5", hover_color="#6366f1")
+        print(">> [VISION MATRIX] Đã dọn sạch ô!")
+
+    # Hàm thần thánh: Vả UART xong mới mở Cam
+    def launch_vision_with_matrix(self, mode):
+        # 1. Gom các ô đã chọn lại thành mảng [e1, e2, e3]
+        col_map = {1: 1, 2: 2, 3: 3, 4: 1, 5: 2, 6: 3}
+        entry = [0, 0, 0]
+        has_selected = False
+        
+        for n in range(1, 7):
+            if self.vision_matrix_selected[n]:
+                idx = col_map[n] - 1
+                entry[idx] = n
+                has_selected = True
+                
+        # Nếu đéo chọn ô nào mà đòi gắp thì chửi luôn
+        if not has_selected:
+            print(">> [CẢNH BÁO] Chưa chọn ô đéo nào mà đòi gắp!")
+            self.info_label.configure(text="LỖI: Mày chưa chọn ô Vùng 3 nào để đặt khối!", text_color="red")
+            return
+
+        print(f"\n>> [ALGO] CHUẨN BỊ GẮP KHỐI RƠI:")
+        print(f"   ├─ Sân: {self.team_color}")
+        print(f"   ├─ Mục tiêu: {'R1' if mode == 1 else 'R2'}")
+        print(f"   └─ Vị trí đặt: {entry}")
+
+        # 2. Bắn UART Matrix xuống STM32 TRƯỚC!
+        print(">> [UART] Đang nạp lệnh vị trí Vùng 3...")
+        self.send_uart_matrix(entry[0], entry[1], entry[2])
+        self.info_label.configure(text=f"Đã gửi vị trí {entry}. Chuẩn bị mở Camera...", text_color="green")
+        
+        # 3. Dùng luồng ngầm cho nghỉ 0.5s để mạch nhận lệnh rồi mới mở CAM
+        def start_cam_delayed():
+            import time
+            time.sleep(0.5)
+            print(">> [VISION] Đang gọi Camera lên ngắm...")
+            try:
+                from pick_block import run_pick_block_loop
+                run_pick_block_loop(mode, self.team_color, False)
+            except Exception as e:
+                print(f">> [LỖI VISION] Không mở được Camera: {e}")
+
+        import threading
+        threading.Thread(target=start_cam_delayed, daemon=True).start()
+
+    def launch_vision(self, mode):
+        # Lấy số ô mà mày vừa tick (1 đến 6)
+        target_slot = self.drop_slot_var.get()
+        print(f"\n>> [ALGO] CHUẨN BỊ GẮP KHỐI RƠI:")
+        print(f"   ├─ Sân: {self.team_color}")
+        print(f"   ├─ Mục tiêu: {'R1' if mode == 1 else 'R2'}")
+        print(f"   └─ Vị trí đặt: Ô số {target_slot}")
+
+        # --- BẮN UART BÁO CHO STM32 BIẾT Ô NÀO TRƯỚC ---
+        # Logic quy đổi y hệt Tab 2 (Matrix)
+        col_map = {1: 1, 2: 2, 3: 3, 4: 1, 5: 2, 6: 3}
+        entry = [0, 0, 0]
+        idx = col_map[target_slot] - 1
+        entry[idx] = target_slot
+        
+        print(">> [UART] Đang nạp lệnh vị trí Vùng 3...")
+        # Gọi thẳng hàm gửi UART có sẵn của Tab 2 để truyền lệnh
+        self.send_uart_matrix(entry[0], entry[1], entry[2])
+        import time
+        time.sleep(0.5) # Dừng nửa giây cho STM32 kịp nuốt lệnh
+
+        # --- MỞ CAMERA LÊN ĐI SĂN ---
+        print(">> [VISION] Đang gọi Camera lên ngắm...")
+        try:
+            from pick_block import run_pick_block_loop
+            import threading
+            threading.Thread(
+                target=run_pick_block_loop, 
+                args=(mode, self.team_color, False), 
+                daemon=True
+            ).start()
+        except Exception as e:
+            print(f">> [LỖI VISION] Không mở được Camera: {e}")
         
 if __name__ == "__main__":
     app = SelectPlaceApp()
