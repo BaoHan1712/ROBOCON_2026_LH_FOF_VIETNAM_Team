@@ -858,7 +858,7 @@ void Leo_bac_400_ko_thanh_do(void)
 		su_dung_chan(265);
 				if (TinHieu_ChuanBi_GapThang == 0 && TinHieu_ChuanBi_GapTrai == 0 && TinHieu_ChuanBi_GapPhai == 0) {
 		// chay toi khi mat cam bien sau
-		robotRunAngle(900,18,-900,0.9);
+		robotRunAngle(900,20,-900,0.9);
 		for(i=0;i<250;i++)
 				{
 						while(CB_Ha_Sau == 0 || (abs(bientrochansauValue - target_chan_sau) > 20))
@@ -1489,7 +1489,7 @@ void chuan_bi_gap_phai_200_duoi_do_5 (void ) {
 }
 
 
-/// ****** leo bac 200 o id  5 san xanh
+/// ****** leo bac 200 o id  5 san do
 void Leo_bac_200_do_5(void) {	
 		Leo_bac_200(900, -900);
 	  Nang_cuc_nhanh();
@@ -1763,8 +1763,8 @@ void Lay_ben_trai_bac_200_duoi_do_8_11(void) {
 			
 	if (TinHieu_ChuanBi_GapThang == 1) {
 			kiem_tra_huong_quay_tay_gap_phia_truoc();
-			vTaskDelay(8000);
-			chuan_bi_gap_thang_xanh_4();
+			vTaskDelay(4000);
+			di_tren_buc_khong_thanh_2_ben_do();
 				}
 }
 

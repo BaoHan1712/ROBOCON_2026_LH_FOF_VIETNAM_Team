@@ -3,14 +3,15 @@ import numpy as np
 import pyrealsense2 as rs
 import customtkinter as ctk
 import time
+import threading
 
 from ultralytics import YOLO
 from config_uart.sent_uart import build_packet, ser
 from gui_tkinter import set_state, STATE_IDLE, STATE_PICK_BLOCK
 
 # ================= CONFIG =================
-MODEL_PATH = r"cover/models/nhathop.onnx"
-CONF_THRES = 0.3
+MODEL_PATH = r"cover\models\nhathop.pt"
+CONF_THRES = 0.5
 MAX_DISTANCE_CM = 250
 SEND_INTERVAL = 0.01
 
@@ -21,6 +22,7 @@ MAX_LOST = 10
 
 selected_mode = None
 running = False
+camera_busy = False  # <=== PHẢI THÊM DÒNG NÀY VÀO ĐÂY NHÉ!
 last_send_time = 0
 
 # ================= ROI =================
@@ -77,12 +79,23 @@ def create_roi_mask(img):
     return mask
 
 # ================= CAMERA =================
-def run_camera(mode, use_state=True):
+def run_camera(mode, team_color="RED", use_state=True):
     global running, selected_mode, roi_mask
     global locked_id, lost_count
 
     selected_mode = mode
     running = True
+
+    # 🎯 LOGIC TÌM CLASS THEO MÀU SÂN
+    # {0: 'XR1', 1: 'XR2', 2: 'DR1', 3: 'DR2'}
+    if team_color == "RED":
+        target_class_id = 2 if mode == 1 else 3
+        target_name = "DR1" if mode == 1 else "DR2"
+    else: # BLUE
+        target_class_id = 0 if mode == 1 else 1
+        target_name = "XR1" if mode == 1 else "XR2"
+
+    print(f"\n>> [Pick Block] BẮT ĐẦU SĂN: Sân {team_color} | Tìm kiếm: {target_name} (ID: {target_class_id})")
 
     # 1. ÉP RESET PHẦN CỨNG NẾU CAM BỊ KẸT TỪ TRƯỚC
     try:
@@ -96,6 +109,7 @@ def run_camera(mode, use_state=True):
     align = None
 
     print(">> [Pick Block] Đang mở Camera...")
+    import time
     while True:
         try:
             pipeline = rs.pipeline()
@@ -115,12 +129,23 @@ def run_camera(mode, use_state=True):
                     ctx.devices[0].hardware_reset()
             except:
                 pass
-            time.sleep(3) 
+            time.sleep(1.5) 
 
     align = rs.align(rs.stream.color)
 
-    # >>> ĐẺ RA TÊN CỬA SỔ ĐỘC NHẤT <<<
-    win_name = f"YOLO RS LOCK [{int(time.time())}]"
+    # =========================================================================
+    # >>> ĐẺ RA TÊN CỬA SỔ ĐỘC NHẤT ĐỂ ĐÁNH LỪA UBUNTU CHỐNG TÀNG HÌNH <<<
+    # =========================================================================
+    win_name = f"Vision_Camera_{int(time.time())}"
+    
+    # 1. ÉP OPENCV PHẢI TẠO KHUNG GIAO DIỆN TRƯỚC KHI VẼ HÌNH
+    cv2.namedWindow(win_name, cv2.WINDOW_AUTOSIZE)
+    
+    # 2. VŨ KHÍ TỐI THƯỢNG: ÉP CỬA SỔ NỔI LÊN TRÊN CÙNG (CHỐNG NÚP LÙM DƯỚI TKINTER)
+    try:
+        cv2.setWindowProperty(win_name, cv2.WND_PROP_TOPMOST, 1)
+    except: 
+        pass
 
     try:
         while running:
@@ -163,7 +188,10 @@ def run_camera(mode, use_state=True):
                     for b in boxes:
                         if b.id is None: continue
                         cls_id = int(b.cls[0])
-                        if cls_id != 1: continue
+                        
+                        # 🎯 CHỈ NHÌN MỤC TIÊU CỦA ĐỘI MÌNH
+                        if cls_id != target_class_id: continue
+                        
                         track_id = int(b.id[0])
 
                         x1, y1, x2, y2 = map(int, b.xyxy[0])
@@ -180,6 +208,7 @@ def run_camera(mode, use_state=True):
                             min_dist = dist
                             best_box = (x1, y1, x2, y2, cx, cy, dist)
                             locked_id = track_id
+                            print(f">> KHÓA MỤC TIÊU: {target_name} | ID: {locked_id}")
                 else:
                     found = False
                     for b in boxes:
@@ -199,6 +228,7 @@ def run_camera(mode, use_state=True):
                     if not found:
                         lost_count += 1
                         if lost_count > MAX_LOST:
+                            print(">> MẤT DẤU MỤC TIÊU -> Đang tìm lại...")
                             locked_id = None
                             lost_count = 0
 
@@ -213,7 +243,9 @@ def run_camera(mode, use_state=True):
                 color = (0,255,0) if locked_id else (0,0,255)
                 cv2.rectangle(img, (x1, y1), (x2, y2), color, 2)
                 cv2.circle(img, (cx, cy), 5, (0,0,255), -1)
-                cv2.putText(img, f"ID: {locked_id}", (x1, y1-50), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255,255,0), 2)
+                
+                # Vẽ thêm cái nhãn tên mục tiêu
+                cv2.putText(img, f"Target: {target_name} | ID: {locked_id}", (x1, y1-50), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255,255,0), 2)
                 cv2.putText(img, f"D: {int(distance)} cm", (x1, y1-30), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0,255,0), 2)
                 cv2.putText(img, f"Offset: {dolech}", (x1, y1-10), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255,0,0), 2)
 
@@ -233,62 +265,126 @@ def run_camera(mode, use_state=True):
         print("\n>> --- TIẾN HÀNH DỌN DẸP CAMERA ---")
         try:
             pipeline.stop()
-            print(">> ✓ Đã nhả cổng USB thành công!")
+            print(">> ✓ Đã nhả luồng RealSense!")
         except Exception as e:
             pass
             
         try: del pipeline
         except: pass
 
+        # Sát thủ diệt window của OpenCV Linux (Phải lặp 20 lần nó mới chết hẳn)
         cv2.destroyAllWindows()
-        for _ in range(10): cv2.waitKey(1)
+        for _ in range(20): cv2.waitKey(1)
             
-        time.sleep(2) 
+        # ÉP ĐỢI 1.5 GIÂY ĐỂ USB XẢ ĐIỆN HOÀN TOÀN TRƯỚC KHI CHO MỞ LẠI
+        time.sleep(1.5) 
 
         locked_id = None
         lost_count = 0
 
         if use_state:
-            set_state["value"] = STATE_IDLE
+            try: set_state["value"] = STATE_IDLE
+            except: pass
 
+        # Mở khóa cho phép lần bấm tiếp theo
+        global camera_busy
+        camera_busy = False
         print(">>> Pick Block OFF | STATE -> IDLE | SẴN SÀNG LẦN MỞ TIẾP THEO!\n")
-
-# ================= MAIN FUNCTION WITH STATE SUPPORT =================
-def run_pick_block_loop(mode=1, use_state=True):
-    """
-    Hàm chạy pick block (Bỏ Thread ảo để tương thích hoàn toàn với OpenCV Linux)
-    """
-    global running
-    print(f">>> Pick Block ON (Mode: {mode})")
+# ================= MAIN FUNCTION & CHỐT CHẶN =================
+def run_pick_block_loop(mode=1, team_color="RED", use_state=True):
+    global running, camera_busy
+    
+    # Ổ KHÓA CHỐNG NGHIỆP VỤ: Đang bận đéo cho mở luồng mới!
+    if camera_busy:
+        print(">> [CẢNH BÁO] Camera đang xả cổng USB hoặc đang chạy. Chờ 2 giây rồi thử lại!")
+        return
+        
+    print(f">>> Pick Block ON (Mode: {mode} | Team: {team_color})")
+    camera_busy = True
     running = True
     
     # Chạy trực tiếp
-    run_camera(mode, use_state)
+    run_camera(mode, team_color, use_state)
 
-# ================= GUI TEST =================
-def start_with_mode(mode):
-    global selected_mode, running
-    selected_mode = mode
-    running = True
-    app.destroy()
-    run_camera(mode, False)
-
-def on_closing():
-    global running
+# ================= MAIN FUNCTION & CHỐT CHẶN (BẢN BỌC THÉP 2 LỚP) =================
+def stop_camera():
+    """Hàm khẩn cấp để tắt Camera từ xa (Cấp quyền tối thượng)"""
+    global running, camera_busy
     running = False
-    app.destroy()
+    
+    # BÚA TẠ: Đập nát ổ khóa ngầm ngay lập tức, không cần biết đang kẹt ở đâu!
+    camera_busy = False  
+    print(">> [VISION] 🛑 ĐÃ NHẬN LỆNH TẮT CAMERA KHẨN CẤP! (Đã ép nhả khóa USB)")
 
+def run_pick_block_loop(mode=1, team_color="RED", use_state=True):
+    global running, camera_busy
+    
+    # Kiểm tra biến khóa (dùng globals để chống lỗi chưa khai báo)
+    if globals().get('camera_busy', False):
+        print(">> [CẢNH BÁO] Bị kẹt khóa luồng! Hãy bấm nút '🛑 TẮT CAM' trên giao diện để Reset!")
+        return
+        
+    print(f">>> Pick Block ON (Mode: {mode} | Team: {team_color})")
+    camera_busy = True
+    running = True
+    
+    # BẢO HIỂM LỚP NGOÀI CÙNG: Bắt mọi lỗi tử thần của RealSense
+    try:
+        run_camera(mode, team_color, use_state)
+    except Exception as e:
+        print(f">> [LỖI FATAL KHỞI ĐỘNG CAMERA] {e}")
+    finally:
+        # CHỐT CHẶN CUỐI CÙNG: Dù trời có sập, sấm có đánh thì luồng kết thúc LÀ PHẢI NHẢ KHÓA!
+        camera_busy = False
+        running = False
+        print(">> [VISION] Đã dọn dẹp và tháo ổ khóa Camera, sẵn sàng mở lại!")
+        
+# ================= MAIN TRIGGER (CẤP QUYỀN CHẠY TIẾN TRÌNH ĐỘC LẬP) =================
 if __name__ == "__main__":
-    ctk.set_appearance_mode("dark")
-    ctk.set_default_color_theme("blue")
-    app = ctk.CTk()
-    app.title("Chọn chế độ truyền")
-    app.geometry("300x250")
-    app.protocol("WM_DELETE_WINDOW", on_closing)
+    import sys
+    run_mode = 1
+    run_team = "RED"
+    
+    # Bắt tham số từ Algo ném sang
+    if len(sys.argv) >= 3:
+        run_mode = int(sys.argv[1])
+        run_team = sys.argv[2]
+        
+    print(f"\n🚀 [TIẾN TRÌNH ĐỘC LẬP] Đang mở Camera - Mode: {run_mode} | Sân: {run_team}")
+    try:
+        run_pick_block_loop(run_mode, run_team, False)
+    except KeyboardInterrupt:
+        print(">> Đã nhận lệnh thoát khẩn cấp từ Algo!")
 
-    ctk.CTkLabel(app, text="Chọn Mode (1-3)", font=("Arial", 20)).pack(pady=20)
-    ctk.CTkButton(app, text="Mode 1", command=lambda: start_with_mode(1)).pack(pady=10)
-    ctk.CTkButton(app, text="Mode 2", command=lambda: start_with_mode(2)).pack(pady=10)
-    ctk.CTkButton(app, text="Mode 3", command=lambda: start_with_mode(3)).pack(pady=10)
+        
+# ================= GUI TEST DÙNG RIÊNG (Nếu cần test độc lập) =================
+# def start_with_mode(mode, team):
+#     global selected_mode, running
+#     selected_mode = mode
+#     running = True
+#     try: app.destroy()
+#     except: pass
+#     run_camera(mode, team, False)
 
-    app.mainloop()
+# def on_closing():
+#     global running
+#     running = False
+#     app.destroy()
+
+# if __name__ == "__main__":
+#     ctk.set_appearance_mode("dark")
+#     ctk.set_default_color_theme("blue")
+#     app = ctk.CTk()
+#     app.title("Test Nhận Diện")
+#     app.geometry("300x320")
+#     app.protocol("WM_DELETE_WINDOW", on_closing)
+#     
+#     ctk.CTkLabel(app, text="CHỌN SÂN (RED/BLUE)", font=("Arial", 16, "bold")).pack(pady=10)
+#     
+#     team_var = ctk.StringVar(value="RED")
+#     ctk.CTkSegmentedButton(app, values=["RED", "BLUE"], variable=team_var).pack(pady=5)
+#     
+#     ctk.CTkButton(app, text="📸 TEST TÌM R1", command=lambda: start_with_mode(1, team_var.get())).pack(pady=15)
+#     ctk.CTkButton(app, text="📸 TEST TÌM R2", command=lambda: start_with_mode(2, team_var.get())).pack(pady=5)
+#
+#     app.mainloop()

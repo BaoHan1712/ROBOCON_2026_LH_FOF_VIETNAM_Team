@@ -1,6 +1,6 @@
 import time
 from gui_tkinter import STATE_SEE_R1, set_state, STATE_IDLE, STATE_MATRIX, STATE_FOREST
-
+# from config_uart.sent_uart import ser
 uart_enable = {"value": True}
 
 def uart_state_listener(ser):
@@ -37,3 +37,6 @@ def uart_state_listener(ser):
             uart_enable["value"] = False
 
         time.sleep(0.005)
+
+
+# uart_state_listener(ser)

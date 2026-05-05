@@ -916,7 +916,7 @@ void Leo_bac_200_bam_thanh_phai(void)
 	target_chan_sau = Min_chan_sau + 250;
 
 			if (TinHieu_ChuanBi_GapThang == 0 && TinHieu_ChuanBi_GapTrai == 0 && TinHieu_ChuanBi_GapPhai == 0) {
-			robotRunAngle(-900,18,900,0.7);
+			robotRunAngle(-900,20,900,0.7);
 			for(i=0;i<1550;i++)
 				{
 				while(CB_Ha_Sau == 1 || CB_Cap_Thanh_Sau == 0 || (abs(bientrochansauValue - target_chan_sau) > 10))	
@@ -1002,7 +1002,7 @@ void Leo_bac_200_ko_thanh(void)
 	
 	if (TinHieu_ChuanBi_GapThang == 0 && TinHieu_ChuanBi_GapTrai == 0 && TinHieu_ChuanBi_GapPhai == 0) {
 		// chay toi khi mat cam bien sau
-		robotRunAngle(-900,18,900,0.7);
+		robotRunAngle(-900,20,900,0.7);
 		for(i=0;i<1550;i++)
 				{
 						while(CB_Ha_Sau == 0 || (abs(bientrochansauValue - target_chan_sau) > 10))	
@@ -1151,7 +1151,7 @@ void Leo_bac_400_ko_thanh(void)
 		
 			if (TinHieu_ChuanBi_GapThang == 0 && TinHieu_ChuanBi_GapTrai == 0 && TinHieu_ChuanBi_GapPhai == 0) {
 		// chay toi khi mat cam bien sau
-		robotRunAngle(-900,18,900,0.9);
+		robotRunAngle(-900,20,900,0.9);
 		for(i=0;i<250;i++)
 				{
 						while(CB_Ha_Sau == 0 ||  (abs(bientrochansauValue - target_chan_sau) > 10))	
@@ -1352,7 +1352,7 @@ void xuong_bac_200_xanh_10 (void) {
 		if (TinHieu_ChuanBi_GapThang == 0 && TinHieu_ChuanBi_GapTrai == 0 && TinHieu_ChuanBi_GapPhai == 0) {
 				su_dung_chan(265);
 				// chay toi khi mat cam bien sau
-				robotRunAngle(-900,14,900,0.8);
+				robotRunAngle(-900,18,900,0.8);
 				for(i=0;i<1550;i++)
 						{
 								while(CB_Ha_Sau == 0 || (abs(bientrochansauValue - target_chan_sau) > 20))	
@@ -1375,7 +1375,7 @@ void xuong_bac_200_end(void) {
 		if (TinHieu_ChuanBi_GapThang == 0 && TinHieu_ChuanBi_GapTrai == 0 && TinHieu_ChuanBi_GapPhai == 0) {
 				su_dung_chan(265);
 				// chay toi khi mat cam bien sau
-				robotRunAngle(-900,16,900,0.8);
+				robotRunAngle(-900,18,900,0.8);
 				for(i=0;i<1550;i++)
 						{
 								while(CB_Ha_Sau == 0|| (abs(bientrochansauValue - target_chan_sau) > 10))	

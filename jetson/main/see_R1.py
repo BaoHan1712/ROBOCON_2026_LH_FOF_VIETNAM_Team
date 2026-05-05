@@ -218,5 +218,5 @@ def detect_r1_snapshot_loop(use_state=True):
             
         print(">> [SEE R1] Đã tắt sạch Camera! Chuyển về IDLE.")
 
-if __name__ == "__main__":
-    detect_r1_snapshot_loop(use_state=False)
+# if __name__ == "__main__":
+#     detect_r1_snapshot_loop(use_state=False)

@@ -181,7 +181,7 @@ vTaskDelay(1000);
 //			if(TRIANGLE && L2 && !R2 )												Xuat_Phat_Lay_Vu_Khi_Do(162,1500,215);
 				
 					if(TRIANGLE && L2 && !R2 )														tudonghoantoan_san_do();
-					if(SQUARE && L2 && !R2) 															su_dung_chan(710);
+					if(SQUARE && L2 && !R2) 															test_gui();
 //					if(X && L2 && !R2) 																	Leo_bac_400(900, -900);
 //				if(O && L2 && !R2 ) 																	Lay_phia_truoc_bac_200_tren();
 ////				if(X && R2 ) 																			nhat_hop_zone3_do();

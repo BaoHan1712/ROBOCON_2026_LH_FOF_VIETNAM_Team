@@ -274,7 +274,7 @@ void Xoay_dau_truoc_cua_do_1(void) {
 	target_chan_sau = 255;
 
 
-	robotRunAngle(1450,25,-900,2);
+	robotRunAngle(1550,25,-900,2);
 			
 	while(_robotIMUAngle > -650)	
 	{
@@ -292,10 +292,10 @@ void Xoay_dau_truoc_cua_do_1(void) {
 				
 
 	if (TinHieu_ChuanBi_GapThang == 1) {
-			chinh_lai_vi_tri_laser_phai_custom_do(vi_tri_cua_rung_do_1_lazer_phai_tay_41 - 8, 1000, 5, 65);
+			chinh_lai_vi_tri_laser_phai_custom_do(vi_tri_cua_rung_do_1_lazer_phai_tay_41 - 8, 1000, 5, 60);
 	}
 	else if (TinHieu_ChuanBi_GapThang == 0) {
-			chinh_lai_vi_tri_laser_phai_custom_do(vi_tri_cua_rung_do_1_lazer_phai_tay_41 - 15 , 1000,5, 65);
+			chinh_lai_vi_tri_laser_phai_custom_do(vi_tri_cua_rung_do_1_lazer_phai_tay_41 - 15 , 1000,5, 60);
 	}
 	
 		if (block_pha == 1) {
@@ -307,6 +307,13 @@ void Xoay_dau_truoc_cua_do_1(void) {
 	
 	robotStop(0); 	
 				
+}
+
+
+void test_gui (void) {
+		SEND_UART (4,1);
+		vTaskDelay (2500);
+		gui++;
 }
 
 void Vao_rung_mai_3_do(int vitri){
@@ -658,13 +665,13 @@ void DatKFS_do(int vitri)
 		while(abs(bientrochansauValue - target_chan_sau) > 100)	{vTaskDelay(1); if(!wantExit())	break;}
 	}
 	
-	chinh_lai_vi_tri_laser_trai_zone3_do(220, 1000, 4, 62);
+	chinh_lai_vi_tri_laser_trai_zone3_do(220, 1000, 4, 50);
 	
 
-		robotRunAngle(900,50,-900,0.5);
+		robotRunAngle(900,48,-900,0.5);
 		for(i=0;i<550;i++)	
 	{	
-			while(lazePhaiValue > 340)	
+			while(lazePhaiValue > 350)	
 			{	
 				vTaskDelay(5); 
 				if(!wantExit())	break;
@@ -698,7 +705,7 @@ void DatKFS_do(int vitri)
 		{	
 				while(lazePhaiValue > 440)	
 				{	
-					Bam_laser_sau(47,0,-900, vitri, 5, 100, 15);
+					Bam_laser_sau(45,0,-900, vitri, 5, 100, 15);
 					vTaskDelay(1); 
 					if(!wantExit())	break;
 				}
@@ -918,7 +925,6 @@ void Init_Action_Table_san_do(void)
 		action_table[0][2][8] =	Lay_ben_trai_bac_200_tren_do_7_10;	
 		action_table[0][2][11]= Lay_ben_trai_bac_200_tren_do_7_10;	
 	
-
 		action_table[0][2][9]  = Lay_ben_trai_bac_200_duoi_do_8_11;		
 		action_table[0][2][12] = Lay_ben_trai_bac_200_duoi_do_8_11;		
 

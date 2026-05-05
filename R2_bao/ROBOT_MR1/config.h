@@ -2200,7 +2200,7 @@ void run_read_gyro_uart3(void)
 	enGyro=1;
 	dataTxGyro='z';
 }
-
+int gui = 0;
 
 //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 //---------------------------- TRUYEN DU LIEU VAO MANG-----------------------------
@@ -2373,7 +2373,7 @@ void HMI_TRAN(vs32 _so_dong)
 										HMI_DMI("dem_goi_tin_gap ",dem_goi_tin_gap,33); 
 										break;
 									case 34:
-										HMI_DMI("dem_goi_tin_gap ",dem_goi_tin_gap,34); 
+										HMI_DMI("gui ",gui,34); 
 										break;
 									case 35:
 										HMI_DMI("dem_goi_tin_gap ",dem_goi_tin_gap,35); 
@@ -2395,6 +2395,8 @@ void HMI_TRAN(vs32 _so_dong)
 										break;
 						}
 }
+
+
 
 //////////////////////////
 void DATA_SPEED_RUN_LOOP()///TOC DO <254
