@@ -487,15 +487,15 @@ int vi_tri_tay_12 = 695;
 
 // VI TRI MAM XOAY LAY BEN PHAI 200 TREN
 int vi_tri_tay_4_phai_tren = 610;
-int vi_tri_tay_1_phai_tren = 415;
+int vi_tri_tay_1_phai_tren = 417;
 int vi_tri_tay_2_phai_tren = 405;
 int vi_tri_tay_3_phai_tren = 600;
 
 /// VI TRI MAM XOAY LAY TRAI 200 
 int vi_tri_tay_4_trai_tren = 410;
 int vi_tri_tay_1_trai_tren = 605;
-int vi_tri_tay_2_trai_tren = 595;
-int vi_tri_tay_3_trai_tren = 402;
+int vi_tri_tay_2_trai_tren = 593;
+int vi_tri_tay_3_trai_tren = 401;
 
 /// VI TRI LAZER LAY QUA THANG
 int vitri_tay41_laser_trai_GapQua = 151;
@@ -554,7 +554,7 @@ int vi_tri_dat_hop_3_tay41_do = 2;
 
 int vi_tri_dat_hop_1_tay23_do = 152;   /// ** DUNG LAZER truoc**
 int vi_tri_dat_hop_2_tay23_do = 98;
-int vi_tri_dat_hop_3_tay23_do = 45;
+int vi_tri_dat_hop_3_tay23_do = 44;
 
 ///
 
@@ -1710,7 +1710,7 @@ int nhat_dat_hop = 0;
 /// cac mode chay robot
 int mode_chay_rung = 0;
 int mode_nhat_hop = 0;
-int mode_cay_diem = 1;
+int mode_cay_diem = 2;
 int mode_retry_zone_3 = 0;
 
 void pha_khoi_r1(void); // ham gui data toi rb1
@@ -2263,7 +2263,7 @@ void HMI_TRAN(vs32 _so_dong)
 										HMI_DMI("mode_chay_rung: ",mode_chay_rung,12);
 										break;
 									case 13:
-										HMI_DMI("Quang tro 2 ",Quang_tro2,13);
+										HMI_DMI("nhat_dat_hop ",nhat_dat_hop,13);
 										break;
 									case 14:
 										HMI_DMI("mode nhat hop ",mode_nhat_hop,14);
@@ -2376,13 +2376,13 @@ void HMI_TRAN(vs32 _so_dong)
 										HMI_DMI("gui ",gui,34); 
 										break;
 									case 35:
-										HMI_DMI("dem_goi_tin_gap ",dem_goi_tin_gap,35); 
+										HMI_DMI("TinHieu_ChuanBi_GapTrai ",TinHieu_ChuanBi_GapTrai,35); 
 										break;
 									case 36:
-										HMI_DMI("dem_goi_tin_gap ",dem_goi_tin_gap,36); 
+										HMI_DMI("TinHieu_ChuanBi_GapPhai ",TinHieu_ChuanBi_GapPhai,36); 
 										break;
 									case 37:
-										HMI_DMI("dem_goi_tin_gap ",dem_goi_tin_gap,37); 
+										HMI_DMI("TinHieu_ChuanBi_GapThang ",TinHieu_ChuanBi_GapThang,37); 
 										break;
 									case 38:
 										HMI_DMI("dem_goi_tin_gap ",dem_goi_tin_gap,38); 

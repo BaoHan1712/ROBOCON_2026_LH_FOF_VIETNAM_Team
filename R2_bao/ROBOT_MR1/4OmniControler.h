@@ -395,8 +395,8 @@ void robotAngleAnalytics(void)
 {
     if(_robotAngleCounterFix > 1)
     {
-    	if(absI(_robotRotateAngle - _robotIMUAngle) < 6){
-	    	if(_robotAngleCounterFix++ > 500)  
+    	if(absI(_robotRotateAngle - _robotIMUAngle) < 5){
+	    	if(_robotAngleCounterFix++ > 300)  
 				{
 						robotStop(0);
 						return;

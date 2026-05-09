@@ -181,9 +181,9 @@ vTaskDelay(1000);
 //			if(TRIANGLE && L2 && !R2 )												Xuat_Phat_Lay_Vu_Khi_Do(162,1500,215);
 				
 					if(TRIANGLE && L2 && !R2 )														tudonghoantoan_san_do();
-					if(SQUARE && L2 && !R2) 															test_gui();
-//					if(X && L2 && !R2) 																	Leo_bac_400(900, -900);
-//				if(O && L2 && !R2 ) 																	Lay_phia_truoc_bac_200_tren();
+					if(SQUARE && L2 && !R2) 															chinh_lai_vi_tri_laser_phai_custom_do(vi_tri_cua_rung_do_3_lazer_phai_tay_41 - 15, 1000,7, 57, 3);
+					if(X && L2 && !R2) 																		Xoay_dau_truoc_cua_do_1();
+//					if(O && L2 && !R2 ) 																	qua_phai_xuong_bac_200_7_do();
 ////				if(X && R2 ) 																			nhat_hop_zone3_do();
 
 	
@@ -196,8 +196,8 @@ vTaskDelay(1000);
 
  
 //					if(TRIANGLE && L2 && !R2) 												 	 		Xuat_Phat_Lay_Vu_Khi_Xanh(168, -1670, 192);
-						if(TRIANGLE && L2 && !R2) 												 	 		tudonghoantoan();
-						if(SQUARE && L2 && !R2) 																su_dung_chan(565);
+						if(TRIANGLE && L2 && !R2) 												 	 		qua_phai_len_bac_200_5_xanh();
+						if(SQUARE && L2 && !R2) 																qua_trai_xuong_bac_200_4_xanh();
 						if(X && L2 && !R2) 																			DatKFSxanh(35);
 //					if(O && L2 && !R2 ) 																		test_dat_hop();
 //					if(X && R2  ) 																					Xuong_bac_200(-900, 900);
@@ -209,7 +209,7 @@ vTaskDelay(1000);
 //					if ( X && L2 && !R2 ) 																su_dung_chan(650);
 //					if(O && L2 && !R2) 																		tu_dong_dat_tang2_xanh();
 		
-////Leo_bac_200
+////Leo_bac_400
 //Xuong_bac_200	(-900, 900)	
 ////Xuong_bac_400	
  ///auto_vao_rung_xanh_cua1(); tay 41, 262 tay 23
