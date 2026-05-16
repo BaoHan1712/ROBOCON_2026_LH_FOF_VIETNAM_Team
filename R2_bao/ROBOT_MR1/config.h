@@ -440,6 +440,9 @@ int TinHieu_ChuanBi_GapThang = 0;
 int TinHieu_ChuanBi_GapTrai = 0;
 int TinHieu_ChuanBi_GapPhai = 0;
 
+int TinHieu_QuaTrai = 0;
+int TinHieu_QuaPhai = 0;
+
 int bai_db = 0;
 
 extern int _robotIMUAngle;
@@ -471,7 +474,7 @@ int cho_phep_chay = 0;
 
 /// **************** GIA TRI VI TRI DAT HOP ********************
 
-int vi_tri_dat_hop_1_2 = 410;
+int vi_tri_dat_hop_1_2 = 408;
 int vi_tri_dat_hop_3_4 = 602;
 int tin_hieu_dat_hop_3_4 = 0;
 int tin_hieu_dat_hop_1_2 = 0;
@@ -494,7 +497,7 @@ int vi_tri_tay_3_phai_tren = 600;
 /// VI TRI MAM XOAY LAY TRAI 200 
 int vi_tri_tay_4_trai_tren = 410;
 int vi_tri_tay_1_trai_tren = 605;
-int vi_tri_tay_2_trai_tren = 593;
+int vi_tri_tay_2_trai_tren = 590;
 int vi_tri_tay_3_trai_tren = 401;
 
 /// VI TRI LAZER LAY QUA THANG
@@ -538,26 +541,26 @@ int vi_tri_cua_rung_do_1_lazer_trai_tay_23 = 370;
 ///*********************************************************
 
 //// ******** VI TRI LAZER DAT HOP XANH *********************
-int vi_tri_dat_hop_1_tay41_xanh = 49; /// ** DUNG LAZER SAU**
-int vi_tri_dat_hop_2_tay41_xanh = 106;
-int vi_tri_dat_hop_3_tay41_xanh = 159;
+int vi_tri_dat_hop_1_tay41_xanh = 50; /// ** DUNG LAZER SAU**
+int vi_tri_dat_hop_2_tay41_xanh = 102;  // di ngang = 95 lazer, di thang = 102 lazer
+int vi_tri_dat_hop_3_tay41_xanh = 158;
 
-int vi_tri_dat_hop_1_tay23_xanh = 6;
-int vi_tri_dat_hop_2_tay23_xanh = 59;
-int vi_tri_dat_hop_3_tay23_xanh = 109;
+int vi_tri_dat_hop_1_tay23_xanh = 5;
+int vi_tri_dat_hop_2_tay23_xanh = 60;
+int vi_tri_dat_hop_3_tay23_xanh = 116;
 
 ///
 //// ******** VI TRI LAZER DAT HOP DO *********************
-int vi_tri_dat_hop_1_tay41_do = 106;   /// ** DUNG LAZER truoc**
-int vi_tri_dat_hop_2_tay41_do = 53;
-int vi_tri_dat_hop_3_tay41_do = 2;
+int vi_tri_dat_hop_1_tay41_do = 105;   /// ** DUNG LAZER truoc**
+int vi_tri_dat_hop_2_tay41_do = 52;
+int vi_tri_dat_hop_3_tay41_do = 1;
 
-int vi_tri_dat_hop_1_tay23_do = 152;   /// ** DUNG LAZER truoc**
-int vi_tri_dat_hop_2_tay23_do = 98;
-int vi_tri_dat_hop_3_tay23_do = 44;
+int vi_tri_dat_hop_1_tay23_do = 150;   /// ** DUNG LAZER truoc**
+int vi_tri_dat_hop_2_tay23_do = 96;
+int vi_tri_dat_hop_3_tay23_do = 42;
 
 ///
-
+int kt_laban = 0;
 /// ************* BIEN TOAN CUC *************
 int da_lay_tay1 = 0;
 int da_lay_tay2 = 0;
@@ -584,7 +587,7 @@ int Min_Nang_Ha = 160 ;
 int Max_Nang_Ha = 610;
 static bool on_off_nang = true;
 
-
+void moqua(void);
 extern int state_nang;
 
 int Max_BT_Nang_Lua = 730;
@@ -1812,7 +1815,11 @@ void ProcessReceivedData_2(void)
 						nhat_dat_hop = id_block;
 						mode_nhat_hop = 1; // mode nhat hop
 			}
-
+			
+			// trang thai nha tat ca qua tren tay
+			else if (id_rb == 3 && state_rb == 3 && move == 3 ) {
+						moqua();
+			}
 			
     }
     else
@@ -2201,7 +2208,7 @@ void run_read_gyro_uart3(void)
 	dataTxGyro='z';
 }
 int gui = 0;
-
+int check_time = 0;
 //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 //---------------------------- TRUYEN DU LIEU VAO MANG-----------------------------
 void HMI_TRAN(vs32 _so_dong)
@@ -2376,22 +2383,22 @@ void HMI_TRAN(vs32 _so_dong)
 										HMI_DMI("gui ",gui,34); 
 										break;
 									case 35:
-										HMI_DMI("TinHieu_ChuanBi_GapTrai ",TinHieu_ChuanBi_GapTrai,35); 
+										HMI_DMI("GapTrai ",TinHieu_ChuanBi_GapTrai,35); 
 										break;
 									case 36:
-										HMI_DMI("TinHieu_ChuanBi_GapPhai ",TinHieu_ChuanBi_GapPhai,36); 
+										HMI_DMI("GapPhai ",TinHieu_ChuanBi_GapPhai,36); 
 										break;
 									case 37:
-										HMI_DMI("TinHieu_ChuanBi_GapThang ",TinHieu_ChuanBi_GapThang,37); 
+										HMI_DMI("GapThang ",TinHieu_ChuanBi_GapThang,37); 
 										break;
 									case 38:
-										HMI_DMI("dem_goi_tin_gap ",dem_goi_tin_gap,38); 
+										HMI_DMI("ngang_qua_o3 ",chay_ngang_qua_o3_do,38); 
 										break;
 									case 39:
-										HMI_DMI("dem_goi_tin_gap ",dem_goi_tin_gap,39); 
+										HMI_DMI("kt_laban ",kt_laban,39); 
 										break;
 									case 40:
-										HMI_DMI("dem_goi_tin_gap ",dem_goi_tin_gap,40); 
+										HMI_DMI("check_time ",check_time,40); 
 										break;
 						}
 }

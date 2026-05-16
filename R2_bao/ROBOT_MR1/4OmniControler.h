@@ -177,8 +177,8 @@ int roundF(float num)
 float fixMotorValue(int T)
 {
 	if(T == 0) 			return 0;
-	else 	if(T < 0) return (T*0.1 - 0.3)/_robotCurrentSpeed; // tuy thuoc robot ma co the he so toi thieu la 0.5, 1, 2...
-				else 			return (T*0.1 + 0.3)/_robotCurrentSpeed;
+	else 	if(T < 0) return (T*0.15 - 0.2)/_robotCurrentSpeed; // tuy thuoc robot ma co the he so toi thieu la 0.5, 1, 2...
+				else 			return (T*0.15 + 0.2)/_robotCurrentSpeed;
 }
 //------------------------------------------------------------------------------
 float absF(float num)
@@ -395,8 +395,8 @@ void robotAngleAnalytics(void)
 {
     if(_robotAngleCounterFix > 1)
     {
-    	if(absI(_robotRotateAngle - _robotIMUAngle) < 5){
-	    	if(_robotAngleCounterFix++ > 300)  
+    	if(absI(_robotRotateAngle - _robotIMUAngle) < 10){
+	    	if(_robotAngleCounterFix++ > 500)  
 				{
 						robotStop(0);
 						return;
@@ -418,7 +418,6 @@ void robotAngleAnalytics(void)
 					calculateMotor(_robotRotate);
     	}
     }
-
 }
 //-----------------------------------------------------------------
 void robotDirectionAnalytics()
@@ -436,7 +435,7 @@ void robotDirectionAnalytics()
 						{
 									if(_robotAngleCounterFix < 3){
 												// Khi dung goc thi dung robot, khoa banh xe, va bat dau Fix Angle
-												if(absI(_robotRotateAngle - _robotIMUAngle) < 10)
+												if(absI(_robotRotateAngle - _robotIMUAngle) < 8)
 												{
 														_robotAngleToFix = _robotRotateAngle;
 														_robotCurrentSpeed = 0;

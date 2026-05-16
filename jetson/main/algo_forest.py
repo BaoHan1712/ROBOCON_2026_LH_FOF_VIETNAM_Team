@@ -58,7 +58,15 @@ def handle_click(data):
     payload = {"team": global_team, "grid": get_algo_matrix_internal()}
     emit('server_sync', {'state': global_state, 'team': global_team}, broadcast=True)
     emit('sync_state', payload, broadcast=True)
+@socketio.on('client_find_path')
+def handle_client_find_path():
+    # Web kêu Dò Đường -> Server phát loa cho App PC làm việc
+    emit('trigger_find_path', broadcast=True)
 
+@socketio.on('app_path_sync')
+def handle_app_path_sync(data):
+    # App PC báo cáo đường đi -> Server phát loa trả kết quả xuống Web
+    emit('server_path_sync', data, broadcast=True)
 @socketio.on('client_toggle_team')
 def handle_toggle_team():
     global global_team, global_state
@@ -398,8 +406,9 @@ class SelectPlaceApp:
         @self.sio.on('trigger_target')
         def on_trigger_target(data=None):
             if data and 'target' in data:
-                self.target_blocks = data['target'] # Lưu biến vào class
-                print(f"\n>> [CHIẾN THUẬT] ĐÃ CHỐT MỤC TIÊU: Chỉ ăn {self.target_blocks} khối R2!")
+                # Gọi thẳng hàm set_kpi thông qua root.after để đảm bảo an toàn luồng Tkinter
+                # Nó sẽ tự động cập nhật biến, nháy màu nút trên App PC, và tự tìm lại đường!
+                self.root.after(0, lambda: self.set_kpi(data['target']))
 
         @self.sio.on('connect')
         def on_connect():
@@ -444,7 +453,11 @@ class SelectPlaceApp:
         def on_trigger_reset(data=None):
             print("\n>> [WEB] ĐÃ NHẬN LỆNH XÓA MAP: Đang dọn dẹp sa bàn...")
             self.root.after(0, self.reset_grid)
-
+            
+        @self.sio.on('trigger_find_path')
+        def on_trigger_find_path(*args):
+            print(">> [WEB COMMAND] Đã bắt được sóng DÒ ĐƯỜNG từ Web! Đang bóp cò...")
+            self.root.after(0, self.smart_run)
         # 4. KẾT NỐI SAU KHI ĐÃ GẮN ĐỦ LỖ TAI
         try:
             self.sio.connect('http://127.0.0.1:5001', transports=['websocket'])
@@ -524,7 +537,7 @@ class SelectPlaceApp:
 
         @self.sio.on('connect_error')
         def on_error(data):
-            self.is_server_connected = False
+            self.is_server_connected = False       
 
         @self.sio.on('sync_state')
         def on_sync_state(data):
@@ -1159,262 +1172,6 @@ class SelectPlaceApp:
             print("\n>>> CHẾ ĐỘ TỰ ĐỘNG (AUTO) <<<")
             self.solve_auto_targets()
 
-    # def solve_auto_targets(self):
-    #     # 1. QUÉT MAP VÀ GOM KHỐI
-    #     list_1s = []
-    #     list_2s = []
-    #     list_2s_at_entry = []   
-    #     list_2s_on_board = []   
-
-    #     for r in range(ROWS):
-    #         for c in range(COLS):
-    #             content = self.grid_cells[r][c]["content"]
-    #             if content:
-    #                 num = content["number"]
-    #                 if num == 1:
-    #                     list_1s.append((r, c))
-    #                 elif num == 2:
-    #                     list_2s.append((r, c))
-    #                     if r == ROWS - 1:
-    #                         list_2s_at_entry.append((r, c))
-    #                     else:
-    #                         list_2s_on_board.append((r, c))
-
-    #     if not list_2s:
-    #         if hasattr(self, 'forced_door_index') and self.forced_door_index != -1:
-    #             self.solve_retry_empty(self.forced_door_index)
-    #         else:
-    #             self.info_label.configure(text="LỖI: Không có khối R2 nào trên sân.", text_color="red")
-    #         return
-
-    #     total_target = getattr(self, 'target_blocks', 4)
-    #     print(f">>> Khối 2: {len(list_2s_at_entry)} tại bục, {len(list_2s_on_board)} trên sa bàn")
-
-    #     # =========================================================================
-    #     # 🎯 QUÉT ĐA VŨ TRỤ: MÔ PHỎNG TẤT CẢ CỬA VÀ MỌI CÚ LÁCH NGANG
-    #     # =========================================================================
-    #     allowed_starts = [self.forced_door_index] if (hasattr(self, 'forced_door_index') and self.forced_door_index != -1) else [0, 1, 2]
-    #     valid_solutions = []
-
-    #     for start_col in allowed_starts:
-    #         # --- Xử lý gắp bục cho từng Cửa ---
-    #         door_picked = None
-    #         sim_list_2s = list(list_2s_on_board)
-
-    #         if list_2s_at_entry:
-    #             door_picked = min(list_2s_at_entry, key=lambda x: abs(x[1] - start_col))
-    #             for entry in list_2s_at_entry:
-    #                 if entry != door_picked:
-    #                     sim_list_2s.append(entry)
-
-    #         # Tính toán quỹ đạo chạy dưới gầm bàn
-    #         door_path_segs = []
-    #         current_door_col = door_picked[1] if door_picked else start_col
-
-    #         if door_picked:
-    #             target_col = door_picked[1]
-    #             dp = [(DOOR_ROW, current_door_col)]
-    #             door_path_segs.append((dp, door_picked))
-    #             current_door_col = target_col
-
-    #         # Đường leo lên sa bàn
-    #         climb_dp = [(DOOR_ROW, current_door_col)]
-    #         c = current_door_col
-    #         while c != start_col:
-    #             c += 1 if start_col > c else -1
-    #             climb_dp.append((DOOR_ROW, c))
-    #         climb_dp.append((ROWS - 1, start_col))
-
-    #         # --- Sinh ra 9 con đường vật lý bắt đầu từ Cửa này ---
-    #         all_paths = []
-            
-    #         # 1. Ủi thẳng
-    #         p = []
-    #         for r in range(ROWS - 1, -2, -1): p.append((r, start_col))
-    #         all_paths.append(p)
-            
-    #         # 2. Tạt ngang (Max 1 lần bẻ lái)
-    #         for shift_dir in [-1, 1]:
-    #             shifted_col = start_col + shift_dir
-    #             if 0 <= shifted_col < COLS:
-    #                 for shift_row in range(ROWS - 1, -1, -1):
-    #                     p = []
-    #                     curr_c = start_col
-    #                     for r in range(ROWS - 1, -2, -1):
-    #                         p.append((r, curr_c))
-    #                         # Thực hiện cua ngang (Crab Walk) tại hàng này
-    #                         if r == shift_row:
-    #                             curr_c = shifted_col
-    #                             p.append((r, curr_c)) 
-    #                     all_paths.append(p)
-
-    #         # --- Chạy mô phỏng trên từng con đường ---
-    #         for path_coords in all_paths:
-    #             # 🚨 LUẬT GIAO THÔNG THỰC TẾ: CHỈ KIỂM TRA LÊN CÁI BÁNH XE!
-    #             is_valid = True
-    #             r1_stepped = 0 # Đếm số khối R1 thực tế mà bánh xe dẫm lên
-
-    #             for r, c in path_coords:
-    #                 if r == -1: continue
-    #                 cell = self.grid_cells[r][c]["content"]
-    #                 if not cell: continue
-                    
-    #                 # 1. Bánh xe cán trúng Khối Fake -> Rớt đài -> Bỏ đường này!
-    #                 if cell["number"] == 3: 
-    #                     is_valid = False
-    #                     break
-                        
-    #                 # 2. Bánh xe cán trúng R1 -> Cộng dồn. Dẫm >= 2 cục R1 trên quỹ đạo -> Kẹt -> BỎ!
-    #                 if cell["number"] == 1: 
-    #                     r1_stepped += 1
-    #                     if r1_stepped >= 2:
-    #                         is_valid = False
-    #                         break
-
-    #             if not is_valid: continue # Chỉ vứt đường đi, đéo vứt nguyên cái cột
-
-    #             picked = []
-    #             sim_path_temp = []
-    #             current_segment = [path_coords[0]]
-    #             path_failed = False
-    #             # target_blocks_on_board = total_target - (1 if door_picked else 0)
-
-    #             # for i in range(len(path_coords) - 1):
-    #             #     curr_r, curr_c = path_coords[i]
-    #             #     next_r, next_c = path_coords[i+1]
-
-    #             #     # Quét tay Trước, Trái, Phải
-    #             #     for dr, dc in [(-1, 0), (0, -1), (0, 1)]:
-    #             #         tr, tc = curr_r + dr, curr_c + dc
-    #             #         if (tr, tc) in sim_list_2s and (tr, tc) not in picked:
-    #             #             if len(picked) < target_blocks_on_board:
-    #             #                 picked.append((tr, tc))
-    #             #                 sim_path_temp.append((current_segment.copy(), (tr, tc)))
-    #             #                 current_segment = [(curr_r, curr_c)]
-
-    #             #     # Húc phải R2 thì gắp, đầy túi mà húc thì Rớt đài
-    #             #     if next_r != -1 and (next_r, next_c) in sim_list_2s and (next_r, next_c) not in picked:
-    #             #         if len(picked) < target_blocks_on_board:
-    #             #             picked.append((next_r, next_c))
-    #             #             sim_path_temp.append((current_segment.copy(), (next_r, next_c)))
-    #             #             current_segment = [(curr_r, curr_c)]
-    #             #         else:
-    #             #             path_failed = True # Lỗi Húc Khối
-    #             #             break
-    #             #     # =====================================================
-    #             #     # 💡 LUẬT KHÓA MỎM & SINH TỒN (2, 3, 4 CỤC)
-    #             #     # =====================================================
-    #             #     desired_target = getattr(self, 'target_blocks', 4) # Lấy KPI từ UI
-    #             #     bag_capacity = 4 # Sức chứa vật lý của xe
-                    
-    #             #     door_count = 1 if door_picked else 0
-    #             #     max_reach_limit = desired_target - door_count   # Giới hạn vươn tay gắp
-    #             #     max_survive_limit = bag_capacity - door_count   # Giới hạn há mỏm nuốt để sống
-
-    #             #     for i in range(len(path_coords) - 1):
-    #             #         curr_r, curr_c = path_coords[i]
-    #             #         next_r, next_c = path_coords[i+1]
-
-    #             #         # 1. QUÉT TAY: Chỉ vươn tay nếu chưa đủ KPI (desired_target)
-    #             #         for dr, dc in [(-1, 0), (0, -1), (0, 1)]:
-    #             #             tr, tc = curr_r + dr, curr_c + dc
-    #             #             if (tr, tc) in sim_list_2s and (tr, tc) not in picked:
-    #             #                 if len(picked) < max_reach_limit:
-    #             #                     picked.append((tr, tc))
-    #             #                     sim_path_temp.append((current_segment.copy(), (tr, tc)))
-    #             #                     current_segment = [(curr_r, curr_c)]
-
-    #             #         # 2. BƯỚC LÊN KHỐI: Nếu dẫm phải khối trên đường -> Bắt buộc nuốt để sống
-    #             #         if next_r != -1 and (next_r, next_c) in sim_list_2s and (next_r, next_c) not in picked:
-    #             #             if len(picked) < max_survive_limit:
-    #             #                 picked.append((next_r, next_c))
-    #             #                 sim_path_temp.append((current_segment.copy(), (next_r, next_c)))
-    #             #                 current_segment = [(curr_r, curr_c)]
-    #             #             else:
-    #             #                 path_failed = True # Bụng đã chứa 4 cục mà vẫn dẫm -> Tông khối!
-    #             #                 break
-    #             #     current_segment.append((next_r, next_c))
-
-                
-                
-    #             sim_path_temp.append((current_segment.copy(), "FINISH"))
-
-    #             # Tính Cost & Ưu Tiên Rẽ Muộn (Late Turn)
-    #             shifts = 0
-    #             shift_row_val = 0
-    #             for i in range(len(path_coords)-1):
-    #                 if path_coords[i][1] != path_coords[i+1][1]:
-    #                     shifts += 1
-    #                     shift_row_val = path_coords[i][0]
-    #                     break
-
-    #             team_bonus = 0
-    #             if shifts == 0: 
-    #                 if self.team_color == "RED" and start_col == 2: team_bonus = -5
-    #                 elif self.team_color == "BLUE" and start_col == 0: team_bonus = -5
-
-    #             cost = len(path_coords) * 10 + shifts * 15 + shift_row_val + team_bonus
-    #             total_picked_this_path = len(picked) + (1 if door_picked else 0)
-
-    #             valid_solutions.append({
-    #                 "start_col": start_col,
-    #                 "door_picked": door_picked,
-    #                 "door_path_segs": door_path_segs,
-    #                 "climb_dp": climb_dp,
-    #                 "picked_count": total_picked_this_path,
-    #                 "cost": cost,
-    #                 "sim_path": sim_path_temp,
-    #                 "ordered_entry": [door_picked] if door_picked else []
-    #             })
-
-    #     if not valid_solutions:
-    #         self.info_label.configure(text="LỖI: Rừng bít bùng, đéo lách được hoặc húc khối!", text_color="red")
-    #         return
-
-        # =========================================================================
-        # 🚨 ĐẢM BẢO YÊU CẦU "BUỘC PHẢI TÌM ĐƯỜNG PICK >= 2 CỤC" 
-        # =========================================================================
-        # max_possible_picks = min(total_target, len(list_2s))
-        # if max_possible_picks >= 2:
-        #     filtered_sols = [s for s in valid_solutions if s["picked_count"] >= 2]
-        #     if filtered_sols:
-        #         valid_solutions = filtered_sols 
-        #     else:
-        #         print(">>> [CẢNH BÁO] Các ngõ lách đều kẹt, không thể ăn >=2 cục an toàn!")
-
-        # # 🏆 CHỐT ĐƠN
-        # valid_solutions.sort(key=lambda x: (-x["picked_count"], x["cost"]))
-        # best_solution = valid_solutions[0]
-        
-        # forest_path = best_solution["sim_path"]
-        # door_path_segs = best_solution["door_path_segs"]
-        # climb_dp = best_solution["climb_dp"]
-        # best_col = best_solution["start_col"]
-        # ordered_entry = best_solution["ordered_entry"]
-
-        # sim_path = []
-        # sim_path.extend(door_path_segs)
-        
-        # if forest_path:
-        #     first_seg_path, first_seg_act = forest_path[0]
-        #     merged_path = climb_dp[:-1] + first_seg_path
-        #     forest_path[0] = (merged_path, first_seg_act)
-            
-        # sim_path.extend(forest_path)
-
-        # # --- LƯU KẾT QUẢ ---
-        # self.simulation_path = sim_path
-        # self.best_ignored_set = []
-        # self._best_col = best_col
-
-        # picked_ids = [self.get_cell_id(*a) for _, a in sim_path if isinstance(a, tuple) and 0 <= a[0] < ROWS]
-        # entry_ids = [self.get_cell_id(*p) for p in ordered_entry]
-
-        # print(f"-> Chọn Cửa: Cột {best_col} (Team {self.team_color})")
-        # print(f"-> Gắp bục: {entry_ids} | Gắp sa bàn: {[i for i in picked_ids if i not in entry_ids]}")
-        # self.visualize_result(sim_path, [])
-        # self.info_label.configure(text=f"AUTO: Bò -> Cửa {best_col} -> Vét máng gắp {picked_ids}.")
-
     def solve_manual_targets(self):
         pass
 
@@ -1534,7 +1291,37 @@ class SelectPlaceApp:
                                  text_color="#00ff88", fg_color="transparent")
             lbl_d.place(relx=0.5, rely=0.85, anchor="center")
             door["overlays"].append(lbl_d)
-    # =========================================================================
+        # =====================================================================
+        # 6. ĐÓNG GÓI TOÀN BỘ ĐƯỜNG ĐI & BIỂU TƯỢNG BẮN LÊN WEB
+        # =====================================================================
+        path_dict = {}
+        for idx, (r, c) in enumerate(sa_ban_path):
+            cell_id = self.get_cell_id(r, c)
+            path_dict[str(cell_id)] = idx
+            
+        picked_list = []
+        for seg_path, act in simulation_path:
+            if isinstance(act, tuple) and 0 <= act[0] < ROWS:
+                picked_list.append(str(self.get_cell_id(*act)))
+                
+        pha_list = []
+        for r, c in sa_ban_path:
+            cell = self.grid_cells[r][c]
+            if cell["content"] and cell["content"]["number"] == 1:
+                pha_list.append(str(self.get_cell_id(r, c)))
+                
+        bo_list = [str(self.get_cell_id(r, c)) for r, c in ignored_blocks]
+        
+        try:
+            self.sio.emit('app_path_sync', {
+                'path_dict': path_dict,
+                'picked_ids': picked_list,
+                'pha_ids': pha_list,
+                'bo_ids': bo_list
+            })
+            print(f">> [SYNC] Đã bắn bản đồ và full biểu tượng lên Web!")
+        except Exception as e:
+            print(f">>> [LỖI FATAL KHI BẮN SYNC]: {e}")    # =========================================================================
     # 🧠 BỘ NÃO SỐ 1: TÌM ĐƯỜNG ĐA VŨ TRỤ (CHỌN LỐI THOÁT TỐI ƯU)
     # =========================================================================
     def solve_auto_targets(self):
@@ -1696,7 +1483,9 @@ class SelectPlaceApp:
                             shift_row_val = path_coords[i][0]
                             break
 
-                    cost = len(path_coords) * 10 + shifts * 15 + shift_row_val
+                    # 💡 GIỮ NGUYÊN LOGIC CŨ, CHỈ TÍNH THÊM KHOẢNG CÁCH CHẠY GẦM
+                    under_table_dist = abs(start_col - door_picked[1]) if door_picked else 0
+                    cost = len(path_coords) * 10 + (shifts + under_table_dist) * 15 + shift_row_val
                     
                     total_picked_this_path = len(picked) + (1 if door_picked else 0)
                     end_col = path_coords[-1][1] 
@@ -1710,38 +1499,39 @@ class SelectPlaceApp:
                         "picked_count": total_picked_this_path,
                         "cost": cost,
                         "sim_path": sim_path_temp,
-                        "ordered_entry": [door_picked] if door_picked else []
+                        "ordered_entry": [door_picked] if door_picked else [],
+                        "shifts": shifts,                           # Truyền số lần rẽ cho Trọng Tài
+                        "under_table_dist": under_table_dist        # Truyền khoảng cách chạy gầm cho Trọng Tài
                     })
 
         if not valid_solutions:
-            self.info_label.configure(text="LỖI: Rừng bít bùng, đéo lách được hoặc húc khối!", text_color="red")
+            self.info_label.configure(text="LỖI: Rừng bít bùng, đéo lách được!", text_color="red")
             return
 
-        max_possible_picks = min(total_target, len(list_2s))
-        if max_possible_picks >= 2:
-            filtered_sols = [s for s in valid_solutions if s["picked_count"] >= 2]
-            if filtered_sols:
-                valid_solutions = filtered_sols 
-            else:
-                print(">>> [CẢNH BÁO] Các ngõ lách đều kẹt, không thể ăn >=2 cục an toàn!")
+        # =========================================================================
+        # 🏆 CHỐT ĐƠN: TRỌNG TÀI TỐI THƯỢNG (ƯU TIÊN ĐƯỜNG THẲNG THEO Ý MÀY)
+        # =========================================================================
+        desired_target = getattr(self, 'target_blocks', 3)
 
-        # =========================================================================
-        # 🏆 CHỐT ĐƠN: THUẬT TOÁN PHÂN XỬ TỐI THƯỢNG (SÂN ĐỎ VÀ SÂN XANH)
-        # =========================================================================
         def get_sort_key(sol):
             if self.team_color == "RED":
-                dist_to_exit = abs(sol["end_col"] - 2) # Sân Đỏ: Ép dạt Cột 2
+                dist_to_exit = abs(sol["end_col"] - 2)
             else:
-                dist_to_exit = abs(sol["end_col"] - 0) # Sân Xanh: Ép dạt Cột 0
+                dist_to_exit = abs(sol["end_col"] - 0)
                 
-            # ĐÂY LÀ CHÌA KHÓA: Phạt điểm thằng nào gắp sai số lượng KPI!
+            # Hình phạt nếu gắp lệch số lượng mày yêu cầu
             pick_penalty = abs(sol["picked_count"] - desired_target)
 
+            # Thưởng đi thẳng: Vẫn giữ, nhưng chỉ để DẰN MẶT khi có 2 đường cùng số lượng khối
+            is_perfect_straight = (sol["under_table_dist"] == 0 and sol["shifts"] == 0)
+            straight_bonus = -100 if is_perfect_straight else 0
+
             return (
-                pick_penalty,         # Ưu tiên 1: Lệch KPI thì Penalty cao -> RỚT HẠNG!
-                -sol["picked_count"], # Ưu tiên 2: Nếu kẹt đường buộc phải Penalty, thì thà gắp nhiều hơn
-                sol["cost"],          # Ưu tiên 3: Đường lách mượt nhất
-                dist_to_exit          # Ưu tiên 4: Góc thoát Vùng 3 gần nhất
+                pick_penalty,         # 👑 ƯU TIÊN 1: Lệnh sếp là số 1! Lệch KPI là cút xuống đáy!
+                straight_bonus,       # 🥈 ƯU TIÊN 2: Cùng đủ KPI thì ưu tiên thằng nào ủi thẳng tắp!
+                -sol["picked_count"], # 🥉 ƯU TIÊN 3: Nếu kẹt đường buộc phải rớt KPI, chọn đường vớt vát nhiều cục nhất
+                sol["cost"],          # 🏅 ƯU TIÊN 4: Né phạt lạng lách, phạt chạy gầm xa
+                dist_to_exit          # 🏅 ƯU TIÊN 5: Ép góc thoát dạt ra mép sân
             )
 
         valid_solutions.sort(key=get_sort_key)
@@ -2206,124 +1996,7 @@ class SelectPlaceApp:
                 self.info_label.configure(text="✓ Nạp Map thành công!", text_color="green")
             else:
                 self.info_label.configure(text="Đã đóng quét QR.", text_color="black")
-    # =========================================================================
-    # TAB 2: VÙNG 3 (MATRIX DETECT) - TÍCH HỢP TỪ MAIN
-    # =========================================================================
-    # def setup_matrix_tab(self):
-    #     self.matrix_selected = {i: False for i in range(1, 7)}
-    #     self.matrix_buttons = {}
-
-    #     ctk.CTkLabel(
-    #         self.tab_matrix, text="Bảng Điều Khiển Gắp Khối Vùng 3",
-    #         font=("Segoe UI", 22, "bold"), text_color="#1e293b"
-    #     ).pack(pady=(20, 5))
-
-    #     self.matrix_status = ctk.CTkLabel(self.tab_matrix, text="Sẵn sàng gửi UART", font=("Segoe UI", 14), text_color="#64748b")
-    #     self.matrix_status.pack(pady=(0, 5))
-
-    #     card = ctk.CTkFrame(self.tab_matrix, corner_radius=20, fg_color="#ffffff")
-    #     card.pack(padx=20, pady=5, fill="both", expand=True)
-
-    #     btn_frame = ctk.CTkFrame(card, fg_color="transparent")
-    #     btn_frame.pack(expand=True, pady=15)
-
-    #     for i in range(1, 7):
-    #         row = 1 if i <= 3 else 0   
-    #         col = (i - 1) % 3
-    #         btn = ctk.CTkButton(
-    #             btn_frame, text=str(i), width=90, height=90, corner_radius=16,
-    #             font=("Segoe UI", 26, "bold"), text_color="white",
-    #             fg_color="#4f46e5", hover_color="#6366f1",
-    #             command=lambda n=i: self.toggle_matrix(n)
-    #         )
-    #         btn.grid(row=row, column=col, padx=15, pady=10)
-    #         self.matrix_buttons[i] = btn
-
-    #     bottom_frame = ctk.CTkFrame(self.tab_matrix, fg_color="transparent")
-    #     bottom_frame.pack(pady=(5, 15))
-
-    #     ctk.CTkButton(
-    #         bottom_frame, text="✔ CHỐT GỬI LỆNH", width=180, height=45, corner_radius=14,
-    #         font=("Segoe UI", 16, "bold"), fg_color="#16a34a", hover_color="#15803d",
-    #         command=self.on_matrix_confirm
-    #     ).grid(row=0, column=0, padx=10)
-
-    #     ctk.CTkButton(
-    #         bottom_frame, text="↺ Reset", width=120, height=45, corner_radius=14,
-    #         font=("Segoe UI", 16, "bold"), fg_color="#dc2626", hover_color="#b91c1c",
-    #         command=self.on_matrix_reset
-    #     ).grid(row=0, column=1, padx=10)
-
-    # def toggle_matrix(self, n):
-    #     self.matrix_selected[n] = not self.matrix_selected[n]
-    #     if self.matrix_selected[n]:
-    #         self.matrix_buttons[n].configure(fg_color="#f59e0b", hover_color="#d97706")
-    #     else:
-    #         self.matrix_buttons[n].configure(fg_color="#4f46e5", hover_color="#6366f1")
-
-    # def on_matrix_reset(self):
-    #     for i in range(1, 7):
-    #         self.matrix_selected[i] = False
-    #         self.matrix_buttons[i].configure(fg_color="#4f46e5", hover_color="#6366f1")
-    #     self.matrix_status.configure(text="Đã Reset lựa chọn", text_color="#64748b")
-
-    # def on_matrix_confirm(self):
-    #     col_map = {1: 1, 2: 2, 3: 3, 4: 1, 5: 2, 6: 3}
-    #     entry = [0, 0, 0]
-    #     for n in range(1, 7):
-    #         if self.matrix_selected[n]:
-    #             idx = col_map[n] - 1
-    #             entry[idx] = n
-
-    #     threading.Thread(
-    #         target=self.send_uart_matrix,
-    #         args=(entry[0], entry[1], entry[2]),
-    #         daemon=True
-    #     ).start()
-
-    # def send_uart_matrix(self, e1, e2, e3):
-    #     try:
-    #         packet = build_packet(2, 3, e1, e2, e3)
-    #         send_packet_once(ser, packet)
-    #         self.matrix_status.configure(text=f"Đã gửi UART Vùng 3: {e1} - {e2} - {e3}", text_color="#16a34a")
-    #         print(f"[MATRIX] Đã gửi lệnh Vùng 3: 2, 3, {e1}, {e2}, {e3}")
-    #     except Exception as e:
-    #         self.matrix_status.configure(text="LỖI UART: Kiểm tra cáp kết nối", text_color="#dc2626")
-    #         print("UART Error:", e)
-
-    # # =========================================================================
-    # # CÔNG TẮC BẬT/TẮT LẮNG NGHE UART (KHÔNG ĐẺ LUỒNG MỚI CHỐNG CRASH)
-    # # =========================================================================
-    # def toggle_main_listener(self):
-    #     try:
-    #         # Import cờ điều khiển từ file uart_listener của mày
-    #         from uart_listener import uart_enable
-            
-    #         # Đảo trạng thái công tắc
-    #         self.is_listening = not self.is_listening
-            
-    #         if self.is_listening:
-    #             # TRẠNG THÁI 1: BẬT
-    #             uart_enable["value"] = True
-    #             self.listen_btn.configure(
-    #                 text="🎧 ĐANG LẮNG NGHE...", 
-    #                 fg_color="#27ae60", hover_color="#2ecc71"
-    #             )
-    #             self.info_label.configure(text="✓ Đã MỞ kết nối Lắng nghe UART!", text_color="green")
-    #             print(">> [UART Algo] Đã MỞ van lắng nghe.")
-    #         else:
-    #             # TRẠNG THÁI 2: TẮT
-    #             uart_enable["value"] = False
-    #             self.listen_btn.configure(
-    #                 text="🎧 BẬT LẮNG NGHE (MAIN)", 
-    #                 fg_color="#8e44ad", hover_color="#732d91"
-    #             )
-    #             self.info_label.configure(text="⏸ Đã TẠM DỪNG Lắng nghe UART.", text_color="#f39c12")
-    #             print(">> [UART Algo] Đã ĐÓNG van lắng nghe.")
-                
-    #     except Exception as e:
-    #         self.info_label.configure(text=f"LỖI Công tắc Lắng Nghe: {e}", text_color="red")
-    #         print(f">> LỖI: {e}")
+    
     def update_led_blink(self):
         """Hàm tạo hiệu ứng nháy đèn dựa trên trạng thái kết nối"""
         self.led_on = not self.led_on # Đảo trạng thái sáng/tối
