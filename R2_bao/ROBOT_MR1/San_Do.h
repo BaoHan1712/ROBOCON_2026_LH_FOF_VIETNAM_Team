@@ -1028,6 +1028,19 @@ void Init_Action_Table_san_do(void)
 		
 		action_table[3][4][10] = qua_phai_xuong_bac_200_10_do; 
     action_table[3][4][11] = qua_phai_len_bac_200_11_do; 
+		
+				/* =========================================
+//   move 4 , action 5,check camera nhin khoi 1
+//   ========================================= */
+		action_table[4][5][4]  = dung_cho_khoi_r1; 
+    action_table[4][5][5]  = dung_cho_khoi_r1;  
+    action_table[4][5][6]  = dung_cho_khoi_r1; 
+    action_table[4][5][7]  = dung_cho_khoi_r1;  
+    action_table[4][5][8]  = dung_cho_khoi_r1;  
+    action_table[4][5][9]  = dung_cho_khoi_r1;  
+    action_table[4][5][10] = dung_cho_khoi_r1;  
+    action_table[4][5][11] = dung_cho_khoi_r1;  
+		action_table[4][5][12] = dung_cho_khoi_r1; 
 }
 
 /////* ================= RUN TU DONG ================= */
@@ -1696,7 +1709,7 @@ void run_align_center(void)
 		}
 }
 
-void chinh_lai_vi_tri_laser_phai_zone3_do(int vitri, int gia_tri_lap)
+void chinh_lai_vi_tri_laser_phai_zone3_do(int vitri, int gia_tri_lap, int min_toc, int max_toc)
 {
 	int speed ;
 	int dieuchinh;
@@ -1704,7 +1717,7 @@ void chinh_lai_vi_tri_laser_phai_zone3_do(int vitri, int gia_tri_lap)
 				{
 		while(abs(lazePhaiValue - vitri) > 1)	{
 			dieuchinh = lazePhaiValue - vitri;
-			speed = smooth_speed(dieuchinh);
+			speed = custom_smooth_speed(dieuchinh, min_toc, max_toc);
 			
 					if  ((lazePhaiValue - vitri)> 0 ) {
 							robotRunAngle(900, speed, 0, 0.5);
@@ -1728,35 +1741,58 @@ void chinh_lai_vi_tri_laser_phai_zone3_do(int vitri, int gia_tri_lap)
 void chon_o_nhat_hop_do(void) {
 
 		if (nhat_dat_hop == 1) {
-				chinh_lai_vi_tri_laser_phai_zone3_do(208, 200);
+				chinh_lai_vi_tri_laser_phai_zone3_do(205, 200, 4, 25);
 			}
 		else if (nhat_dat_hop == 2) {
-				chinh_lai_vi_tri_laser_phai_zone3_do(255, 200);
+				chinh_lai_vi_tri_laser_phai_zone3_do(255, 200, 4, 25);
 			}
 		else if (nhat_dat_hop == 3) {
-				chinh_lai_vi_tri_laser_phai_zone3_do(302, 200);
+				chinh_lai_vi_tri_laser_phai_zone3_do(299, 200, 4, 25);
 			}
 
 			robotStop(0);
 		if (nhat_dat_hop == 1|| nhat_dat_hop == 2 || nhat_dat_hop == 3) {
-				Tay2_len;
-				for(i=0;i<50;i++)	{ 
-									while(CB_xilanh_tay_2 == 1 )	{vTaskDelay(1); if(!wantExit())	break;}
-							}
-				su_dung_chan(508);
-				chinh_lai_vi_tri_laser_sau_zone3(5, 1000);
+				su_dung_chan_thuong(500);
+				chinh_lai_vi_tri_laser_sau_zone3(7, 1000);
 				robotStop(0);
+			
 				if (da_lay_tay1 == 0 && da_lay_tay2 == 0) {
-						dat_hop4_2(508 ,330,5, 4);
-				}
-				else if (da_lay_tay1 == 1 && da_lay_tay2 == 0) {
-						dat_hop1_3(508, 560,5, 1);
+					speed_tay_gat2 = 150;
+					target_tay_gat2 = 400;
+					for(i=0; i<550; i++) 
+						{ 
+					while(abs(bientrodaytay2Value - target_tay_gat2) > 15) { vTaskDelay(1); if(!wantExit()) break; }
+						}
+					dat_hop4_2(500, 330,5, 4);
+					vTaskDelay(2000); 
+					speed_tay_gat2 = 250;
+					target_tay_gat2 = vitri_tay2home ;
+					for(i=0; i<550; i++) 
+						{ 
+					while(abs(bientrodaytay2Value - target_tay_gat2) > 15) { vTaskDelay(1); if(!wantExit()) break; }
+						}
 					}
-				}
-		
+				else if (da_lay_tay1 == 1 && da_lay_tay2 == 0) {
+						speed_tay_gat1 = 150;
+				target_tay_gat1 = 470;
+				for(i=0; i<550; i++) 
+					{ 
+				while(abs(bientrodaytay1Value - target_tay_gat1) > 15) { vTaskDelay(1); if(!wantExit()) break; }
+					}
+				dat_hop1_3(500, 560,5, 1);
+				vTaskDelay(2000); 
+				speed_tay_gat1 = 250;
+				target_tay_gat1 = vitri_tay1home ;
+				for(i=0; i<550; i++) 
+					{ 
+				while(abs(bientrodaytay1Value - target_tay_gat1) > 20) { vTaskDelay(1); if(!wantExit()) break; }
+					}
+			}
+		}
+
 		// chon be tang 3
-			if (nhat_dat_hop == 4 ||nhat_dat_hop == 5 || nhat_dat_hop == 6  ) {
-				robotRotate(-900,0.5,0);
+			else if (nhat_dat_hop == 4 ||nhat_dat_hop == 5 || nhat_dat_hop == 6  ) {
+				robotRotate(-890,0.5,0);
 				while(robotFixAngle()){
 					vTaskDelay (1); 
 					if(!wantExit())	break;
@@ -1765,8 +1801,8 @@ void chon_o_nhat_hop_do(void) {
 				su_dung_chan(710);
 				quyet_dinh_dat_hop_tang3();
 			}
+		robotStop(0);
 }			
-
 
 
 void nhat_hop_zone3_do (void) {

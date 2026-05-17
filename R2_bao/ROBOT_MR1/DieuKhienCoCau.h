@@ -645,17 +645,17 @@ void Nang_cham	(void) {
 
 void Nang_thuong	(void) {
 	speed_chan_sau = 80;
-	speed_chan_truoc = 81;
+	speed_chan_truoc = 80;
 }
 
 void Nang_nhanh	(void) {
-	speed_chan_sau = 180;
-	speed_chan_truoc = 181;
+	speed_chan_sau = 140;
+	speed_chan_truoc = 140;
 }
 
 void Nang_cuc_nhanh	(void) {
 	speed_chan_sau = 230;
-	speed_chan_truoc = 231;
+	speed_chan_truoc = 230;
 }
 
 
@@ -674,7 +674,6 @@ void su_dung_chan_cham (int value_chan) {
 
 void su_dung_chan_thuong (int value_chan) {
 	Nang_thuong();
-
 	target_chan_truoc = value_chan ;
 	target_chan_sau = value_chan;
 }

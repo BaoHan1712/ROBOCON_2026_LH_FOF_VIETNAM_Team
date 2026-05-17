@@ -582,6 +582,10 @@ uint8_t tay_4_co_qua = 0;
 
 uint8_t robot_position = 0;  // vi tri robot dat hop
 
+
+
+
+/// *****************
 int target_Nang_Ha = 600;
 int Min_Nang_Ha = 160 ;
 int Max_Nang_Ha = 610;
@@ -1699,8 +1703,9 @@ void Finish_Current_Block(void)
     Queue_Pop(&dummy);   // ? pop khi dã xong
     has_active_block = 0;
 }
+int cho_r1 = 0;
 
-
+	
 int block_pha = 0;
 int co_vat_can = 1;
 int id_dat_hop = 0;
@@ -1709,6 +1714,8 @@ int id_dat_hop = 0;
 int do_lech = 0;
 int khoangcach = 0;
 int nhat_dat_hop = 0;
+int nhin_hop_duoi_dat = 0; 
+int nhin_hop_tren_buc = 0; 
 
 /// cac mode chay robot
 int mode_chay_rung = 0;
@@ -1765,7 +1772,6 @@ void ProcessReceivedData_2(void)
 			// trang thai ghep vu khi
 			if (id_rb == 1 && state_rb == 2) {
 					block_pha = id_block;
-//					pha_khoi_r1();
 			}
 			else if (id_rb == 2 && state_rb == 1) {
 							co_vat_can = 0;
@@ -1796,6 +1802,13 @@ void ProcessReceivedData_2(void)
 				 if (move == 0 && (action == 1 || action == 2 || action == 3)) {
 						 dem_goi_tin_gap++;
 				 }
+				 //check khoi 1 truoc mat
+				 if (move == 4 && action == 5 ) {
+						 cho_r1 = 1;
+				 }
+				 else if (move == 4 && action == 6 ) {
+						 cho_r1 = 0;
+				 }
 			}
 			
 			// trang thai len zone 3 dat hop
@@ -1815,6 +1828,18 @@ void ProcessReceivedData_2(void)
 						nhat_dat_hop = id_block;
 						mode_nhat_hop = 1; // mode nhat hop
 			}
+			
+			// trang thai nhat hop tren zone 3 lan 2 tu dong
+			else if (id_rb == 2 && state_rb == 5 ) {
+					if ( move == 1 && action == 1 && id_block == 1 ) {
+							nhin_hop_duoi_dat = 1;
+						}
+					/// ngo len nhin nen dat o nao tren buc 3
+					if ( move == 2 && action == 2 ) {
+							nhat_dat_hop = id_block;
+							nhin_hop_tren_buc = 1;
+						}
+					}
 			
 			// trang thai nha tat ca qua tren tay
 			else if (id_rb == 3 && state_rb == 3 && move == 3 ) {
@@ -2380,10 +2405,10 @@ void HMI_TRAN(vs32 _so_dong)
 										HMI_DMI("dem_goi_tin_gap ",dem_goi_tin_gap,33); 
 										break;
 									case 34:
-										HMI_DMI("gui ",gui,34); 
+										HMI_DMI("cho_r1 ",cho_r1,34); 
 										break;
 									case 35:
-										HMI_DMI("GapTrai ",TinHieu_ChuanBi_GapTrai,35); 
+										HMI_DMI("nhin_hop_duoi_dat ",nhin_hop_duoi_dat,35); 
 										break;
 									case 36:
 										HMI_DMI("GapPhai ",TinHieu_ChuanBi_GapPhai,36); 

@@ -196,10 +196,10 @@ vTaskDelay(1000);
 
  
 //					if(TRIANGLE && L2 && !R2) 												 	 		Xuat_Phat_Lay_Vu_Khi_Xanh(168, -1670, 193);
-						if(TRIANGLE && L2 && !R2) 												 	 		tudonghoantoan();
-						if(SQUARE && L2 && !R2) 																quyet_dinh_dat_hop_tang3();
-						if(X && L2 && !R2) 																			su_dung_chan_thuong(710);
-						if(O && L2 && !R2 ) 																		tu_dong_dat_tang2_xanh();
+						if(TRIANGLE && L2 && !R2) 												 	 		nhat_hop_zone3_xanh();
+						if(SQUARE && L2 && !R2) 																test_ngo_matrix();
+//						if(X && L2 && !R2) 																			su_dung_chan_thuong(710);
+//						if(O && L2 && !R2 ) 																		tu_dong_dat_tang2_xanh();
 //					if(X && R2  ) 																					Leo_bac_400(-900,1 900);
 
 		

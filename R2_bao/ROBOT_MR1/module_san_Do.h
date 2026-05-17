@@ -857,7 +857,7 @@ void xuong_bac_200_do_12(void) {
 		if (TinHieu_ChuanBi_GapThang == 0 && TinHieu_ChuanBi_GapTrai == 0 && TinHieu_ChuanBi_GapPhai == 0 && TinHieu_QuaPhai == 0) {
 				su_dung_chan(265);
 				// chay toi khi mat cam bien sau
-				robotRunAngle(900,16,-900,0.5);
+				robotRunAngle(900,18,-900,0.5);
 				for(i=0;i<1550;i++)
 						{
 								while(CB_Ha_Sau == 0 || (abs(bientrochansauValue - target_chan_sau) > 20))	
@@ -1833,7 +1833,7 @@ void xuong_bac_200_do_10 (void) {
 		if (TinHieu_ChuanBi_GapThang == 0 && TinHieu_ChuanBi_GapTrai == 0 && TinHieu_ChuanBi_GapPhai == 0 && TinHieu_QuaTrai == 0) {
 				su_dung_chan(265);
 				// chay toi khi mat cam bien sau
-				robotRunAngle(900,16,-900,0.5);
+				robotRunAngle(900,18,-900,0.5);
 				for(i=0;i<1550;i++)
 						{
 								while(CB_Ha_Sau == 0 || (abs(bientrochansauValue - target_chan_sau) > 20))	
@@ -1924,7 +1924,7 @@ void xuong_bac_200_11_do(void) {
 				su_dung_chan(265);
 
 				// chay toi khi mat cam bien sau
-				robotRunAngle(900,17,-900,0.5);
+				robotRunAngle(900,18,-900,0.5);
 				for(i=0;i<1550;i++)
 						{
 								while(CB_Ha_Sau == 0 || (abs(bientrochansauValue - target_chan_sau) > 20))	
