@@ -48,7 +48,7 @@ void Xuat_Phat_Lay_Vu_Khi_Xanh(int vu_khi, int goc_ve,int vitri)
 					}
 				}
 				Nang_cuc_nhanh();
-				target_chan_truoc = 610, target_chan_sau =615;
+				target_chan_truoc = 610, target_chan_sau =613;
 				for(i=0;i<50;i++)		
 				{
 				while(bientrochantruocValue < 470)	{
@@ -126,7 +126,7 @@ void Xuat_Phat_Lay_Vu_Khi_Xanh(int vu_khi, int goc_ve,int vitri)
 				Tay_kep_len; 
 				
 				robotRun(goc_ve - ((KC_Vu_khi - vu_khi)*10),30);
-				robotRotate(-900,-2.5,0);
+				robotRotate(-900,-2.35,0);
 				
 				Nang_cuc_nhanh();
 		
@@ -151,14 +151,14 @@ void Xuat_Phat_Lay_Vu_Khi_Xanh(int vu_khi, int goc_ve,int vitri)
 					}
 				}
 				
-				vTaskDelay(2000);
+				vTaskDelay(1500);
 				robotStop(0);
 				chinh_lai_vi_tri_VK(vitri, 1000);
 				speed_chan_sau =40;
 				speed_chan_truoc = 41;
 				target_chan_truoc = 231, target_chan_sau = 231;
 				robotRunAngle(900,9,-900,0.7);
-				vTaskDelay(2000);
+				vTaskDelay(1500);
 				robotStop(0);
 			}
 
@@ -1549,9 +1549,10 @@ void chuan_bi_gap_trai_200_tren (void ) {
 void Xuong_bac_200_xanh_9(void){	
 		int vitri_tay23 = vitri_tay23_phai_laser_GapQua;
 		Xuong_bac_200(-900, 900);
-		su_dung_chan(265);
+		
 		if (TinHieu_ChuanBi_GapThang == 0 && TinHieu_ChuanBi_GapTrai == 0 && TinHieu_ChuanBi_GapPhai == 0 && TinHieu_QuaTrai == 0 ) {
 				// chay toi khi mat cam bien sau
+				su_dung_chan(265);
 				robotRunAngle(-900,20,900,0.8);
 				for(i=0;i<250;i++)
 							{
@@ -1617,9 +1618,9 @@ void Lay_ben_trai_bac_200_tren_xanh_9(void) {
 
 void xuong_bac_200_xanh_12(void) {
 		Xuong_bac_200(-900, 900);
-		su_dung_chan(265);
+		
 		if (TinHieu_ChuanBi_GapThang == 0 && TinHieu_ChuanBi_GapTrai == 0 && TinHieu_ChuanBi_GapPhai == 0 && TinHieu_QuaTrai == 0) {
-				
+				su_dung_chan(265);
 				// chay toi khi mat cam bien sau
 				robotRunAngle(-900,18,900,0.8);
 				for(i=0;i<1550;i++)
@@ -1767,36 +1768,44 @@ void qua_phai_len_bac_200_3_xanh (void) {
 void qua_phai_len_bac_200_5_xanh (void) {
 		int time_41 = 0;
 		int time_23 = 0;
+		int di_cheo_41 = 0;
+		int di_cheo_23 = 0;
 		if (TinHieu_QuaPhai == 1  && CB_Cap_Thanh_Sau == 1) { // th vua gap trc xong
 				time_41 = 9000;
 				time_23 = 9000;
+				di_cheo_41 = 1450;
+				di_cheo_23 = 450;
 		}
 		else if (TinHieu_QuaPhai == 1 && CB_Cap_Thanh_Sau == 0) { // TH k gap di ngang
-				time_41 = 10;
-				time_23 = 10;
+				time_41 = 4000;
+				time_23 = 4000;
+				di_cheo_41 = -1450;
+				di_cheo_23 = -450;
 		}
 		else {
 				time_41 = 4500;
 				time_23 = 4500;
+				di_cheo_41 = 1450;
+				di_cheo_23 = 450;
 		}
 		TinHieu_QuaPhai = 0;
 		// ***************************** //
 		if (da_lay_tay1 == 0 && da_lay_tay2 == 0 && da_lay_tay3 == 0 && da_lay_tay4 == 0) {
-				MD_qua_trai_phai_len_bac_200(1800, 900, 850, time_41,900, 0, 1800);
+				MD_qua_trai_phai_len_bac_200(1800, 900, 850, 10,900, 0, 1800);
 			}
 		else if (da_lay_tay1 == 1 && da_lay_tay2 == 0 && da_lay_tay3 == 0 && da_lay_tay4 == 0) {
-				MD_qua_trai_phai_len_bac_200(1800, 900, 1450, time_41,900, 0, 1800);
+				MD_qua_trai_phai_len_bac_200(1800, 900, di_cheo_41, time_41,900, 0, 1800);
 			}
 			//// gap 2 lan r
 		else if (da_lay_tay1 == 1 && da_lay_tay2 == 1 && da_lay_tay3 == 0 && da_lay_tay4 == 0) {		
-				MD_qua_trai_phai_len_bac_200(1800, 900, 1450, time_41,900, 0, 1800);
+				MD_qua_trai_phai_len_bac_200(1800, 900, di_cheo_41, time_41,900, 0, 1800);
 			}
 		//// gap 3 lan r
 		else if (da_lay_tay1 == 1 && da_lay_tay2 == 1 && da_lay_tay3 == 1 && da_lay_tay4 == 0) {		
-				MD_qua_trai_phai_len_bac_200(1800, 900, 450, time_23,900, 0, 1800);
+				MD_qua_trai_phai_len_bac_200(1800, 900, di_cheo_23, time_23,900, 0, 1800);
 			}
 		else if (da_lay_tay1 == 1 && da_lay_tay2 == 1 && da_lay_tay3 == 1 && da_lay_tay4 == 1) {		
-				MD_qua_trai_phai_len_bac_200(1800, 900, 450, time_23,900, 0, 1800);
+				MD_qua_trai_phai_len_bac_200(1800, 900, di_cheo_23, time_23,900, 0, 1800);
 			}
 		robotStop(0);
 			
@@ -1851,37 +1860,45 @@ void qua_phai_len_bac_200_5_xanh (void) {
 void qua_phai_len_bac_200_6_xanh (void) {
 		int time_41 = 0;
 		int time_23 = 0;
+		int di_cheo_41 = 0;
+		int di_cheo_23 = 0;
 		if (TinHieu_QuaPhai == 1 && CB_Cap_Thanh_Sau == 1) { // th vua gap trc xong
 				time_41 = 9000;
 				time_23 = 9000;
+				di_cheo_41 = 1450;
+				di_cheo_23 = 450;
 		}
 		else if (TinHieu_QuaPhai == 1 && CB_Cap_Thanh_Sau == 0 ) { // TH k gap di ngang
-				time_41 = 10;
-				time_23 = 10;
+				time_41 = 4000;
+				time_23 = 4000;
+				di_cheo_41 = -1450;
+				di_cheo_23 = -450;
 		}
 		else {
 				time_41 = 4500;
 				time_23 = 4500;
+				di_cheo_41 = 1450;
+				di_cheo_23 = 450;
 		}
 		TinHieu_QuaPhai = 0;
 		/// ***************************
 		
 		if (da_lay_tay1 == 0 && da_lay_tay2 == 0 && da_lay_tay3 == 0 && da_lay_tay4 == 0) {
-				MD_qua_trai_phai_len_bac_200(1800, 900, 850, time_41,900, 0, 1800);
+				MD_qua_trai_phai_len_bac_200(1800, 900, 850, 10,900, 0, 1800);
 			}
 		else if (da_lay_tay1 == 1 && da_lay_tay2 == 0 && da_lay_tay3 == 0 && da_lay_tay4 == 0) {
-				MD_qua_trai_phai_len_bac_200(1800, 900, 1450, time_41,900, 0, 1800);
+				MD_qua_trai_phai_len_bac_200(1800, 900, di_cheo_41, time_41,900, 0, 1800);
 			}
 			//// gap 2 lan r
 		else if (da_lay_tay1 == 1 && da_lay_tay2 == 1 && da_lay_tay3 == 0 && da_lay_tay4 == 0) {		
-				MD_qua_trai_phai_len_bac_200(1800, 900, 1450, time_41,900, 0, 1800);
+				MD_qua_trai_phai_len_bac_200(1800, 900, di_cheo_41, time_41,900, 0, 1800);
 			}
 		//// gap 3 lan r
 		else if (da_lay_tay1 == 1 && da_lay_tay2 == 1 && da_lay_tay3 == 1 && da_lay_tay4 == 0) {		
-				MD_qua_trai_phai_len_bac_200(1800, 900, 500, time_23,900, 0, 1800);
+				MD_qua_trai_phai_len_bac_200(1800, 900, di_cheo_23, time_23,900, 0, 1800);
 			}
 		else if (da_lay_tay1 == 1 && da_lay_tay2 == 1 && da_lay_tay3 == 1 && da_lay_tay4 == 1) {		
-				MD_qua_trai_phai_len_bac_200(1800, 900, 500, time_23,900, 0, 1800);
+				MD_qua_trai_phai_len_bac_200(1800, 900, di_cheo_23, time_23,900, 0, 1800);
 			}
 		robotStop(0);
 			
@@ -1931,36 +1948,44 @@ void qua_phai_len_bac_200_6_xanh (void) {
 void qua_phai_len_bac_200_8_xanh (void) {
 		int time_41 = 0;
 		int time_23 = 0;
+		int di_cheo_41 = 0;
+		int di_cheo_23 = 0;
 		if (TinHieu_QuaPhai == 1 && CB_Ha_Sau == 1 && (bientrochansauValue <= 300)) { // th vua gap trc xong
 				time_41 = 9000;
 				time_23 = 9000;
+				di_cheo_41 = 1450;
+				di_cheo_23 = 450;
 		}
 		else if (TinHieu_QuaPhai == 1 && CB_Ha_Sau == 0 && (bientrochansauValue <= 300)) { // TH k gap di ngang
-				time_41 = 10;
-				time_23 = 10;
+				time_41 = 4000;
+				time_23 = 4000;
+				di_cheo_41 = -1450;
+				di_cheo_23 = -450;
 		}
 		else {
 				time_41 = 4500;
 				time_23 = 4500;
+				di_cheo_41 = 1450;
+				di_cheo_23 = 450;
 		}
 		TinHieu_QuaPhai = 0;
 		/// ***************************
 		if (da_lay_tay1 == 0 && da_lay_tay2 == 0 && da_lay_tay3 == 0 && da_lay_tay4 == 0) {
-				MD_qua_trai_phai_len_bac_200(1800, 900, 850, time_41,900, 0, 1800);
+				MD_qua_trai_phai_len_bac_200(1800, 900, 850, 10,900, 0, 1800);
 			}
 		else if (da_lay_tay1 == 1 && da_lay_tay2 == 0 && da_lay_tay3 == 0 && da_lay_tay4 == 0) {
-				MD_qua_trai_phai_len_bac_200(1800, 900, 1450, time_41,900, 0, 1800);
+				MD_qua_trai_phai_len_bac_200(1800, 900, di_cheo_41, time_41,900, 0, 1800);
 			}
 			//// gap 2 lan r
 		else if (da_lay_tay1 == 1 && da_lay_tay2 == 1 && da_lay_tay3 == 0 && da_lay_tay4 == 0) {		
-				MD_qua_trai_phai_len_bac_200(1800, 900, 1450, time_41,900, 0, 1800);
+				MD_qua_trai_phai_len_bac_200(1800, 900, di_cheo_41, time_41,900, 0, 1800);
 			}
 		//// gap 3 lan r
 		else if (da_lay_tay1 == 1 && da_lay_tay2 == 1 && da_lay_tay3 == 1 && da_lay_tay4 == 0) {		
-				MD_qua_trai_phai_len_bac_200(1800, 900, 500, time_23,900, 0, 1800);
+				MD_qua_trai_phai_len_bac_200(1800, 900, di_cheo_23, time_23,900, 0, 1800);
 			}
 		else if (da_lay_tay1 == 1 && da_lay_tay2 == 1 && da_lay_tay3 == 1 && da_lay_tay4 == 1) {		
-				MD_qua_trai_phai_len_bac_200(1800, 900, 500, time_23,900, 0, 1800);
+				MD_qua_trai_phai_len_bac_200(1800, 900, di_cheo_23, time_23,900, 0, 1800);
 			}
 		robotStop(0);
 			
@@ -2010,36 +2035,44 @@ void qua_phai_len_bac_200_8_xanh (void) {
 void qua_phai_xuong_bac_200_9_xanh (void) {
 		int time_41 = 0;
 		int time_23 = 0;
+		int di_cheo_41 = 0;
+		int di_cheo_23 = 0;
 		if (TinHieu_QuaPhai == 1 && CB_Ha_Sau == 1) { // th vua gap trc xong
 				time_41 = 9000;
 				time_23 = 9000;
+				di_cheo_41 = 1450;
+				di_cheo_23 = 450;
 		}
 		else if (TinHieu_QuaPhai == 1 && CB_Ha_Sau == 0 ) { // TH k gap di ngang
-				time_41 = 10;
-				time_23 = 10;
+				time_41 = 4000;
+				time_23 = 4000;
+				di_cheo_41 = -1450;
+				di_cheo_23 = -450;
 		}
 		else {
 				time_41 = 4500;
 				time_23 = 4500;
+				di_cheo_41 = 1450;
+				di_cheo_23 = 450;
 		}
 		TinHieu_QuaPhai = 0;
 		/// ***************************
 		if (da_lay_tay1 == 0 && da_lay_tay2 == 0 && da_lay_tay3 == 0 && da_lay_tay4 == 0) {
-				MD_qua_trai_phai_xuong_bac_200(1800, 900, 850, time_41,900, 0, 1800);
+				MD_qua_trai_phai_xuong_bac_200(1800, 900, 850, 10,900, 0, 1800);
 			}
 		else if (da_lay_tay1 == 1 && da_lay_tay2 == 0 && da_lay_tay3 == 0 && da_lay_tay4 == 0) {
-				MD_qua_trai_phai_xuong_bac_200(1800, 900, 1450, time_41,900, 0, 1800);
+				MD_qua_trai_phai_xuong_bac_200(1800, 900, di_cheo_41, time_41,900, 0, 1800);
 			}
 			//// gap 2 lan r
 		else if (da_lay_tay1 == 1 && da_lay_tay2 == 1 && da_lay_tay3 == 0 && da_lay_tay4 == 0) {		
-				MD_qua_trai_phai_xuong_bac_200(1800, 900, 1450, time_41,900, 0, 1800);
+				MD_qua_trai_phai_xuong_bac_200(1800, 900, di_cheo_41, time_41,900, 0, 1800);
 			}
 		//// gap 3 lan r
 		else if (da_lay_tay1 == 1 && da_lay_tay2 == 1 && da_lay_tay3 == 1 && da_lay_tay4 == 0) {		
-				MD_qua_trai_phai_xuong_bac_200(1800, 900, 450, time_23,900, 0, 1800);
+				MD_qua_trai_phai_xuong_bac_200(1800, 900, di_cheo_23, time_23,900, 0, 1800);
 			}
 		else if (da_lay_tay1 == 1 && da_lay_tay2 == 1 && da_lay_tay3 == 1 && da_lay_tay4 == 1) {		
-				MD_qua_trai_phai_xuong_bac_200(1800, 900, 450, time_23,900, 0, 1800);
+				MD_qua_trai_phai_xuong_bac_200(1800, 900, di_cheo_23, time_23,900, 0, 1800);
 			}
 		robotStop(0);
 			
@@ -2081,36 +2114,44 @@ void qua_phai_xuong_bac_200_9_xanh (void) {
 void qua_phai_len_bac_200_11_xanh (void) {
 		int time_41 = 0;
 		int time_23 = 0;
-		if (TinHieu_QuaPhai == 1 && CB_Ha_Sau == 1) { // th vua gap trc xong
+		int di_cheo_41 = 0;
+		int di_cheo_23 = 0;
+		if (TinHieu_QuaPhai == 1 && CB_Ha_Sau == 1 && (bientrochansauValue <= 300)) { // th vua gap trc xong
 				time_41 = 9000;
 				time_23 = 9000;
+				di_cheo_41 = 1450;
+				di_cheo_23 = 450;
 		}
-		else if (TinHieu_QuaPhai == 1 && CB_Ha_Sau == 0 ) { // TH k gap di ngang
-				time_41 = 10;
-				time_23 = 10;
+		else if (TinHieu_QuaPhai == 1 && CB_Ha_Sau == 1 && (bientrochansauValue >= 300)) { // TH k gap di ngang
+				time_41 = 3500;
+				time_23 = 3500;
+				di_cheo_41 = -1450;
+				di_cheo_23 = -450;
 		}
 		else {
 				time_41 = 4500;
 				time_23 = 4500;
+				di_cheo_41 = 1450;
+				di_cheo_23 = 450;
 		}
 		TinHieu_QuaPhai = 0;
 		/// ************************
 		if (da_lay_tay1 == 0 && da_lay_tay2 == 0 && da_lay_tay3 == 0 && da_lay_tay4 == 0) {
-				MD_qua_trai_phai_len_bac_200(1800, 900, 850, time_41,900, 0, 1800);
+				MD_qua_trai_phai_len_bac_200(1800, 900, 850, 10,900, 0, 1800);
 			}
 		else if (da_lay_tay1 == 1 && da_lay_tay2 == 0 && da_lay_tay3 == 0 && da_lay_tay4 == 0) {
-				MD_qua_trai_phai_len_bac_200(1800, 900, 1450, time_41,900, 0, 1800);
+				MD_qua_trai_phai_len_bac_200(1800, 900, di_cheo_41, time_41,900, 0, 1800);
 			}
 			//// gap 2 lan r
 		else if (da_lay_tay1 == 1 && da_lay_tay2 == 1 && da_lay_tay3 == 0 && da_lay_tay4 == 0) {		
-				MD_qua_trai_phai_len_bac_200(1800, 900, 1450, time_41,900, 0, 1800);
+				MD_qua_trai_phai_len_bac_200(1800, 900, di_cheo_41, time_41,900, 0, 1800);
 			}
 		//// gap 3 lan r
 		else if (da_lay_tay1 == 1 && da_lay_tay2 == 1 && da_lay_tay3 == 1 && da_lay_tay4 == 0) {		
-				MD_qua_trai_phai_len_bac_200(1800, 900, 450, time_23,900, 0, 1800);
+				MD_qua_trai_phai_len_bac_200(1800, 900, di_cheo_23, time_23,900, 0, 1800);
 			}
 		else if (da_lay_tay1 == 1 && da_lay_tay2 == 1 && da_lay_tay3 == 1 && da_lay_tay4 == 1) {		
-				MD_qua_trai_phai_len_bac_200(1800, 900, 450, time_23,900, 0, 1800);
+				MD_qua_trai_phai_len_bac_200(1800, 900, di_cheo_23, time_23,900, 0, 1800);
 			}
 		robotStop(0);
 			
@@ -2146,36 +2187,44 @@ void qua_phai_len_bac_200_11_xanh (void) {
 void qua_phai_xuong_bac_200_12_xanh (void) {
 		int time_41 = 0;
 		int time_23 = 0;
-		if (TinHieu_QuaPhai == 1 && CB_Ha_Sau == 1) { // th vua gap trc xong
+		int di_cheo_41 = 0;
+		int di_cheo_23 = 0;
+		if (TinHieu_QuaPhai == 1 && CB_Ha_Sau == 1 && (bientrochansauValue <= 300)) { // th vua gap trc xong
 				time_41 = 9000;
 				time_23 = 9000;
+				di_cheo_41 = 1450;
+				di_cheo_23 = 450;	
 		}
-		else if (TinHieu_QuaPhai == 1 && CB_Ha_Sau == 0 ) { // TH k gap di ngang
-				time_41 = 10;
-				time_23 = 10;
+		else if (TinHieu_QuaPhai == 1 && CB_Ha_Sau == 1 && (bientrochansauValue >= 300)) { // TH k gap di ngang
+				time_41 = 3500;
+				time_23 = 3500;
+				di_cheo_41 = -1450;
+				di_cheo_23 = -450;
 		}
 		else {
 				time_41 = 4500;
 				time_23 = 4500;
+				di_cheo_41 = 1450;
+				di_cheo_23 = 450;
 		}
 		TinHieu_QuaPhai = 0;
 		/// ************************
 		if (da_lay_tay1 == 0 && da_lay_tay2 == 0 && da_lay_tay3 == 0 && da_lay_tay4 == 0) {
-				MD_qua_trai_phai_xuong_bac_200(1800, 900, 850, time_41,900, 0, 1800);
+				MD_qua_trai_phai_xuong_bac_200(1800, 900, 850, 10,900, 0, 1800);
 			}
 		else if (da_lay_tay1 == 1 && da_lay_tay2 == 0 && da_lay_tay3 == 0 && da_lay_tay4 == 0) {
-				MD_qua_trai_phai_xuong_bac_200(1800, 900, 1450, time_41,900, 0, 1800);
+				MD_qua_trai_phai_xuong_bac_200(1800, 900, di_cheo_41, time_41,900, 0, 1800);
 			}
 			//// gap 2 lan r
 		else if (da_lay_tay1 == 1 && da_lay_tay2 == 1 && da_lay_tay3 == 0 && da_lay_tay4 == 0) {		
-				MD_qua_trai_phai_xuong_bac_200(1800, 900, 1450, time_41,900, 0, 1800);
+				MD_qua_trai_phai_xuong_bac_200(1800, 900, di_cheo_41, time_41,900, 0, 1800);
 			}
 		//// gap 3 lan r
 		else if (da_lay_tay1 == 1 && da_lay_tay2 == 1 && da_lay_tay3 == 1 && da_lay_tay4 == 0) {		
-				MD_qua_trai_phai_xuong_bac_200(1800, 900, 450, time_23,900, 0, 1800);
+				MD_qua_trai_phai_xuong_bac_200(1800, 900, di_cheo_23, time_23,900, 0, 1800);
 			}
 		else if (da_lay_tay1 == 1 && da_lay_tay2 == 1 && da_lay_tay3 == 1 && da_lay_tay4 == 1) {		
-				MD_qua_trai_phai_xuong_bac_200(1800, 900, 450, time_23,900, 0, 1800);
+				MD_qua_trai_phai_xuong_bac_200(1800, 900, di_cheo_23, time_23,900, 0, 1800);
 			}
 		robotStop(0);
 			
@@ -2261,36 +2310,44 @@ void qua_trai_xuong_bac_200_2_xanh (void) {
 void qua_trai_xuong_bac_200_4_xanh (void) {
 		int time_41 = 0;
 		int time_23 = 0;
+		int di_cheo_41 = 0;
+		int di_cheo_23 = 0;
 		if (TinHieu_QuaTrai == 1 && CB_Cap_Thanh_Sau == 1) { // th vua gap trc xong
 				time_41 = 9000;
 				time_23 = 9000;
+				di_cheo_41 = 1450;
+				di_cheo_23 = 450;
 		}
 		else if (TinHieu_QuaTrai == 1 && CB_Cap_Thanh_Sau == 0 ) { // TH k gap di ngang
-				time_41 = 10;
-				time_23 = 10;
+				time_41 = 4000;
+				time_23 = 4000;
+				di_cheo_41 = -1450;
+				di_cheo_23 = -450;
 		}
 		else {
 				time_41 = 4500;
 				time_23 = 4500;
+				di_cheo_41 = 1450;
+				di_cheo_23 = 450;
 		}
 		TinHieu_QuaTrai = 0;
 		/// ***************************
 		if (da_lay_tay1 == 0 && da_lay_tay2 == 0 && da_lay_tay3 == 0 && da_lay_tay4 == 0) {
-				MD_qua_trai_phai_xuong_bac_200(0, 900, 850, time_41,900, -1800, 0);
+				MD_qua_trai_phai_xuong_bac_200(0, 900, 850, 10,900, -1800, 0);
 			}
 		else if (da_lay_tay1 == 1 && da_lay_tay2 == 0 && da_lay_tay3 == 0 && da_lay_tay4 == 0) {
-				MD_qua_trai_phai_xuong_bac_200(0, 900, 1450, time_41,900, -1800, 0);
+				MD_qua_trai_phai_xuong_bac_200(0, 900, di_cheo_41, time_41,900, -1800, 0);
 			}
 			//// gap 2 lan r
 		else if (da_lay_tay1 == 1 && da_lay_tay2 == 1 && da_lay_tay3 == 0 && da_lay_tay4 == 0) {		
-				MD_qua_trai_phai_xuong_bac_200(0, 900, 1450, time_41,900, -1800, 0);
+				MD_qua_trai_phai_xuong_bac_200(0, 900, di_cheo_41, time_41,900, -1800, 0);
 			}
 		//// gap 3 lan r
 		else if (da_lay_tay1 == 1 && da_lay_tay2 == 1 && da_lay_tay3 == 1 && da_lay_tay4 == 0) {		
-				MD_qua_trai_phai_xuong_bac_200(0, 900, 450, time_23,900, -1800, 0);
+				MD_qua_trai_phai_xuong_bac_200(0, 900, di_cheo_23, time_23,900, -1800, 0);
 			}
 		else if (da_lay_tay1 == 1 && da_lay_tay2 == 1 && da_lay_tay3 == 1 && da_lay_tay4 == 1) {		
-				MD_qua_trai_phai_xuong_bac_200(0, 900, 450, time_23,900, -1800, 0);
+				MD_qua_trai_phai_xuong_bac_200(0, 900, di_cheo_23, time_23,900, -1800, 0);
 			}
 		robotStop(0);
 		Nang_thuong();
@@ -2399,37 +2456,45 @@ void qua_trai_len_bac_200_1_xanh (void) {
 void qua_trai_xuong_bac_200_5_xanh (void) {
 		int time_41 = 0;
 		int time_23 = 0;
+		int di_cheo_41 = 0;
+		int di_cheo_23 = 0;
 		if (TinHieu_QuaTrai == 1 && CB_Ha_Sau == 1) { // th vua gap trc xong
 				time_41 = 9000;
 				time_23 = 9000;
+				di_cheo_41 = 1450;
+				di_cheo_23 = 450;
 		}
 		else if (TinHieu_QuaTrai == 1 && CB_Ha_Sau == 0 ) { // TH k gap di ngang
-				time_41 = 10;
-				time_23 = 10;
+				time_41 = 4000;
+				time_23 = 4000;
+				di_cheo_41 = -1450;
+				di_cheo_23 = -450;
 		}
 		else {
 				time_41 = 4500;
 				time_23 = 4500;
+				di_cheo_41 = 1450;
+				di_cheo_23 = 450;
 		}
 		TinHieu_QuaTrai = 0;
 		/// ***************************
 		
 		if (da_lay_tay1 == 0 && da_lay_tay2 == 0 && da_lay_tay3 == 0 && da_lay_tay4 == 0) {
-				MD_qua_trai_phai_xuong_bac_200(0, 900, 850, time_41,900, -1800, 0);
+				MD_qua_trai_phai_xuong_bac_200(0, 900, 850, 10,900, -1800, 0);
 			}
 		else if (da_lay_tay1 == 1 && da_lay_tay2 == 0 && da_lay_tay3 == 0 && da_lay_tay4 == 0) {
-				MD_qua_trai_phai_xuong_bac_200(0, 900, 1450, time_41,900, -1800, 0);
+				MD_qua_trai_phai_xuong_bac_200(0, 900, di_cheo_41, time_41,900, -1800, 0);
 			}
 			//// gap 2 lan r
 		else if (da_lay_tay1 == 1 && da_lay_tay2 == 1 && da_lay_tay3 == 0 && da_lay_tay4 == 0) {		
-				MD_qua_trai_phai_xuong_bac_200(0, 900, 1450, time_41,900, -1800, 0);
+				MD_qua_trai_phai_xuong_bac_200(0, 900, di_cheo_41, time_41,900, -1800, 0);
 			}
 		//// gap 3 lan r
 		else if (da_lay_tay1 == 1 && da_lay_tay2 == 1 && da_lay_tay3 == 1 && da_lay_tay4 == 0) {		
-				MD_qua_trai_phai_xuong_bac_200(0, 900, 450, time_23,900, -1800, 0);
+				MD_qua_trai_phai_xuong_bac_200(0, 900, di_cheo_23, time_23,900, -1800, 0);
 			}
 		else if (da_lay_tay1 == 1 && da_lay_tay2 == 1 && da_lay_tay3 == 1 && da_lay_tay4 == 1) {		
-				MD_qua_trai_phai_xuong_bac_200(0, 900, 450, time_23,900, -1800, 0);
+				MD_qua_trai_phai_xuong_bac_200(0, 900, di_cheo_23, time_23,900, -1800, 0);
 			}
 		robotStop(0);
 		Nang_thuong();
@@ -2472,36 +2537,44 @@ void qua_trai_xuong_bac_200_5_xanh (void) {
 void qua_trai_xuong_bac_200_7_xanh (void) {
 		int time_41 = 0;
 		int time_23 = 0;
+		int di_cheo_41 = 0;
+		int di_cheo_23 = 0;
 		if (TinHieu_QuaTrai == 1 && CB_Ha_Sau == 1 && (bientrochansauValue <= 300)) { // th vua gap trc xong
 				time_41 = 9000;
 				time_23 = 9000;
+				di_cheo_41 = 1450;
+				di_cheo_23 = 450;
 		}
 		else if (TinHieu_QuaTrai == 1 && CB_Ha_Sau == 0 && (bientrochansauValue <= 300)) { // TH k gap di ngang
-				time_41 = 10;
-				time_23 = 10;
+				time_41 = 4000;
+				time_23 = 4000;
+				di_cheo_41 = -1450;
+				di_cheo_23 = -450;
 		}
 		else {
 				time_41 = 4500;
 				time_23 = 4500;
+				di_cheo_41 = 1450;
+				di_cheo_23 = 450;
 		}
 		TinHieu_QuaTrai = 0;
 		/// ***************************
 		if (da_lay_tay1 == 0 && da_lay_tay2 == 0 && da_lay_tay3 == 0 && da_lay_tay4 == 0) {
-				MD_qua_trai_phai_xuong_bac_200(0, 900, 850, time_41,900, -1800, 0);
+				MD_qua_trai_phai_xuong_bac_200(0, 900, 850, 10,900, -1800, 0);
 			}
 		else if (da_lay_tay1 == 1 && da_lay_tay2 == 0 && da_lay_tay3 == 0 && da_lay_tay4 == 0) {
-				MD_qua_trai_phai_xuong_bac_200(0, 900, 1450, time_41,900, -1800, 0);
+				MD_qua_trai_phai_xuong_bac_200(0, 900, di_cheo_41, time_41,900, -1800, 0);
 			}
 			//// gap 2 lan r
 		else if (da_lay_tay1 == 1 && da_lay_tay2 == 1 && da_lay_tay3 == 0 && da_lay_tay4 == 0) {		
-				MD_qua_trai_phai_xuong_bac_200(0, 900, 1450, time_41,900, -1800, 0);
+				MD_qua_trai_phai_xuong_bac_200(0, 900, di_cheo_41, time_41,900, -1800, 0);
 			}
 		//// gap 3 lan r
 		else if (da_lay_tay1 == 1 && da_lay_tay2 == 1 && da_lay_tay3 == 1 && da_lay_tay4 == 0) {		
-				MD_qua_trai_phai_xuong_bac_200(0, 900, 500, time_23,900, -1800, 0);
+				MD_qua_trai_phai_xuong_bac_200(0, 900, di_cheo_23, time_23,900, -1800, 0);
 			}
 		else if (da_lay_tay1 == 1 && da_lay_tay2 == 1 && da_lay_tay3 == 1 && da_lay_tay4 == 1) {		
-				MD_qua_trai_phai_xuong_bac_200(0, 900, 500, time_23,900, -1800, 0);
+				MD_qua_trai_phai_xuong_bac_200(0, 900, di_cheo_23, time_23,900, -1800, 0);
 			}
 		robotStop(0);
 		Nang_thuong();
@@ -2549,36 +2622,44 @@ void qua_trai_xuong_bac_200_7_xanh (void) {
 void qua_trai_len_bac_200_8_xanh (void) {
 		int time_41 = 0;
 		int time_23 = 0;
+		int di_cheo_41 = 0;
+		int di_cheo_23 = 0;
 		if (TinHieu_QuaTrai == 1 && CB_Ha_Sau == 1 && (bientrochansauValue <= 300)) { // th vua gap trc xong
 				time_41 = 9000;
 				time_23 = 9000;
+				di_cheo_41 = 1450;
+				di_cheo_23 = 450;
 		}
-		else if (TinHieu_QuaTrai == 1 && CB_Ha_Sau == 0 && (bientrochansauValue <= 300)) { // TH k gap di ngang
-				time_41 = 10;
-				time_23 = 10;
+		else if (TinHieu_QuaTrai == 1 && CB_Ha_Sau == 1 && (bientrochansauValue >= 300)) { // TH k gap di ngang
+				time_41 = 3500;
+				time_23 = 3500;
+				di_cheo_41 = -1450;
+				di_cheo_23 = -450;
 		}
 		else {
 				time_41 = 4500;
 				time_23 = 4500;
+				di_cheo_41 = 1450;
+				di_cheo_23 = 450;
 		}
 		TinHieu_QuaTrai = 0;
 		/// ***************************
 		if (da_lay_tay1 == 0 && da_lay_tay2 == 0 && da_lay_tay3 == 0 && da_lay_tay4 == 0) {
-				MD_qua_trai_phai_len_bac_200(0, 900, 850, time_41,900, -1800, 0);
+				MD_qua_trai_phai_len_bac_200(0, 900, 850, 10,900, -1800, 0);
 			}
 		else if (da_lay_tay1 == 1 && da_lay_tay2 == 0 && da_lay_tay3 == 0 && da_lay_tay4 == 0) {
-				MD_qua_trai_phai_len_bac_200(0, 900, 1450, time_41,900, -1800, 0);
+				MD_qua_trai_phai_len_bac_200(0, 900, di_cheo_41, time_41,900, -1800, 0);
 			}
 			//// gap 2 lan r
 		else if (da_lay_tay1 == 1 && da_lay_tay2 == 1 && da_lay_tay3 == 0 && da_lay_tay4 == 0) {		
-				MD_qua_trai_phai_len_bac_200(0, 900, 1450, time_41,900, -1800, 0);
+				MD_qua_trai_phai_len_bac_200(0, 900, di_cheo_41, time_41,900, -1800, 0);
 			}
 		//// gap 3 lan r
 		else if (da_lay_tay1 == 1 && da_lay_tay2 == 1 && da_lay_tay3 == 1 && da_lay_tay4 == 0) {		
-				MD_qua_trai_phai_len_bac_200(0, 900, 450, time_23,900, -1800, 0);
+				MD_qua_trai_phai_len_bac_200(0, 900, di_cheo_23, time_23,900, -1800, 0);
 			}
 		else if (da_lay_tay1 == 1 && da_lay_tay2 == 1 && da_lay_tay3 == 1 && da_lay_tay4 == 1) {		
-				MD_qua_trai_phai_len_bac_200(0, 900, 450, time_23,900, -1800, 0);
+				MD_qua_trai_phai_len_bac_200(0, 900, di_cheo_23, time_23,900, -1800, 0);
 			}
 		robotStop(0);			
 		su_dung_chan(265);
@@ -2629,36 +2710,44 @@ void qua_trai_len_bac_200_8_xanh (void) {
 void qua_trai_len_bac_200_11_xanh (void) {
 		int time_41 = 0;
 		int time_23 = 0;
+		int di_cheo_41 = 0;
+		int di_cheo_23 = 0;
 		if (TinHieu_QuaTrai == 1 && CB_Ha_Sau == 1 && (bientrochansauValue <= 300)) { // th vua gap trc xong
 				time_41 = 9000;
 				time_23 = 9000;
+				di_cheo_41 = 1450;
+				di_cheo_23 = 450;
 		}
-		else if (TinHieu_QuaTrai == 1 && CB_Ha_Sau == 0 && (bientrochansauValue <= 300)) { // TH k gap di ngang
-				time_41 = 10;
-				time_23 = 10;
+		else if (TinHieu_QuaTrai == 1 && CB_Ha_Sau == 1 && (bientrochansauValue >= 300)) { // TH k gap di ngang
+				time_41 = 3500;
+				time_23 = 3500;
+				di_cheo_41 = -1450;
+				di_cheo_23 = -450;
 		}
 		else {
 				time_41 = 4500;
 				time_23 = 4500;
+				di_cheo_41 = 1450;
+				di_cheo_23 = 450;
 		}
 		TinHieu_QuaTrai = 0;
 		/// ***************************
 		if (da_lay_tay1 == 0 && da_lay_tay2 == 0 && da_lay_tay3 == 0 && da_lay_tay4 == 0) {
-				MD_qua_trai_phai_len_bac_200(0, 900, 850, time_41,900, -1800, 0);
+				MD_qua_trai_phai_len_bac_200(0, 900, 850, 10,900, -1800, 0);
 			}
 		else if (da_lay_tay1 == 1 && da_lay_tay2 == 0 && da_lay_tay3 == 0 && da_lay_tay4 == 0) {
-				MD_qua_trai_phai_len_bac_200(0, 900, 1450, time_41,900, -1800, 0);
+				MD_qua_trai_phai_len_bac_200(0, 900, di_cheo_41, time_41,900, -1800, 0);
 			}
 			//// gap 2 lan r
 		else if (da_lay_tay1 == 1 && da_lay_tay2 == 1 && da_lay_tay3 == 0 && da_lay_tay4 == 0) {		
-				MD_qua_trai_phai_len_bac_200(0, 900, 1450, time_41,900, -1800, 0);
+				MD_qua_trai_phai_len_bac_200(0, 900, di_cheo_41, time_41,900, -1800, 0);
 			}
 		//// gap 3 lan r
 		else if (da_lay_tay1 == 1 && da_lay_tay2 == 1 && da_lay_tay3 == 1 && da_lay_tay4 == 0) {		
-				MD_qua_trai_phai_len_bac_200(0, 900, 450, time_23,900, -1800, 0);
+				MD_qua_trai_phai_len_bac_200(0, 900, di_cheo_23, time_23,900, -1800, 0);
 			}
 		else if (da_lay_tay1 == 1 && da_lay_tay2 == 1 && da_lay_tay3 == 1 && da_lay_tay4 == 1) {		
-				MD_qua_trai_phai_len_bac_200(0, 900, 450, time_23,900, -1800, 0);
+				MD_qua_trai_phai_len_bac_200(0, 900, di_cheo_23, time_23,900, -1800, 0);
 			}
 		robotStop(0);			
 		su_dung_chan(265);
@@ -2693,36 +2782,44 @@ void qua_trai_len_bac_200_11_xanh (void) {
 void qua_trai_xuong_bac_200_10_xanh (void) {
 		int time_41 = 0;
 		int time_23 = 0;
+		int di_cheo_41 = 0;
+		int di_cheo_23 = 0;
 		if (TinHieu_QuaTrai == 1 && CB_Ha_Sau == 1 && (bientrochansauValue <= 300)) { // th vua gap trc xong
 				time_41 = 9000;
 				time_23 = 9000;
+				di_cheo_41 = 1450;
+				di_cheo_23 = 450;
 		}
-		else if (TinHieu_QuaTrai == 1 && CB_Ha_Sau == 0 && (bientrochansauValue <= 300)) { // TH k gap di ngang
-				time_41 = 10;
-				time_23 = 10;
+		else if (TinHieu_QuaTrai == 1 && CB_Ha_Sau == 1 && (bientrochansauValue >= 300)) { // TH k gap di ngang
+				time_41 = 3500;
+				time_23 = 3500;
+				di_cheo_41 = -1450;
+				di_cheo_23 = -450;
 		}
 		else {
 				time_41 = 4500;
 				time_23 = 4500;
+				di_cheo_41 = 1450;
+				di_cheo_23 = 450;
 		}
 		TinHieu_QuaTrai = 0;
 		/// ***************************
 		if (da_lay_tay1 == 0 && da_lay_tay2 == 0 && da_lay_tay3 == 0 && da_lay_tay4 == 0) {
-				MD_qua_trai_phai_xuong_bac_200(0, 900, 850, time_41,900, -1800, 0);
+				MD_qua_trai_phai_xuong_bac_200(0, 900, 850, 10,900, -1800, 0);
 			}
 		else if (da_lay_tay1 == 1 && da_lay_tay2 == 0 && da_lay_tay3 == 0 && da_lay_tay4 == 0) {
-				MD_qua_trai_phai_xuong_bac_200(0, 900, 1450, time_41,900, -1800, 0);
+				MD_qua_trai_phai_xuong_bac_200(0, 900, di_cheo_41, time_41,900, -1800, 0);
 			}
 			//// gap 2 lan r
 		else if (da_lay_tay1 == 1 && da_lay_tay2 == 1 && da_lay_tay3 == 0 && da_lay_tay4 == 0) {		
-				MD_qua_trai_phai_xuong_bac_200(0, 900, 1450, time_41,900, -1800, 0);
+				MD_qua_trai_phai_xuong_bac_200(0, 900, di_cheo_41, time_41,900, -1800, 0);
 			}
 		//// gap 3 lan r
 		else if (da_lay_tay1 == 1 && da_lay_tay2 == 1 && da_lay_tay3 == 1 && da_lay_tay4 == 0) {		
-				MD_qua_trai_phai_xuong_bac_200(0, 900, 450, time_23,900, -1800, 0);
+				MD_qua_trai_phai_xuong_bac_200(0, 900, di_cheo_23, time_23,900, -1800, 0);
 			}
 		else if (da_lay_tay1 == 1 && da_lay_tay2 == 1 && da_lay_tay3 == 1 && da_lay_tay4 == 1) {		
-				MD_qua_trai_phai_xuong_bac_200(0, 900, 450, time_23,900, -1800, 0);
+				MD_qua_trai_phai_xuong_bac_200(0, 900, di_cheo_23, time_23,900, -1800, 0);
 			}
 		robotStop(0);
 		su_dung_chan(265);
@@ -2869,15 +2966,15 @@ void Init_Action_Table_san_xanh(void)
     action_table[1][4][1]  = Leo_bac_400_ko_thanh; 
     action_table[1][4][2]  = Leo_bac_200_bam_thanh_phai;
 		action_table[1][4][3]  = Leo_bac_400_co_thanh;
-		action_table[1][4][4]  = Xuong_bac_200_xanh_4; //
-    action_table[1][4][5]  = Leo_bac_200_xanh_5;  //
-    action_table[1][4][6]  = Leo_bac_200_ko_thanh; // 
-    action_table[1][4][7]  = Leo_bac_200_xanh_7; // 
-    action_table[1][4][8]  = Leo_bac_200_ko_thanh; // 
-    action_table[1][4][9]  = Xuong_bac_200_xanh_9; //  
-    action_table[1][4][10] = xuong_bac_200_xanh_10; // 
-    action_table[1][4][11] = xuong_bac_200_end; // 
-		action_table[1][4][12] = xuong_bac_200_xanh_12; // 
+		action_table[1][4][4]  = Xuong_bac_200_xanh_4; 
+    action_table[1][4][5]  = Leo_bac_200_xanh_5;  
+    action_table[1][4][6]  = Leo_bac_200_ko_thanh; 
+    action_table[1][4][7]  = Leo_bac_200_xanh_7;  
+    action_table[1][4][8]  = Leo_bac_200_ko_thanh;  
+    action_table[1][4][9]  = Xuong_bac_200_xanh_9;  
+    action_table[1][4][10] = xuong_bac_200_xanh_10;  
+    action_table[1][4][11] = xuong_bac_200_end;  
+		action_table[1][4][12] = xuong_bac_200_xanh_12; 
 		
 				/* =========================================
 //   move 2 , action 4,chay ben trai
@@ -2885,14 +2982,14 @@ void Init_Action_Table_san_xanh(void)
 		action_table[2][4][1] = qua_trai_len_bac_200_1_xanh;
 		action_table[2][4][2] = qua_trai_xuong_bac_200_2_xanh;
 		
-		action_table[2][4][4] = qua_trai_xuong_bac_200_4_xanh; // 
-		action_table[2][4][5] = qua_trai_xuong_bac_200_5_xanh; //
+		action_table[2][4][4] = qua_trai_xuong_bac_200_4_xanh; 
+		action_table[2][4][5] = qua_trai_xuong_bac_200_5_xanh; 
 		
-		action_table[2][4][8] = qua_trai_len_bac_200_8_xanh; // 
-		action_table[2][4][7] = qua_trai_xuong_bac_200_7_xanh; //
+		action_table[2][4][8] = qua_trai_len_bac_200_8_xanh;  
+		action_table[2][4][7] = qua_trai_xuong_bac_200_7_xanh; 
 		
-		action_table[2][4][11] = qua_trai_len_bac_200_11_xanh;  //
-		action_table[2][4][10] = qua_trai_xuong_bac_200_10_xanh; //
+		action_table[2][4][11] = qua_trai_len_bac_200_11_xanh;  
+		action_table[2][4][10] = qua_trai_xuong_bac_200_10_xanh; 
 
 		/* =========================================
 //   move 3 , action 4,chay ben phai
@@ -2900,14 +2997,14 @@ void Init_Action_Table_san_xanh(void)
 		action_table[3][4][2] = qua_phai_xuong_bac_200_2_xanh; 
 		action_table[3][4][3] = qua_phai_len_bac_200_3_xanh;
 		
-    action_table[3][4][5] = qua_phai_len_bac_200_5_xanh;//
-		action_table[3][4][6] = qua_phai_len_bac_200_6_xanh; //
+    action_table[3][4][5] = qua_phai_len_bac_200_5_xanh;
+		action_table[3][4][6] = qua_phai_len_bac_200_6_xanh; 
 		
-		action_table[3][4][8] = qua_phai_len_bac_200_8_xanh; // 
-		action_table[3][4][9] = qua_phai_xuong_bac_200_9_xanh; //
+		action_table[3][4][8] = qua_phai_len_bac_200_8_xanh;  
+		action_table[3][4][9] = qua_phai_xuong_bac_200_9_xanh; 
 		
-		action_table[3][4][11] = qua_phai_len_bac_200_11_xanh; // 
-		action_table[3][4][12] = qua_phai_xuong_bac_200_12_xanh; // 
+		action_table[3][4][11] = qua_phai_len_bac_200_11_xanh;  
+		action_table[3][4][12] = qua_phai_xuong_bac_200_12_xanh;  
 		
 }
 
@@ -3088,8 +3185,8 @@ void kiem_tra_qua_tay_nao(void) {
         speed_tay_xoay = 100;
         target_xoay_tay = target_tam;
 
-        if (abs(bientroxoaytayValue - target_xoay_tay) > 10) {
-            while (abs(bientroxoaytayValue - target_xoay_tay) > 10) {
+        if (abs(bientroxoaytayValue - target_xoay_tay) > 50) {
+            while (abs(bientroxoaytayValue - target_xoay_tay) > 50) {
                 vTaskDelay(1); 
                 if (!wantExit()) break; 
             }
@@ -3172,7 +3269,7 @@ void DatKFSxanh(int vitri)
 		while(abs(bientrochansauValue - target_chan_sau) > 50)	{vTaskDelay(1); if(!wantExit())	break;}
 	}
 	
-	chinh_lai_vi_tri_laser_phai_custom(190, 1000, 5, 55, 1);
+	chinh_lai_vi_tri_laser_phai_custom(190, 1000, 5, 60, 4);
 	robotStop(50);
 //	
 		robotRunAngle(-900,45,900,0.5);
@@ -3202,13 +3299,13 @@ void DatKFSxanh(int vitri)
 		robotRunAngle(-900,18,900,0.8);
 		for(i=0;i<550;i++)	
 		{	
-				while(lazeSauValue > 38)	
+				while(lazeSauValue > 37)	
 				{	
 					vTaskDelay(5); 
 					if(!wantExit())	break;
 				}
 		}		
-		robotStop(20);
+		robotStop(30);
 		
 //	**************** che do cay diem  ******************
 	if (mode_cay_diem == 1 ) {
@@ -3216,7 +3313,7 @@ void DatKFSxanh(int vitri)
 			{	
 					while(lazeTraiValue > 230)	
 					{	
-						Bam_laser_sau(45,0,900, vitri, 3, -120, 10);
+						Bam_laser_sau(45,0,900, vitri + 15, 3, -120, 10);
 						vTaskDelay(5); 
 						if(!wantExit())	break;
 					}
@@ -3227,7 +3324,7 @@ void DatKFSxanh(int vitri)
 			{	
 					while(lazeTraiValue > 187)	
 					{	
-						Bam_laser_sau(10,0,900, vitri, 1, -100, 10);
+						Bam_laser_sau(10,0,900, vitri + 15, 1, -100, 10);
 						vTaskDelay(5); 
 						if(!wantExit())	break;
 					}
@@ -3257,7 +3354,7 @@ void DatKFSxanh(int vitri)
 			{	
 					while(lazeTraiValue > 230)	
 					{	
-						Bam_laser_sau(45,0,900, vitri + 64, 3, -150, 10);
+						Bam_laser_sau(45,0,900, vitri + 67, 3, -150, 10);
 						vTaskDelay(5); 
 						if(!wantExit())	break;
 					}
@@ -3268,7 +3365,7 @@ void DatKFSxanh(int vitri)
 			{	
 					while(lazeTraiValue > 187)	
 					{	
-						Bam_laser_sau(10,0,900, vitri + 64, 1, -120, 10);
+						Bam_laser_sau(10,0,900, vitri + 67, 1, -120, 10);
 						su_dung_chan_thuong(508);
 						vTaskDelay(1); 
 						if(!wantExit())	break;
@@ -3299,7 +3396,7 @@ bool da_dat_tay_4 = false;
 void dat_qua_tay_1_2_xanh(void) {
     if (CB_kep_1_2 == 0 && CB_kep_1_1 == 0 && !da_dat_tay_1) {
         speed_tay_gat1 = 100;
-        target_tay_gat1 = vitri_tay1home + 95;
+        target_tay_gat1 = vitri_tay1home + 90;
     
         for(i=0; i<50; i++) { 
             while(abs(bientrodaytay1Value - target_tay_gat1) > 10 || abs(bientrodaytay2Value - target_tay_gat2) > 10) {
@@ -3315,12 +3412,13 @@ void dat_qua_tay_1_2_xanh(void) {
 						}
 				}
 				
-        Kep_phai_1_ra;    
+        Kep_phai_1_ra;
+				vTaskDelay(1000);
         da_dat_tay_1 = true; 
     }
     else if (CB_kep_2_2 == 0 && CB_kep_2_1 == 0 && !da_dat_tay_2) {
         speed_tay_gat2 = 100;
-        target_tay_gat2 = vitri_tay2home + 95;
+        target_tay_gat2 = vitri_tay2home + 90;
             
         for(i=0; i<50; i++) { 
             while(abs(bientrodaytay1Value - target_tay_gat1) > 10 || abs(bientrodaytay2Value - target_tay_gat2) > 10) {
@@ -3337,6 +3435,7 @@ void dat_qua_tay_1_2_xanh(void) {
 				}
 				
         Kep_phai_2_ra;
+				vTaskDelay(1000);
         da_dat_tay_2 = true; 
     }
     
@@ -3358,7 +3457,7 @@ void dat_qua_tay_4_3_xanh(void) {
     
     if (CB_kep_4_2 == 0 && CB_kep_4_1 == 0 && !da_dat_tay_4) {
         speed_tay_gat2 = 100;
-        target_tay_gat2 = vitri_tay2home - 95;
+        target_tay_gat2 = vitri_tay2home - 90;
             
         for(i=0; i<50; i++) { 
             while(abs(bientrodaytay1Value - target_tay_gat1) > 10 || abs(bientrodaytay2Value - target_tay_gat2) > 10) {
@@ -3374,12 +3473,13 @@ void dat_qua_tay_4_3_xanh(void) {
 				}
 			
         Kep_phai_4_ra;
+				vTaskDelay(1000);
         da_dat_tay_4 = true; //
     }
     
     else if (CB_kep_3_2 == 0 && CB_kep_3_1 == 0 && !da_dat_tay_3) {
         speed_tay_gat1 = 100;
-        target_tay_gat1 = vitri_tay1home - 95;
+        target_tay_gat1 = vitri_tay1home - 90;
 
         for(i=0; i<50; i++) { 
             while(abs(bientrodaytay1Value - target_tay_gat1) > 10 || abs(bientrodaytay2Value - target_tay_gat2) > 10) {
@@ -3396,6 +3496,7 @@ void dat_qua_tay_4_3_xanh(void) {
 				}
 				
         Kep_phai_3_ra;
+				vTaskDelay(1000);
         da_dat_tay_3 = true; // Ðánh d?u dã d?t xong tay 3
     }
 
@@ -3678,7 +3779,7 @@ void be_len_dat_xanh (void) {
 						
 					}
 				}
-					vTaskDelay (6000);
+					vTaskDelay (2500);
 							
 				for(i=0;i<550;i++)	
 				{	
@@ -3779,14 +3880,21 @@ void be_len_dat_xanh_4_qua (void) {
 					}
 				}
 			kiem_tra_qua_tay_nao();
-
 			vTaskDelay (1000);
+			chuan_bi_dat_hop_tang3();
 			nhay_den_lan_1 = 4;
 			robotStop(0);
 		}
 		
 				// nhay lan 3 thi dat hop lan 3
 	if (nhay_den_lan_1 == 4) {
+			for(i=0;i<1000;i++)	
+			{
+		while(Quang_tro2 > 120)	{	
+				vTaskDelay (1);
+		if(!wantExit())	break;
+					}
+			}
 		
 			dat_hop_vao_o();
 		
@@ -3834,7 +3942,7 @@ void be_len_dat_xanh_4_qua (void) {
 						
 					}
 				}
-					vTaskDelay (6000);
+					vTaskDelay (2500);
 							
 				for(i=0;i<550;i++)	
 				{	
@@ -3934,7 +4042,7 @@ void be_len_dat_xanh_1_qua_tren_3 (void) {
 						}
 				}
 				
-				vTaskDelay (6000);
+				vTaskDelay (2500);
 				for(i=0;i<550;i++)	
 				{	
 						while(lazePhaiValue < 220)	
@@ -4061,6 +4169,14 @@ void mo_vk_san_xanh(void) {
 		}		
 }
 
+void test_xoay (void) {
+		robotRotate(900, 1.3, 0);
+		while(robotFixAngle()){
+		vTaskDelay (1); 
+		if(!wantExit())	break;
+				}
+		robotStop(0);
+}
 void test_vitri_3 (void) {
 		kiem_tra_so_qua_tren_tay();
 		kiem_tra_qua_tay_nao_xuong_rung(); 
@@ -4804,7 +4920,7 @@ void lay_thong_so(void) {
 }
 
 void tu_dong_dat_tang2_xanh(void) {
-		robotRotate(870,0.2, 0);
+		robotRotate(890,0.2, 0);
 		while(robotFixAngle()){
 					vTaskDelay (1); 
 					if(!wantExit())	break;

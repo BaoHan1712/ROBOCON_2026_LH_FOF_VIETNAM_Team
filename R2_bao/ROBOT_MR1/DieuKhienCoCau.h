@@ -830,14 +830,14 @@ void Leo_bac_200(int Angle, int Robot_Angle)
 		while(CB_bung == 1)	{vTaskDelay(1); if(!wantExit())	break;}
 	}
 
-	vTaskDelay(200);
+	vTaskDelay(100);
 	
   robotStop(0);
 	
 	speed_chan_truoc = 230;
 	target_chan_truoc = Min_chan_truoc + 5;
 	
-	speed_chan_sau = 120;
+	speed_chan_sau = 50;
 	target_chan_sau = Min_chan_sau + 10;
 
 	for(i=0;i<250;i++)	
@@ -845,15 +845,13 @@ void Leo_bac_200(int Angle, int Robot_Angle)
 		while(abs(bientrochantruocValue - target_chan_truoc) > 30)	{vTaskDelay(1); if(!wantExit())	break;}
 	}
 	
-	
-	robotRunAngle(Angle,18,Robot_Angle,0.9);
-	for(i=0;i<250;i++)	
+	robotRunAngle(Angle,16,Robot_Angle,0.9);
+	for(i=0;i<550;i++)	
 	{
 	while(CB_ROI_2 == 1  && CB_ROI_3 == 1)	{vTaskDelay(1); if(!wantExit())	break;}
 	}
-
 	RESET_ENCODER(); 
-	while(abs(ENCODER_FR()) + abs(ENCODER_FL()) < 400)	{vTaskDelay (5); if(!wantExit())	break;}
+	while(abs(ENCODER_FR()) + abs(ENCODER_FL()) < 420)	{vTaskDelay (5); if(!wantExit())	break;}
 
   Nang_nhanh();
 	target_chan_truoc = 265, target_chan_sau = 265;
@@ -873,16 +871,15 @@ void MD_qua_trai_phai_len_bac_200 (int goc_quay_ngang,int goc_quay_thang, int di
 		robotRunAngle(di_Cheo, 16, giu_dau,1);
 		vTaskDelay (time_lui); 
 		robotStop(0);
-		robotRotate(goc_quay_ngang,1, 0);
+		robotRotate(goc_quay_ngang,1.2, 0);
 		while(robotFixAngle()){
 		vTaskDelay (1); 
 		if(!wantExit())	break;
 				}
-		robotStop(50);
-		vTaskDelay (1000); 
+		robotStop(0);
 		Leo_bac_200(Angle, Robot_Angle);
 		robotStop(0);
-		robotRotate(goc_quay_thang,1, 0);
+		robotRotate(goc_quay_thang,1.2, 0);
 		while(robotFixAngle()){
 		vTaskDelay (1); 
 		if(!wantExit())	break;
@@ -896,16 +893,15 @@ void MD_qua_trai_phai_xuong_bac_200 (int goc_quay_ngang,int goc_quay_thang, int 
 		robotRunAngle(di_Cheo, 16, giu_dau,1);
 		vTaskDelay (time_lui); 
 		robotStop(0);
-		robotRotate(goc_quay_ngang,1, 0);
+		robotRotate(goc_quay_ngang,1.2, 0);
 		while(robotFixAngle()){
 		vTaskDelay (1); 
 		if(!wantExit())	break;
 				}
-		robotStop(50);
-		vTaskDelay (1000); 
+		robotStop(0);
 		Xuong_bac_200(Angle, Robot_Angle);
 		robotStop(0);
-		robotRotate(goc_quay_thang,1, 0);
+		robotRotate(goc_quay_thang,1.2, 0);
 		while(robotFixAngle()){
 		vTaskDelay (1); 
 		if(!wantExit())	break;
@@ -1198,7 +1194,7 @@ void Leo_bac_400(int Angle, int Robot_Angle)
   Nang_cuc_nhanh();
 	target_chan_truoc = 265, target_chan_sau = 265;
 	
-	robotRunAngle(Angle,14,Robot_Angle,0.8);
+	robotRunAngle(Angle,15,Robot_Angle,0.8);
 
 	for(i=0;i<100;i++) 
 		{
@@ -1422,9 +1418,10 @@ void Xuong_bac_200(int Angle, int Robot_Angle)
 	
 void xuong_bac_200_xanh_10 (void) {
 	Xuong_bac_200(-900, 900);
-	su_dung_chan(265);
+	
 		if (TinHieu_ChuanBi_GapThang == 0 && TinHieu_ChuanBi_GapTrai == 0 && TinHieu_ChuanBi_GapPhai == 0 && TinHieu_QuaPhai == 0) {
 				// chay toi khi mat cam bien sau
+				su_dung_chan(265);
 				robotRunAngle(-900,18,900,0.8);
 				for(i=0;i<1550;i++)
 						{
@@ -1445,9 +1442,10 @@ void xuong_bac_200_xanh_10 (void) {
 
 void xuong_bac_200_end(void) {
 		Xuong_bac_200(-900, 900);
-		su_dung_chan(265);
+		
 		if (TinHieu_ChuanBi_GapThang == 0 && TinHieu_ChuanBi_GapTrai == 0 && TinHieu_ChuanBi_GapPhai == 0 && TinHieu_QuaPhai == 0 && TinHieu_QuaTrai == 0) {
 				// chay toi khi mat cam bien sau
+				su_dung_chan(265);
 				robotRunAngle(-900,18,900,0.8);
 				for(i=0;i<1550;i++)
 						{
@@ -4124,7 +4122,7 @@ void Lay_phia_truoc_bac_200_duoi (void) {
 }
 
 /// *********** HAM tracking vi tri bang laser ****************
-#define SPEED_FAST 18
+#define SPEED_FAST 15
 #define SPEED_MIN 4
 #define ERROR_MAX 50
 
@@ -4335,16 +4333,16 @@ void chinh_lai_vi_tri_laser_phai_custom(int vitri, int gia_tri_lap, int min_toc,
 	int dieuchinh;
 		for(i=0;i<gia_tri_lap;i++)
 				{
-		while(abs(lazePhaiValue - vitri) > 1)	{
+		while(abs(lazePhaiValue - vitri) > 0)	{
 			dieuchinh = lazePhaiValue - vitri;
 			speed = smooth_speed(dieuchinh);
 			
 					if  ((lazePhaiValue - vitri)> 0 ) {
-							robotRunAngle(0, speed, -900, 0.3);
+							robotRunAngle(0, speed, -900, 0.8);
 					}
 					else if ((lazePhaiValue - vitri)< 0) {
 					
-					robotRunAngle(1800, speed, -900, 0.3);
+					robotRunAngle(1800, speed, -900, 0.8);
 					
 					}
 					else robotStop(0);

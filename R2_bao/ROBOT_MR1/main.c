@@ -197,19 +197,19 @@ vTaskDelay(1000);
  
 //					if(TRIANGLE && L2 && !R2) 												 	 		Xuat_Phat_Lay_Vu_Khi_Xanh(168, -1670, 193);
 						if(TRIANGLE && L2 && !R2) 												 	 		tudonghoantoan();
-						if(SQUARE && L2 && !R2) 																test_vitri_3();
-						if(X && L2 && !R2) 																			su_dung_chan_cham(508);
-//						if(O && L2 && !R2 ) 																		Tay1_len;
-//					if(X && R2  ) 																					Leo_bac_400(-900, 900);
+						if(SQUARE && L2 && !R2) 																quyet_dinh_dat_hop_tang3();
+						if(X && L2 && !R2) 																			su_dung_chan_thuong(710);
+						if(O && L2 && !R2 ) 																		tu_dong_dat_tang2_xanh();
+//					if(X && R2  ) 																					Leo_bac_400(-900,1 900);
 
 		
 				
 //					if(TRIANGLE && L2 && !R2) 														 Run_All_Blocks_From_Queue_san_xanh();
 //					if(SQUARE && L2 && !R2) 															test_vitri_3();
-//					if ( X && L2 && !R2 ) 																su_dung_chan(650);
+//					if ( X && L2 && !R2 ) 																test_xoay();
 //					if(O && L2 && !R2) 																		tu_dong_dat_tang2_xanh();
 		
-////Leo_bac_200
+////Leo_bac_400
 //Xuong_bac_200	(-900, 900)	
 ////Xuong_bac_400	
  ///auto_vao_rung_xanh_cua1(); tay 41, 262 tay 23

@@ -542,7 +542,7 @@ int vi_tri_cua_rung_do_1_lazer_trai_tay_23 = 370;
 
 //// ******** VI TRI LAZER DAT HOP XANH *********************
 int vi_tri_dat_hop_1_tay41_xanh = 50; /// ** DUNG LAZER SAU**
-int vi_tri_dat_hop_2_tay41_xanh = 102;  // di ngang = 95 lazer, di thang = 102 lazer
+int vi_tri_dat_hop_2_tay41_xanh = 103;  // di ngang = 95 lazer, di thang = 103 lazer
 int vi_tri_dat_hop_3_tay41_xanh = 158;
 
 int vi_tri_dat_hop_1_tay23_xanh = 5;

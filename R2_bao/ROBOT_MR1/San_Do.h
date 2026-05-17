@@ -988,15 +988,15 @@ void Init_Action_Table_san_do(void)
     action_table[1][4][1] = Leo_bac_400_ko_thanh_do;  
     action_table[1][4][2] = Leo_bac_200_bam_thanh_phai_do;  
 		action_table[1][4][3] = Leo_bac_400_co_thanh_do; 
-		action_table[1][4][4] = Xuong_bac_200_do_4;	  //
-    action_table[1][4][5] = Leo_bac_200_do_5;		// 
-    action_table[1][4][6] = Leo_bac_200_ko_thanh_do; //
-    action_table[1][4][7] = Leo_bac_200_do_7;   //
-    action_table[1][4][8] = Leo_bac_200_ko_thanh_do;  //
-    action_table[1][4][9]  = Xuong_bac_200_do_9; 	//
-    action_table[1][4][10] = xuong_bac_200_do_10;  //
-    action_table[1][4][11] = xuong_bac_200_11_do; //
-		action_table[1][4][12] = xuong_bac_200_do_12; //
+		action_table[1][4][4] = Xuong_bac_200_do_4;	  
+    action_table[1][4][5] = Leo_bac_200_do_5;		
+    action_table[1][4][6] = Leo_bac_200_ko_thanh_do; 
+    action_table[1][4][7] = Leo_bac_200_do_7;   
+    action_table[1][4][8] = Leo_bac_200_ko_thanh_do;  
+    action_table[1][4][9]  = Xuong_bac_200_do_9; 	
+    action_table[1][4][10] = xuong_bac_200_do_10;  
+    action_table[1][4][11] = xuong_bac_200_11_do; 
+		action_table[1][4][12] = xuong_bac_200_do_12; 
 		
 		
 			/* =========================================
@@ -1005,14 +1005,14 @@ void Init_Action_Table_san_do(void)
 		action_table[2][4][2] = qua_trai_xuong_bac_200_2_do;
 		action_table[2][4][3] = qua_trai_len_bac_200_3_do;
 		
-		action_table[2][4][5] = qua_trai_len_bac_200_5_do;//
-		action_table[2][4][6] = qua_trai_len_bac_200_6_do;//
+		action_table[2][4][5] = qua_trai_len_bac_200_5_do;
+		action_table[2][4][6] = qua_trai_len_bac_200_6_do;
 		
-		action_table[2][4][8] = qua_trai_len_bac_200_8_do; // 
-		action_table[2][4][9] = qua_trai_xuong_bac_200_9_do; // 
+		action_table[2][4][8] = qua_trai_len_bac_200_8_do;  
+		action_table[2][4][9] = qua_trai_xuong_bac_200_9_do; 
 		
-		action_table[2][4][11] = qua_trai_len_bac_200_11_do; //
-		action_table[2][4][12] = qua_trai_xuong_bac_200_12_do;//
+		action_table[2][4][11] = qua_trai_len_bac_200_11_do; 
+		action_table[2][4][12] = qua_trai_xuong_bac_200_12_do;
 
 		/* =========================================
 //   move 3 , action 4,chay ben phai
@@ -1020,14 +1020,14 @@ void Init_Action_Table_san_do(void)
 		action_table[3][4][1] = qua_phai_len_bac_200_1_do;
     action_table[3][4][2] = qua_phai_xuong_bac_200_2_do;
 		
-		action_table[3][4][4] = qua_phai_xuong_bac_200_4_do; //
-    action_table[3][4][5] = qua_phai_xuong_bac_200_5_do; //
+		action_table[3][4][4] = qua_phai_xuong_bac_200_4_do; 
+    action_table[3][4][5] = qua_phai_xuong_bac_200_5_do; 
 		
-		action_table[3][4][7] = qua_phai_xuong_bac_200_7_do;//
-    action_table[3][4][8] = qua_phai_len_bac_200_8_do; //
+		action_table[3][4][7] = qua_phai_xuong_bac_200_7_do;
+    action_table[3][4][8] = qua_phai_len_bac_200_8_do; 
 		
-		action_table[3][4][10] = qua_phai_xuong_bac_200_10_do; // 
-    action_table[3][4][11] = qua_phai_len_bac_200_11_do; //
+		action_table[3][4][10] = qua_phai_xuong_bac_200_10_do; 
+    action_table[3][4][11] = qua_phai_len_bac_200_11_do; 
 }
 
 /////* ================= RUN TU DONG ================= */
