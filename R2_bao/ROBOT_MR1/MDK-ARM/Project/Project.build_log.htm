@@ -48,23 +48,23 @@ compiling main.c...
   	char k=0xff,i;
 ..\doc_tay_game.h(153): warning:  #1-D: last line of file ends without a newline
   }
-..\config.h(979): warning:  #177-D: variable "NVIC_InitStructure"  was declared but never referenced
+..\config.h(980): warning:  #177-D: variable "NVIC_InitStructure"  was declared but never referenced
   	NVIC_InitTypeDef NVIC_InitStructure;
-..\config.h(1994): warning:  #47-D: incompatible redefinition of macro "UART_BUFFER_SIZE"  (declared at line 1873)
+..\config.h(1995): warning:  #47-D: incompatible redefinition of macro "UART_BUFFER_SIZE"  (declared at line 1874)
   #define UART_BUFFER_SIZE 8
-..\config.h(2250): warning:  #188-D: enumerated type mixed with another type
+..\config.h(2251): warning:  #188-D: enumerated type mixed with another type
   											GPIO_WriteBit(GPIOC,GPIO_Pin_15,0);
-..\config.h(2254): warning:  #188-D: enumerated type mixed with another type
+..\config.h(2255): warning:  #188-D: enumerated type mixed with another type
   											GPIO_WriteBit(GPIOC,GPIO_Pin_15,1);
-..\config.h(2241): warning:  #177-D: variable "camera"  was declared but never referenced
+..\config.h(2242): warning:  #177-D: variable "camera"  was declared but never referenced
   		char*camera="11111111111111111111110111111111";
-..\config.h(2244): warning:  #550-D: variable "_chu_cac_bit"  was set but never used
+..\config.h(2245): warning:  #550-D: variable "_chu_cac_bit"  was set but never used
   									char _chu_cac_bit[40];
-..\config.h(2435): warning:  #177-D: variable "_k"  was declared but never referenced
+..\config.h(2436): warning:  #177-D: variable "_k"  was declared but never referenced
   	{int _k,_i;
-..\config.h(2435): warning:  #177-D: variable "_i"  was declared but never referenced
+..\config.h(2436): warning:  #177-D: variable "_i"  was declared but never referenced
   	{int _k,_i;
-..\config.h(2447): warning:  #1-D: last line of file ends without a newline
+..\config.h(2448): warning:  #1-D: last line of file ends without a newline
   }
 ..\4OmniControler.h(390): warning:  #1035-D: single-precision operand implicitly converted to double-precision
   			robotRotate(robotAngle, (abs(robotAngle - _robotIMUAngle) > 100? (robotAngle > _robotIMUAngle ? rotate: -rotate):(robotAngle - _robotIMUAngle)*0.005), 0);
@@ -104,13 +104,13 @@ compiling main.c...
   		int vitri_tay41 = vitri_tay41_laser_trai_GapQua;
 ..\San_Xanh.h(1550): warning:  #177-D: variable "vitri_tay23"  was declared but never referenced
   		int vitri_tay23 = vitri_tay23_phai_laser_GapQua;
-..\San_Xanh.h(4419): warning:  #550-D: variable "nhom_A"  was set but never used
+..\San_Xanh.h(4479): warning:  #550-D: variable "nhom_A"  was set but never used
   		int nhom_A;
-..\San_Xanh.h(4420): warning:  #550-D: variable "nhom_B"  was set but never used
+..\San_Xanh.h(4480): warning:  #550-D: variable "nhom_B"  was set but never used
   		int nhom_B ;
-..\San_Xanh.h(4475): warning:  #550-D: variable "nhom_A"  was set but never used
+..\San_Xanh.h(4535): warning:  #550-D: variable "nhom_A"  was set but never used
   		int nhom_A;
-..\San_Xanh.h(4476): warning:  #550-D: variable "nhom_B"  was set but never used
+..\San_Xanh.h(4536): warning:  #550-D: variable "nhom_B"  was set but never used
   		int nhom_B ;
 ..\San_Do.h(1282): warning:  #550-D: variable "nhom_A"  was set but never used
   		int nhom_A;
@@ -126,11 +126,13 @@ compiling main.c...
   		int di_cheo_23 = 0;
 ..\module_san_Do.h(3144): warning:  #1-D: last line of file ends without a newline
   }
-..\main.c: 49 warnings, 0 errors
+..\main.c(226): warning:  #111-D: statement is unreachable
+  		robotStop(0);
+..\main.c: 50 warnings, 0 errors
 linking...
-Program Size: Code=162088 RO-data=616 RW-data=1560 ZI-data=106440  
+Program Size: Code=165560 RO-data=616 RW-data=1560 ZI-data=106440  
 FromELF: creating hex file...
-".\Project\Project.axf" - 0 Error(s), 49 Warning(s).
+".\Project\Project.axf" - 0 Error(s), 50 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -152,7 +154,7 @@ Package Vendor: Keil
 <h2>Collection of Component Files used:</h2>
 
    * Component: ARM::CMSIS:CORE:6.1.0
-Build Time Elapsed:  00:00:03
+Build Time Elapsed:  00:00:02
 </pre>
 </body>
 </html>

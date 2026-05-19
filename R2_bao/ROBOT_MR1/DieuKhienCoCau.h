@@ -2139,8 +2139,8 @@ void vehome_xuat_phat(void)
 
 	Nang_thuong();
 
-	target_chan_truoc = 247;//
-	target_chan_sau = 247;//home lay vk
+	target_chan_truoc = 240;//
+	target_chan_sau = 240;//home lay vk
 	
 //	speed_tay_gat2 = 50;
 //	target_tay_gat2 = 564;//home lay vk

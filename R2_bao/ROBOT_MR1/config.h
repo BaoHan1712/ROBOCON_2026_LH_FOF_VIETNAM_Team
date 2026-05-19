@@ -271,6 +271,7 @@ vu8 DATA_SPEED[80]={255,1,0,0,				// 1- ID = 1, DIRECT = 0, SPEED = 0
 
 #define  Start															GPIO_ReadInputDataBit(GPIOD,GPIO_Pin_0)
 #define  QT5																GPIO_ReadInputDataBit(GPIOD,GPIO_Pin_1)
+#define  chuyen_doi_T3											GPIO_ReadInputDataBit(GPIOC,GPIO_Pin_6) // nhan la 0
 
 
 //// CB CHECK CO QUA TREN TAY HAY CHUA
@@ -761,7 +762,7 @@ void Config_in_mode(void)
 	GPIO_Init(GPIOB, &GPIO_InitStructure);
 	
 	
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_2 | GPIO_Pin_8 | GPIO_Pin_9;
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_2 | GPIO_Pin_8 | GPIO_Pin_9 | GPIO_Pin_6 | GPIO_Pin_7;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
 	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
@@ -2402,13 +2403,13 @@ void HMI_TRAN(vs32 _so_dong)
 										HMI_DMI("ENCODER_RL() ",ENCODER_RL(),32); 
 										break;
 									case 33:
-										HMI_DMI("dem_goi_tin_gap ",dem_goi_tin_gap,33); 
+										HMI_DMI("chuyen_doi_T3 ",chuyen_doi_T3,33); 
 										break;
 									case 34:
 										HMI_DMI("cho_r1 ",cho_r1,34); 
 										break;
 									case 35:
-										HMI_DMI("nhin_hop_duoi_dat ",nhin_hop_duoi_dat,35); 
+										HMI_DMI("do_lech ",do_lech,35); 
 										break;
 									case 36:
 										HMI_DMI("GapPhai ",TinHieu_ChuanBi_GapPhai,36); 
