@@ -527,23 +527,23 @@ int vi_tri_cua_rung_xanh_3_lazer_phai_tay_23 = 446;
 int vi_tri_cua_rung_xanh_3_lazer_phai_tay_41 = 477;
 
 //// ******** VI TRI LAZER CUA RUNG DO *********************
-int vi_tri_cua_rung_do_3_lazer_phai_tay_41 = 304;
+int vi_tri_cua_rung_do_3_lazer_phai_tay_41 = 301;
 int vi_tri_cua_rung_do_3_lazer_phai_tay_23 = 262;
 
-int vi_tri_cua_rung_do_2_lazer_phai_tay_41 = 399;
+int vi_tri_cua_rung_do_2_lazer_phai_tay_41 = 396;
 int vi_tri_cua_rung_do_2_lazer_phai_tay_23 = 363;
 
-int vi_tri_cua_rung_do_1_lazer_phai_tay_41 = 476;
+int vi_tri_cua_rung_do_1_lazer_phai_tay_41 = 473;
 int vi_tri_cua_rung_do_1_lazer_phai_tay_23 = 451;
 
-int vi_tri_cua_rung_do_1_lazer_trai_tay_41 = 306;
+int vi_tri_cua_rung_do_1_lazer_trai_tay_41 = 301;
 int vi_tri_cua_rung_do_1_lazer_trai_tay_23 = 370;
 
 ///*********************************************************
 
 //// ******** VI TRI LAZER DAT HOP XANH *********************
 int vi_tri_dat_hop_1_tay41_xanh = 50; /// ** DUNG LAZER SAU**
-int vi_tri_dat_hop_2_tay41_xanh = 103;  // di ngang = 95 lazer, di thang = 103 lazer
+int vi_tri_dat_hop_2_tay41_xanh = 106;  // di ngang = 95 lazer, di thang = 106 lazer
 int vi_tri_dat_hop_3_tay41_xanh = 158;
 
 int vi_tri_dat_hop_1_tay23_xanh = 5;

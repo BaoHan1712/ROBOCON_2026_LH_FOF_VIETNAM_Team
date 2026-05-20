@@ -180,7 +180,7 @@ vTaskDelay(1000);
 				
 //			if(TRIANGLE && L2 && !R2 )												Xuat_Phat_Lay_Vu_Khi_Do(162,1500,215);
 //				
-//					if(TRIANGLE && L2 && !R2 )														nhat_hop_zone3_do();
+//					if(TRIANGLE && L2 && !R2 )														Run_All_Blocks_From_Queue_san_do();
 //					if(SQUARE && L2 && !R2) 															su_dung_chan_thuong(710);
 //					if(X && L2 && !R2) 																		quyet_dinh_dat_hop_tang3();
 //					if(O && L2 && !R2 ) 																	qua_phai_xuong_bac_200_7_do();
@@ -195,12 +195,12 @@ vTaskDelay(1000);
 //			if(O && L2 && !R2)															Xuat_Phat_Lay_Vu_Khi_Xanh(169,-1650,233) ;
 
 
-//	//					if(TRIANGLE && L2 && !R2) 												 	 		Xuat_Phat_Lay_Vu_Khi_Xanh(168, -1670, 193);
-//						if(TRIANGLE && L2 && !R2) 												 	 		be_len_dat_xanh();
-//						if(SQUARE && L2 && !R2) 																su_dung_chan_thuong(710);
-//						if(X && L2 && !R2) 																			nhat_hop_zone3_xanh();
+	//					if(TRIANGLE && L2 && !R2) 												 	 		Xuat_Phat_Lay_Vu_Khi_Xanh(168, -1670, 193);
+//						if(TRIANGLE && L2 && !R2) 												 	 			Leo_bac_400_ko_thanh();
+//						if(SQUARE && L2 && !R2) 																	su_dung_chan_thuong(265);
+//						if(X && L2 && !R2) 																				Lay_phia_truoc_bac_200_duoi();
 //						if(O && L2 && !R2 ) 																		test_ngo_matrix();
-//	//					if(X && R2  ) 																					Leo_bac_400(-900,1 900);
+//	//					if(X && R2  ) 																				Leo_bac_400(-900,1 900);
 
 		
 				
@@ -209,7 +209,7 @@ vTaskDelay(1000);
 //					if ( X && L2 && !R2 ) 																test_xoay();
 //					if(O && L2 && !R2) 																		tu_dong_dat_tang2_xanh();
 		
-////Leo_bac_400
+////Leo_bac_200
 //Xuong_bac_200	(-900, 900)	
 ////Xuong_bac_400	
  ///auto_vao_rung_xanh_cua1(); tay 41, 262 tay 23
