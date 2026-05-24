@@ -380,8 +380,8 @@ vu8 DATA_SPEED[80]={255,1,0,0,				// 1- ID = 1, DIRECT = 0, SPEED = 0
 #define Tay1_len_on						Cylinder_ID8 |= bit_0_H//ko ok
 #define Tay1_len_off					Cylinder_ID8 &= bit_0_L
 
-#define	Tay1_xuong_on				Cylinder_ID8 |= bit_1_H
-#define Tay1_xuong_off			Cylinder_ID8 &= bit_1_L
+#define	led_bao_hieu_on				Cylinder_ID8 |= bit_1_H
+#define led_bao_hieu_off			Cylinder_ID8 &= bit_1_L
 
 #define Kep_phai_4_ra					Cylinder_ID8 |= bit_2_H
 #define Kep_phai_4_vao				Cylinder_ID8 &= bit_2_L
@@ -491,15 +491,15 @@ int vi_tri_tay_12 = 695;
 
 // VI TRI MAM XOAY LAY BEN PHAI 200 TREN
 int vi_tri_tay_4_phai_tren = 610;
-int vi_tri_tay_1_phai_tren = 417;
-int vi_tri_tay_2_phai_tren = 405;
-int vi_tri_tay_3_phai_tren = 600;
+int vi_tri_tay_1_phai_tren = 418;
+int vi_tri_tay_2_phai_tren = 406;
+int vi_tri_tay_3_phai_tren = 593;
 
 /// VI TRI MAM XOAY LAY TRAI 200 
-int vi_tri_tay_4_trai_tren = 410;
-int vi_tri_tay_1_trai_tren = 605;
-int vi_tri_tay_2_trai_tren = 590;
-int vi_tri_tay_3_trai_tren = 401;
+int vi_tri_tay_4_trai_tren = 416;
+int vi_tri_tay_1_trai_tren = 606;
+int vi_tri_tay_2_trai_tren = 593;
+int vi_tri_tay_3_trai_tren = 403;
 
 /// VI TRI LAZER LAY QUA THANG
 int vitri_tay41_laser_trai_GapQua = 151;
@@ -542,9 +542,9 @@ int vi_tri_cua_rung_do_1_lazer_trai_tay_23 = 370;
 ///*********************************************************
 
 //// ******** VI TRI LAZER DAT HOP XANH *********************
-int vi_tri_dat_hop_1_tay41_xanh = 50; /// ** DUNG LAZER SAU**
+int vi_tri_dat_hop_1_tay41_xanh = 53; /// ** DUNG LAZER SAU**
 int vi_tri_dat_hop_2_tay41_xanh = 106;  // di ngang = 95 lazer, di thang = 106 lazer
-int vi_tri_dat_hop_3_tay41_xanh = 158;
+int vi_tri_dat_hop_3_tay41_xanh = 160;
 
 int vi_tri_dat_hop_1_tay23_xanh = 5;
 int vi_tri_dat_hop_2_tay23_xanh = 60;
@@ -584,7 +584,7 @@ uint8_t tay_4_co_qua = 0;
 uint8_t robot_position = 0;  // vi tri robot dat hop
 
 
-
+void nhan_tin_hieu (void );
 
 /// *****************
 int target_Nang_Ha = 600;
@@ -1706,7 +1706,10 @@ void Finish_Current_Block(void)
 }
 int cho_r1 = 0;
 
-	
+int bat_bien_check_r1_ngang = 0;
+int cho_r1_ben_Canh = 0;
+
+int see_R1_tren_rung = 0;
 int block_pha = 0;
 int co_vat_can = 1;
 int id_dat_hop = 0;
@@ -1796,25 +1799,38 @@ void ProcessReceivedData_2(void)
 			
 			// trang thai vuot rung
 			else if (id_rb == 2 && state_rb == 2 ) {
-				 // Push vào FIFO
-        Queue_Push(state_rb, move, action, id_block);
+			// Push vào FIFO
+         Queue_Push(state_rb, move, action, id_block);
+				 led_bao_hieu_on;
 				
 				// dem khi co 2 qua thi cho gap cung phia
 				 if (move == 0 && (action == 1 || action == 2 || action == 3)) {
 						 dem_goi_tin_gap++;
 				 }
-				 //check khoi 1 truoc mat
+				 /// ************************ ////
+						 //check khoi 1 truoc mat 
 				 if (move == 4 && action == 5 ) {
 						 cho_r1 = 1;
+						 see_R1_tren_rung = id_block;
 				 }
 				 else if (move == 4 && action == 6 ) {
 						 cho_r1 = 0;
+						 cho_r1_ben_Canh = 0;
 				 }
+				/// ************************ ////
+						//check khoi 1 ben canh
+				 if (move == 5 && action == 5 ) {
+						 cho_r1_ben_Canh = 1;
+						 see_R1_tren_rung = id_block;
+				 }
+				 
+				/// ************************ ////
 			}
 			
 			// trang thai len zone 3 dat hop
 			else if (id_rb == 2 && state_rb == 3) {
 					id_dat_hop = Get_Id_Dat_Hop(move, action, id_block);
+					led_bao_hieu_on;
 					
 					if(id_dat_hop != 0)
 					{
@@ -1824,9 +1840,14 @@ void ProcessReceivedData_2(void)
 			
 			// trang thai nhat hop tren zone 3
 			else if (id_rb == 2 && state_rb == 4 ) {
+						if ( move == 1 && action == 1  ) {
+								mode_nhat_hop = 1;
+								led_bao_hieu_on;
+						}
 						do_lech = move;
 						khoangcach = action;
 						nhat_dat_hop = id_block;
+						
 						mode_nhat_hop = 1; // mode nhat hop
 			}
 			
@@ -2364,13 +2385,13 @@ void HMI_TRAN(vs32 _so_dong)
 										HMI_DMI("block_pha: ",block_pha,19);
 										break;	
 									case 20:
-										HMI_DMI("id_dat_hop ",id_dat_hop,20);  
+										HMI_DMI("see_R1_tren_rung ",see_R1_tren_rung,20);  
 										break;	
 									case 21:
 										HMI_DMI("CB_Nang_trai ",CB_Nang_trai,21);  
 										break;	
 									case 22:
-										HMI_DMI("robot_position",robot_position,22); 
+										HMI_DMI("Quang_tro2 ",Quang_tro2,22); 
 										break;
 									case 23:
 										HMI_DMI("CB_Nang_phai",CB_Nang_phai,23); 
@@ -2406,13 +2427,13 @@ void HMI_TRAN(vs32 _so_dong)
 										HMI_DMI("chuyen_doi_T3 ",chuyen_doi_T3,33); 
 										break;
 									case 34:
-										HMI_DMI("cho_r1 ",cho_r1,34); 
+										HMI_DMI("id_dat_hop ",id_dat_hop,34); 
 										break;
 									case 35:
 										HMI_DMI("do_lech ",do_lech,35); 
 										break;
 									case 36:
-										HMI_DMI("GapPhai ",TinHieu_ChuanBi_GapPhai,36); 
+										HMI_DMI("cho_r1_ben_Canh ",cho_r1_ben_Canh,36); 
 										break;
 									case 37:
 										HMI_DMI("GapThang ",TinHieu_ChuanBi_GapThang,37); 

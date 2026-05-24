@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <script src="/static/js/socket.io.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#121212">
+    <link rel="manifest"
+        href="data:application/manifest+json,%7B%22name%22%3A%22Robocon%22%2C%22short_name%22%3A%22Robocon%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23121212%22%2C%22theme_color%22%3A%22%23121212%22%7D">
+
+    <title>LHU | ULTRA WIDE COMMAND</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500;700;900&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- STYLE CHO TEM GẮP VÀ PHÁ --- */
+        .act-badge {
+            position: absolute;
+            color: white;
+            font-size: 11px;
+            font-weight: 900;
+            padding: 3px 6px;
+            border-radius: 5px;
+            z-index: 1000;
+            pointer-events: none;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.8);
+            border: 1px solid white;
+            letter-spacing: 1px;
+        }
+        .act-pick {
+            background: #e74c3c; /* Đỏ rực - Đặt góc TRÊN BÊN PHẢI */
+            top: 5px;
+            right: 5px;
+        }
+        .act-break {
+            background: #e67e22; /* Cam - Đặt góc DƯỚI BÊN PHẢI */
+            bottom: 5px;
+            right: 5px;
+        }
+        :root {
+            --bg: #0f0f13;
+            --card: #1c1c21;
+            --cyan: #00f2ff;
+            --green: #10b981;
+            --red: #ef4444;
+            --yellow: #f59e0b;
+            --blue: #3b82f6;
+            --text-main: #ffffff;
+            --text-muted: #888888;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto', sans-serif;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            min-height: 100dvh;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding-bottom: 50px;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 1450px;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            gap: 25px;
+        }
+
+        .keep-size {
+            max-width: 1040px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            border-bottom: 3px solid #2a2a30;
+            padding-bottom: 20px;
+        }
+
+        .header h1 {
+            font-size: 36px;
+            color: var(--cyan);
+            letter-spacing: 3px;
+            text-shadow: 0 0 20px rgba(0, 242, 255, 0.5);
+        }
+
+        .status {
+            font-size: 18px;
+            color: var(--green);
+            margin-top: 10px;
+            font-weight: 700;
+        }
+
+        .section-title {
+            font-size: 18px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            font-weight: 900;
+            margin-bottom: -5px;
+            padding-left: 10px;
+        }
+
+        .remote-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .ctrl-btn {
+            height: 85px;
+            border-radius: 20px;
+            border: none;
+            color: white;
+            font-weight: 900;
+            font-size: 20px;
+            cursor: pointer;
+            box-shadow: 0 8px 0px rgba(0, 0, 0, 0.6);
+            transition: all 0.1s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        /* Style cho số thứ tự đường đi trên Web */
+        /* --- STYLE CHO CON SỐ ĐƯỜNG ĐI --- */
+        .path-step {
+            position: absolute;
+            bottom: 8px;     /* Nhích lên trên một chút */
+            left: 8px;       /* Nằm góc TRÁI y chang App PC */
+            width: 32px;     /* Phóng to hình tròn ra */
+            height: 32px;
+            background: #2ecc71; /* Xanh lá sáng */
+            color: black;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px; /* Chữ to ra */
+            font-weight: 900;
+            z-index: 999;    /* Ép nó NỔI LÊN TRÊN CÙNG, đè mọi loại khối */
+            border: 3px solid white;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.9); /* Đổ bóng cực mạnh */
+            pointer-events: none;
+        }
+
+        .ctrl-btn:active {
+            transform: translateY(8px);
+            box-shadow: 0 0px 0px rgba(0, 0, 0, 0);
+        }
+
+        #btnTeam { background: var(--red); }
+        #btnTeam.blue { background: var(--blue); }
+        #btnReset { background: #52525b; }
+        #btnMode { background: #374151; }
+        #btnStrat { background: #d97706; }
+        #btnTarget { background: #9333ea; }
+        #btnReplay { background: #0f766e; }
+
+        .forest-container {
+            width: 100%;
+            background: var(--card);
+            padding: 30px;
+            border-radius: 35px;
+            border: 3px solid #2a2a30;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+
+        .cell {
+            position: relative;
+            height: 145px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .id-tag {
+            position: absolute;
+            top: -15px;
+            left: -10px;
+            font-size: 17px;
+            padding: 6px 12px;
+            border-radius: 10px;
+            color: black;
+            font-weight: 900;
+            z-index: 10;
+            background: #ffffff;
+            box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.6);
+            pointer-events: none;
+            border: 2px solid #ccc;
+        }
+
+        .tag-finish { background: var(--yellow); }
+        .tag-start { background: var(--cyan); }
+
+        .sub-btn {
+            flex: 1;
+            background: #2a2a30;
+            border: 2px solid #3f3f46;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            font-weight: 900;
+            color: #555;
+            transition: 0.1s;
+        }
+
+        .sub-btn:active {
+            transform: scale(0.88);
+            background: #444;
+        }
+
+        .sub-btn.active-1 {
+            background: var(--cyan);
+            color: black;
+            border-color: white;
+            box-shadow: 0 0 20px rgba(0, 242, 255, 0.6);
+        }
+
+        .sub-btn.active-2 {
+            background: var(--yellow);
+            color: black;
+            border-color: white;
+            box-shadow: 0 0 20px rgba(245, 158, 11, 0.6);
+        }
+
+        .sub-btn.active-fake {
+            background: var(--red);
+            color: white;
+            border-color: white;
+            box-shadow: 0 0 20px rgba(239, 68, 68, 0.6);
+        }
+
+        .cell.has-val .sub-btn:not(.active-1):not(.active-2):not(.active-fake) {
+            display: none;
+        }
+
+        .btn-trigger {
+            width: 100%;
+            height: 120px;
+            background: var(--green);
+            color: #000;
+            font-size: 34px;
+            font-weight: 900;
+            border-radius: 30px;
+            border: none;
+            box-shadow: 0 12px 0px #065f46;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.1s ease;
+            margin-top: 20px;
+            letter-spacing: 4px;
+        }
+
+        .btn-trigger:active {
+            transform: translateY(12px);
+            box-shadow: 0 0px 0px #065f46;
+        }
+
+        .footer {
+            text-align: center;
+            font-size: 16px;
+            color: #444;
+            padding: 30px 0;
+            font-weight: 700;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="app-container">
+        <div class="header keep-size">
+            <h1>COMMAND CENTER ULTRA WIDE</h1>
+            <div class="status" id="statusText">🟢 KẾT NỐI SẴN SÀNG</div>
+        </div>
+
+        <div class="section-title keep-size">⚙️ HỆ THỐNG</div>
+        
+        <div class="remote-grid keep-size">
+            <button class="ctrl-btn" id="btnTeam">SÂN: ĐỎ (RED)</button>
+            <button class="ctrl-btn" id="btnReset">🗑️ XÓA MAP</button>
+            <button class="ctrl-btn" id="btnMode">MODE: NORMAL</button>
+            <button class="ctrl-btn" id="btnStrat">🔥 THẮNG NHANH</button>
+<div style="grid-column: span 2; display: flex; gap: 10px;">
+                <button class="ctrl-btn" id="btnTarget4" style="flex: 1; background: #9333ea; font-size: 16px;">🎯 4 KHỐI</button>
+                <button class="ctrl-btn" id="btnTarget3" style="flex: 1; background: #374151; font-size: 16px;">🎯 3 KHỐI</button>
+                <button class="ctrl-btn" id="btnTarget2" style="flex: 1; background: #374151; font-size: 16px;">🎯 2 KHỐI</button>
+            </div>
+            <button class="ctrl-btn" id="btnReplay">▶ PHÁT LẠI UART</button>
+        </div>
+
+        <div class="section-title">🌲 SA BÀN RỪNG (WIDE +40%)</div>
+        <div class="forest-container" id="forestGrid">
+        </div>
+
+        <div class="keep-size" style="display: flex; gap: 10px;">
+            <button class="btn-trigger" id="btnFindPath" style="background: #10b981; flex: 1;">🔍 DÒ ĐƯỜNG</button>
+            <button class="btn-trigger" id="mainTriggerBtn" style="flex: 2;">🚀 CHỐT & GỬI UART</button>
+        </div>
+
+        <div class="footer">LHU ROBOCON 2026 - ULTIMATE WIDE PANEL</div>
+    </div>
+
+    <script>
+        const socket = io("http://10.42.0.1:5001", {
+            transports: ['websocket'],
+            upgrade: false
+        });
+        
+        let state = {}; let team = 'R';
+        let currentRenderedTeam = null;
+        let isModeNormal = true; let isFastAttack = true;
+        let targetBlocks = 4;
+        
+        // 1. KHAI BÁO BIẾN TOÀN CỤC Ở ĐÂY CHO ĐỠ LỖI
+        let isManualMode = false;
+        let pathData = { path_dict: {}, picked_ids: [], pha_ids: [], bo_ids: [] }; 
+
+        // ===============================================
+        // LOGIC 3 NÚT TARGET ĐỘC LẬP
+        // ===============================================
+        function setTarget(num) {
+            targetBlocks = num;
+            document.getElementById('btnTarget4').style.background = (num === 4) ? "#9333ea" : "#374151";
+            document.getElementById('btnTarget3').style.background = (num === 3) ? "#0284c7" : "#374151";
+            document.getElementById('btnTarget2').style.background = (num === 2) ? "#9f1239" : "#374151";
+            socket.emit('client_set_target', { target: targetBlocks });
+        }
+        document.getElementById('btnTarget4').onclick = () => setTarget(4);
+        document.getElementById('btnTarget3').onclick = () => setTarget(3);
+        document.getElementById('btnTarget2').onclick = () => setTarget(2);
+
+        // ===============================================
+        // VẼ SA BÀN RỪNG
+        // ===============================================
+        function renderForest() {
+            const grid = document.getElementById('forestGrid');
+            grid.innerHTML = '';
+            const layout = (team === 'R') ? [
+                [12, null, 11, 10], [9, null, 8, 7], [6, 5, null, 4], [3, 2, null, 1]
+            ] : [
+                [10, null, 11, 12], [7, null, 8, 9], [4, 5, null, 6], [1, 2, null, 3]
+            ];
+
+            layout.forEach(row => {
+                row.forEach(id => {
+                    if (id === null) { grid.appendChild(document.createElement('div')); return; }
+                    if (!(id in state)) state[id] = 'EMPTY';
+                    const cell = document.createElement('div');
+                    cell.className = 'cell'; cell.dataset.id = id;
+                    
+                    const tag = document.createElement('div');
+                    tag.className = 'id-tag';
+                    if ([12, 11, 10].includes(id)) tag.classList.add('tag-finish');
+                    if ([3, 2, 1].includes(id)) tag.classList.add('tag-start');
+                    tag.innerText = id; cell.appendChild(tag);
+
+                    ['1', '2', 'Fake'].forEach(type => {
+                        const b = document.createElement('div');
+                        b.className = 'sub-btn'; b.innerText = type === 'Fake' ? 'F' : type;
+                        const toggleBtn = (e) => {
+                            e.preventDefault();
+                            // Đã gắn logic kiểm tra VẼ TAY vào đây
+                            if (isManualMode) {
+                                socket.emit('client_manual_click', { id: id });
+                                return;
+                            }
+                            const isCurrent = b.classList.contains('active-' + type.toLowerCase());
+                            socket.emit('client_click', { id: id, val: isCurrent ? 'EMPTY' : type });
+                        };
+                        b.addEventListener('mousedown', toggleBtn);
+                        b.addEventListener('touchstart', toggleBtn, { passive: false });
+                        cell.appendChild(b);
+                    });
+                    grid.appendChild(cell);
+                });
+            });
+            currentRenderedTeam = team; 
+            updateForestUI();
+        }
+
+        // ===============================================
+        // HỨNG DỮ LIỆU ĐƯỜNG ĐI TỪ APP PC
+        // ===============================================
+        socket.on('server_path_sync', (data) => {
+            pathData = data; // Gán data vào biến toàn cục mới đúng!
+            updateForestUI();
+        });
+
+        // ===============================================
+        // NÚT DÒ ĐƯỜNG: CHỈ GỌI APP PC TÍNH TOÁN
+        // ===============================================
+        document.getElementById('btnFindPath').onclick = () => { 
+            // Gắn cái này để xem trên điện thoại bấm nó có nhận Cảm ứng không!
+            alert(">> WEB ĐÃ BẮN LỆNH DÒ ĐƯỜNG XUỐNG SERVER!"); 
+            console.log(">> [WEB] Đã bấm nút DÒ ĐƯỜNG! Đang gọi App PC...");
+            
+            // Xóa cái ngoặc nhọn {} đi cho chắc cú, nhỡ phiên bản thư viện kén
+            socket.emit('client_find_path'); 
+        };
+
+        // ===============================================
+        // UPDATE GIAO DIỆN (TÔ MÀU KHỐI & VẼ SỐ)
+        // ===============================================
+        function updateForestUI() {
+            Object.keys(state).forEach(id => {
+                const cell = document.querySelector(`.cell[data-id="${id}"]`);
+                if (!cell) return;
+
+                // 1. Phục hồi màu khối KFS
+                ['1', '2', 'Fake'].forEach(type => {
+                    const b = cell.querySelector(`.sub-btn:nth-child(${['1', '2', 'Fake'].indexOf(type) + 2})`);
+                    if (b) {
+                        if (state[id] === type) b.classList.add('active-' + type.toLowerCase());
+                        else b.classList.remove('active-' + type.toLowerCase());
+                    }
+                });
+                if (state[id] !== 'EMPTY') cell.classList.add('has-val');
+                else cell.classList.remove('has-val');
+
+                // 2. Dọn sạch bóng số và tem cũ trước khi vẽ đường mới
+                const oldStep = cell.querySelector('.path-step');
+                if (oldStep) oldStep.remove();
+                
+                const oldBadges = cell.querySelectorAll('.act-badge');
+                oldBadges.forEach(b => b.remove());
+                
+                // 3. VẼ SỐ BƯỚC ĐI ĐÈ LÊN MẶT KHỐI
+                if (pathData.path_dict && id in pathData.path_dict) {
+                    const stepDiv = document.createElement('div');
+                    stepDiv.className = 'path-step';
+                    const stepNum = pathData.path_dict[id];
+                    stepDiv.innerText = stepNum;
+                    
+                    const totalSteps = Object.keys(pathData.path_dict).length;
+                    if (stepNum === 0) {
+                        stepDiv.style.background = "#3498db"; 
+                        stepDiv.style.color = "white";
+                    } else if (stepNum === totalSteps - 1) {
+                        stepDiv.style.background = "#f1c40f"; 
+                    }
+                    cell.appendChild(stepDiv);
+                }
+
+                // 4. VẼ TEM "GẮP" (Khối 2) VÀ "PHÁ" (Khối 1)
+                if (pathData.picked_ids && pathData.picked_ids.includes(id)) {
+                    const pickDiv = document.createElement('div');
+                    pickDiv.className = 'act-badge act-pick';
+                    pickDiv.innerText = 'GẮP';
+                    cell.appendChild(pickDiv);
+                }
+                
+                if (pathData.pha_ids && pathData.pha_ids.includes(id)) {
+                    const breakDiv = document.createElement('div');
+                    breakDiv.className = 'act-badge act-break';
+                    breakDiv.innerText = 'PHÁ';
+                    cell.appendChild(breakDiv);
+                }
+            });
+            
+            const tBtn = document.getElementById('btnTeam');
+            tBtn.innerText = `SÂN: ${team === 'R' ? 'ĐỎ (RED)' : 'XANH (BLUE)'}`;
+            if (team === 'B') tBtn.classList.add('blue'); else tBtn.classList.remove('blue');
+        }
+
+        // ===============================================
+        // NÚT BẤM CÁC CHẾ ĐỘ
+        // ===============================================
+        const btnManual = document.getElementById('btnManualMode');
+        if (btnManual) {
+            btnManual.onclick = function() {
+                isManualMode = !isManualMode;
+                this.innerText = isManualMode ? "✍️ VẼ TAY: ON" : "✍️ VẼ TAY: OFF";
+                this.style.background = isManualMode ? "#be123c" : "#e11d48";
+                socket.emit('client_toggle_manual', { state: isManualMode });
+                
+                if (!isManualMode) {
+                    pathData = { path_dict: {}, picked_ids: [], pha_ids: [], bo_ids: [] };
+                    updateForestUI();
+                }
+            };
+        }
+
+        document.getElementById('btnTeam').onclick = () => socket.emit('client_toggle_team');
+        
+        document.getElementById('btnMode').onclick = function () {
+            isModeNormal = !isModeNormal;
+            this.innerText = isModeNormal ? "MODE: NORMAL" : "MODE: RETRY 2";
+            this.style.background = isModeNormal ? "#374151" : "#b45309";
+            socket.emit('client_toggle_mode');
+        };
+        
+        document.getElementById('btnStrat').onclick = function () {
+            isFastAttack = !isFastAttack;
+            this.innerText = isFastAttack ? "🔥 THẮNG NHANH" : "🎯 CÀY ĐIỂM";
+            this.style.background = isFastAttack ? "#d97706" : "#6d28d9";
+            socket.emit('client_toggle_strategy');
+        };
+
+        document.getElementById('btnReset').onclick = () => {
+            if (confirm("⚠ XÓA SẠCH MAP?")) socket.emit('client_reset');
+        };
+        
+        document.getElementById('btnReplay').onclick = () => {
+            if (confirm("▶ Phát lại gói UART cũ?")) socket.emit('client_replay_cache');
+        };
+
+        const statusTxt = document.getElementById('statusText');
+        document.getElementById('mainTriggerBtn').onclick = () => {
+            statusTxt.innerText = "🚀 ĐANG XỬ LÝ SIÊU TỐC...";
+            statusTxt.style.color = "var(--yellow)";
+            socket.emit('client_click', { id: 0, val: 'EMPTY' });
+            socket.emit('client_trigger_algo');
+            setTimeout(() => {
+                statusTxt.innerText = "🟢 THÀNH CÔNG!";
+                statusTxt.style.color = "var(--green)";
+            }, 1500);
+        };
+
+        socket.on('server_sync', (data) => {
+            state = data.state; team = data.team;
+            if (currentRenderedTeam !== team) renderForest(); else updateForestUI();
+        });
+
+        renderForest();
+    </script>
+</body>
+
+</html>

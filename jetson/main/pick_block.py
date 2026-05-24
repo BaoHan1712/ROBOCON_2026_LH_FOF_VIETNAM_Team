@@ -70,7 +70,7 @@ def get_distance(depth_frame, x, y):
 def calc_offset(cx):
     norm = int(cx / 640 * 200)
     if norm < 85: return norm - 85
-    elif norm > 103: return norm - 103
+    elif norm > 95: return norm - 95
     else: return 0
 
 def create_roi_mask(img):

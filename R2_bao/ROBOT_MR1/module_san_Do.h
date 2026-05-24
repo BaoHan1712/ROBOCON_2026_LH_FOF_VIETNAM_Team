@@ -235,8 +235,15 @@ void qua_trai_len_bac_200_cua_vao_do(void) {
 			{	
 				while( lazePhaiValue < 380)	{vTaskDelay(1); if(!wantExit())	break;}
 			}
+			vTaskDelay(5000);
 			robotStop(0);
 	if ( TinHieu_ChuanBi_GapThang == 1 ) {
+				robotRunAngle(0,30,-900,0.6);
+				RESET_ENCODER(); 
+				while(abs(ENCODER_FR()) + abs(ENCODER_FL()) < 10000)	{
+							vTaskDelay (5); if(!wantExit())	break;}
+				robotStop(0);
+							
 				chinh_lai_vi_tri_laser_phai_custom_do(vi_tri_cua_rung_do_2_lazer_phai_tay_41 , 1000, 5, 50, 3);
 				su_dung_chan(575);
 				robotRunAngle(900,12,-900,0.3);
@@ -249,10 +256,20 @@ void qua_trai_len_bac_200_cua_vao_do(void) {
 		
 	else if  (TinHieu_ChuanBi_GapThang == 0 ) {
 			if (chay_ngang_qua_o3_do == 0) {
-			chinh_lai_vi_tri_laser_phai_custom_do(vi_tri_cua_rung_do_2_lazer_phai_tay_41 - 15, 1000, 5, 50, 3);
+					robotRunAngle(0,30,-900,0.6);
+					RESET_ENCODER(); 
+					while(abs(ENCODER_FR()) + abs(ENCODER_FL()) < 10000)	{
+								vTaskDelay (5); if(!wantExit())	break;}
+					robotStop(0);
+					chinh_lai_vi_tri_laser_phai_custom_do(vi_tri_cua_rung_do_2_lazer_phai_tay_41 - 13, 1000, 5, 50, 3);
 			}
 			else if (chay_ngang_qua_o3_do == 1) {
-			chinh_lai_vi_tri_laser_phai_custom_do(vi_tri_cua_rung_do_3_lazer_phai_tay_41 - 10, 1000, 5, 50, 3);
+					robotRunAngle(0,30,-900,0.6);
+					RESET_ENCODER(); 
+					while(abs(ENCODER_FR()) + abs(ENCODER_FL()) < 18000)	{
+							vTaskDelay (5); if(!wantExit())	break;}
+					robotStop(0);
+					chinh_lai_vi_tri_laser_phai_custom_do(vi_tri_cua_rung_do_3_lazer_phai_tay_41 - 13, 1000, 5, 50, 3);
 				}
 		}
 		
@@ -313,9 +330,16 @@ void qua_phai_len_bac_200_cua_vao_do(void) {
 	{	
 		while( lazeTraiValue < 360)	{vTaskDelay(1); if(!wantExit())	break;}
 	}
+	vTaskDelay(5000);
 	robotStop(0);
 	vTaskDelay(2000);
 		if ( TinHieu_ChuanBi_GapThang == 1 ) {
+				robotRunAngle(1800,30,-900,0.6);
+				RESET_ENCODER(); 
+				while(abs(ENCODER_FR()) + abs(ENCODER_FL()) < 10000)	{
+							vTaskDelay (5); if(!wantExit())	break;}
+				robotStop(0);
+							
 				chinh_lai_vi_tri_laser_phai_custom_do(vi_tri_cua_rung_do_2_lazer_phai_tay_41, 1000, 5, 40, 3);
 				su_dung_chan(575);
 				robotRunAngle(900,12,-900,0.3);
@@ -328,10 +352,22 @@ void qua_phai_len_bac_200_cua_vao_do(void) {
 		
 		else if  (TinHieu_ChuanBi_GapThang == 0 && TinHieu_ChuanBi_GapTrai == 0 && TinHieu_ChuanBi_GapPhai == 0) {
 				if (chay_ngang_qua_o1_do == 0) {
-						chinh_lai_vi_tri_laser_phai_custom_do(vi_tri_cua_rung_do_2_lazer_phai_tay_41 - 7, 1000, 5, 40, 3);
+						robotRunAngle(1800,30,-900,0.6);
+						RESET_ENCODER(); 
+						while(abs(ENCODER_FR()) + abs(ENCODER_FL()) < 10000)	{
+									vTaskDelay (5); if(!wantExit())	break;}
+						robotStop(0);
+							
+						chinh_lai_vi_tri_laser_phai_custom_do(vi_tri_cua_rung_do_2_lazer_phai_tay_41 - 10, 1000, 5, 40, 3);
 			}
 			else if (chay_ngang_qua_o1_do == 1) {
-						chinh_lai_vi_tri_laser_phai_custom_do(vi_tri_cua_rung_do_1_lazer_phai_tay_41 - 7, 1000,5 , 40, 3);
+						robotRunAngle(1800,30,-900,0.6);
+						RESET_ENCODER(); 
+						while(abs(ENCODER_FR()) + abs(ENCODER_FL()) < 18000)	{
+									vTaskDelay (5); if(!wantExit())	break;}
+						robotStop(0);
+							
+						chinh_lai_vi_tri_laser_phai_custom_do(vi_tri_cua_rung_do_1_lazer_phai_tay_41 - 10, 1000,5 , 40, 3);
 						}
 				}
 		robotStop(0);
@@ -1162,7 +1198,7 @@ void Leo_bac_200_bam_thanh_phai_do(void)
 
 //**************** Xuong_bac_200 ô 4********
 void chuan_bi_gap_thang_do_4(void) {
-	int vitri_tay23 = vitri_tay23_phai_laser_GapQua + 5;
+	int vitri_tay23 = vitri_tay23_phai_laser_GapQua + 6;
 		kiem_tra_huong_quay_tay_gap_phia_truoc();
 		su_dung_chan(565);
 		if (da_lay_tay1 == 0 && da_lay_tay2 == 0 && da_lay_tay3 == 0 && da_lay_tay4 == 0) {
@@ -1954,21 +1990,21 @@ void xuong_bac_200_11_do(void) {
 
 void qua_trai_xuong_bac_200_2_do (void) {
 		if (da_lay_tay1 == 0 && da_lay_tay2 == 0 && da_lay_tay3 == 0 && da_lay_tay4 == 0) {
-				MD_qua_trai_phai_xuong_bac_200(-1800, -900, -850, 5500,-900, 0, -1800);
+				MD_qua_trai_phai_xuong_bac_200(-1800, -900, -850, 3500,-900, 0, -1800);
 			}
 		else if (da_lay_tay1 == 1 && da_lay_tay2 == 0 && da_lay_tay3 == 0 && da_lay_tay4 == 0) {
-				MD_qua_trai_phai_xuong_bac_200(-1800, -900, -450, 5500,-900, 0, -1800);
+				MD_qua_trai_phai_xuong_bac_200(-1800, -900, -450, 4000,-900, 0, -1800);
 			}
 			//// gap 2 lan r
 		else if (da_lay_tay1 == 1 && da_lay_tay2 == 1 && da_lay_tay3 == 0 && da_lay_tay4 == 0) {		
-				MD_qua_trai_phai_xuong_bac_200(-1800, -900, -450, 5500,-900, 0, -1800);
+				MD_qua_trai_phai_xuong_bac_200(-1800, -900, -450, 4000,-900, 0, -1800);
 			}
 		//// gap 3 lan r
 		else if (da_lay_tay1 == 1 && da_lay_tay2 == 1 && da_lay_tay3 == 1 && da_lay_tay4 == 0) {		
-				MD_qua_trai_phai_xuong_bac_200(-1800, -900, -1350, 5500,-900, 0, -1800);
+				MD_qua_trai_phai_xuong_bac_200(-1800, -900, -1350, 4000,-900, 0, -1800);
 			}
 		else if (da_lay_tay1 == 1 && da_lay_tay2 == 1 && da_lay_tay3 == 1 && da_lay_tay4 == 1) {		
-				MD_qua_trai_phai_xuong_bac_200(-1800, -900, -1350, 5500,-900, 0, -1800);
+				MD_qua_trai_phai_xuong_bac_200(-1800, -900, -1350, 4000,-900, 0, -1800);
 			}
 		robotStop(0);
 			
@@ -2012,21 +2048,21 @@ void qua_trai_xuong_bac_200_2_do (void) {
 
 void qua_trai_len_bac_200_3_do (void) {
 		if (da_lay_tay1 == 0 && da_lay_tay2 == 0 && da_lay_tay3 == 0 && da_lay_tay4 == 0) {
-				MD_qua_trai_phai_len_bac_200(-1800, -900, -850, 5500,-900, 0, -1800);
+				MD_qua_trai_phai_len_bac_200(-1800, -900, -850, 3500,-900, 0, -1800);
 			}
 		else if (da_lay_tay1 == 1 && da_lay_tay2 == 0 && da_lay_tay3 == 0 && da_lay_tay4 == 0) {
-				MD_qua_trai_phai_len_bac_200(-1800, -900, -450, 5500,-900, 0, -1800);
+				MD_qua_trai_phai_len_bac_200(-1800, -900, -450, 4000,-900, 0, -1800);
 			}
 			//// gap 2 lan r
 		else if (da_lay_tay1 == 1 && da_lay_tay2 == 1 && da_lay_tay3 == 0 && da_lay_tay4 == 0) {		
-				MD_qua_trai_phai_len_bac_200(-1800, -900, -450, 5500,-900, 0, -1800);
+				MD_qua_trai_phai_len_bac_200(-1800, -900, -450, 4000,-900, 0, -1800);
 			}
 			//// gap 3 lan r
 		else if (da_lay_tay1 == 1 && da_lay_tay2 == 1 && da_lay_tay3 == 1 && da_lay_tay4 == 0) {		
-				MD_qua_trai_phai_len_bac_200(-1800, -900, -1350, 5500,-900, 0, -1800);
+				MD_qua_trai_phai_len_bac_200(-1800, -900, -1350, 4000,-900, 0, -1800);
 			}
 		else if (da_lay_tay1 == 1 && da_lay_tay2 == 1 && da_lay_tay3 == 1 && da_lay_tay4 == 1) {		
-				MD_qua_trai_phai_len_bac_200(-1800, -900, -1350, 5500,-900, 0, -1800);
+				MD_qua_trai_phai_len_bac_200(-1800, -900, -1350, 4000,-900, 0, -1800);
 			}
 		
 		robotStop(0);
@@ -2635,21 +2671,21 @@ void qua_phai_xuong_bac_200_4_do (void) {
 
 void qua_phai_len_bac_200_1_do (void) {
 		if (da_lay_tay1 == 0 && da_lay_tay2 == 0 && da_lay_tay3 == 0 && da_lay_tay4 == 0) {
-				MD_qua_trai_phai_len_bac_200(0,-900, -750, 5500,-900, 1800, 0);
+				MD_qua_trai_phai_len_bac_200(0,-900, -750, 3500,-900, 1800, 0);
 			}
 		else if (da_lay_tay1 == 1 && da_lay_tay2 == 0 && da_lay_tay3 == 0 && da_lay_tay4 == 0) {
-				MD_qua_trai_phai_len_bac_200(0,-900, -450, 5500,-900, 1800, 0);
+				MD_qua_trai_phai_len_bac_200(0,-900, -450, 4000,-900, 1800, 0);
 			}
 			//// gap 2 lan r
 		else if (da_lay_tay1 == 1 && da_lay_tay2 == 1 && da_lay_tay3 == 0 && da_lay_tay4 == 0) {		
-				MD_qua_trai_phai_len_bac_200(0,-900, -450, 5500,-900, 1800, 0);
+				MD_qua_trai_phai_len_bac_200(0,-900, -450, 4000,-900, 1800, 0);
 			}
 		//// gap 3 lan r
 		else if (da_lay_tay1 == 1 && da_lay_tay2 == 1 && da_lay_tay3 == 1 && da_lay_tay4 == 0) {		
-				MD_qua_trai_phai_len_bac_200(0,-900, -1350, 5500,-900, 1800, 0);
+				MD_qua_trai_phai_len_bac_200(0,-900, -1350, 4000,-900, 1800, 0);
 			}
 		else if (da_lay_tay1 == 1 && da_lay_tay2 == 1 && da_lay_tay3 == 1 && da_lay_tay4 == 1) {		
-				MD_qua_trai_phai_len_bac_200(0,-900, -1350, 5500,-900, 1800, 0);
+				MD_qua_trai_phai_len_bac_200(0,-900, -1350, 4000,-900, 1800, 0);
 			}
 		robotStop(0);
 		su_dung_chan(265);
@@ -2694,21 +2730,21 @@ void qua_phai_len_bac_200_1_do (void) {
 void qua_phai_xuong_bac_200_2_do (void) {
 
 		if (da_lay_tay1 == 0 && da_lay_tay2 == 0 && da_lay_tay3 == 0 && da_lay_tay4 == 0) {
-				MD_qua_trai_phai_xuong_bac_200(0,-900, -750, 5500,-900, 1800, 0);
+				MD_qua_trai_phai_xuong_bac_200(0,-900, -750, 3500,-900, 1800, 0);
 			}
 		else if (da_lay_tay1 == 1 && da_lay_tay2 == 0 && da_lay_tay3 == 0 && da_lay_tay4 == 0) {
-				MD_qua_trai_phai_xuong_bac_200(0,-900, -450, 5500,-900, 1800, 0);
+				MD_qua_trai_phai_xuong_bac_200(0,-900, -450, 4000,-900, 1800, 0);
 			}
 			//// gap 2 lan r
 		else if (da_lay_tay1 == 1 && da_lay_tay2 == 1 && da_lay_tay3 == 0 && da_lay_tay4 == 0) {		
-				MD_qua_trai_phai_xuong_bac_200(0,-900, -450, 5500,-900, 1800, 0);
+				MD_qua_trai_phai_xuong_bac_200(0,-900, -450, 4000,-900, 1800, 0);
 			}
 		//// gap 3 lan r
 		else if (da_lay_tay1 == 1 && da_lay_tay2 == 1 && da_lay_tay3 == 1 && da_lay_tay4 == 0) {		
-				MD_qua_trai_phai_xuong_bac_200(0,-900, -1350, 5500,-900, 1800, 0);
+				MD_qua_trai_phai_xuong_bac_200(0,-900, -1350, 4000,-900, 1800, 0);
 			}
 		else if (da_lay_tay1 == 1 && da_lay_tay2 == 1 && da_lay_tay3 == 1 && da_lay_tay4 == 1) {		
-				MD_qua_trai_phai_xuong_bac_200(0,-900, -1350, 5500,-900, 1800, 0);
+				MD_qua_trai_phai_xuong_bac_200(0,-900, -1350, 4000,-900, 1800, 0);
 			}
 		robotStop(0);
 

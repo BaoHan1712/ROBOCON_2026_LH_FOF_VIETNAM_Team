@@ -1,0 +1,2 @@
+Requirement already satisfied: lap in /home/robot/miniconda3/envs/pyenv/lib/python3.10/site-packages (0.5.13)
+Requirement already satisfied: numpy>=1.21.6 in /home/robot/miniconda3/envs/pyenv/lib/python3.10/site-packages (from lap) (1.23.5)
