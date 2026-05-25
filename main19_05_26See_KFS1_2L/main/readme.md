@@ -1,1 +1,0 @@
-sudo nano /etc/systemd/system/robot_gui.service 
