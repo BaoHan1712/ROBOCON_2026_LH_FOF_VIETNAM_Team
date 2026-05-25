@@ -1198,7 +1198,7 @@ void Leo_bac_200_bam_thanh_phai_do(void)
 
 //**************** Xuong_bac_200 ô 4********
 void chuan_bi_gap_thang_do_4(void) {
-	int vitri_tay23 = vitri_tay23_phai_laser_GapQua + 6;
+	int vitri_tay23 = vitri_tay23_phai_laser_GapQua + 7;
 		kiem_tra_huong_quay_tay_gap_phia_truoc();
 		su_dung_chan(565);
 		if (da_lay_tay1 == 0 && da_lay_tay2 == 0 && da_lay_tay3 == 0 && da_lay_tay4 == 0) {

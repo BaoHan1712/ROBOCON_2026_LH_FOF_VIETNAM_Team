@@ -2221,7 +2221,7 @@ void gap_tay4_bac_400(void)
         tracking_traiPhaiThang_tren_tay4();
         
         speed_tay_gat2 = 200;
-        target_tay_gat2 = (Min_tay_gat2 + 60);
+        target_tay_gat2 = (Min_tay_gat2 + 55);
         vTaskDelay(7500); 
         Kep_phai_4_vao;
         vTaskDelay(2500);
@@ -4367,6 +4367,33 @@ void chinh_lai_vi_tri_laser_sau(int vitri, int gia_tri_lap, int min_toc, int max
 					else if ((lazeSauValue - vitri)< 0) {
 					
 					robotRunAngle(900, speed, 900, 0.5);
+					
+					}
+					else {
+								robotStop(0);
+								}
+				if(!wantExit())	break;
+			}
+		}   		
+	}
+
+	
+void chinh_lai_vi_tri_laser_truoc_xanh(int vitri, int gia_tri_lap, int min_toc, int max_toc)
+{
+	int speed ;
+	int dieuchinh;
+		for(i=0;i<gia_tri_lap;i++)
+				{
+		while(abs(lazeTruocValue - vitri) > 0)	{
+			dieuchinh = lazeTruocValue - vitri;
+			speed = custom_smooth_speed(dieuchinh, min_toc, max_toc);
+			
+					if  ((lazeTruocValue - vitri)> 0 ) {
+							robotRunAngle(900, speed, 900, 0.8);
+					}
+					else if ((lazeTruocValue - vitri)< 0) {
+					
+					robotRunAngle(-900, speed, 900, 0.8);
 					
 					}
 					else {
