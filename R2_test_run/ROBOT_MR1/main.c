@@ -167,8 +167,8 @@ vTaskDelay(1000);
 //			go_qua();
 //		
 //			if(OPTIONS) vehome();
-			
-			if(quangTroValue < 220)					Tay_kep_mo;
+//			
+//			if(quangTroValue < 220)					Tay_kep_mo;
 			
 			if(CHON_SAN == 0)									//SAN DO
 			{
@@ -178,9 +178,9 @@ vTaskDelay(1000);
 				
 ////			if(TRIANGLE && L2 && !R2 )												Xuat_Phat_Lay_Vu_Khi_Do(162,1500,215);
 //////				
-//					if(TRIANGLE && L2 && !R2 )											Leo_bac_200(900, -900);
-//					if(SQUARE && L2 && !R2) 												Leo_bac_400(900, -900);
-//					if(X && L2 && !R2) 															Xuong_bac_200(900, -900);
+//					if(TRIANGLE && L2 && !R2 )											su_dung_chan_thuong(710);
+//					if(SQUARE && L2 && !R2) 												su_dung_chan_thuong(565);
+//					if(X && L2 && !R2) 															Tay2_len;
 //					if(O && L2 && !R2 ) 														Xuong_bac_400(900, -900);
 				
 				
@@ -198,9 +198,9 @@ vTaskDelay(1000);
 				bat_dau_chay_xanh();
 //			if(O && L2 && !R2)															Xuat_Phat_Lay_Vu_Khi_Xanh(168, -1670, 198);
 
-//					if(TRIANGLE && L2 && !R2 )												tudonghoantoan();
-//					if(SQUARE && L2 && !R2) 													check_dat_hop_tren_T2_xanh();
-//					if(X && L2 && !R2) 																su_dung_chan_thuong(512);
+//					if(TRIANGLE && L2 && !R2 )												Leo_bac_200	(-900, 900);
+//					if(SQUARE && L2 && !R2) 													tu_dong_dat_tang2_xanh();
+//					if(X && L2 && !R2) 																su_dung_chan_thuong(710);
 //					if(O && L2 && !R2 ) 														Xuong_bac_400(-900, 900);
 
 		
