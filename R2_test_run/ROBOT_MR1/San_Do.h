@@ -1125,7 +1125,7 @@ void Run_All_Blocks_From_Queue_san_do(void)
             action_table[pkt.move][pkt.action][pkt.id_block]();
         }
 
-        vTaskDelay(1000); 
+        vTaskDelay(200); 
     }
 
     has_active_block = 0;

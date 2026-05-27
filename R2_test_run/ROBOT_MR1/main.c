@@ -157,18 +157,18 @@ vTaskDelay(1000);
 	while (1)
 	{ 
 
-//		while(SHARE) 
-//		{	
-////			
-//			robotGamePadControl(8,40);
-//			Nang_Ha_tay1_Manual(); 
-//			Nang_Ha_tay2_Manual();
-//			Xoay_tay_Manual();
-//			go_qua();
-//		
-//			if(OPTIONS) vehome();
+		while(SHARE) 
+		{	
 //			
-//			if(quangTroValue < 220)					Tay_kep_mo;
+			robotGamePadControl(8,40);
+			Nang_Ha_tay1_Manual(); 
+			Nang_Ha_tay2_Manual();
+			Xoay_tay_Manual();
+			go_qua();
+		
+			if(OPTIONS) vehome();
+			
+			if(quangTroValue < 220)					Tay_kep_mo;
 			
 			if(CHON_SAN == 0)									//SAN DO
 			{
@@ -198,10 +198,10 @@ vTaskDelay(1000);
 				bat_dau_chay_xanh();
 //			if(O && L2 && !R2)															Xuat_Phat_Lay_Vu_Khi_Xanh(168, -1670, 198);
 
-//					if(TRIANGLE && L2 && !R2 )												Leo_bac_200	(-900, 900);
-//					if(SQUARE && L2 && !R2) 													tu_dong_dat_tang2_xanh();
-//					if(X && L2 && !R2) 																su_dung_chan_thuong(710);
-//					if(O && L2 && !R2 ) 														Xuong_bac_400(-900, 900);
+					if(TRIANGLE && L2 && !R2 )												test_dat();
+					if(SQUARE && L2 && !R2) 													Lay_phia_truoc_bac_200_duoi();
+					if(X && L2 && !R2) 																su_dung_chan_thuong(565);
+					if(O && L2 && !R2 ) 															Lay_phia_truoc_bac_200_tren();
 
 		
 				
@@ -226,7 +226,7 @@ vTaskDelay(1000);
 
 		robotStop(0);
 	}
-//}
+}
 	
 int main(void)
 {
