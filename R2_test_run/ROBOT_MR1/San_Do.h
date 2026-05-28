@@ -83,7 +83,7 @@ void Xuat_Phat_Lay_Vu_Khi_Do(int vu_khi, int goc_ve, int vitri) {
 					}
 				}
 				Nang_cuc_nhanh();
-				target_chan_truoc = 607, target_chan_sau =607;
+				target_chan_truoc = 608, target_chan_sau =608;
 				for(i=0;i<50;i++)		
 				{
 				while(bientrochantruocValue < 470)	{

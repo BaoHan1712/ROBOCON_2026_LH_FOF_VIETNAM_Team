@@ -2443,7 +2443,7 @@ void HMI_TRAN(vs32 _so_dong)
 										HMI_DMI("check_dat_hop_T2 ",check_dat_hop_T2,36); 
 										break;
 									case 37:
-										HMI_DMI("GapThang ",TinHieu_ChuanBi_GapThang,37); 
+										HMI_DMI("nhay_den_lan_1 ",nhay_den_lan_1,37); 
 										break;
 									case 38:
 										HMI_DMI("ngang_qua_o3 ",chay_ngang_qua_o3_do,38); 
