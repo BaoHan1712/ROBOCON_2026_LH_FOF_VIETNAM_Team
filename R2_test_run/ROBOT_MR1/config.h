@@ -498,8 +498,8 @@ int vi_tri_tay_3_phai_tren = 595;
 /// VI TRI MAM XOAY LAY TRAI 200 
 int vi_tri_tay_4_trai_tren = 416;
 int vi_tri_tay_1_trai_tren = 606;
-int vi_tri_tay_2_trai_tren = 590;
-int vi_tri_tay_3_trai_tren = 398;
+int vi_tri_tay_2_trai_tren = 587;
+int vi_tri_tay_3_trai_tren = 397;
 
 /// VI TRI LAZER LAY QUA THANG
 int vitri_tay41_laser_trai_GapQua = 151;
