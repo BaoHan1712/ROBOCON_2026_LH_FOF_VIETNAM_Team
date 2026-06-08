@@ -1723,7 +1723,7 @@ void retry_zone2_do(void) {
 		retry_co_qua_tren_tay();
 		Run_All_Blocks_From_Queue_san_do();
 	
-		if (hoan_thanh_chay_rung == 1 ) DatKFS_do(18),hoan_thanh_chay_rung = 2 ;
+if (hoan_thanh_chay_rung == 1 ) DatKFS_do(18),hoan_thanh_chay_rung = 2 ;
 	/// ******* //////
 		if (hoan_thanh_chay_rung == 2 && mode_cay_diem == 1)  {
 				quyet_dinh_dat_hop_tang3(); // danh cay diem 1
@@ -1736,9 +1736,10 @@ void retry_zone2_do(void) {
 					if(!wantExit())	break;
 				}
 				robotStop(0);
+				chinh_lai_vi_tri_laser_trai(177, 1000);
+				robotStop(0);
 				chinh_lai_vi_tri_laser_truoc_do(vi_tri_dat_hop_2_tay41_do, 100, 5 , 20);
-        robotStop(0);
-        chinh_lai_vi_tri_laser_trai(177, 1000);
+				
 				robotStop(0);
 				check_dat_hop_tren_T2_do();
 				robotStop(0);

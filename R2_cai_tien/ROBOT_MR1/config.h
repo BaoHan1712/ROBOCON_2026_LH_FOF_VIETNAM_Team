@@ -551,7 +551,7 @@ int vi_tri_dat_hop_2_tay23_xanh = 60;
 int vi_tri_dat_hop_3_tay23_xanh = 116;
 
 int vi_tri_dat_hop_1_tay41_xanh_truoc = 107; /// ** DUNG LAZER truoc**
-int vi_tri_dat_hop_2_tay41_xanh_truoc = 53;  
+int vi_tri_dat_hop_2_tay41_xanh_truoc = 54;  
 int vi_tri_dat_hop_3_tay41_xanh_truoc = 0;
 
 int vi_tri_dat_hop_1_tay23_xanh_truoc = 151;
@@ -560,7 +560,7 @@ int vi_tri_dat_hop_3_tay23_xanh_truoc = 40;
 ///
 //// ******** VI TRI LAZER DAT HOP DO *********************
 int vi_tri_dat_hop_1_tay41_do = 105;   /// ** DUNG LAZER truoc**
-int vi_tri_dat_hop_2_tay41_do = 52;
+int vi_tri_dat_hop_2_tay41_do = 54;
 int vi_tri_dat_hop_3_tay41_do = 1;
 
 int vi_tri_dat_hop_1_tay23_do = 150;   /// ** DUNG LAZER truoc**
@@ -576,6 +576,8 @@ int da_lay_tay3 = 0;
 int da_lay_tay4 = 0;
 int da_lay_tay4_duoi = 0;
 int hoan_thanh_chay_rung = 0;
+
+int gap_truoc_dac_biet = 0; // dung trong viec gap hop phia truoc nhung chan xuong luon
 
 extern int Xoay_ok;
 int	KT_Ha_Tay;

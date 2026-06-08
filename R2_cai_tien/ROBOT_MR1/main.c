@@ -141,13 +141,13 @@ vTaskDelay(1000);
 	target_tay_gat1 = bientrodaytay1Value;
 	target_tay_gat2 = bientrodaytay2Value;
 
-	speed_tay_xoay = 100;
+	speed_tay_xoay = 130;
 	target_xoay_tay = vi_tri_tay_43;
 	
-	speed_tay_gat1 = 250;
+	speed_tay_gat1 = 140;
 	target_tay_gat1 = vitri_tay1home;
 	
-	speed_tay_gat2 = 250;
+	speed_tay_gat2 = 140;
 	target_tay_gat2 = vitri_tay2home;
 	
 	RESET_ENCODER();
@@ -200,10 +200,10 @@ vTaskDelay(1000);
 				bat_dau_chay_xanh();
 //			if(O && L2 && !R2)															Xuat_Phat_Lay_Vu_Khi_Xanh(168, -1670, 198);
 
-					if(TRIANGLE && L2 && !R2 )													Leo_bac_200(-900, 900);
-					if(SQUARE && L2 && !R2) 														Xuong_bac_200(-900, 900);
-					if(X && L2 && !R2) 																	Leo_bac_400 (-900, 900);
-					if(O && L2 && !R2 ) 																Xuong_bac_400(-900, 900);
+					if(TRIANGLE && L2 && !R2 )												Run_All_Blocks_From_Queue_san_xanh();
+					if(SQUARE && L2 && !R2) 													ha_sat_xuong();
+					if(X && L2 && !R2) 																Tay2_len;
+					if(O && L2 && !R2 ) 															Tay1_len;
 
 		
 				
