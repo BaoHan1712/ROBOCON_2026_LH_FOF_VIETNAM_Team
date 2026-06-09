@@ -381,22 +381,20 @@ void di_tren_buc_khong_thanh_2_ben_do(void) {
 		kiem_tra_huong_quay_tay_gap_phia_truoc();
 		if (da_lay_tay1 == 0 && da_lay_tay2 == 0 && da_lay_tay3 == 0 && da_lay_tay4 == 0) {
 				while(CB_Ha_Sau == 0) {
-				if(CB_ROI_3  == 0 && CB_ROI_1 == 0)	robotRunAngle(1550,18,-900,0.7); // di voi goc xéo phai
+				if(CB_ROI_3  == 0 && CB_ROI_1 == 0)	robotRunAngle(1400,18,-900,0.7); // di voi goc xéo phai
 				else																robotRunAngle(900,12,-900,0.7); // di thang
 				vTaskDelay(1);
 				if(!wantExit()) break;
 					}
-				Tay2_len;
 			}
 		
 	else if (da_lay_tay1 == 1 && da_lay_tay2 == 0 && da_lay_tay3 == 0 && da_lay_tay4 == 0) {
 				while( CB_Ha_Sau == 0) {
-				if(CB_ROI_3  == 0 && CB_ROI_1 == 0)	robotRunAngle(1550,18,-900,0.7); // di xeo phai
+				if(CB_ROI_3  == 0 && CB_ROI_1 == 0)	robotRunAngle(1400,18,-900,0.7); // di xeo phai
 				else																robotRunAngle(900,12,-900,0.7);  // di thang 
 				vTaskDelay(1);
 				if(!wantExit()) break;
 					}
-				Tay1_len;
 				}
 		// quay mam sang tay 2
 			else if (da_lay_tay1 == 1 && da_lay_tay2 == 1 && da_lay_tay3 == 0 && da_lay_tay4 == 0) {
@@ -406,7 +404,6 @@ void di_tren_buc_khong_thanh_2_ben_do(void) {
 				vTaskDelay(1);
 				if(!wantExit()) break;
 							}
-				Tay2_len;
 				}
 		
 		// quay mam sang tay 3
@@ -417,7 +414,6 @@ void di_tren_buc_khong_thanh_2_ben_do(void) {
 				vTaskDelay(1);
 				if(!wantExit()) break;
 						}
-				Tay1_len;
 					}
 			robotStop(0);
 			
@@ -712,27 +708,25 @@ void Leo_bac_400_co_thanh_do(void) {
 
 //**************** Xuong_bac_200 do ô 9 **************		
 void chuan_bi_gap_thang_do_9 (void) {
-		int vitri_tay41 = vitri_tay41_laser_trai_GapQua + 5;
+		int vitri_tay41 = vitri_tay41_laser_trai_GapQua + 6;
 		kiem_tra_huong_quay_tay_gap_phia_truoc();
 		su_dung_chan(265);
 			// chinh lai vi tri cho tay gap
 			if (da_lay_tay1 == 0 && da_lay_tay2 == 0 && da_lay_tay3 == 0 && da_lay_tay4 == 0) {
 				while( CB_Ha_Sau == 0 || (abs(bientrochansauValue - target_chan_sau) > 20)) 
 					{	
-					if(lazeTraiValue > vitri_tay41)			robotRunAngle(1550,18,-900,0.7);
+					if(lazeTraiValue > vitri_tay41)			robotRunAngle(1450,18,-900,0.7);
 					else																robotRunAngle(900,12,-900,0.7);
 					vTaskDelay(1);
 					if(!wantExit()) break; }
-					Tay2_len;
 			}
 		else if (da_lay_tay1 == 1 && da_lay_tay2 == 0 && da_lay_tay3 == 0 && da_lay_tay4 == 0) {
 				while(CB_Ha_Sau == 0 || (abs(bientrochansauValue - target_chan_sau) > 20)) 
 					{	
-					if(lazeTraiValue > vitri_tay41)			robotRunAngle(1550,18,-900,0.7);
+					if(lazeTraiValue > vitri_tay41)			robotRunAngle(1450,18,-900,0.7);
 					else																robotRunAngle(900,12,-900,0.7);
 					vTaskDelay(1);
 					if(!wantExit()) break; }
-					Tay1_len;
 				}
 
 		else if (da_lay_tay1 == 1 && da_lay_tay2 == 1 && da_lay_tay3 == 0 && da_lay_tay4 == 0) {
@@ -742,7 +736,6 @@ void chuan_bi_gap_thang_do_9 (void) {
 				vTaskDelay(1);
 				if(!wantExit()) break;
 					}
-				Tay2_len;
 				// chay toi roi thi di ngang qua trai
 				robotRunAngle(0,10,-900,0.7);
 				while (CB_ROI_2  == 0 )	 {
@@ -757,7 +750,6 @@ void chuan_bi_gap_thang_do_9 (void) {
 				vTaskDelay(1);
 				if(!wantExit()) break;
 					}
-				Tay1_len;
 				// chay toi roi thi di ngang qua trai
 				robotRunAngle(0,10,-900,0.7);
 				while (CB_ROI_2  == 0 )	 {
@@ -924,7 +916,7 @@ void Leo_bac_400_ko_thanh_do(void)
 				robotRunAngle(900,20,-900,0.9);
 				for(i=0;i<250;i++)
 						{
-								while(CB_Ha_Sau == 0 || (abs(bientrochansauValue - target_chan_sau) > 20))
+								while(CB_Ha_Sau == 0 || (abs(bientrochansauValue - target_chan_sau) > 30))
 							{	
 								vTaskDelay (1);
 								if(!wantExit())	break;
@@ -954,13 +946,13 @@ void Leo_bac_400_ko_thanh_do(void)
 }
 
 void chuan_bi_gap_thang_do_2(void) {
-			int vitri_tay41 = vitri_tay41_laser_trai_GapQua + 4;
-			int vitri_tay23 = vitri_tay23_phai_laser_GapQua + 4;
+			int vitri_tay41 = vitri_tay41_laser_trai_GapQua + 6;
+			int vitri_tay23 = vitri_tay23_phai_laser_GapQua + 6;
 			su_dung_chan(565);
 			if (da_lay_tay1 == 0 && da_lay_tay2 == 0 && da_lay_tay3 == 0 && da_lay_tay4 == 0) {
 					for(i=0;i<1550;i++) {
 						
-					while( CB_Cap_Thanh_Sau == 0 ||  (abs(bientrochansauValue - target_chan_sau) > 20))	
+					while( CB_Cap_Thanh_Sau == 0 ||  (abs(bientrochansauValue - target_chan_sau) > 40))	
 					{	
 					if(lazeTraiValue > vitri_tay41)			robotRunAngle(1450,18,-900,0.7);
 					else																robotRunAngle(900,12,-900,0.7);
@@ -973,7 +965,7 @@ void chuan_bi_gap_thang_do_2(void) {
 			
 		else if (da_lay_tay1 == 1 && da_lay_tay2 == 0 && da_lay_tay3 == 0 && da_lay_tay4 == 0) {
 					for(i=0;i<1550;i++) {
-					while( CB_Cap_Thanh_Sau == 0 ||  (abs(bientrochansauValue - target_chan_sau) > 20))	
+					while( CB_Cap_Thanh_Sau == 0 ||  (abs(bientrochansauValue - target_chan_sau) > 40))	
 					{	
 					if(lazeTraiValue > vitri_tay41)			robotRunAngle(1450,18,-900,0.7);
 					else																robotRunAngle(900,12,-900,0.7);
@@ -986,7 +978,7 @@ void chuan_bi_gap_thang_do_2(void) {
 
 		else if (da_lay_tay1 == 1 && da_lay_tay2 == 1 && da_lay_tay3 == 0 && da_lay_tay4 == 0) {
 					for(i=0;i<1550;i++) {
-					while( CB_Cap_Thanh_Sau == 0 ||  (abs(bientrochansauValue - target_chan_sau) > 20))	
+					while( CB_Cap_Thanh_Sau == 0 ||  (abs(bientrochansauValue - target_chan_sau) > 40))	
 					{	
 					if(lazePhaiValue > vitri_tay23)			robotRunAngle(450,18,-900,0.7);
 					else																robotRunAngle(900,12,-900,0.7);
@@ -998,7 +990,7 @@ void chuan_bi_gap_thang_do_2(void) {
 					}
 		else if (da_lay_tay1 == 1 && da_lay_tay2 == 1 && da_lay_tay3 == 1 && da_lay_tay4 == 0) {
 					for(i=0;i<1550;i++) {
-					while( CB_Cap_Thanh_Sau == 0 ||  (abs(bientrochansauValue - target_chan_sau) > 20))	
+					while( CB_Cap_Thanh_Sau == 0 ||  (abs(bientrochansauValue - target_chan_sau) > 40))	
 					{	
 					if(lazePhaiValue > vitri_tay23)			robotRunAngle(450,18,-900,0.7);
 					else																robotRunAngle(900,12,-900,0.7);
@@ -1198,13 +1190,13 @@ void Leo_bac_200_bam_thanh_phai_do(void)
 
 //**************** Xuong_bac_200 ô 4********
 void chuan_bi_gap_thang_do_4(void) {
-	int vitri_tay23 = vitri_tay23_phai_laser_GapQua + 7;
+	int vitri_tay23 = vitri_tay23_phai_laser_GapQua + 6;
 		kiem_tra_huong_quay_tay_gap_phia_truoc();
 		su_dung_chan(565);
 		if (da_lay_tay1 == 0 && da_lay_tay2 == 0 && da_lay_tay3 == 0 && da_lay_tay4 == 0) {
 			for(i=0;i<1550;i++) {
 				while( CB_Cap_Thanh_Sau == 0 || (abs(bientrochansauValue - target_chan_sau) > 100) )	{
-						if(CB_ROI_1  == 0 && CB_ROI_3 == 0)	robotRunAngle(1550,18,-900,0.7);
+						if(CB_ROI_1  == 0 && CB_ROI_3 == 0)	robotRunAngle(1450,18,-900,0.7);
 						else																robotRunAngle(900,12,-900,0.7);
 						vTaskDelay(1);
 						if(!wantExit()) break;
@@ -1223,7 +1215,7 @@ void chuan_bi_gap_thang_do_4(void) {
 		else if (da_lay_tay1 == 1 && da_lay_tay2 == 0 && da_lay_tay3 == 0 && da_lay_tay4 == 0) {
 				for(i=0;i<1550;i++) {
 				while( CB_Cap_Thanh_Sau == 0 || (abs(bientrochansauValue - target_chan_sau) > 100) )	{
-						if(CB_ROI_1  == 0 && CB_ROI_3 == 0)	robotRunAngle(1550,18,-900,0.7);
+						if(CB_ROI_1  == 0 && CB_ROI_3 == 0)	robotRunAngle(1450,18,-900,0.7);
 						else																robotRunAngle(900,12,-900,0.7);
 						vTaskDelay(1);
 						if(!wantExit()) break;
@@ -1483,7 +1475,7 @@ void Xuong_bac_200_do_4(void)
 
 		for(i=0;i<1550;i++)
 				{
-					while(CB_Ha_Sau == 1 || (abs(bientrochansauValue - target_chan_sau) > 10) )	
+					while(CB_Ha_Sau == 1 || (abs(bientrochansauValue - target_chan_sau) > 40) )	
 						
 					{	
 						if(!wantExit())	break;
@@ -1648,7 +1640,7 @@ void Leo_bac_200_do_5(void) {
 				robotRunAngle(900,20,-900,0.7);
 				for(i=0;i<1550;i++)
 				{
-				while(CB_Ha_Sau == 1 || (abs(bientrochansauValue - target_chan_sau) > 20)	 )	
+				while(CB_Ha_Sau == 1 || (abs(bientrochansauValue - target_chan_sau) > 40)	 )	
 					{	
 						vTaskDelay (1);
 						if(!wantExit())	break;
@@ -1682,19 +1674,17 @@ void Leo_bac_200_do_5(void) {
 }
 
 void chuan_bi_gap_thang_do_7(void) {
-		int vitri_tay23 = vitri_tay23_phai_laser_GapQua + 3;
-		kiem_tra_huong_quay_tay_gap_phia_truoc();
+		int vitri_tay23 = vitri_tay23_phai_laser_GapQua + 6;
 		su_dung_chan(265);
 
 	// chinh lai vi tri cho tay gap
 	if (da_lay_tay1 == 0 && da_lay_tay2 == 0 && da_lay_tay3 == 0 && da_lay_tay4 == 0) {
-				while(CB_Ha_Sau == 0 || (abs(bientrochansauValue - target_chan_sau) > 15)) {
-				if(CB_ROI_1  == 0 && CB_ROI_3 == 0)	robotRunAngle(1550,18,-900,0.7);
+				while(CB_Ha_Sau == 0 || (abs(bientrochansauValue - target_chan_sau) > 25)) {
+				if(CB_ROI_1  == 0 && CB_ROI_3 == 0)	robotRunAngle(1450,18,-900,0.7);
 				else																robotRunAngle(900,12,-900,0.7);
 				vTaskDelay(1);
 				if(!wantExit()) break;
 							}
-				Tay2_len;
 				// chay toi roi thi di ngang qua phai
 				robotRunAngle(1800,8,-900,0.7);
 				while (CB_ROI_3  == 0 )	 {
@@ -1703,13 +1693,12 @@ void chuan_bi_gap_thang_do_7(void) {
 						}
 			}
 		else if (da_lay_tay1 == 1 && da_lay_tay2 == 0 && da_lay_tay3 == 0 && da_lay_tay4 == 0) {
-				while( CB_Ha_Sau == 0 || (abs(bientrochansauValue - target_chan_sau) > 15)) {
-				if(CB_ROI_1  == 0 && CB_ROI_3 == 0)	robotRunAngle(1550,18,-900,0.7);
+				while( CB_Ha_Sau == 0 || (abs(bientrochansauValue - target_chan_sau) > 25)) {
+				if(CB_ROI_1  == 0 && CB_ROI_3 == 0)	robotRunAngle(1450,18,-900,0.7);
 				else																robotRunAngle(900,12,-900,0.7);
 				vTaskDelay(1);
 				if(!wantExit()) break;
 							}
-				Tay1_len;
 				// chay toi roi thi di ngang qua phai
 				robotRunAngle(1800,8,-900,0.7);
 				while (CB_ROI_3  == 0 )	 {
@@ -1719,24 +1708,22 @@ void chuan_bi_gap_thang_do_7(void) {
 			}
 
 		else if (da_lay_tay1 == 1 && da_lay_tay2 == 1 && da_lay_tay3 == 0 && da_lay_tay4 == 0) {
-					while(CB_Ha_Sau == 0 || (abs(bientrochansauValue - target_chan_sau) > 15)) 
+					while(CB_Ha_Sau == 0 || (abs(bientrochansauValue - target_chan_sau) > 25)) 
 					{	
 						if(lazePhaiValue > vitri_tay23)			robotRunAngle(350,18,-900,0.7);
 						else																robotRunAngle(900,12,-900,0.7);
 						vTaskDelay(1);
 						if(!wantExit()) break;
-						Tay2_len;
 									}
 				}
 		else if (da_lay_tay1 == 1 && da_lay_tay2 == 1 && da_lay_tay3 == 1 && da_lay_tay4 == 0) {
-						while(CB_Ha_Sau == 0 || (abs(bientrochansauValue - target_chan_sau) > 15)) 
+						while(CB_Ha_Sau == 0 || (abs(bientrochansauValue - target_chan_sau) > 25)) 
 					{	
 						if(lazePhaiValue > vitri_tay23)			robotRunAngle(350,18,-900,0.7);
 						else																robotRunAngle(900,12,-900,0.7);
 						vTaskDelay(1);
 						if(!wantExit()) break;
 									}
-					Tay1_len;
 								}
 			robotStop(0);
 }
@@ -1831,7 +1818,7 @@ void Leo_bac_200_do_7(void)  {
 		robotRunAngle(900,20,-900,0.7);
 		for(i=0;i<1550;i++)
 				{
-						while(CB_Ha_Sau == 0 || (abs(bientrochansauValue - target_chan_sau) > 10)	)	
+						while(CB_Ha_Sau == 0 || (abs(bientrochansauValue - target_chan_sau) > 30)	)	
 			
 					{	
 						if(!wantExit())	break;
@@ -1842,7 +1829,7 @@ void Leo_bac_200_do_7(void)  {
 		robotRunAngle(900,10,-900,0.7);
 		for(i=0;i<1550;i++)
 				{
-						while(CB_Ha_Sau == 0 || CB_vtri_leo == 0 || (abs(bientrochansauValue - target_chan_sau) > 10)	)	
+						while(CB_Ha_Sau == 0 || CB_vtri_leo == 0 || (abs(bientrochansauValue - target_chan_sau) > 30)	)	
 			
 					{	
 						if(!wantExit())	break;

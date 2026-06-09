@@ -201,9 +201,9 @@ vTaskDelay(1000);
 //			if(O && L2 && !R2)															Xuat_Phat_Lay_Vu_Khi_Xanh(168, -1670, 198);
 
 					if(TRIANGLE && L2 && !R2 )												Run_All_Blocks_From_Queue_san_xanh();
-					if(SQUARE && L2 && !R2) 													ha_sat_xuong();
-					if(X && L2 && !R2) 																Tay2_len;
-					if(O && L2 && !R2 ) 															Tay1_len;
+					if(SQUARE && L2 && !R2) 													su_dung_chan(700);	
+					if(X && L2 && !R2) 																Leo_bac_400	(-900, 900);	
+					if(O && L2 && !R2 ) 															Xuong_bac_200	(-900, 900);	
 
 		
 				
