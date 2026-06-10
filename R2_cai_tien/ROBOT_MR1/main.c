@@ -180,8 +180,8 @@ vTaskDelay(1000);
 //				if(TRIANGLE && L2 && !R2 )												Xuat_Phat_Lay_Vu_Khi_Do(162, 1500, 215);
 				
 //////				
-					if(TRIANGLE && L2 && !R2 )										Run_All_Blocks_From_Queue_san_do();
-//					if(SQUARE && L2 && !R2) 											Tay2_len;
+					if(TRIANGLE && L2 && !R2 )										tudonghoantoan_san_do();
+					if(SQUARE && L2 && !R2) 											Leo_bac_200(900, -900);
 //					if(X && L2 && !R2) 														chay_toi_o_dat_qua_do(vi_tri_dat_hop_3_tay41_do_sau, vi_tri_dat_hop_3_tay41_do);
 //					if(O && L2 && !R2 ) 													su_dung_chan(512);
 				
