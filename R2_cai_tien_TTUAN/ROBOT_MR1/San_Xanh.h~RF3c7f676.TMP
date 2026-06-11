@@ -1,0 +1,371 @@
+void San_Xanh	(void)
+{
+//===============================CHAY SAN XANH===============================//
+				robotResetIMU();
+				RESET_ENCODER();
+
+//---------------------------COT 1---------------------------------//				
+				robotRunAngle(450,40,0,0);
+				while(ENCODER()<300)								if(WannaExit())	while(1)	robotStop(0);
+				
+				robotRunAngle(450,70,0,0);
+				while(ENCODER()<1600)								if(WannaExit())	while(1)	robotStop(0);
+				
+				robotRunAngle(0,70,0,0);
+				while(ENCODER()<2050)								if(WannaExit())	while(1)	robotStop(0);
+				
+//---------------------------COT 2---------------------------------//					
+				robotRunAngle(-450,70,0,0);
+				while(ENCODER()<4400)								if(WannaExit())	while(1)	robotStop(0);
+
+				robotRunAngle(0,70,0,0);
+				while(ENCODER()<4850)								if(WannaExit())	while(1)	robotStop(0);
+
+//---------------------------COT 3---------------------------------//				
+				robotRunAngle(450,70,0,0);
+				while(ENCODER()<7200)								if(WannaExit())	while(1)	robotStop(0);	
+			
+				robotRunAngle(0,70,0,0);
+				while(ENCODER()<7600)								if(WannaExit())	while(1)	robotStop(0);		
+
+//---------------------------QUA CAU---------------------------------//	
+				robotRunAngle(-300,60,0,0);
+				while(ENCODER() < 8600)							if(WannaExit())	while(1)	robotStop(0);
+				while(lazeTraiValue > 710)					if(WannaExit())	while(1)	robotStop(0);
+
+				RESET_ENCODER();
+				robotRunAngle(0,70,0,0);
+				while(ENCODER() < 500)							if(WannaExit())	while(1)	robotStop(0);	
+
+				robotRunAngle(100,60,0,0);
+				while(ENCODER() < 1800)							if(WannaExit())	while(1)	robotStop(0);
+
+				robotRunAngle(0,50,0,0);
+				while(lazeTruocValue > 625)					if(WannaExit())	while(1)	robotStop(0);
+				robotStop(0);
+				
+//---------------------------CAP THANH CHAY NGANG---------------------------------//	
+				RESET_ENCODER();
+				
+				while(ENCODER()<500)						
+				{
+					if(WannaExit())	while(1)	robotStop(0);
+					cap_thanh_lazer_truoc(900,0,60,455);
+				}
+				
+				while(ENCODER() < 3000)						
+				{
+					if(WannaExit())	while(1)	robotStop(0);
+					cap_thanh_lazer_truoc(900,0,70,455);
+				}
+				
+				xl_Trao_Ra;
+				
+				while(ENCODER() < 4650)						
+				{
+					if(WannaExit())	while(1)	robotStop(0);
+					cap_thanh_lazer_truoc(900,0,50,455);
+				}
+				
+				while(ENCODER() < 4600)						
+				{
+					if(WannaExit())	while(1)	robotStop(0);
+					cap_thanh_lazer_truoc(900,0,30,455);
+				}
+
+//---------------------------LUI SAU TRAO GEREGE---------------------------------//					
+				robotRunAngle(1050,12,0,0);
+				while( lazePhaiValue > 670)			if(WannaExit())	while(1)	robotStop(0);				
+				robotStop(0);
+				
+				delay_ms(500); 
+				xl_Gerege_Nha, delay_ms(2000);
+				xl_Trao_Ve;
+				
+				
+
+//---------------------------LAY SHAGAI 1---------------------------------//					
+				while(O) vTaskDelay(1);
+				{
+					LayShagai();
+				}
+
+//---------------------------QUAY PHAI DOI---------------------------------//									
+				RESET_ENCODER();
+				
+				robotRun(-900,20);
+				robotRotate(900,1,0);
+				while(ENCODER()<1600)						if(WannaExit())	while(1)	robotStop(0);
+				
+				robotStop(0);
+				
+				xl_Shagai_Nha;							delay_ms(500);
+				xl_Truot_Xuong;							delay_ms(2000);
+				xl_Shagai_Kep;	
+
+//---------------------------CAP THANH BAN SHAGAI 1---------------------------------//				
+				while(O) vTaskDelay(1);
+				{
+				
+					robotRunAngle(-1800,50,0,0);
+					while(lazeTruocValue > 200)			if(WannaExit())	while(1)	robotStop(0);
+				
+					RESET_ENCODER();
+
+					while(ENCODER() < 800)			
+					{
+						if(WannaExit())	while(1)	robotStop(0);
+						cap_thanh_lazer_truoc(900,900,60,80);	
+					}
+					
+					while(ENCODER() < 2300)			
+					{
+						if(WannaExit())	while(1)	robotStop(0);
+						cap_thanh_lazer_truoc(900,900,70,80);	
+					}
+					
+					while(ENCODER() < 2700)			
+					{
+						if(WannaExit())	while(1)	robotStop(0);
+						cap_thanh_lazer_truoc(900,900,40,80);	
+					}
+				
+					while(ENCODER() < 3200)		
+					{					
+						if(WannaExit())	while(1)	robotStop(0);
+						cap_thanh_lazer_truoc(900,900,20,80);	
+					}
+
+//---------------------------XOAY VAO VI TRI BAN---------------------------------//						
+					robotRun(900,10);
+					robotRotate(1660,1,4);
+					while(_robotIMUAngle < 1660)	if(WannaExit())	while(1)	robotStop(0);
+					
+					robotRun(0,10); delay_ms(500);
+					robotStop(0);
+					
+//---------------------------BAN SHAGAI 1---------------------------------//					
+					xl_Doi_Ra;											delay_ms(1200);
+					xl_Shagai_Nha,									delay_ms(500);
+					xl_Shagai_Kep, 									delay_ms(500);
+					xl_Shagai_Nha, 									delay_ms(1500);
+				
+					xl_Ban_Ra,										 	delay_ms(1000);
+					xl_Ban_Ve;											delay_ms(500);
+					xl_Doi_Ve; 
+				}
+				
+//=====================================LAY SHAGAI 2=================================//
+			
+				RESET_ENCODER();
+				
+	
+				while(_robotIMUAngle > 900)
+				{
+					robotRun(-1660,20);
+					robotRotate(900,-1,0);
+				}
+
+//---------------------------CAP THANH LUI LAY SHAGAI 2---------------------------------//				
+				while(ENCODER() < 3800)		
+				{					
+					if(WannaExit())	while(1)	robotStop(0);
+					cap_thanh_lazer_truoc(-900,900,60,20);	
+				}
+				
+				while(ENCODER() < 4400)		
+				{					
+					if(WannaExit())	while(1)	robotStop(0);
+					cap_thanh_lazer_truoc(-900,900,40,20);	
+				}
+				
+				robotRunAngle(0,30,100,0);
+				while(lazeTruocValue < 300)				 if(WannaExit())	while(1)	robotStop(0);
+				
+//---------------------------CHAY LAY SHAGAI 2---------------------------------//	
+				RESET_ENCODER();
+				
+				while(ENCODER() < 1000)			
+				{
+					if(WannaExit())	while(1)	robotStop(0);
+					xl_Nang_Ngan_Ra;
+					robotRunAngle(15,35,-900,0);	
+				}
+
+				
+				robotRunAngle(15,25,-900,0);	
+				while(ENCODER() < 1850)					if(WannaExit())	while(1)	robotStop(0);
+
+				robotRunAngle(15,15,-900,0);
+				while(lazeTruocValue > 500)			 	if(WannaExit())	while(1)	robotStop(0);
+				
+				robotRunAngle(0,7,-900,0); 
+				delay_ms(1000);
+				robotStop(0);
+
+				xl_Don_Ra;	delay_ms(500);
+
+//---------------------------TOI VI TRI GAP SHAGAI 2---------------------------------//	
+				robotRunAngle(900,7,0,0);
+				while(lazeTruocValue > 80)		 if(WannaExit())	while(1)	robotStop(0);
+				
+				robotRunAngle(890,7,0,0); 
+				delay_ms(300);
+				robotStop(0);
+				
+				xl_Shagai_Kep,												delay_ms(700);
+				xl_Truot_Len,													delay_ms(1500);
+				xl_Don_Ve;														delay_ms(500);
+				
+//---------------------------CHAY VAO VI TRI BAN 2---------------------------------//					
+				RESET_ENCODER();
+
+				robotRunAngle(1850,40,0,0);
+				xl_Nang_Ngan_Ve;											delay_ms(800);
+				while(lazeTruocValue > 200)				if(WannaExit())	while(1)	robotStop(0);
+
+				RESET_ENCODER();
+				while(ENCODER() < 3100)			
+				{
+					if(WannaExit())	while(1)	robotStop(0);
+					cap_thanh_lazer_truoc(900,900,60,40);	
+				}
+				
+				while(ENCODER() < 3600)		
+				{					
+					if(WannaExit())	while(1)	robotStop(0);
+					cap_thanh_lazer_truoc(900,900,20,40);	
+				}
+
+//---------------------------XOAY GOC BAN 2---------------------------------//				
+				robotRun(900,15);
+				robotRotate(1410,1,4);
+				while(_robotIMUAngle < 1400)	if(WannaExit())	while(1)	robotStop(0);
+	
+				robotRun(0,8), delay_ms(500);
+				robotStop(0);
+				
+				xl_Doi_Ra; 									delay_ms(1200);
+				xl_Shagai_Nha; 							delay_ms(500);
+				xl_Truot_Xuong; 						delay_ms(700);
+				xl_Shagai_Kep; 							delay_ms(500);
+				xl_Shagai_Nha; 							delay_ms(1500);
+				
+				xl_Ban_Ra; 									delay_ms(1000);
+				xl_Ban_Ve; 									delay_ms(500);
+				xl_Doi_Ve;
+			
+			
+//=================================LAY SHAGAI 3==================================//
+				RESET_ENCODER();
+				xl_Doi_Ve; 
+	
+				while(_robotIMUAngle > 900)
+				{
+					robotRun(-1400,20);
+					robotRotate(900,-1,0);
+				}
+				
+				while(ENCODER() < 3500)		
+				{					
+					if(WannaExit())	while(1)	robotStop(0);
+					cap_thanh_lazer_truoc(-900,900,60,35);	
+				}
+				
+				while(ENCODER() < 4000)		
+				{					
+					if(WannaExit())	while(1)	robotStop(0);
+					cap_thanh_lazer_truoc(-900,900,40,35);	
+				}
+				
+				robotRunAngle(0,40,900,0);
+				while(lazeTruocValue < 300)				 if(WannaExit())	while(1)	robotStop(0);
+				
+				
+				
+//---------------------------CHAY LAY SHAGAI 3---------------------------------//
+				RESET_ENCODER();
+				
+				while(ENCODER() < 700)	
+				{
+					if(WannaExit())	while(1)	robotStop(0);
+					xl_Nang_Ngan_Ra;
+					robotRunAngle(200,50,-900,0);	
+				}
+
+				robotRunAngle(200,35,-900,0);	
+				while(ENCODER() < 1500)					if(WannaExit())	while(1)	robotStop(0);
+				
+				robotRunAngle(200,20,-900,0);	
+				while(ENCODER() < 2450)					if(WannaExit())	while(1)	robotStop(0);
+
+				robotRunAngle(200,12,-900,0);
+				while(lazeTruocValue > 500)			 	if(WannaExit())	while(1)	robotStop(0);
+				
+				robotRunAngle(0,7,-900,0); 
+				delay_ms(1000);
+				
+				robotStop(0);
+				
+//---------------------------TOI VI TRI GAP SHAGAI 3---------------------------------//	
+				xl_Don_Ra;	delay_ms(300);
+				
+				robotRunAngle(900,7,0,0);
+				while(lazeTruocValue > 80)		 if(WannaExit())	while(1)	robotStop(0);
+				
+				robotRunAngle(890,7,0,0); 
+				delay_ms(300);
+				robotStop(0);
+				
+				xl_Shagai_Kep,												delay_ms(700);
+				xl_Truot_Len,													delay_ms(1500);
+				xl_Don_Ve;														delay_ms(500);
+				
+//---------------------------CHAY VAO VI TRI BAN 3---------------------------------//				
+				while(lazeTruocValue < 445 )
+				{
+					if(WannaExit())		while(1)	robotStop(0);
+					robotRun(1800, 15);
+				}
+				
+				robotStop(0);
+				RESET_ENCODER();
+
+				robotRunAngle(2010,40,0,0);
+				xl_Nang_Ngan_Ve;											delay_ms(800);
+				while(lazeTruocValue > 200)				if(WannaExit())	while(1)	robotStop(0);
+
+				RESET_ENCODER();
+				while(ENCODER() < 3100)			
+				{
+					if(WannaExit())	while(1)	robotStop(0);
+					cap_thanh_lazer_truoc(900,900,60,40);	
+				}
+				
+				while(ENCODER() < 3750)		
+				{					
+					if(WannaExit())	while(1)	robotStop(0);
+					cap_thanh_lazer_truoc(900,900,20,40);	
+				}
+				
+//---------------------------XOAY GOC BAN 3---------------------------------//					
+				robotRun(900,15);
+				robotRotate(1410,1,4);
+				while(_robotIMUAngle < 1400)	if(WannaExit())	while(1)	robotStop(0);
+	
+				robotRun(0,8), delay_ms(1000);
+				robotStop(0);
+				
+				xl_Doi_Ra; 									delay_ms(1200);
+				xl_Shagai_Nha; 							delay_ms(500);
+				xl_Truot_Xuong; 						delay_ms(700);
+				xl_Shagai_Kep; 							delay_ms(500);
+				xl_Shagai_Nha; 							delay_ms(1500);
+				
+				xl_Ban_Ra; 									delay_ms(1000);
+				xl_Ban_Ve; 									delay_ms(500);
+				xl_Doi_Ve;
+			
+			robotStop(0);
+		
+}
