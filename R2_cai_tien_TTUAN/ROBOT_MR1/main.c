@@ -178,12 +178,13 @@ vTaskDelay(1000);
 				
 ////			if(TRIANGLE && L2 && !R2 )												Xuat_Phat_Lay_Vu_Khi_Do(162,1500,215);
 //				if(TRIANGLE && L2 && !R2 )												lay_200_db(Min_tay_gat2 + 93, 160, 900, -900);
+//				if(TRIANGLE && L2 && !R2 )												bieu_dien();
 				
 //////				
-					if(TRIANGLE && L2 && !R2 )										bieu_dien();
-					if(SQUARE && L2 && !R2) 											su_dung_chan(512);
-					if(X && L2 && !R2) 														dat_hop1_3(512, 550, 5, 1);
-					if(O && L2 && !R2 ) 													Tay2_len;
+					if(TRIANGLE && L2 && !R2 )										su_dung_chan_thuong(512);
+					if(SQUARE && L2 && !R2) 											Tay1_len;
+//					if(X && L2 && !R2) 														Leo_bac_400(900, -900);
+//					if(O && L2 && !R2 ) 													su_dung_chan_thuong(512);
 				
 				
 //					if(TRIANGLE && L2 && !R2 )											tu_dong_dat_tang2_do();

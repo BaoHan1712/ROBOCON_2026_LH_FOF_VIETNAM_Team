@@ -559,7 +559,7 @@ int vi_tri_dat_hop_2_tay23_xanh_truoc = 96;
 int vi_tri_dat_hop_3_tay23_xanh_truoc = 40;
 ///
 //// ******** VI TRI LAZER DAT HOP DO *********************
-int vi_tri_dat_hop_1_tay41_do = 106;   /// ** DUNG LAZER truoc**
+int vi_tri_dat_hop_1_tay41_do = 105;   /// ** DUNG LAZER truoc**
 int vi_tri_dat_hop_2_tay41_do = 53;
 int vi_tri_dat_hop_3_tay41_do = 0;
 

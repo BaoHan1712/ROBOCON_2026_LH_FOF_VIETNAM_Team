@@ -3589,17 +3589,17 @@ void DatKFSxanh(int vitri)
 				}
 		}
 		robotStop(0);
-		robotRunAngle(0,36,900,0.8);
+		robotRunAngle(0,38,900,0.8);
 		for(i=0;i<550;i++)	
 		{	
-			while(lazePhaiValue < 226)	
+			while(lazePhaiValue < 220)	
 			{	
 				vTaskDelay(1); 
 				if(!wantExit())	break;
 			}
 		}
 		
-		robotRunAngle(0,46,900,0.8);
+		robotRunAngle(0,50,900,0.8);
 		for(i=0;i<550;i++)	
 		{	
 			while(lazePhaiValue < 400)	
@@ -3926,7 +3926,7 @@ void dat_hop_vao_o_tang2 (void) {
 						{ 
 						while(abs(bientrodaytay1Value - target_tay_gat1) > 10) { vTaskDelay(1); if(!wantExit()) break; }
 						}
-						dat_hop1_3(512, 560, 5, 1);
+						dat_hop1_3(512, 550, 5, 1);
 						vTaskDelay(3000); 
 						speed_tay_gat1 = 250;
 						target_tay_gat1 = vitri_tay1home ;
@@ -4808,11 +4808,11 @@ void chay_toi_o_dat_qua_do(int lz_sau, int lz_truoc) {
     }
     else {
         if (delta_truoc <= delta_sau) {
-            chinh_lai_vi_tri_laser_truoc_do(lz_truoc, 100, 4, 20);
+            chinh_lai_vi_tri_laser_truoc_do(lz_truoc, 100, 4, 17);
             robotStop(0);
         } 
         else {
-            chinh_lai_vi_tri_laser_sau(lz_sau, 100, 4, 20);
+            chinh_lai_vi_tri_laser_sau(lz_sau, 100, 4, 15);
             robotStop(0);
         }
     }
@@ -5174,8 +5174,8 @@ void dat_hop4_2(int do_cao_chan, int goc_tay, int ha_chan, int chontay)
         if (t > timeout)
         {
             do_cao_chan_hien_tai -= ha_chan;
-            if (do_cao_chan_hien_tai < 400)
-                do_cao_chan_hien_tai = 400;
+            if (do_cao_chan_hien_tai < 440)
+                do_cao_chan_hien_tai = 440;
 
             su_dung_chan(do_cao_chan_hien_tai);
             while (abs(bientrochansauValue - target_chan_sau) > 10)
@@ -5194,8 +5194,10 @@ void dat_hop4_2(int do_cao_chan, int goc_tay, int ha_chan, int chontay)
     target_tay_gat2 = goc_tay;
 		for(i=0; i<550; i++) 
 				{ 
-        while(abs(bientrodaytay2Value - target_tay_gat2) > 8) { vTaskDelay(1); if(!wantExit()) break; }
+        while(abs(bientrodaytay2Value - target_tay_gat2) > 5) { vTaskDelay(1); if(!wantExit()) break; }
           }
+		vTaskDelay(2000);
+					
     if (chontay == 4)
     {
         Kep_phai_4_ra;
@@ -5211,7 +5213,8 @@ void dat_hop1_3(int do_cao_chan, int goc_tay, int ha_chan, int chontay)
 {
     int do_cao_chan_hien_tai = do_cao_chan;
     int timeout = 8000;
-		 int t = 0;
+		int t = 0;
+		int retry_count = 0;
 retry:
 	
     Tay1_len;
@@ -5228,8 +5231,8 @@ retry:
             {
                 do_cao_chan_hien_tai -= ha_chan;
 
-                if (do_cao_chan_hien_tai < 400)
-                    do_cao_chan_hien_tai = 400;
+                if (do_cao_chan_hien_tai < 440)
+                    do_cao_chan_hien_tai = 440;
 
                 su_dung_chan(do_cao_chan_hien_tai);
 
@@ -5257,37 +5260,68 @@ retry:
         }
     }
 
-    if (IMUxoay > 16)
+		if (IMUxoay > 16)
     {
+        retry_count++;
+
+        robotStop(0);
+        su_dung_chan(512);
+
         speed_tay_gat1 = 150;
         target_tay_gat1 = 485;
         Tay1_xuong;
-				for(i=0; i<50; i++) { 
-        while(abs(bientrodaytay1Value - target_tay_gat1) > 10) {
-            vTaskDelay(1); 
-            if(!wantExit()) break;
-					}
-				}
-				 vTaskDelay(2000); 
-				
-				robotStop(0);
-        robotRunAngle(-900, 10, 900, 0.5);
-				RESET_ENCODER(); 
-				while(abs(ENCODER_FR()) + abs(ENCODER_FL()) < 550)	{vTaskDelay (5); if(!wantExit())	break;}
-				robotStop(0);
-				vTaskDelay(2000); 
 
-        goto retry;     // quay l?i t? d?u
+        for(i=0; i<50; i++)
+        {
+            while(abs(bientrodaytay1Value - target_tay_gat1) > 5)
+            {
+                vTaskDelay(1);
+                if(!wantExit()) break;
+            }
+        }
+
+        vTaskDelay(2500);
+
+        robotStop(0);
+
+        if(retry_count == 1)
+        {
+            // Lan dau
+            robotRunAngle(-900, 10, 900, 0.5);
+            RESET_ENCODER();
+
+            while(abs(ENCODER_FR()) + abs(ENCODER_FL()) < 550)
+            {
+                vTaskDelay(5);
+                if(!wantExit()) break;
+            }
+        }
+        else
+        {
+            // Lan thu 2 
+            robotRunAngle(900, 10, 900, 0.5);
+            RESET_ENCODER();
+
+            while(abs(ENCODER_FR()) + abs(ENCODER_FL()) < 850)
+            {
+                vTaskDelay(5);
+                if(!wantExit()) break;
+            }
+        }
+
+        robotStop(0);
+        vTaskDelay(2000);
+
+        if(retry_count < 3)
+            goto retry;
     }
-		vTaskDelay(2000); 
-    if (chontay == 1)
-    {
+
+    vTaskDelay(2500);
+
+    if(chontay == 1)
         Kep_phai_1_ra;
-    }
-    else if (chontay == 3)
-    {
+    else if(chontay == 3)
         Kep_phai_3_ra;
-    }
 }
 
 
@@ -5413,7 +5447,7 @@ void chon_o_nhat_hop_xanh(void) {
 					{ 
 				while(abs(bientrodaytay1Value - target_tay_gat1) > 15) { vTaskDelay(1); if(!wantExit()) break; }
 					}
-				dat_hop1_3(510, 560,5, 1);
+				dat_hop1_3(510, 550,5, 1);
 				vTaskDelay(2000); 
 				speed_tay_gat1 = 250;
 				target_tay_gat1 = vitri_tay1home ;
@@ -5426,10 +5460,14 @@ void chon_o_nhat_hop_xanh(void) {
 		
 			// chon be tang 3
 		else if (nhat_dat_hop == 4 ||nhat_dat_hop == 5 || nhat_dat_hop == 6  ) {
+				kiem_tra_so_qua_tren_tay();
+				kiem_tra_qua_tay_nao();
+			
 				chinh_lai_vi_tri_laser_sau_zone3(30, 1000);
 				chinh_lai_vi_tri_laser_phai_zone3_do(195, 200, 4, 35);
 				robotStop(0);
-				robotRotate(-890,1,0);
+			
+				robotRotate(-890,1.2,0);
 				while(robotFixAngle()){
 					vTaskDelay (1); 
 					if(!wantExit())	break;
@@ -5439,7 +5477,7 @@ void chon_o_nhat_hop_xanh(void) {
 				robotStop(0);
 				quyet_dinh_dat_hop_tang3();
 				robotStop(0);
-				robotRotate(10, 1, 0);
+				robotRotate(10, 0.9, 0);
         while(robotFixAngle()) {
             vTaskDelay (1); 
             if(!wantExit()) break;

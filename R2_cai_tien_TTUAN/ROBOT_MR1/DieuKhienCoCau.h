@@ -626,11 +626,11 @@ void Gat_2()
 		if (bientroxoaytayValue > target_xoay_tay)			tay_xoay_thuan;
 		else																						tay_xoay_nghich;
 
-		speed_temp = abs(bientroxoaytayValue - target_xoay_tay)*8;
+		speed_temp = abs(bientroxoaytayValue - target_xoay_tay)*10;
 		if (speed_temp > speed_tay_xoay)
 				speed_temp = speed_tay_xoay;
-		if (speed_temp < 50)
-				speed_temp = 50;
+		if (speed_temp < 70)
+				speed_temp = 70;
 	
 		tay_xoay = speed_temp;
 		Xoay_ok = 0;
@@ -788,7 +788,7 @@ void Leo_bac_200(int Angle, int Robot_Angle)
 		while(CB_Ha_Sau == 1  )	{vTaskDelay(1); if(!wantExit())	break;}
 	}
 	
-	robotRunAngle(Angle,12,Robot_Angle,0.8);
+	robotRunAngle(Angle,13,Robot_Angle,0.8);
 	for(i=0;i<150;i++)	
 	{	
 		while(CB_Ha_Sau == 1  || CB_Cap_Thanh_Sau == 0)	{vTaskDelay(1); if(!wantExit())	break;}
@@ -796,13 +796,13 @@ void Leo_bac_200(int Angle, int Robot_Angle)
 	robotStop(0);
 	//// nâng bánh sau lên 
 	speed_chan_sau = 230;
-	target_chan_sau = Min_chan_sau + 5;
+	target_chan_sau = Min_chan_sau + 6;
 	for(i=0;i<50;i++)		
 	{
 			while(abs(bientrochansauValue - target_chan_sau) > 20)	{vTaskDelay(1); if(!wantExit())	break;}
 	}
 	
-	robotRunAngle(Angle,38,Robot_Angle,0.7);
+	robotRunAngle(Angle,32,Robot_Angle,0.7);
 	
 	for(i=0;i<1000;i++)	
 	{	
@@ -811,9 +811,9 @@ void Leo_bac_200(int Angle, int Robot_Angle)
 	vTaskDelay(1300);
 	
 	speed_chan_sau =50;
-	target_chan_sau = Min_chan_sau + 5;
+	target_chan_sau = Min_chan_sau + 6;
 	
-	robotRunAngle(Angle,24,Robot_Angle,0.8);
+	robotRunAngle(Angle,22,Robot_Angle,0.8);
 	
 	for(i=0;i<550;i++)	
 	{	
@@ -829,9 +829,9 @@ void Leo_bac_200(int Angle, int Robot_Angle)
   robotStop(0);
 	
 	speed_chan_truoc = 230;
-	target_chan_truoc = Min_chan_truoc + 5;
+	target_chan_truoc = Min_chan_truoc + 6;
 	speed_chan_sau = 50;
-	target_chan_sau = Min_chan_sau + 5;
+	target_chan_sau = Min_chan_sau + 6;
 
 	for(i=0;i<250;i++)	
 	{
@@ -1186,7 +1186,7 @@ void Leo_bac_400(int Angle, int Robot_Angle)
 	robotStop(0); 
 //	
 	speed_chan_sau = 240;
-	target_chan_sau = Min_chan_sau ;
+	target_chan_sau = Min_chan_sau + 6 ;
 
 	for(i=0;i<50;i++)		
 	{
@@ -1201,13 +1201,13 @@ void Leo_bac_400(int Angle, int Robot_Angle)
 		while(CB_ROI_1 == 1  && CB_ROI_4 == 1)	{vTaskDelay(1); if(!wantExit())	break;}
 	}
 	speed_chan_sau = 50;
-	target_chan_sau = Min_chan_sau + 5;
+	target_chan_sau = Min_chan_sau + 6;
 	
 	robotRunAngle(Angle,25,Robot_Angle,0.8);
 	
 	for(i=0;i<550;i++)	
 	{	
-		while(CB_bung_duoi == 1)	{vTaskDelay(2); if(!wantExit())	break;}
+		while(CB_bung_duoi == 1)	{vTaskDelay(1); if(!wantExit())	break;}
 	}
 	
 	robotRunAngle(Angle,9,Robot_Angle,0.8);
@@ -1218,10 +1218,10 @@ void Leo_bac_400(int Angle, int Robot_Angle)
 	
   robotStop(0);
 	speed_chan_truoc = 240;
-	target_chan_truoc = Min_chan_truoc + 5 ;
+	target_chan_truoc = Min_chan_truoc + 6 ;
 		
 	speed_chan_sau = 50;
-	target_chan_sau = Min_chan_sau + 5;
+	target_chan_sau = Min_chan_sau + 6;
 
 	for(i=0;i<250;i++)	
 	{
@@ -2047,16 +2047,16 @@ void Xoay_tay_Manual(void)
 {
 	if (SQUARE && !R1 && !R2 && !L2 && bientroxoaytayValue > Min_xoay_tay ) 				
 	{
-		if(L1 && bientroxoaytayValue < Max_xoay_tay - 20)	tay_xoay = 80;
-		else		tay_xoay = 40;
+		if(L1 && bientroxoaytayValue < Max_xoay_tay - 20)	tay_xoay = 140;
+		else		tay_xoay = 70;
 		tay_xoay_thuan;
 		target_xoay_tay = bientroxoaytayValue;
 		Man_xoay_tay = 1;
 	}
 	else	if (O && !R1 && !R2 && !L2 && bientroxoaytayValue < Max_xoay_tay) 	
 				{
-					if(L1 && bientroxoaytayValue > Min_xoay_tay + 20)	tay_xoay = 80;
-					else		tay_xoay = 40;
+					if(L1 && bientroxoaytayValue > Min_xoay_tay + 20)	tay_xoay = 140;
+					else		tay_xoay = 70;
 					tay_xoay_nghich;
 					target_xoay_tay = bientroxoaytayValue;
 					Man_xoay_tay = 1;

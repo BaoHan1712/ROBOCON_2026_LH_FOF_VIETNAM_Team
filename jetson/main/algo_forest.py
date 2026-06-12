@@ -58,10 +58,12 @@ def handle_click(data):
     payload = {"team": global_team, "grid": get_algo_matrix_internal()}
     emit('server_sync', {'state': global_state, 'team': global_team}, broadcast=True)
     emit('sync_state', payload, broadcast=True)
+
 @socketio.on('client_find_path')
-def handle_client_find_path():
-    # Web kêu Dò Đường -> Server phát loa cho App PC làm việc
-    emit('trigger_find_path', broadcast=True)
+def handle_client_find_path(data=None):
+    print(">> [SERVER FLASK] Nhận lệnh DÒ ĐƯỜNG từ Web! Đang truyền xuống App PC...")
+    # Phát loa gọi thằng App PC làm việc
+    emit('trigger_find_path', {}, broadcast=True)
 
 @socketio.on('app_path_sync')
 def handle_app_path_sync(data):
@@ -395,7 +397,7 @@ class SelectPlaceApp:
         
         # 2. CHỜ 1 GIÂY CHO SERVER LÊN MÂM
         import time
-        time.sleep(1)
+        time.sleep(0.05)
 
         # 3. KẾT NỐI ALGO VÀO SERVER NỘI BỘ
         self.sio = client_sio.Client()
@@ -429,10 +431,9 @@ class SelectPlaceApp:
         @self.sio.on('trigger_algo')
         def on_trigger_algo(data=None):
             print("\n" + "🚀"*20)
-            print(">> [WEB] ĐÃ NHẬN LỆNH BÓP CÒ: Đang tính toán và bắn UART...")
-            self.root.after(0, self.smart_run)
-            # Chờ 1 giây để Algo vẽ xong đường rồi mới vả UART
-            self.root.after(1000, self.sent_and_close)
+            print(">> [WEB COMMAND] NHẬN LỆNH CHỐT: Chỉ thực hiện bắn gói UART...")
+            # Chỉ gọi hàm gửi, không gọi smart_run nữa
+            self.root.after(0, self.sent_and_close)
 
         @self.sio.on('trigger_mode')
         def on_trigger_mode(data=None):
@@ -446,6 +447,7 @@ class SelectPlaceApp:
         def on_trigger_replay(data=None):
             self.root.after(0, self.action_replay_cache)
 
+
         # =======================================================
         # === NHÉT THÊM CỤC LỖ TAI NÀY VÀO ===
         # =======================================================
@@ -458,6 +460,7 @@ class SelectPlaceApp:
         def on_trigger_find_path(*args):
             print(">> [WEB COMMAND] Đã bắt được sóng DÒ ĐƯỜNG từ Web! Đang bóp cò...")
             self.root.after(0, self.smart_run)
+            
         # 4. KẾT NỐI SAU KHI ĐÃ GẮN ĐỦ LỖ TAI
         try:
             self.sio.connect('http://127.0.0.1:5001', transports=['websocket'])
@@ -484,15 +487,15 @@ class SelectPlaceApp:
         ctk.CTkLabel(self.retry_frame, text=" ║ ", font=("DejaVu Sans", 20, "bold"), text_color="gray").pack(side="left", padx=10)
 
         # Đổi parent thành self.retry_frame và bóp height=35 cho bằng với nút Ép cửa
-        self.btn_kpi_2 = ctk.CTkButton(self.retry_frame, text="✌️ 2 KHOI", width=70, height=35, corner_radius=10,
+        self.btn_kpi_2 = ctk.CTkButton(self.retry_frame, text="2 KHOI", width=70, height=35, corner_radius=10,
                                        fg_color="#34495e", hover_color="#c0392b", command=lambda: self.set_kpi(2))
         self.btn_kpi_2.pack(side="left", padx=5)
 
-        self.btn_kpi_3 = ctk.CTkButton(self.retry_frame, text="🤟 3 KHOI", width=70, height=35, corner_radius=10,
+        self.btn_kpi_3 = ctk.CTkButton(self.retry_frame, text="3 KHOI", width=70, height=35, corner_radius=10,
                                        fg_color="#27ae60", hover_color="#2ecc71", command=lambda: self.set_kpi(3))
         self.btn_kpi_3.pack(side="left", padx=5)
 
-        self.btn_kpi_4 = ctk.CTkButton(self.retry_frame, text="🖖 4 KHOI", width=70, height=35, corner_radius=10,
+        self.btn_kpi_4 = ctk.CTkButton(self.retry_frame, text="4 KHOI", width=70, height=35, corner_radius=10,
                                        fg_color="#34495e", hover_color="#5c4f61", command=lambda: self.set_kpi(4))
         self.btn_kpi_4.pack(side="left", padx=5)
     # --- CỜ & NÚT CHIẾN THUẬT ---
@@ -736,7 +739,7 @@ class SelectPlaceApp:
 
             # 4. Refresh lại ID (Bản đã sửa ở Bước 1)
             self.refresh_grid_ids()
-
+            
             # ... (Các đoạn trên giữ nguyên) ...
 
             # 5. ĐỒNG BỘ TAB VISION (TUYỆT ĐỐI KHÔNG DÙNG STRING_VAR NỮA)
@@ -838,17 +841,22 @@ class SelectPlaceApp:
     def sent_and_close(self):
         # Bọc toàn bộ logic gửi UART vào một hàm con chạy ngầm
         def _send_task():
-            # 1. Tự động tìm đường nếu chưa có
+            # =========================================================
+            # 🔥 TÁCH NÚT: CHỈ GỬI UART, NẾU CHƯA DÒ ĐƯỜNG THÌ CẤM GỬI!
+            # =========================================================
             if not getattr(self, 'simulation_path', None):
-                print(">> [HỆ THỐNG] Chưa có đường đi, tự động chạy TÌM ĐƯỜNG...")
-                self.root.after(0, self.smart_run)
-                import time
-                time.sleep(0.5)
+                print("\n" + "❌"*20)
+                print(">> [HỆ THỐNG] LỖI: Chưa bấm TÌM ĐƯỜNG mà đã đòi GỬI UART!")
+                self.root.after(0, lambda: self.info_label.configure(text="❌ CẢNH BÁO: Phải bấm 'DÒ ĐƯỜNG' trước khi chốt gửi!", text_color="red"))
+                print("❌"*20 + "\n")
+                return
 
             # =========================================================
             # 🛡️ BỘ XÀ BENG UART: CHỐNG CÂM SAU KHI STOP/IDLE
             # =========================================================
             try:
+                from config_uart.sent_uart import ser
+                # ... (Phần dưới giữ nguyên đéo đụng chạm gì)
                 from config_uart.sent_uart import ser
                 if ser is not None:
                     if not ser.is_open:
@@ -880,12 +888,12 @@ class SelectPlaceApp:
             except: pass
                 
             import time
-            time.sleep(0.5) 
+            time.sleep(0.05) 
                 
             # 3. Gửi toàn bộ mảng đường đi
             self.send_uart()
             import time
-            time.sleep(0.5) 
+            time.sleep(0.05) 
 
             # =========================================================
             # 4. GỬI GÓI CHIẾN THUẬT (MÃ 9)
@@ -903,10 +911,12 @@ class SelectPlaceApp:
             # Cập nhật UI an toàn từ luồng ngầm
             def update_ui():
                 self.info_label.configure(
-                    text=f"Đa truyen Mode ({mode_name}) & Chien thuat ({strat_name}) thanh cong!", 
+                    text=f"✓ Truyền Mode ({mode_name}) & Chiến thuật ({strat_name}) xong!\nĐANG TỰ ĐỘNG THOÁT VÀ QUAY VỀ MAIN...", 
                     text_color="green"
                 )
             self.root.after(0, update_ui)
+            #dung de thoat app
+            self.root.after(100, self.on_closing)
 
         # Đẻ ra luồng ngầm để chạy (Tránh làm đơ App Tkinter)
         import threading
@@ -1085,6 +1095,18 @@ class SelectPlaceApp:
         if hasattr(self, 'last_grid_data'):
             self.last_grid_data = None
         self.calc_session_id += 1 # Hủy luôn các tính toán tìm đường đang chạy dở
+        
+        # --- THÊM CỤC NÀY ĐỂ BẮN LỆNH XÓA ĐƯỜNG LÊN WEB ---
+        try:
+            self.sio.emit('app_path_sync', {
+                'path_dict': {},
+                'picked_ids': [],
+                'pha_ids': [],
+                'bo_ids': []
+            })
+            print(">> [SYNC] Đã bắn lệnh XÓA SẠCH ĐƯỜNG ĐI lên Web!")
+        except Exception as e:
+            pass
     # =========================================================================
     # ENGINE: PATHFINDING
     # =========================================================================
@@ -1425,7 +1447,7 @@ class SelectPlaceApp:
                             is_valid = False; break
                         if cell["number"] == 1: 
                             r1_stepped += 1
-                            if r1_stepped >= 2:
+                            if r1_stepped >= 3:
                                 is_valid = False; break
 
                     if not is_valid: continue 
@@ -1487,6 +1509,9 @@ class SelectPlaceApp:
                     under_table_dist = abs(start_col - door_picked[1]) if door_picked else 0
                     cost = len(path_coords) * 10 + (shifts + under_table_dist) * 15 + shift_row_val
                     
+                    # 🔥 ĐÁNH THUẾ R1: Mỗi cục R1 phạt 100 điểm! Đéo có chuyện ưu tiên bằng đường trống!
+                    cost = len(path_coords) * 10 + (shifts + under_table_dist) * 15 + shift_row_val + (r1_stepped * 100)
+                    
                     total_picked_this_path = len(picked) + (1 if door_picked else 0)
                     end_col = path_coords[-1][1] 
 
@@ -1500,8 +1525,9 @@ class SelectPlaceApp:
                         "cost": cost,
                         "sim_path": sim_path_temp,
                         "ordered_entry": [door_picked] if door_picked else [],
-                        "shifts": shifts,                           # Truyền số lần rẽ cho Trọng Tài
-                        "under_table_dist": under_table_dist        # Truyền khoảng cách chạy gầm cho Trọng Tài
+                        "shifts": shifts,                           
+                        "under_table_dist": under_table_dist,
+                        "r1_stepped": r1_stepped  # 🔥 BƠM THÊM CÁI NÀY VÀO ĐỂ BÁO CÁO TRỌNG TÀI!
                     })
 
         if not valid_solutions:
@@ -1509,7 +1535,7 @@ class SelectPlaceApp:
             return
 
         # =========================================================================
-        # 🏆 CHỐT ĐƠN: TRỌNG TÀI TỐI THƯỢNG (ƯU TIÊN ĐƯỜNG THẲNG THEO Ý MÀY)
+        # 🏆 CHỐT ĐƠN: TRỌNG TÀI TỐI THƯỢNG (LUẬT MỚI CỦA SẾP)
         # =========================================================================
         desired_target = getattr(self, 'target_blocks', 3)
 
@@ -1522,16 +1548,18 @@ class SelectPlaceApp:
             # Hình phạt nếu gắp lệch số lượng mày yêu cầu
             pick_penalty = abs(sol["picked_count"] - desired_target)
 
-            # Thưởng đi thẳng: Vẫn giữ, nhưng chỉ để DẰN MẶT khi có 2 đường cùng số lượng khối
-            is_perfect_straight = (sol["under_table_dist"] == 0 and sol["shifts"] == 0)
-            straight_bonus = -100 if is_perfect_straight else 0
+            # 🔥 LUẬT MỚI: THẺ VÀNG CHO TỘI ĐẠP 2 CỤC R1
+            # Đạp <= 1 cục: Không sao (0). Đạp >= 2 cục: Ăn gậy (1), bị đẩy xuống chót bảng!
+            too_many_r1 = 1 if sol["r1_stepped"] >= 2 else 0
 
             return (
-                pick_penalty,         # 👑 ƯU TIÊN 1: Lệnh sếp là số 1! Lệch KPI là cút xuống đáy!
-                straight_bonus,       # 🥈 ƯU TIÊN 2: Cùng đủ KPI thì ưu tiên thằng nào ủi thẳng tắp!
-                -sol["picked_count"], # 🥉 ƯU TIÊN 3: Nếu kẹt đường buộc phải rớt KPI, chọn đường vớt vát nhiều cục nhất
-                sol["cost"],          # 🏅 ƯU TIÊN 4: Né phạt lạng lách, phạt chạy gầm xa
-                dist_to_exit          # 🏅 ƯU TIÊN 5: Ép góc thoát dạt ra mép sân
+                pick_penalty,         # 👑 ƯU TIÊN 1: Vẫn phải lấy đủ KPI sếp giao!
+                too_many_r1,          # 🚨 ƯU TIÊN 2 (MỚI): Thà rẽ 1 lần còn hơn đâm 2 cục R1!
+                sol["shifts"],        # 🥈 ƯU TIÊN 3: Nếu an toàn (chỉ đạp 0 hoặc 1 cục R1), thì ưu tiên đường thẳng tắp (0 rẽ)
+                sol["r1_stepped"],    # 🥉 ƯU TIÊN 4: Nếu 2 đường CÙNG đi thẳng, CÙNG không vi phạm, thì đường nào ít R1 hơn sẽ thắng
+                -sol["picked_count"], # 🏅 ƯU TIÊN 5: Vớt vát khối nếu thiếu KPI
+                sol["cost"],          # 🏅 ƯU TIÊN 6: Chi phí phụ
+                dist_to_exit          # 🏅 ƯU TIÊN 7: Thoát ra mép sân
             )
 
         valid_solutions.sort(key=get_sort_key)
@@ -1594,7 +1622,7 @@ class SelectPlaceApp:
         print("=" * 60)
         print(f"BẮT ĐẦU GỬI UART — TEAM {self.team_color}")
         print("=" * 60)
-
+        self.packets_cache = []
         # =====================================================================
         # 1. GỬI GÓI MODE RỪNG TRƯỚC TIÊN (MÃ 10)
         # =====================================================================
@@ -1602,7 +1630,7 @@ class SelectPlaceApp:
         mode_name = "BÌNH THƯỜNG" if mode_val == 1 else "RETRY ZONE 2"
         print(f"\n  ├─ [MODE PACKET] Gửi: (2, 10, {mode_val}, 2, 2) — {mode_name}")
         ser.write(build_packet(2, 10, mode_val, 2, 2))
-        time.sleep(0.3)
+        time.sleep(0.05)
 
         # =====================================================================
         # 2. GỬI GÓI CHIẾN THUẬT (MÃ 9)
@@ -1611,14 +1639,15 @@ class SelectPlaceApp:
         strat_name = "THẮNG NHANH" if strat_val == 2 else "CÀY ĐIỂM"
         print(f"  ├─ [STRAT PACKET] Gửi: (2, 9, {strat_val}, 2, 2) — {strat_name}")
         ser.write(build_packet(2, 9, strat_val, 2, 2))
-        time.sleep(0.3)
+        time.sleep(0.05)
 
         has_sent_start = False
         has_climbed    = False
         traveled_path  = []
         picked_blocks  = []
         count_rb2      = 2 # Tính 2 gói Mode và Strat ở trên
-
+        r1_encounter_count = 0 # 🔥 THÊM BỘ ĐẾM R1 Ở ĐÂY ĐỂ TRÁO LỆNH!
+        prev_move_cmd = 1
         first_door_col = None
         for seg_path, seg_act in simulation_path:
             for pos in seg_path:
@@ -1646,7 +1675,7 @@ class SelectPlaceApp:
         print(f"\n  ├─ [START PACKET] Gửi: {start_packet_str}")
         ser.write(build_packet(2, 2, 10, 10, start_block_id))
         count_rb2 += 1
-        time.sleep(0.3)
+        time.sleep(0.05)
         has_sent_start = True
 
         for seg_idx, (segment_path, segment_action) in enumerate(simulation_path):
@@ -1670,12 +1699,12 @@ class SelectPlaceApp:
                 if curr_r == DOOR_ROW and next_r == DOOR_ROW:
                     move_cmd = 3 if dc > 0 else 2
                     door_id  = self._get_door_block_id(next_c)
-                    time.sleep(0.3)
+                    time.sleep(0.05)
                     ser.write(build_packet(2, 2, move_cmd, 10, door_id))
                     count_rb2 += 1
                     desc = "→ Phải" if dc > 0 else "← Trái"
                     print(f"  ├─ [DOOR LATERAL] Gửi: (2, 2, {move_cmd}, 10, {door_id}) — {desc}")
-                    time.sleep(0.1)
+                    time.sleep(0.05)
                     continue
 
                 if curr_r == DOOR_ROW and next_r == ROWS - 1:
@@ -1683,26 +1712,36 @@ class SelectPlaceApp:
                     cell_entry = self.grid_cells[next_r][next_c]
                     
                     if cell_entry["content"] and cell_entry["content"]["number"] == 1:
-                        print(f"  ├─ [KHỐI 1 BỤC] Gửi: (1, 2, 0, 0, {entry_id}) — Phá khối tại bục")
-                        time.sleep(0.3)
-                        ser.write(build_packet(1, 2, 0, 0, entry_id))
-                        time.sleep(0.3)
+                        # 🔥 TĂNG BỘ ĐẾM, KIỂM TRA ĐÂY LÀ R1 LẦN MẤY
+                        r1_encounter_count += 1
+                        
+                        if r1_encounter_count == 2:
+                            print(f"  ├─ [KHỐI 1 BỤC LẦN 2] Gửi: (2, 2, 4, 5, {entry_id}) — Mở Cam CHECK R1_L2 Né Cản")
+                            time.sleep(0.05)
+                            ser.write(build_packet(2, 2, 4, 5, entry_id))
+                            time.sleep(0.05)
+                        else:
+                            print(f"  ├─ [KHỐI 1 BỤC] Gửi: (1, 2, 0, 0, {entry_id}) — Phá khối tại bục")
+                            time.sleep(0.05)
+                            ser.write(build_packet(1, 2, 0, 0, entry_id))
+                            time.sleep(0.05)
+                        
                         
                     elif cell_entry["content"] and cell_entry["content"]["number"] == 2:
                         if entry_id in intended_targets and entry_id not in picked_blocks:
                             print(f"  ├─ [KHỐI 2 BỤC] Gửi: (2, 2, 0, 1, {entry_id}) — Gắp thẳng trước khi leo")
-                            time.sleep(0.3)
+                            time.sleep(0.05)
                             ser.write(build_packet(2, 2, 0, 1, entry_id))
                             count_rb2 += 1
                             picked_blocks.append(entry_id)
-                            time.sleep(0.3)
+                            time.sleep(0.05)
 
-                    time.sleep(0.3)
+                    time.sleep(0.05)
                     ser.write(build_packet(2, 2, 1, 4, entry_id))
                     count_rb2 += 1
                     has_climbed = True
                     print(f"  ├─ [CLIMB] Gửi: (2, 2, 1, 4, {entry_id}) — Leo bục thẳng")
-                    time.sleep(0.3)
+                    time.sleep(0.05)
                     continue
 
                 if 0 <= curr_r < ROWS and 0 <= next_r < ROWS:
@@ -1716,26 +1755,73 @@ class SelectPlaceApp:
                     cell_next = self.grid_cells[next_r][next_c]
 
                     if cell_next["content"] and cell_next["content"]["number"] == 1:
-                        print(f"  │  ├─ [KHỐI 1] Gửi: (1, 2, 0, 0, {step_id}) — Phá khối")
-                        time.sleep(0.3)
-                        ser.write(build_packet(1, 2, 0, 0, step_id))
-                        time.sleep(0.3)
+                        # 🔥 TĂNG BỘ ĐẾM, KIỂM TRA ĐÂY LÀ R1 LẦN MẤY
+                        r1_encounter_count += 1
+                        
+                        if r1_encounter_count == 2:
+                            if not hasattr(self, 'packets_cache') or self.packets_cache is None:
+                                self.packets_cache = []
+
+                            # =========================================================
+                            # 🪓 ĐỈNH CAO CƠ KHÍ: TÁCH BIỆT R1 RẼ (CÁNH) vs R1 ĐI THẲNG
+                            # =========================================================
+                            if move_cmd in [2, 3]:
+                                # [TRƯỜNG HỢP 1 - R1 RẼ] Xe bò ngang, cục R1 tạt vào bên cánh!
+                                print(f"  │  ├─ [CẢNH BÁO RẼ VÀO R1 L2] Gửi: (2, 2, 5, 5, {step_id}) — Check R1 Cánh")
+                                p_cmd = build_packet(2, 2, 5, 5, step_id)
+                            else:
+                                # [TRƯỜNG HỢP 2 - R1 THẲNG] Xe đâm thẳng, cục R1 lù lù trước mặt!
+                                print(f"  │  ├─ [ĐI THẲNG VÀO R1 L2] Gửi: (2, 2, 4, 5, {step_id}) — Check R1 Thẳng Mặt")
+                                p_cmd = build_packet(2, 2, 4, 5, step_id)
+
+                            # Bắn lệnh xuống STM32 (Chỉ dùng 1 khối lệnh chung cho sạch code)
+                            if ser and ser.is_open:
+                                ser.write(p_cmd)
+                                self.packets_cache.append([int(b) for b in p_cmd])
+                                time.sleep(0.02)
+                            count_rb2 += 1 
+                        else:
+                            # 🪓 KHỐI 1 LẦN ĐẦU: Đập hộp xong cũng phải phân rẽ/thẳng y như Lần 2!
+                            if not hasattr(self, 'packets_cache') or self.packets_cache is None:
+                                self.packets_cache = []
+
+                            print(f"  │  ├─ [KHỐI 1] Gửi: (1, 2, 0, 0, {step_id}) — Phá khối")
+                            p_12 = build_packet(1, 2, 0, 0, step_id)
+                            if ser and ser.is_open:
+                                ser.write(p_12)
+                                self.packets_cache.append([int(b) for b in p_12])
+                                time.sleep(0.02)
+                            
+                            # =========================================================
+                            # 🔥 ĐÃ ĐỒNG BỘ LOGIC RẼ CÁNH CHO CỤC R1 LẦN ĐẦU TIÊN!
+                            # =========================================================
+                            if move_cmd in [2, 3]:
+                                print(f"  │  ├─ [GỌI CAM CÁNH] Bắn bồi lệnh mở Cam: (2, 2, 5, 5, {step_id})")
+                                p_bboi = build_packet(2, 2, 5, 5, step_id)
+                            else:
+                                print(f"  │  ├─ [GỌI CAM THẲNG] Bắn bồi lệnh mở Cam: (2, 2, 4, 5, {step_id})")
+                                p_bboi = build_packet(2, 2, 4, 5, step_id)
+                                
+                            if ser and ser.is_open:
+                                ser.write(p_bboi)
+                                self.packets_cache.append([int(b) for b in p_bboi])
+                                time.sleep(0.02)
 
                     elif cell_next["content"] and cell_next["content"]["number"] == 2:
                         if step_id in intended_targets and step_id not in picked_blocks:
                             print(f"  │  ├─ [KHỐI 2] Gửi: (2, 2, 0, {move_cmd}, {step_id}) — Gắp trước khi đi")
-                            time.sleep(0.3)
+                            time.sleep(0.05)
                             ser.write(build_packet(2, 2, 0, move_cmd, step_id))
                             count_rb2 += 1
                             picked_blocks.append(step_id)
-                            time.sleep(0.5)
+                            time.sleep(0.05)
 
-                    time.sleep(0.3)
+                    time.sleep(0.05)
                     ser.write(build_packet(2, 2, move_cmd, 4, step_id))
                     count_rb2 += 1
                     desc = ["?", "Thẳng", "Trái", "Phải"][move_cmd]
                     print(f"  │  ├─ [MOVE]   Gửi: (2, 2, {move_cmd}, 4, {step_id}) — {desc}")
-                    time.sleep(0.1)
+                    time.sleep(0.05)
 
             if segment_action == "FINISH":
                 continue
@@ -1754,10 +1840,10 @@ class SelectPlaceApp:
 
             if r_end == DOOR_ROW and tr == ROWS - 1 and c_end == tc:
                 print(f"  └─ [PICK DOOR] Gửi: (2, 2, 0, 1, {action_id}) — Vươn lên gắp từ cửa")
-                time.sleep(0.3)
+                time.sleep(0.05)
                 ser.write(build_packet(2, 2, 0, 1, action_id))
                 count_rb2 += 1
-                time.sleep(0.3)
+                time.sleep(0.05)
                 picked_blocks.append(action_id)
                 continue
 
@@ -1769,10 +1855,10 @@ class SelectPlaceApp:
 
             desc = ["?", "Thẳng", "Trái", "Phải", "0 Gắp"][action_cmd]
             print(f"  └─ [PICK]      Gửi: (2, 2, 0, {action_cmd}, {action_id}) — Gắp {desc}")
-            time.sleep(0.3)
+            time.sleep(0.05)
             ser.write(build_packet(2, 2, 0, action_cmd, action_id))
             count_rb2 += 1
-            time.sleep(0.3)
+            time.sleep(0.05)
             picked_blocks.append(action_id)
 
         # =====================================================================
@@ -1789,7 +1875,7 @@ class SelectPlaceApp:
                     print(f"\n  ├─ [END PACKET] Gửi: (2, 2, 20, 20, {last_id}) — Hoàn thành!")
                     ser.write(build_packet(2, 2, 20, 20, last_id))
                     count_rb2 += 1
-                    time.sleep(0.1)
+                    time.sleep(0.05)
 
         print("\n" + "=" * 60)
         print(f"HOÀN THÀNH — {count_rb2} gói tin (id_rb=2)")
@@ -2073,7 +2159,7 @@ class SelectPlaceApp:
             text_color="#e67e22"
         )
 
-# if __name__ == "__main__":
-#     app = SelectPlaceApp()
-#     app.run_algothism_forest()
+if __name__ == "__main__":
+     app = SelectPlaceApp()
+     app.run_algothism_forest()
     
