@@ -181,10 +181,10 @@ vTaskDelay(1000);
 //				if(TRIANGLE && L2 && !R2 )												bieu_dien();
 				
 //////				
-					if(TRIANGLE && L2 && !R2 )										su_dung_chan_thuong(512);
-					if(SQUARE && L2 && !R2) 											Tay1_len;
-//					if(X && L2 && !R2) 														Leo_bac_400(900, -900);
-//					if(O && L2 && !R2 ) 													su_dung_chan_thuong(512);
+					if(TRIANGLE && L2 && !R2 )										su_dung_chan_thuong(565);
+//					if(SQUARE && L2 && !R2) 											gap_tay4_thang(130, 65);
+					if(X && L2 && !R2) 														ha_tay_2(Max_tay_gat2 - 35, 70, 250, 25, 1.5, -900, 900, 8);
+					if(O && L2 && !R2 ) 													Leo_bac_200(900, -900);
 				
 				
 //					if(TRIANGLE && L2 && !R2 )											tu_dong_dat_tang2_do();

@@ -17,6 +17,8 @@ void retry_co_qua_tren_tay(void);
 void nghieng_tay_k_dat_tang2(void);
 void dung_cho_khoi_r1_ben_canh (void);
 
+
+
 void gap_ngang_2_ben_san_xanh (void){
 		if (da_lay_tay1 == 1 && da_lay_tay2 == 0 && da_lay_tay3 == 0 && da_lay_tay4 == 0) {
 					robotRunAngle(900,10,900,0.7);
@@ -5887,11 +5889,478 @@ void bat_dau_chay_xanh (void) {
         chon_o_retry3();
     }
 }
+
+
+int Tinh_Toc_Do_Gat_Tay_Excel(int current_error, int target_error, int start_error, int max_toc, int min_toc, float k)
+{
+    int speed_out;
+    float ratio;
+
+    if (current_error >= start_error)
+    {
+        return max_toc;
+    }
+    
+    if (current_error <= target_error)
+    {
+        return min_toc;
+    }
+
+    ratio = (float)(start_error - current_error) / (float)(start_error - target_error);
+    
+    speed_out = min_toc + (int)((float)(max_toc - min_toc) * (1.0f - powf(ratio, k)));
+
+    if (speed_out > max_toc) speed_out = max_toc;
+    if (speed_out < min_toc) speed_out = min_toc;
+
+    return speed_out;
+}
+
+void ha_tay_4(int target_tay, int hs_trackking, int max_toc, int min_toc, float k, int gc_cb2, int gc_cb1, int toc_track) {
+    int current_error;
+    int target_error;
+    int start_error;
+
+    Kep_phai_4_ra;
+    Tay2_len;
+    
+    for(i=0; i<50; i++) { 
+        while(CB_xilanh_tay_2 == 1) { 
+            vTaskDelay(1); 
+            if(!wantExit()) break; 
+        }
+    }
+    
+    target_tay_gat2 = target_tay; 
+    
+    target_error = hs_trackking;
+    start_error = target_error + 90; 
+
+    while(1) { 
+        current_error = abs(bientrodaytay2Value - target_tay_gat2);
+        
+        if (current_error <= target_error) {
+            break;
+						}
+				
+        speed_tay_gat2 = Tinh_Toc_Do_Gat_Tay_Excel(current_error, target_error, start_error, max_toc, min_toc, k);
+        
+        vTaskDelay(1); 
+        if(!wantExit()) break; 
+    }
+    
+    while(abs(bientrodaytay2Value - target_tay_gat2) > 5) {
+        if (CB_kep_4_2 == 0 || CB_kep_4_1 == 0) {
+            led_bao_hieu_on;
+            if (CB_kep_4_2 == 0 ) {
+                robotRun(gc_cb2, toc_track);
+                speed_tay_gat2 = 25;
+            } 
+            else if (CB_kep_4_1 == 0 ) {
+                robotRun(gc_cb1, toc_track);
+                speed_tay_gat2 = 25;
+            }
+        } else {
+            speed_tay_gat2 = 100;
+            led_bao_hieu_off;
+            robotStop(0);
+        }
+        
+        vTaskDelay(1);
+        if(!wantExit()) break;
+    }
+    led_bao_hieu_off;
+    
+    robotStop(0);
+}
+
+
+void ha_tay_1(int target_tay, int hs_trackking, int max_toc, int min_toc, float k, int gc_cb2, int gc_cb1, int toc_track) {
+    int current_error;
+    int target_error;
+    int start_error;
+
+    Kep_phai_1_ra;
+    Tay1_len;
+    
+    for(i=0; i<50; i++) { 
+        while(CB_xilanh_tay_1 == 1) { 
+            vTaskDelay(1); 
+            if(!wantExit()) break; 
+					}
+				}
+    
+    target_tay_gat1 = target_tay; 
+    
+    target_error = hs_trackking;
+    start_error = target_error + 90; 
+
+    while(1) { 
+        current_error = abs(bientrodaytay1Value - target_tay_gat1);
+        
+        if (current_error <= target_error) {
+            break;
+						}
+				
+        speed_tay_gat1 = Tinh_Toc_Do_Gat_Tay_Excel(current_error, target_error, start_error, max_toc, min_toc, k);
+        
+        vTaskDelay(1); 
+        if(!wantExit()) break; 
+    }
+    
+    while(abs(bientrodaytay1Value - target_tay_gat1) > 5) {
+        if (CB_kep_1_2 == 0 || CB_kep_1_1 == 0) {
+            led_bao_hieu_on;
+            if (CB_kep_1_2 == 0 ) {
+                robotRun(gc_cb2, toc_track);
+                speed_tay_gat1 = 25;
+            } 
+            else if (CB_kep_1_1 == 0 ) {
+                robotRun(gc_cb1, toc_track);
+                speed_tay_gat1 = 25;
+            }
+        } else {
+            speed_tay_gat1 = 100;
+            led_bao_hieu_off;
+            robotStop(0);
+        }
+        
+        vTaskDelay(1);
+        if(!wantExit()) break;
+    }
+    led_bao_hieu_off;
+    
+    robotStop(0);
+}
+
+
+void ha_tay_2(int target_tay, int hs_trackking, int max_toc, int min_toc, float k, int gc_cb2, int gc_cb1, int toc_track) {
+    int current_error;
+    int target_error;
+    int start_error;
+
+    Kep_phai_2_ra;
+    Tay2_len;
+    
+    for(i=0; i<50; i++) { 
+        while(CB_xilanh_tay_2 == 1) { 
+            vTaskDelay(1); 
+            if(!wantExit()) break; 
+        }
+    }
+    
+    target_tay_gat2 = target_tay; 
+    
+    target_error = hs_trackking;
+    start_error = target_error + 90; 
+
+    while(1) { 
+        current_error = abs(bientrodaytay2Value - target_tay_gat2);
+        
+        if (current_error <= target_error) {
+            break;
+						}
+				
+        speed_tay_gat2 = Tinh_Toc_Do_Gat_Tay_Excel(current_error, target_error, start_error, max_toc, min_toc, k);
+        
+        vTaskDelay(1); 
+        if(!wantExit()) break; 
+    }
+    
+    while(abs(bientrodaytay2Value - target_tay_gat2) > 5) {
+        if (CB_kep_2_2 == 0 || CB_kep_2_1 == 0) {
+            led_bao_hieu_on;
+            if (CB_kep_2_2 == 0 ) {
+                robotRun(gc_cb2, toc_track);
+                speed_tay_gat2 = 25;
+            } 
+            else if (CB_kep_2_1 == 0 ) {
+                robotRun(gc_cb1, toc_track);
+                speed_tay_gat2 = 25;
+            }
+        } else {
+            speed_tay_gat2 = 100;
+            led_bao_hieu_off;
+            robotStop(0);
+        }
+        
+        vTaskDelay(1);
+        if(!wantExit()) break;
+    }
+    led_bao_hieu_off;
+    
+    robotStop(0);
+}
+
+void ha_tay_3(int target_tay, int hs_trackking, int max_toc, int min_toc, float k, int gc_cb2, int gc_cb1, int toc_track) {
+    int current_error;
+    int target_error;
+    int start_error;
+
+    Kep_phai_3_ra;
+    Tay1_len;
+    
+    for(i=0; i<50; i++) { 
+        while(CB_xilanh_tay_1 == 1) { 
+            vTaskDelay(1); 
+            if(!wantExit()) break; 
+					}
+				}
+    
+    target_tay_gat1 = target_tay; 
+    
+    target_error = hs_trackking;
+    start_error = target_error + 90; 
+
+    while(1) { 
+        current_error = abs(bientrodaytay1Value - target_tay_gat1);
+        
+        if (current_error <= target_error) {
+            break;
+						}
+				
+        speed_tay_gat1 = Tinh_Toc_Do_Gat_Tay_Excel(current_error, target_error, start_error, max_toc, min_toc, k);
+        
+        vTaskDelay(1); 
+        if(!wantExit()) break; 
+    }
+    
+    while(abs(bientrodaytay1Value - target_tay_gat1) > 5) {
+        if (CB_kep_3_2 == 0 || CB_kep_3_1 == 0) {
+            led_bao_hieu_on;
+            if (CB_kep_3_2 == 0 ) {
+                robotRun(gc_cb2, toc_track);
+                speed_tay_gat1 = 25;
+            } 
+            else if (CB_kep_3_1 == 0 ) {
+                robotRun(gc_cb1, toc_track);
+                speed_tay_gat1 = 25;
+            }
+        } else {
+            speed_tay_gat1 = 100;
+            led_bao_hieu_off;
+            robotStop(0);
+        }
+        
+        vTaskDelay(1);
+        if(!wantExit()) break;
+    }
+    led_bao_hieu_off;
+    
+    robotStop(0);
+}
 	
+
+
+void ha_tay_4_k_xlang(int target_tay, int hs_trackking, int max_toc, int min_toc, float k, int gc_cb2, int gc_cb1, int toc_track) {
+    int current_error;
+    int target_error;
+    int start_error;
+
+    Kep_phai_4_ra;
+		vTaskDelay(1000); 
+    
+    target_tay_gat2 = target_tay; 
+    
+    target_error = hs_trackking;
+    start_error = target_error + 90; 
+
+    while(1) { 
+        current_error = abs(bientrodaytay2Value - target_tay_gat2);
+        
+        if (current_error <= target_error) {
+            break;
+						}
+				
+        speed_tay_gat2 = Tinh_Toc_Do_Gat_Tay_Excel(current_error, target_error, start_error, max_toc, min_toc, k);
+        
+        vTaskDelay(1); 
+        if(!wantExit()) break; 
+    }
+    
+    while(abs(bientrodaytay2Value - target_tay_gat2) > 5) {
+        if (CB_kep_4_2 == 0 || CB_kep_4_1 == 0) {
+            led_bao_hieu_on;
+            if (CB_kep_4_2 == 0 ) {
+                robotRun(gc_cb2, toc_track);
+                speed_tay_gat2 = 25;
+            } 
+            else if (CB_kep_4_1 == 0 ) {
+                robotRun(gc_cb1, toc_track);
+                speed_tay_gat2 = 25;
+            }
+        } else {
+            speed_tay_gat2 = 100;
+            led_bao_hieu_off;
+            robotStop(0);
+        }
+        
+        vTaskDelay(1);
+        if(!wantExit()) break;
+    }
+    led_bao_hieu_off;
+    
+    robotStop(0);
+}
+
+
+void ha_tay_1_k_xlang(int target_tay, int hs_trackking, int max_toc, int min_toc, float k, int gc_cb2, int gc_cb1, int toc_track) {
+    int current_error;
+    int target_error;
+    int start_error;
+
+    Kep_phai_1_ra;
+    vTaskDelay(1000); 
+    
+    target_tay_gat1 = target_tay; 
+    
+    target_error = hs_trackking;
+    start_error = target_error + 90; 
+
+    while(1) { 
+        current_error = abs(bientrodaytay1Value - target_tay_gat1);
+        
+        if (current_error <= target_error) {
+            break;
+						}
+				
+        speed_tay_gat1 = Tinh_Toc_Do_Gat_Tay_Excel(current_error, target_error, start_error, max_toc, min_toc, k);
+        
+        vTaskDelay(1); 
+        if(!wantExit()) break; 
+    }
+    
+    while(abs(bientrodaytay1Value - target_tay_gat1) > 5) {
+        if (CB_kep_1_2 == 0 || CB_kep_1_1 == 0) {
+            led_bao_hieu_on;
+            if (CB_kep_1_2 == 0 ) {
+                robotRun(gc_cb2, toc_track);
+                speed_tay_gat1 = 25;
+            } 
+            else if (CB_kep_1_1 == 0 ) {
+                robotRun(gc_cb1, toc_track);
+                speed_tay_gat1 = 25;
+            }
+        } else {
+            speed_tay_gat1 = 100;
+            led_bao_hieu_off;
+            robotStop(0);
+        }
+        
+        vTaskDelay(1);
+        if(!wantExit()) break;
+    }
+    led_bao_hieu_off;
+    
+    robotStop(0);
+}
+
+
+void ha_tay_2_k_xlang(int target_tay, int hs_trackking, int max_toc, int min_toc, float k, int gc_cb2, int gc_cb1, int toc_track) {
+    int current_error;
+    int target_error;
+    int start_error;
+
+    Kep_phai_2_ra;
+    vTaskDelay(1000); 
+    
+    target_tay_gat2 = target_tay; 
+    
+    target_error = hs_trackking;
+    start_error = target_error + 90; 
+
+    while(1) { 
+        current_error = abs(bientrodaytay2Value - target_tay_gat2);
+        
+        if (current_error <= target_error) {
+            break;
+						}
+				
+        speed_tay_gat2 = Tinh_Toc_Do_Gat_Tay_Excel(current_error, target_error, start_error, max_toc, min_toc, k);
+        
+        vTaskDelay(1); 
+        if(!wantExit()) break; 
+    }
+    
+    while(abs(bientrodaytay2Value - target_tay_gat2) > 5) {
+        if (CB_kep_2_2 == 0 || CB_kep_2_1 == 0) {
+            led_bao_hieu_on;
+            if (CB_kep_2_2 == 0 ) {
+                robotRun(gc_cb2, toc_track);
+                speed_tay_gat2 = 25;
+            } 
+            else if (CB_kep_2_1 == 0 ) {
+                robotRun(gc_cb1, toc_track);
+                speed_tay_gat2 = 25;
+            }
+        } else {
+            speed_tay_gat2 = 100;
+            led_bao_hieu_off;
+            robotStop(0);
+        }
+        
+        vTaskDelay(1);
+        if(!wantExit()) break;
+    }
+    led_bao_hieu_off;
+    
+    robotStop(0);
+}
+
+void ha_tay_3_k_xlang(int target_tay, int hs_trackking, int max_toc, int min_toc, float k, int gc_cb2, int gc_cb1, int toc_track) {
+    int current_error;
+    int target_error;
+    int start_error;
+
+    Kep_phai_3_ra;
+    vTaskDelay(1000); 
+    
+    target_tay_gat1 = target_tay; 
+    
+    target_error = hs_trackking;
+    start_error = target_error + 90; 
+
+    while(1) { 
+        current_error = abs(bientrodaytay1Value - target_tay_gat1);
+        
+        if (current_error <= target_error) {
+            break;
+						}
+				
+        speed_tay_gat1 = Tinh_Toc_Do_Gat_Tay_Excel(current_error, target_error, start_error, max_toc, min_toc, k);
+        
+        vTaskDelay(1); 
+        if(!wantExit()) break; 
+    }
+    
+    while(abs(bientrodaytay1Value - target_tay_gat1) > 5) {
+        if (CB_kep_3_2 == 0 || CB_kep_3_1 == 0) {
+            led_bao_hieu_on;
+            if (CB_kep_3_2 == 0 ) {
+                robotRun(gc_cb2, toc_track);
+                speed_tay_gat1 = 25;
+            } 
+            else if (CB_kep_3_1 == 0 ) {
+                robotRun(gc_cb1, toc_track);
+                speed_tay_gat1 = 25;
+            }
+        } else {
+            speed_tay_gat1 = 100;
+            led_bao_hieu_off;
+            robotStop(0);
+        }
+        
+        vTaskDelay(1);
+        if(!wantExit()) break;
+    }
+    led_bao_hieu_off;
+    
+    robotStop(0);
+}
 void lay_200_db(int tracking, int gap, int Angle, int Robot_Angle ) {
 		Kep_phai_4_ra;
 		Tay2_len;
-		speed_tay_gat2 = 250;
+		speed_tay_gat2 = 140;
 		target_tay_gat2 = tracking;
 		for(i=0; i<50; i++) { 
 				while(CB_xilanh_tay_2 == 1) { vTaskDelay(1); if(!wantExit()) break; }
@@ -5901,10 +6370,11 @@ void lay_200_db(int tracking, int gap, int Angle, int Robot_Angle ) {
 		}
 		vTaskDelay(3000);
 		Ktra_vtri_kep4();
-		speed_tay_gat2 = 200;
-		target_tay_gat2 = gap;
 
-		Nang_nhanh();
+		speed_tay_gat2 = 100;
+		target_tay_gat2 = gap;
+		
+		Nang_cuc_nhanh();
 		target_chan_truoc = Min_chan_truoc + 243;
 		target_chan_sau = Min_chan_sau + 245;
 		
@@ -5921,7 +6391,7 @@ void lay_200_db(int tracking, int gap, int Angle, int Robot_Angle ) {
 		robotStop(0);
 		//// nâng bánh sau lên 
 		speed_chan_sau = 245;
-		target_chan_sau = Min_chan_sau + 5;
+		target_chan_sau = Min_chan_sau + 6;
 		for(i=0;i<50;i++)		
 		{
 				while(abs(bientrochansauValue - target_chan_sau) > 30)	{vTaskDelay(1); if(!wantExit())	break;}
@@ -5939,7 +6409,7 @@ void lay_200_db(int tracking, int gap, int Angle, int Robot_Angle ) {
 		vTaskDelay(1300);
 		
 		speed_chan_sau =50;
-		target_chan_sau = Min_chan_sau + 5;
+		target_chan_sau = Min_chan_sau + 6;
 		
 		robotRunAngle(Angle,24,Robot_Angle,0.8);
 		
@@ -5957,9 +6427,9 @@ void lay_200_db(int tracking, int gap, int Angle, int Robot_Angle ) {
 		robotStop(0);
 		
 		speed_chan_truoc = 230;
-		target_chan_truoc = Min_chan_truoc + 5;
+		target_chan_truoc = Min_chan_truoc + 6;
 		speed_chan_sau = 50;
-		target_chan_sau = Min_chan_sau + 5;
+		target_chan_sau = Min_chan_sau + 6;
 
 		for(i=0;i<250;i++)	
 		{
