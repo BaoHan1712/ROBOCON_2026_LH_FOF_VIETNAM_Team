@@ -834,8 +834,8 @@ void Leo_bac_200(int Angle, int Robot_Angle)
 		while(CB_bung == 1)	{vTaskDelay(1); if(!wantExit())	break;}
 	}
 	
-  robotStop(0);
-	
+//  robotStop(0);
+//	
 	speed_chan_truoc = 250;
 	target_chan_truoc = Min_chan_truoc + 8;
 
