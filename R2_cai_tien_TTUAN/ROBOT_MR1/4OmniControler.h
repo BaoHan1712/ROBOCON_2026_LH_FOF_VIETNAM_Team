@@ -539,6 +539,77 @@ void robotAnalytics(void)//-------- Dat trong Interup Timer ---------
      if(_robotChange) setMotor(roundF(_robotCurrentSpeed * _robotRunFL), roundF(_robotCurrentSpeed * _robotRunFR), roundF(_robotCurrentSpeed * _robotRunRL), roundF(_robotCurrentSpeed * _robotRunRR));
 }
 
+
+void robotRotateCompass(int goc_la_ban_tuyet_doi, float toc_do_quay, int tam_quay, int sai_so)
+{
+    int current_imu = robotAngle();
+    float actual_rotate = absF(toc_do_quay);
+
+    if (absI(goc_la_ban_tuyet_doi - current_imu) <= sai_so) {
+        return; 
+    }
+
+    if (goc_la_ban_tuyet_doi < current_imu) {
+        actual_rotate = -actual_rotate;
+    }
+
+    _robotAngleCounterFix = 1; 
+    _robotRotateAngle = goc_la_ban_tuyet_doi; 
+    _robotRotatePoint = tam_quay;
+    _robotRotate = actual_rotate;
+    _robotCounter = 0;
+
+    if(_robotAngle == 30000)
+    {
+        _robotRunSpeed = 30;
+        if(_robotCurrentSpeed == 0) _robotCurrentSpeed = 10;
+    }
+
+    calculateMotor(_robotRotate);
+
+    while(robotFixAngle() > 0)
+    {
+
+    }
+}
+
+
+// than so toi uu la robotRotateQuick(900, 1.6, 0, 0.2, 300); 
+void robotRotateQuick(int goc_la_ban, float toc_do_quay, int tam_quay, float min_toc, int vung_giam)
+{
+    int current_imu = robotAngle();
+    float actual_rotate = absF(toc_do_quay);
+    float slow_rotate = min_toc;
+    int vung_giam_toc = vung_giam;
+    int is_slow_mode = 0;
+		int goc_la_ban_tuyet_doi = goc_la_ban - 16;
+
+    if (absI(goc_la_ban_tuyet_doi - current_imu) <= 10) {
+        return; 
+    }
+
+    if (goc_la_ban_tuyet_doi < current_imu) {
+        robotRotateFree(-actual_rotate, tam_quay);
+        
+        while ((current_imu = robotAngle()) > goc_la_ban_tuyet_doi) {
+            if (!is_slow_mode && (current_imu - goc_la_ban_tuyet_doi) <= vung_giam_toc) {
+                robotRotateFree(-slow_rotate, tam_quay);
+                is_slow_mode = 1;
+            }
+        }
+    } else {
+        robotRotateFree(actual_rotate, tam_quay);
+        
+        while ((current_imu = robotAngle()) < goc_la_ban_tuyet_doi) {
+            if (!is_slow_mode && (goc_la_ban_tuyet_doi - current_imu) <= vung_giam_toc) {
+                robotRotateFree(slow_rotate, tam_quay);
+                is_slow_mode = 1;
+            }
+        }
+    }
+    
+    robotStop(0);
+}
 //==========================================================================================
 //==========================================================================================
 //==========================================================================================

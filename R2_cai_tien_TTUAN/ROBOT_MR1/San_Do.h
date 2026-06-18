@@ -492,7 +492,7 @@ void Vao_rung_mai_2_do(int vitri)
 				}				
 			for(i=0;i<1550;i++)
 						{
-							while( CB_Ha_Sau == 1 || CB_Cap_Thanh_Sau == 0)	
+							while( CB_Cap_Thanh_Sau == 0)	
 							{	
 								Bam_thanh_laser_phai(12,900,-900,vitri - 10,2,-150,10);
 								if(!wantExit())	break;
@@ -519,7 +519,7 @@ void Vao_rung_mai_2_do(int vitri)
 					
 					for(i=0;i<1550;i++)
 							{
-								while(CB_Ha_Sau == 1 || CB_Cap_Thanh_Sau == 0)	
+								while( CB_Cap_Thanh_Sau == 0)	
 								{	
 									Bam_thanh_laser_phai(12,900,-900,vitri,2,-150,10);
 									if(!wantExit())	break;
@@ -700,6 +700,7 @@ void chinh_lai_vi_tri_laser_trai_zone3_do(int vitri, int gia_tri_lap, int min_to
 		}   		
 	}
 
+
 void DatKFS_do(int vitri)
 {
 	kiem_tra_so_qua_tren_tay();
@@ -714,7 +715,7 @@ void DatKFS_do(int vitri)
 		while(abs(bientrochansauValue - target_chan_sau) > 50)	{vTaskDelay(1); if(!wantExit())	break;}
 	}
 	
-	chinh_lai_vi_tri_laser_trai_zone3_do(220, 1000, 5, 58);
+	chinh_lai_vi_tri_laser_trai_zone3_do(224, 1000, 5, 58);
 	
 	robotStop(20);
 	
@@ -743,7 +744,7 @@ void DatKFS_do(int vitri)
 	
 	vTaskDelay(200); 
 		
-	robotRunAngle(900,20,-900,0.9);
+	robotRunAngle(900,22,-900,0.9);
 	for(i=0;i<550;i++)	
 	{	
 			while(lazeSauValue > 30)	
@@ -752,10 +753,10 @@ void DatKFS_do(int vitri)
 				if(!wantExit())	break;
 			}
 	}
-	robotRunAngle(900,16,-900,0.9);
+	robotRunAngle(750,16,-900,0.9);
 	for(i=0;i<550;i++)	
 	{	
-			while(lazeSauValue > 8)	
+			while(lazeSauValue > 12)	
 			{	
 				vTaskDelay(1); 
 				if(!wantExit())	break;
@@ -767,15 +768,15 @@ void DatKFS_do(int vitri)
 		{	
 				while(lazePhaiValue > 440)	
 				{	
-					Bam_laser_sau(50,0,-900, vitri - 14, 3, 100, 15);
+					Bam_laser_sau(54,0,-900, vitri - 6, 3, 100, 15);
 					vTaskDelay(1); 
 					if(!wantExit())	break;
 				}
 		}
 		
-		robotRunAngle(-150,40,900,1.5);
+		robotRunAngle(-150,42,900,1.6);
 				
-		while(_robotIMUAngle < 810)	
+		while(_robotIMUAngle < 800)	
 		{
 			vTaskDelay (1); 
 			if(!wantExit())	break;
@@ -857,6 +858,122 @@ void DatKFS_do(int vitri)
 
 	robotStop(0);
 }
+
+//void test_curve (void) {
+//	
+//		robotCurve(-1800, 15, -5.5);
+//		while(_robotIMUAngle > -1600)	
+//		{
+//			vTaskDelay (1); 
+//			if(!wantExit())	break;
+//		}
+//	robotStop(0);
+//}
+
+void test_DatKFS_do(int vitri)
+{
+	kiem_tra_so_qua_tren_tay();
+	kiem_tra_qua_tay_nao_xuong_rung(); // ham kiem tra co qua tay nao de dat
+	
+	Nang_nhanh();
+	target_chan_truoc = 300;
+	target_chan_sau = 300;
+	
+	for(i=0;i<150;i++)		
+	{
+		while(abs(bientrochansauValue - target_chan_sau) > 50)	{vTaskDelay(1); if(!wantExit())	break;}
+	}
+	
+	chinh_lai_vi_tri_laser_trai_zone3_do(229, 1000, 5, 56);
+	
+	robotStop(20);
+	
+	vTaskDelay(700); 
+
+		robotRunAngle(900,45,-900,0.9);
+		for(i=0;i<550;i++)	
+	{	
+			while(lazePhaiValue > 270)	
+			{	
+				vTaskDelay(1); 
+				if(!wantExit())	break;
+			}
+	}	
+	vTaskDelay(3000); 
+	
+		for(i=0;i<550;i++)	
+	{	
+			while(lazePhaiValue < 270)	
+			{	
+
+				vTaskDelay(1); 
+				if(!wantExit())	break;
+			}
+	}		
+	
+	vTaskDelay(200); 
+		
+	robotRunAngle(900,20,-900,0.9);
+	for(i=0;i<550;i++)	
+	{	
+			while(lazeSauValue > 30)	
+			{	
+				vTaskDelay(1); 
+				if(!wantExit())	break;
+			}
+	}
+
+		robotRunAngle(900,16,-900,0.9);
+	for(i=0;i<550;i++)	
+	{	
+			while(lazeSauValue > 10)	
+			{	
+				vTaskDelay(1); 
+				if(!wantExit())	break;
+			}
+	}	
+	
+		
+		for(i=0;i<550;i++)	
+		{	
+				while(lazePhaiValue > 440)	
+				{	
+					Bam_laser_sau(50,0,-900, vitri - 10, 3, 100, 15);
+					vTaskDelay(1); 
+					if(!wantExit())	break;
+				}
+		}
+		
+		robotRunAngle(0,30,-1800, -1.2);
+				
+		while(_robotIMUAngle > -1700)	
+		{
+			vTaskDelay (1); 
+			if(!wantExit())	break;
+		}
+
+	robotRunAngle(0,45,-1800,0.9);
+	for(i=0;i<550;i++)	
+	{	
+			while(lazeSauValue > 30)	
+			{	
+				vTaskDelay(1); 
+				if(!wantExit())	break;
+			}
+	}	
+	robotRunAngle(0,20,-1800,0.9);
+	for(i=0;i<550;i++)	
+	{	
+			while(lazeSauValue > 10)	
+			{	
+				vTaskDelay(1); 
+				if(!wantExit())	break;
+			}
+	}
+
+	robotStop(0);
+}
+
 
 
 void dat_qua_tay_1_2_do(void) {
