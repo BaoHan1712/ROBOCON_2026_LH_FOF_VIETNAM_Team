@@ -181,9 +181,9 @@ vTaskDelay(1000);
 //				if(TRIANGLE && L2 && !R2 )												bieu_dien();
 				
 //////				
-					if(TRIANGLE && L2 && !R2 )											Leo_bac_200(900, -900);
-					if(SQUARE && L2 && !R2) 												MD_qua_trai_phai_len_bac_200(-1800, -900, -850, 3500,-900, 0, -1800);
-//					if(X && L2 && !R2) 															robotRotateCompass(900, 1, 0, 10); 
+					if(TRIANGLE && L2 && !R2 )											Xuong_bac_200	(900, -900);
+					if(SQUARE && L2 && !R2) 												Leo_bac_200(900, -900);
+					if(X && L2 && !R2) 															test_xuong_bac_3_lan();
 //					if(O && L2 && !R2 ) 													Tay1_len;
 				
 				
@@ -202,7 +202,7 @@ vTaskDelay(1000);
 //			if(O && L2 && !R2)															Xuat_Phat_Lay_Vu_Khi_Xanh(168, -1670, 198);
 
 					if(TRIANGLE && L2 && !R2 )										Run_All_Blocks_From_Queue_san_xanh();
-//					if(SQUARE && L2 && !R2) 											chay_toi_o_dat_qua(vi_tri_dat_hop_2_tay23_xanh, vi_tri_dat_hop_2_tay23_xanh_truoc);	
+					if(SQUARE && L2 && !R2) 											Xuong_bac_200	(900, -900);
 //					if(X && L2 && !R2) 														chay_toi_o_dat_qua(vi_tri_dat_hop_3_tay23_xanh, vi_tri_dat_hop_3_tay23_xanh_truoc);
 //					if(O && L2 && !R2 ) 															Xuong_bac_200	(-900, 900);	
 

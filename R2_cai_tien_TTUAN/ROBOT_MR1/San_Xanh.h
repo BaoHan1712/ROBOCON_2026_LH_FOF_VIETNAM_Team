@@ -1208,7 +1208,6 @@ void Xuong_bac_200_xanh_4(void)
 					}
 				}
 				
-		robotStop(0); 
 	}
 	// CO LENH GAP THANG
 		else if (TinHieu_ChuanBi_GapThang == 1 ) {
@@ -3330,7 +3329,7 @@ void Run_All_Blocks_From_Queue_san_xanh(void)
             action_table[pkt.move][pkt.action][pkt.id_block]();
         }
 
-        vTaskDelay(100); 
+//        vTaskDelay(100); 
     }
 
     has_active_block = 0;
