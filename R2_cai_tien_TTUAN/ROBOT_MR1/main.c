@@ -176,15 +176,14 @@ vTaskDelay(1000);
 				Init_Action_Table_san_do(); 
 				bat_dau_chay_do();
 				
-////			if(TRIANGLE && L2 && !R2 )												Xuat_Phat_Lay_Vu_Khi_Do(162,1500,215);
-//				if(TRIANGLE && L2 && !R2 )												lay_200_db(Min_tay_gat2 + 93, 160, 900, -900);
+////			if(TRIANGLE && L2 && !R2 )												Xuat_Phat_Lay_Vu_Khi_Do(152,1450,215);
 //				if(TRIANGLE && L2 && !R2 )												bieu_dien();
 				
 //////				
-					if(TRIANGLE && L2 && !R2 )											Xuong_bac_200	(900, -900);
-					if(SQUARE && L2 && !R2) 												Leo_bac_200(900, -900);
-					if(X && L2 && !R2) 															test_xuong_bac_3_lan();
-//					if(O && L2 && !R2 ) 													Tay1_len;
+					if(TRIANGLE && L2 && !R2 )												retry_zone_3_o_3_do(vi_tri_dat_hop_3_tay41_do);
+					if(SQUARE && L2 && !R2) 													retry_zone_3_o_3_do(vi_tri_dat_hop_3_tay23_do);
+//					if(X && L2 && !R2) 															chinh_vt_laser_trai_zone3_do_ngang(185, 1000, 10, 80, 65, 40);
+//					if(O && L2 && !R2 ) 														DatKFS_do(158);
 				
 				
 //					if(TRIANGLE && L2 && !R2 )											tu_dong_dat_tang2_do();
@@ -199,10 +198,10 @@ vTaskDelay(1000);
 			{
 				Init_Action_Table_san_xanh(); 
 				bat_dau_chay_xanh();
-//			if(O && L2 && !R2)															Xuat_Phat_Lay_Vu_Khi_Xanh(168, -1670, 198);
+//			if(O && L2 && !R2)															Xuat_Phat_Lay_Vu_Khi_Xanh(163, -1700, 205);
 
-					if(TRIANGLE && L2 && !R2 )										Run_All_Blocks_From_Queue_san_xanh();
-					if(SQUARE && L2 && !R2) 											Xuong_bac_200	(900, -900);
+					if(TRIANGLE && L2 && !R2 )										Xuat_Phat_Lay_Vu_Khi_Xanh(163, -1700, 200);
+//					if(SQUARE && L2 && !R2) 											Xuong_bac_200	(900, -900);
 //					if(X && L2 && !R2) 														chay_toi_o_dat_qua(vi_tri_dat_hop_3_tay23_xanh, vi_tri_dat_hop_3_tay23_xanh_truoc);
 //					if(O && L2 && !R2 ) 															Xuong_bac_200	(-900, 900);	
 
