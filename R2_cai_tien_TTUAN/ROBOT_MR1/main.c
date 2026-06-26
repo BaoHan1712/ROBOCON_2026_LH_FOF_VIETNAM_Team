@@ -141,13 +141,13 @@ vTaskDelay(1000);
 	target_tay_gat1 = bientrodaytay1Value;
 	target_tay_gat2 = bientrodaytay2Value;
 
-	speed_tay_xoay = 130;
+	speed_tay_xoay = 120;
 	target_xoay_tay = vi_tri_tay_43;
 	
-	speed_tay_gat1 = 140;
+	speed_tay_gat1 = 120;
 	target_tay_gat1 = vitri_tay1home;
 	
-	speed_tay_gat2 = 140;
+	speed_tay_gat2 = 120;
 	target_tay_gat2 = vitri_tay2home;
 	
 	RESET_ENCODER();
@@ -180,10 +180,10 @@ vTaskDelay(1000);
 //				if(TRIANGLE && L2 && !R2 )												bieu_dien();
 				
 //////				
-					if(TRIANGLE && L2 && !R2 )												retry_zone_3_o_3_do(vi_tri_dat_hop_3_tay41_do);
-					if(SQUARE && L2 && !R2) 													retry_zone_3_o_3_do(vi_tri_dat_hop_3_tay23_do);
-//					if(X && L2 && !R2) 															chinh_vt_laser_trai_zone3_do_ngang(185, 1000, 10, 80, 65, 40);
-//					if(O && L2 && !R2 ) 														DatKFS_do(158);
+					if(TRIANGLE && L2 && !R2 )													nhat_hop_zone3_do();
+//					if(SQUARE && L2 && !R2) 													Leo_bac_200_ko_thanh_do();
+//					if(X && L2 && !R2) 																Xoay_dau_truoc_cua_do_3();
+//					if(O && L2 && !R2 ) 															Tay2_len;
 				
 				
 //					if(TRIANGLE && L2 && !R2 )											tu_dong_dat_tang2_do();

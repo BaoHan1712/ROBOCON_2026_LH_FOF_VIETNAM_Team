@@ -251,13 +251,13 @@ vu8 DATA_SPEED[80]={255,1,0,0,				// 1- ID = 1, DIRECT = 0, SPEED = 0
 #define  CB_bung											    	GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_13)//ok
 #define  CB_bung_duoi												GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_0)//ok
 #define  CB_kep_1_1													GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_10)//okT 
-#define  CB_kep_1_2													GPIO_ReadInputDataBit(GPIOD,GPIO_Pin_14)//okP 
-#define  CB_kep_2_1													GPIO_ReadInputDataBit(GPIOD,GPIO_Pin_11)//okT 
+#define  CB_kep_1_2													GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_15)//okP 
+#define  CB_kep_2_1													GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_12)//okT 
 #define  CB_kep_2_2													GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_13)//okP ,
-#define  CB_kep_3_1													GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_15)//okT  
+#define  CB_kep_3_1													GPIO_ReadInputDataBit(GPIOD,GPIO_Pin_14)//okT  
 #define  CB_kep_3_2													GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_14)//okP
 #define  CB_kep_4_1													GPIO_ReadInputDataBit(GPIOD,GPIO_Pin_10)//OKT
-#define  CB_kep_4_2													GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_12)//OKP ,
+#define  CB_kep_4_2													GPIO_ReadInputDataBit(GPIOD,GPIO_Pin_11)//OKP 
 //#define  CB_vtri_leo												GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_6)  // con vang o dit
 
 #define  CB_xilanh_tay_1										GPIO_ReadInputDataBit(GPIOD,GPIO_Pin_15)//OK nhan la 0, khong nhan la 1
@@ -529,16 +529,16 @@ int vi_tri_cua_rung_xanh_3_lazer_phai_tay_23 = 446;
 int vi_tri_cua_rung_xanh_3_lazer_phai_tay_41 = 475;
 
 //// ******** VI TRI LAZER CUA RUNG DO *********************
-int vi_tri_cua_rung_do_3_lazer_phai_tay_41 = 252;
+int vi_tri_cua_rung_do_3_lazer_phai_tay_41 = 255;
 int vi_tri_cua_rung_do_3_lazer_phai_tay_23 = 223;
 
 int vi_tri_cua_rung_do_2_lazer_phai_tay_41 = 322;
 int vi_tri_cua_rung_do_2_lazer_phai_tay_23 = 294;
 
-int vi_tri_cua_rung_do_1_lazer_phai_tay_41 = 387;
+int vi_tri_cua_rung_do_1_lazer_phai_tay_41 = 390;
 int vi_tri_cua_rung_do_1_lazer_phai_tay_23 = 361;
 
-int vi_tri_cua_rung_do_1_lazer_trai_tay_41 = 224;
+int vi_tri_cua_rung_do_1_lazer_trai_tay_41 = 222;
 int vi_tri_cua_rung_do_1_lazer_trai_tay_23 = 255;
 
 ///*********************************************************
@@ -587,9 +587,9 @@ int da_lay_tay3 = 0;
 int da_lay_tay4 = 0;
 int da_lay_tay4_duoi = 0;
 int hoan_thanh_chay_rung = 0;
-int vi_tri_chay_ngang_do = 2; // bien de xuong o nao de bie chay voi toc tuong ung
 
-int gap_truoc_dac_biet = 0; // dung trong viec gap hop phia truoc nhung chan xuong luon
+int vi_tri_chay_ngang_do = 11; // bien de xuong o nao de biet chay voi toc tuong ung
+int vi_tri_chay_ngang_xanh = 11;
 
 extern int Xoay_ok;
 int	KT_Ha_Tay;
