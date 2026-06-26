@@ -417,9 +417,9 @@ void di_tren_buc_khong_thanh_2_ben_do(void) {
 						}
 					}
 		
-			robotRunAngle(900,15,-900,0.3);
+			robotRunAngle(900,12,-900,0.3);
 			RESET_ENCODER(); 
-			while(abs(ENCODER_FR()) + abs(ENCODER_FL()) < 300)	{vTaskDelay (1); if(!wantExit())	break;}
+			while(abs(ENCODER_FR()) + abs(ENCODER_FL()) < 200)	{vTaskDelay (1); if(!wantExit())	break;}
 			robotStop(0);
 			
 			
@@ -807,9 +807,9 @@ void chuan_bi_gap_thang_do_9 (void) {
 						}
 					}
 			
-				robotRunAngle(900,15,-900,0.3);
+				robotRunAngle(900,12,-900,0.3);
 				RESET_ENCODER(); 
-				while(abs(ENCODER_FR()) + abs(ENCODER_FL()) < 300)	{vTaskDelay (1); if(!wantExit())	break;}
+				while(abs(ENCODER_FR()) + abs(ENCODER_FL()) < 200)	{vTaskDelay (1); if(!wantExit())	break;}
 				robotStop(0); 
 			}
 
@@ -1803,9 +1803,9 @@ void chuan_bi_gap_thang_do_7(void) {
 									}
 								}
 		
-			robotRunAngle(900,15,-900,0.3);
+			robotRunAngle(900,12,-900,0.3);
 			RESET_ENCODER(); 
-			while(abs(ENCODER_FR()) + abs(ENCODER_FL()) < 300)	{vTaskDelay (1); if(!wantExit())	break;}
+			while(abs(ENCODER_FR()) + abs(ENCODER_FL()) < 200)	{vTaskDelay (1); if(!wantExit())	break;}
 			robotStop(0);
 }
 

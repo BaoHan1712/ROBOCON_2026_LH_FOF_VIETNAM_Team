@@ -169,7 +169,7 @@ vTaskDelay(1000);
 			if(OPTIONS) vehome();
 		
 			
-			if(quangTroValue < 220)					Tay_kep_mo;
+			if(quangTroValue < 120)					Tay_kep_mo;
 			if(CHON_SAN == 0)									//SAN DO
 			{
 				
@@ -180,8 +180,8 @@ vTaskDelay(1000);
 //				if(TRIANGLE && L2 && !R2 )												bieu_dien();
 				
 //////				
-					if(TRIANGLE && L2 && !R2 )													nhat_hop_zone3_do();
-//					if(SQUARE && L2 && !R2) 													Leo_bac_200_ko_thanh_do();
+//					if(TRIANGLE && L2 && !R2 )													dat_hop1_3(520, 555, 5, 1);
+					if(SQUARE && L2 && !R2) 														tudonghoantoan_san_do(); 
 //					if(X && L2 && !R2) 																Xoay_dau_truoc_cua_do_3();
 //					if(O && L2 && !R2 ) 															Tay2_len;
 				
@@ -200,7 +200,7 @@ vTaskDelay(1000);
 				bat_dau_chay_xanh();
 //			if(O && L2 && !R2)															Xuat_Phat_Lay_Vu_Khi_Xanh(163, -1700, 205);
 
-					if(TRIANGLE && L2 && !R2 )										Xuat_Phat_Lay_Vu_Khi_Xanh(163, -1700, 200);
+					if(TRIANGLE && L2 && !R2 )										Xuat_Phat_Lay_Vu_Khi_Xanh(163, -1700, 198);
 //					if(SQUARE && L2 && !R2) 											Xuong_bac_200	(900, -900);
 //					if(X && L2 && !R2) 														chay_toi_o_dat_qua(vi_tri_dat_hop_3_tay23_xanh, vi_tri_dat_hop_3_tay23_xanh_truoc);
 //					if(O && L2 && !R2 ) 															Xuong_bac_200	(-900, 900);	

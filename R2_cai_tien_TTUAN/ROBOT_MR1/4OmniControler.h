@@ -64,7 +64,7 @@ int i100 = 100, khoangCachGocFix = 200;
 
 //------------ su dung cho ham gia toc bac 1 tuyen tinh--------------
 float _robotY = 85; // gia toc xuat phat
-float _robotX = 125;
+float _robotX = 120;
 
 int motorLock = 2;
 int motorLockRepeat = 100000;//20000

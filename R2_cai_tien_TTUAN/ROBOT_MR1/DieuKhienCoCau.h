@@ -73,8 +73,8 @@ void kiem_tra_huong_quay_tay_gap_ben_phai (void);
  void chuan_bi_gap_phai_200_tren_4 (void );
 
 // *************** thong so tay gap ************
-int	Min_chan_truoc = 230, Max_chan_truoc = 720, target_chan_truoc;
-int	Min_chan_sau = 230, Max_chan_sau = 720, target_chan_sau;
+int	Min_chan_truoc = 230, Max_chan_truoc = 730, target_chan_truoc;
+int	Min_chan_sau = 230, Max_chan_sau = 730, target_chan_sau;
 int	Min_xoay_tay = 250, Max_xoay_tay = 710, target_xoay_tay;
 int	Min_tay_gat1 = 95, Max_tay_gat1 = 803, target_tay_gat1;
 int	Min_tay_gat2 = 94, Max_tay_gat2 = 800, target_tay_gat2; 
@@ -776,9 +776,9 @@ void di_tren_buc_khong_thanh_2_ben (void) {
 							}
 					}
 		
-		robotRunAngle(-900,15,900,0.7);
+		robotRunAngle(-900,12,900,0.7);
 		RESET_ENCODER(); 
-		while(abs(ENCODER_FR()) + abs(ENCODER_FL()) < 300)	{vTaskDelay (1); if(!wantExit())	break;}
+		while(abs(ENCODER_FR()) + abs(ENCODER_FL()) < 200)	{vTaskDelay (1); if(!wantExit())	break;}
 		robotStop(0);	
 }
 
@@ -886,7 +886,7 @@ void MD_qua_trai_phai_len_bac_200 (int goc_quay_ngang,int goc_quay_thang, int di
 		robotRunAngle(di_Cheo, 16, giu_dau,0.7);
 		vTaskDelay (time_lui); 
 		robotStop(0);
-		robotRotateQuick(goc_quay_ngang, 1.5, 0, 0.2, 300); 
+		robotRotateQuick(goc_quay_ngang, 1.5, 0, 0.3, 300); 
 		robotStop(0);
 		Nang_nhanh();
 		target_chan_truoc = Min_chan_truoc + 250;
@@ -917,7 +917,7 @@ void MD_qua_trai_phai_len_bac_200 (int goc_quay_ngang,int goc_quay_thang, int di
 	
 		Leo_bac_200(Angle, Robot_Angle);
 		robotStop(0);
-		robotRotateQuick(goc_quay_thang, 1.5, 0, 0.2, 300); 
+		robotRotateQuick(goc_quay_thang, 1.5, 0, 0.3, 300); 
 		robotStop(0);
 }
 
@@ -928,7 +928,7 @@ void MD_qua_trai_phai_xuong_bac_200 (int goc_quay_ngang,int goc_quay_thang, int 
 		robotRunAngle(di_Cheo, 16, giu_dau,0.5);
 		vTaskDelay (time_lui); 
 		robotStop(0);
-		robotRotateQuick(goc_quay_ngang, 1.5, 0, 0.2, 300);
+		robotRotateQuick(goc_quay_ngang, 1.5, 0, 0.3, 300);
 		robotStop(0);
 				
 		su_dung_chan(265);
@@ -955,7 +955,7 @@ void MD_qua_trai_phai_xuong_bac_200 (int goc_quay_ngang,int goc_quay_thang, int 
 				
 		Xuong_bac_200(Angle, Robot_Angle);
 		robotStop(0);
-		robotRotateQuick(goc_quay_thang, 1.5, 0, 0.2, 300);
+		robotRotateQuick(goc_quay_thang, 1.5, 0, 0.3, 300);
 		robotStop(0);
 }
 

@@ -1732,6 +1732,9 @@ int cho_r1_ben_Canh = 0;
 
 int see_R1_tren_rung = 0;
 int block_pha = 0;
+
+int check_hang_1 = 0;
+
 int co_vat_can = 1;
 int id_dat_hop = 0;
 
