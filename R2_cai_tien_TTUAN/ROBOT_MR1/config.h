@@ -544,21 +544,23 @@ int vi_tri_cua_rung_do_1_lazer_trai_tay_23 = 255;
 ///*********************************************************
 
 //// ******** VI TRI LAZER DAT HOP XANH *********************
-int vi_tri_dat_hop_1_tay41_xanh = 48; /// ** DUNG LAZER SAU**
-int vi_tri_dat_hop_2_tay41_xanh = 103;  
-int vi_tri_dat_hop_3_tay41_xanh = 157;
 
-int vi_tri_dat_hop_1_tay23_xanh = 5;
-int vi_tri_dat_hop_2_tay23_xanh = 59;
-int vi_tri_dat_hop_3_tay23_xanh = 115;
+int vi_tri_dat_hop_1_tay41_xanh_truoc = 185; /// ** DUNG LAZER truoc**
+int vi_tri_dat_hop_2_tay41_xanh_truoc = 158;  
+int vi_tri_dat_hop_3_tay41_xanh_truoc = 134;
 
-int vi_tri_dat_hop_1_tay41_xanh_truoc = 107; /// ** DUNG LAZER truoc**
-int vi_tri_dat_hop_2_tay41_xanh_truoc = 53;  
-int vi_tri_dat_hop_3_tay41_xanh_truoc = 0;
+int vi_tri_dat_hop_1_tay41_xanh = 154; /// ** DUNG LAZER SAU**
+int vi_tri_dat_hop_2_tay41_xanh = 182;  
+int vi_tri_dat_hop_3_tay41_xanh = 208;
 
-int vi_tri_dat_hop_1_tay23_xanh_truoc = 150;
-int vi_tri_dat_hop_2_tay23_xanh_truoc = 96;
-int vi_tri_dat_hop_3_tay23_xanh_truoc = 40;
+
+int vi_tri_dat_hop_1_tay23_xanh = 135;  //* DUNG LAZER SAU**
+int vi_tri_dat_hop_2_tay23_xanh = 162;
+int vi_tri_dat_hop_3_tay23_xanh = 189;
+
+int vi_tri_dat_hop_1_tay23_xanh_truoc = 205;
+int vi_tri_dat_hop_2_tay23_xanh_truoc = 178;
+int vi_tri_dat_hop_3_tay23_xanh_truoc = 151;
 ///
 //// ******** VI TRI LAZER DAT HOP DO *********************
 int vi_tri_dat_hop_1_tay41_do = 181;   /// ** DUNG LAZER truoc**

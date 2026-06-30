@@ -622,16 +622,7 @@ void Leo_bac_200_ko_thanh_do(void)
 						vTaskDelay (1);
 					}
 				}
-		robotRunAngle(900,10,-900,0.7);
-		for(i=0;i<1550;i++)
-				{
-						while(CB_Ha_Sau == 0)	
-				
-					{	
-						if(!wantExit())	break;
-						vTaskDelay (1);
-					}
-				}
+
 				
 //		robotStop(0);
 			}
@@ -914,16 +905,6 @@ void Xuong_bac_200_do_9(void)
 						vTaskDelay (1);
 					}
 				}
-				robotRunAngle(900,10,-900,0.7);
-				for(i=0;i<1550;i++)
-				{
-						while(CB_Ha_Sau == 0)	
-				
-					{	
-						if(!wantExit())	break;
-						vTaskDelay (1);
-					}
-				}
 						
 //				robotStop(0);
 				}				
@@ -979,16 +960,6 @@ void Leo_bac_400_ko_thanh_do(void)
 								if(!wantExit())	break;
 							}
 						}
-				robotRunAngle(900,10,-900,0.9);
-				for(i=0;i<250;i++)
-						{
-								while( CB_Ha_Sau == 0 )	
-
-								{	
-								vTaskDelay (1);
-								if(!wantExit())	break;
-								}
-							}
 //						robotStop(0);
 					}
 						
@@ -1917,16 +1888,6 @@ void Leo_bac_200_do_7(void)  {
 					}
 				}
 				
-		robotRunAngle(900,10,-900,0.7);
-		for(i=0;i<1550;i++)
-				{
-						while(CB_Ha_Sau == 0 ||  (abs(bientrochansauValue - target_chan_sau) > 30)	)	
-			
-					{	
-						if(!wantExit())	break;
-						vTaskDelay (1);
-					}
-				}
 				
 //		robotStop(0);
 			}

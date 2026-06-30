@@ -1122,10 +1122,10 @@ void Leo_bac_200_ko_thanh(void)
 		su_dung_chan(265);
 	
 	if (TinHieu_ChuanBi_GapThang == 0 && TinHieu_ChuanBi_GapTrai == 0 && TinHieu_ChuanBi_GapPhai == 0 && TinHieu_QuaPhai == 0 && TinHieu_QuaTrai == 0){
-		robotRunAngle(-900,16,900,0.7);
+		robotRunAngle(-900,20,900,0.7);
 		for(i=0;i<1550;i++)
 				{
-						while(CB_Ha_Sau == 0 || (abs(bientrochansauValue - target_chan_sau) > 10))	
+						while(CB_Ha_Sau == 0 || (abs(bientrochansauValue - target_chan_sau) > 30))	
 				
 					{	
 						if(!wantExit())	break;
@@ -1261,16 +1261,7 @@ void Leo_bac_400_ko_thanh(void)
 						if(!wantExit())	break;
 					}
 				}
-		robotRunAngle(-900,10,900,0.9);
-		for(i=0;i<250;i++)
-				{
-						while(CB_Ha_Sau == 0 )	
 
-					{	
-						vTaskDelay (1);
-						if(!wantExit())	break;
-					}
-				}
 //		robotStop(0);
 			}
 				

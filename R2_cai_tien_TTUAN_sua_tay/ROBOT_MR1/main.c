@@ -78,9 +78,12 @@ static void taskDieuKhienCoCau(void *pvParameters)
 
 	while (1)
 	{
-		if(KT_Ha_Tay == 1)	kiem_tra_huong_ha_tay_gap_phia_truoc();
-		if(KT_Ha_Tay_phai == 1)	kiem_tra_huong_ha_tay_gap_ben_phai();
-		if(KT_Ha_Tay_trai == 1)	kiem_tra_huong_ha_tay_gap_ben_trai();
+		if(KT_Ha_Tay == 1)							kiem_tra_huong_ha_tay_gap_phia_truoc(); // thang 200 tren
+		if(KT_Ha_Tay_Trc_200_Duoi == 1)	kiem_tra_huong_ha_tay_gap_phia_truoc_duoi(); // thang 200 duoi
+		if(KT_Ha_Tay_Trc_400 == 1)			kiem_tra_huong_ha_tay_gap_phia_truoc_400(); // thang 400 tren
+		
+		if(KT_Ha_Tay_phai == 1)					kiem_tra_huong_ha_tay_gap_ben_phai();
+		if(KT_Ha_Tay_trai == 1)					kiem_tra_huong_ha_tay_gap_ben_trai();
 		
 		vTaskDelay(3);
 	}
@@ -141,13 +144,13 @@ vTaskDelay(1000);
 	target_tay_gat1 = bientrodaytay1Value;
 	target_tay_gat2 = bientrodaytay2Value;
 
-	speed_tay_xoay = 130;
+	speed_tay_xoay = 120;
 	target_xoay_tay = vi_tri_tay_43;
 	
-	speed_tay_gat1 = 140;
+	speed_tay_gat1 = 120;
 	target_tay_gat1 = vitri_tay1home;
 	
-	speed_tay_gat2 = 140;
+	speed_tay_gat2 = 120;
 	target_tay_gat2 = vitri_tay2home;
 	
 	RESET_ENCODER();
@@ -169,22 +172,21 @@ vTaskDelay(1000);
 			if(OPTIONS) vehome();
 		
 			
-			if(quangTroValue < 220)					Tay_kep_mo;
+			if(quangTroValue < 120)					Tay_kep_mo;
 			if(CHON_SAN == 0)									//SAN DO
 			{
 				
 				Init_Action_Table_san_do(); 
 				bat_dau_chay_do();
 				
-////			if(TRIANGLE && L2 && !R2 )												Xuat_Phat_Lay_Vu_Khi_Do(162,1500,215);
-//				if(TRIANGLE && L2 && !R2 )												lay_200_db(Min_tay_gat2 + 93, 160, 900, -900);
+////			if(TRIANGLE && L2 && !R2 )												Xuat_Phat_Lay_Vu_Khi_Do(152,1450,215);
 //				if(TRIANGLE && L2 && !R2 )												bieu_dien();
 				
 //////				
-					if(TRIANGLE && L2 && !R2 )										su_dung_chan_thuong(512);
-					if(SQUARE && L2 && !R2) 											Tay1_len;
-//					if(X && L2 && !R2) 														Leo_bac_400(900, -900);
-//					if(O && L2 && !R2 ) 													su_dung_chan_thuong(512);
+//					if(TRIANGLE && L2 && !R2 )													dat_hop1_3(520, 555, 5, 1);
+					if(SQUARE && L2 && !R2) 														tudonghoantoan_san_do(); 
+//					if(X && L2 && !R2) 																Xoay_dau_truoc_cua_do_3();
+//					if(O && L2 && !R2 ) 															Tay2_len;
 				
 				
 //					if(TRIANGLE && L2 && !R2 )											tu_dong_dat_tang2_do();
@@ -199,12 +201,12 @@ vTaskDelay(1000);
 			{
 				Init_Action_Table_san_xanh(); 
 				bat_dau_chay_xanh();
-//			if(O && L2 && !R2)															Xuat_Phat_Lay_Vu_Khi_Xanh(168, -1670, 198);
+//			if(O && L2 && !R2)															Xuat_Phat_Lay_Vu_Khi_Xanh(163, -1700, 205); chon_o_retry3();
 
-					if(TRIANGLE && L2 && !R2 )										tudonghoantoan();
-//					if(SQUARE && L2 && !R2) 											chay_toi_o_dat_qua(vi_tri_dat_hop_2_tay23_xanh, vi_tri_dat_hop_2_tay23_xanh_truoc);	
-//					if(X && L2 && !R2) 														chay_toi_o_dat_qua(vi_tri_dat_hop_3_tay23_xanh, vi_tri_dat_hop_3_tay23_xanh_truoc);
-//					if(O && L2 && !R2 ) 															Xuong_bac_200	(-900, 900);	
+					if(TRIANGLE && L2 && !R2 )												tudonghoantoan();
+//					if(SQUARE && L2 && !R2) 													chinh_lai_vi_tri_laser_phai_custom(183, 1000, 15, 72, 2);
+//					if(X && L2 && !R2) 																chinh_lai_vi_tri_laser_phai_custom(183, 1000, 10, 75, 5);
+//					if(O && L2 && !R2 ) 															chinh_lai_vi_tri_laser_phai_custom(183, 1000, 5, 67, 5);
 
 		
 				
@@ -213,7 +215,7 @@ vTaskDelay(1000);
 //					if ( X && L2 && !R2 ) 																test_xoay();
 //					if(O && L2 && !R2) 																		tu_dong_dat_tang2_xanh();
 		
-////Leo_bac_200
+////Leo_bac_400
 //Xuong_bac_200	(-900, 900)	
 ////Xuong_bac_400	
  ///auto_vao_rung_xanh_cua1(); tay 41, 262 tay 23

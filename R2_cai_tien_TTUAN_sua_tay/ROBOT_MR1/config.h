@@ -71,8 +71,8 @@ vu8 DATA_SPEED[80]={255,1,0,0,				// 1- ID = 1, DIRECT = 0, SPEED = 0
 
 #define	DIA_CHI_START4												DATA_SPEED[12]=255
 #define	ID4	 																	DATA_SPEED[13]=4
-#define Mor_RearRight_thuan							 			DATA_SPEED[14]=1
-#define Mor_RearRight_nghich									DATA_SPEED[14]=0
+#define Mor_RearRight_thuan							 			DATA_SPEED[14]=0
+#define Mor_RearRight_nghich									DATA_SPEED[14]=1
 #define	Mor_RearRight		 											DATA_SPEED[15]
 
 #define	DIA_CHI_START5 												DATA_SPEED[16]=255
@@ -250,15 +250,15 @@ vu8 DATA_SPEED[80]={255,1,0,0,				// 1- ID = 1, DIRECT = 0, SPEED = 0
 #define  CB_ROI_4														GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_0)//ok
 #define  CB_bung											    	GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_13)//ok
 #define  CB_bung_duoi												GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_0)//ok
-#define  CB_kep_1_1													GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_15)//okT
-#define  CB_kep_1_2													GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_10)//okP
-#define  CB_kep_2_1													GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_12)//okT
-#define  CB_kep_2_2													GPIO_ReadInputDataBit(GPIOD,GPIO_Pin_10)//okP
-#define  CB_kep_3_1													GPIO_ReadInputDataBit(GPIOD,GPIO_Pin_14)//okT
+#define  CB_kep_1_1													GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_10)//okT 
+#define  CB_kep_1_2													GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_15)//okP 
+#define  CB_kep_2_1													GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_12)//okT 
+#define  CB_kep_2_2													GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_13)//okP ,
+#define  CB_kep_3_1													GPIO_ReadInputDataBit(GPIOD,GPIO_Pin_14)//okT  
 #define  CB_kep_3_2													GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_14)//okP
-#define  CB_kep_4_1													GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_13)//OKT
-#define  CB_kep_4_2													GPIO_ReadInputDataBit(GPIOD,GPIO_Pin_11)//OKP
-#define  CB_vtri_leo												GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_6)  // con vang o dit
+#define  CB_kep_4_1													GPIO_ReadInputDataBit(GPIOD,GPIO_Pin_10)//OKT
+#define  CB_kep_4_2													GPIO_ReadInputDataBit(GPIOD,GPIO_Pin_11)//OKP 
+//#define  CB_vtri_leo												GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_6)  // con vang o dit
 
 #define  CB_xilanh_tay_1										GPIO_ReadInputDataBit(GPIOD,GPIO_Pin_15)//OK nhan la 0, khong nhan la 1
 #define  CB_xilanh_tay_2										GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_11)//OK
@@ -275,11 +275,13 @@ vu8 DATA_SPEED[80]={255,1,0,0,				// 1- ID = 1, DIRECT = 0, SPEED = 0
 #define  check_dat_hop_T2										GPIO_ReadInputDataBit(GPIOC,GPIO_Pin_7) // nhan la 0
 
 //// CB CHECK CO QUA TREN TAY HAY CHUA
+// cb 2, 1 kh co qua la 1, nguoc lai la 0
+// cb 3, 4 kh co qua la 0, nguoc lai la 1
 
-#define  check_hop_1										GPIO_ReadInputDataBit(GPIOC,GPIO_Pin_9) // 
-#define  check_hop_3										GPIO_ReadInputDataBit(GPIOC,GPIO_Pin_8)  //
+#define  check_hop_3										GPIO_ReadInputDataBit(GPIOC,GPIO_Pin_9) // 
+#define  check_hop_1										GPIO_ReadInputDataBit(GPIOC,GPIO_Pin_8)  //
 #define  check_hop_4										GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_6)  // 
-#define  check_hop_2										GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_5)  // dong la 0, bung la 1
+#define  check_hop_2										GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_5)  // 
 
 //================================INPUT==================================//
 
@@ -383,20 +385,20 @@ vu8 DATA_SPEED[80]={255,1,0,0,				// 1- ID = 1, DIRECT = 0, SPEED = 0
 #define	led_bao_hieu_on				Cylinder_ID8 |= bit_1_H
 #define led_bao_hieu_off			Cylinder_ID8 &= bit_1_L
 
-#define Kep_phai_4_ra					Cylinder_ID8 |= bit_2_H
+#define Kep_phai_4_ra       do { if (abs(bientrodaytay1Value - bientrodaytay2Value) >= 130) { Cylinder_ID8 |= bit_2_H; } } while(0)
 #define Kep_phai_4_vao				Cylinder_ID8 &= bit_2_L
 
-#define Kep_phai_1_ra					Cylinder_ID8 |= bit_3_H
+#define Kep_phai_1_ra       do { if (abs(bientrodaytay1Value - bientrodaytay2Value) >= 130) { Cylinder_ID8 |= bit_3_H; } } while(0)
 #define Kep_phai_1_vao				Cylinder_ID8 &= bit_3_L
 
-#define Kep_phai_3_ra					Cylinder_ID8 |= bit_4_H
+#define Kep_phai_3_ra       do { if (abs(bientrodaytay1Value - bientrodaytay2Value) >= 130) { Cylinder_ID8 |= bit_4_H; } } while(0)
 #define Kep_phai_3_vao				Cylinder_ID8 &= bit_4_L
+
+#define Kep_phai_2_ra       do { if (abs(bientrodaytay1Value - bientrodaytay2Value) >= 130) { Cylinder_ID8 |= bit_6_H; } } while(0)
+#define Kep_phai_2_vao				Cylinder_ID8 &= bit_6_L
 
 #define Tay1_len						Cylinder_ID8 |= bit_5_H
 #define Tay1_xuong					Cylinder_ID8 &= bit_5_L
-
-#define Kep_phai_2_ra					Cylinder_ID8 |= bit_6_H
-#define Kep_phai_2_vao				Cylinder_ID8 &= bit_6_L
 
 #define Tay2_len					Cylinder_ID8 |= bit_7_H
 #define Tay2_xuong					Cylinder_ID8 &= bit_7_L
@@ -502,9 +504,9 @@ int vi_tri_tay_2_trai_tren = 588;
 int vi_tri_tay_3_trai_tren = 398;
 
 /// VI TRI LAZER LAY QUA THANG
-int vitri_tay41_laser_trai_GapQua = 151;
+int vitri_tay41_laser_trai_GapQua = 150;
 int vitri_tay23_laser_trai_GapQua = 222;
-int vitri_tay23_phai_laser_GapQua = 151;
+int vitri_tay23_phai_laser_GapQua = 150;
 
 
 int vitri_tay1home = 445;
@@ -516,64 +518,67 @@ int kiem_tra_loi = 0;
 int tay_se_dung_tiep_theo = 0;
 //// ******** VI TRI LAZER CUA RUNG XANH *********************
 
-int vi_tri_cua_rung_xanh_1_lazer_phai_tay_41 = 306;
+int vi_tri_cua_rung_xanh_1_lazer_phai_tay_41 = 253;
 int vi_tri_cua_rung_xanh_1_lazer_phai_tay_23 = 261;
 
-int vi_tri_cua_rung_xanh_2_lazer_phai_tay_41 = 400;
-int vi_tri_cua_rung_xanh_2_lazer_phai_tay_23 = 399;
+int vi_tri_cua_rung_xanh_2_lazer_phai_tay_41 = 323;
+int vi_tri_cua_rung_xanh_2_lazer_phai_tay_23 = 294;
 
-int vi_tri_cua_rung_xanh_3_lazer_trai_tay_41 = 306;
+int vi_tri_cua_rung_xanh_3_lazer_trai_tay_41 = 224;
 int vi_tri_cua_rung_xanh_3_lazer_phai_tay_23 = 446;
-int vi_tri_cua_rung_xanh_3_lazer_phai_tay_41 = 475;
+int vi_tri_cua_rung_xanh_3_lazer_phai_tay_41 = 387;
 
 //// ******** VI TRI LAZER CUA RUNG DO *********************
-int vi_tri_cua_rung_do_3_lazer_phai_tay_41 = 302;
-int vi_tri_cua_rung_do_3_lazer_phai_tay_23 = 262;
+int vi_tri_cua_rung_do_3_lazer_phai_tay_41 = 255;
+int vi_tri_cua_rung_do_3_lazer_phai_tay_23 = 223;
 
-int vi_tri_cua_rung_do_2_lazer_phai_tay_41 = 399;
-int vi_tri_cua_rung_do_2_lazer_phai_tay_23 = 363;
+int vi_tri_cua_rung_do_2_lazer_phai_tay_41 = 322;
+int vi_tri_cua_rung_do_2_lazer_phai_tay_23 = 294;
 
-int vi_tri_cua_rung_do_1_lazer_phai_tay_41 = 476;
-int vi_tri_cua_rung_do_1_lazer_phai_tay_23 = 451;
+int vi_tri_cua_rung_do_1_lazer_phai_tay_41 = 390;
+int vi_tri_cua_rung_do_1_lazer_phai_tay_23 = 361;
 
-int vi_tri_cua_rung_do_1_lazer_trai_tay_41 = 302;
-int vi_tri_cua_rung_do_1_lazer_trai_tay_23 = 370;
+int vi_tri_cua_rung_do_1_lazer_trai_tay_41 = 222;
+int vi_tri_cua_rung_do_1_lazer_trai_tay_23 = 255;
 
 ///*********************************************************
 
 //// ******** VI TRI LAZER DAT HOP XANH *********************
-int vi_tri_dat_hop_1_tay41_xanh = 48; /// ** DUNG LAZER SAU**
-int vi_tri_dat_hop_2_tay41_xanh = 103;  
-int vi_tri_dat_hop_3_tay41_xanh = 157;
 
-int vi_tri_dat_hop_1_tay23_xanh = 5;
-int vi_tri_dat_hop_2_tay23_xanh = 59;
-int vi_tri_dat_hop_3_tay23_xanh = 115;
+int vi_tri_dat_hop_1_tay41_xanh_truoc = 185; /// ** DUNG LAZER truoc**
+int vi_tri_dat_hop_2_tay41_xanh_truoc = 158;  
+int vi_tri_dat_hop_3_tay41_xanh_truoc = 134;
 
-int vi_tri_dat_hop_1_tay41_xanh_truoc = 107; /// ** DUNG LAZER truoc**
-int vi_tri_dat_hop_2_tay41_xanh_truoc = 53;  
-int vi_tri_dat_hop_3_tay41_xanh_truoc = 0;
+int vi_tri_dat_hop_1_tay41_xanh = 154; /// ** DUNG LAZER SAU**
+int vi_tri_dat_hop_2_tay41_xanh = 182;  
+int vi_tri_dat_hop_3_tay41_xanh = 208;
 
-int vi_tri_dat_hop_1_tay23_xanh_truoc = 150;
-int vi_tri_dat_hop_2_tay23_xanh_truoc = 96;
-int vi_tri_dat_hop_3_tay23_xanh_truoc = 40;
+
+int vi_tri_dat_hop_1_tay23_xanh = 135;  //* DUNG LAZER SAU**
+int vi_tri_dat_hop_2_tay23_xanh = 162;
+int vi_tri_dat_hop_3_tay23_xanh = 189;
+
+int vi_tri_dat_hop_1_tay23_xanh_truoc = 205;
+int vi_tri_dat_hop_2_tay23_xanh_truoc = 178;
+int vi_tri_dat_hop_3_tay23_xanh_truoc = 151;
 ///
 //// ******** VI TRI LAZER DAT HOP DO *********************
-int vi_tri_dat_hop_1_tay41_do = 105;   /// ** DUNG LAZER truoc**
-int vi_tri_dat_hop_2_tay41_do = 53;
-int vi_tri_dat_hop_3_tay41_do = 0;
+int vi_tri_dat_hop_1_tay41_do = 181;   /// ** DUNG LAZER truoc**
+int vi_tri_dat_hop_2_tay41_do = 156;
+int vi_tri_dat_hop_3_tay41_do = 130;
 
-int vi_tri_dat_hop_1_tay23_do = 146;   /// ** DUNG LAZER truoc**
-int vi_tri_dat_hop_2_tay23_do = 91;
-int vi_tri_dat_hop_3_tay23_do = 42;
+int vi_tri_dat_hop_1_tay41_do_sau = 159;   /// ** DUNG LAZER sau**
+int vi_tri_dat_hop_2_tay41_do_sau = 184;
+int vi_tri_dat_hop_3_tay41_do_sau = 211;
 
-int vi_tri_dat_hop_1_tay41_do_sau = 49;   /// ** DUNG LAZER sau**
-int vi_tri_dat_hop_2_tay41_do_sau = 102;
-int vi_tri_dat_hop_3_tay41_do_sau = 157;
 
-int vi_tri_dat_hop_1_tay23_do_sau = 9;   /// ** DUNG LAZER sau**
-int vi_tri_dat_hop_2_tay23_do_sau = 65;
-int vi_tri_dat_hop_3_tay23_do_sau = 114;
+int vi_tri_dat_hop_1_tay23_do = 206;   /// ** DUNG LAZER truoc**
+int vi_tri_dat_hop_2_tay23_do = 179;
+int vi_tri_dat_hop_3_tay23_do = 154;
+
+int vi_tri_dat_hop_1_tay23_do_sau = 134;   /// ** DUNG LAZER sau**
+int vi_tri_dat_hop_2_tay23_do_sau = 161;
+int vi_tri_dat_hop_3_tay23_do_sau = 186;
 
 ///
 int kt_laban = 0;
@@ -585,10 +590,16 @@ int da_lay_tay4 = 0;
 int da_lay_tay4_duoi = 0;
 int hoan_thanh_chay_rung = 0;
 
-int gap_truoc_dac_biet = 0; // dung trong viec gap hop phia truoc nhung chan xuong luon
+int vi_tri_chay_ngang_do = 11; // bien de xuong o nao de biet chay voi toc tuong ung
+int vi_tri_chay_ngang_xanh = 11;
 
 extern int Xoay_ok;
 int	KT_Ha_Tay;
+
+int KT_Ha_Tay_Trc_400 = 0;
+int KT_Ha_Tay_Trc_200_Duoi = 0;
+	
+///////////////
 int	KT_Ha_Tay_phai;
 int KT_Ha_Tay_trai;
 int nhay_den_lan_1 = 0;
@@ -1728,6 +1739,9 @@ int cho_r1_ben_Canh = 0;
 
 int see_R1_tren_rung = 0;
 int block_pha = 0;
+
+int check_hang_1 = 0;
+
 int co_vat_can = 1;
 int id_dat_hop = 0;
 
@@ -2300,19 +2314,19 @@ void HMI_TRAN(vs32 _so_dong)
 										break;
 
 									case 2:
-										HMI_DMI("Lazer phai",lazePhaiValue,2);
+										HMI_DMI("Lazer phai: ",lazePhaiValue,2);
 										break;
 									case 3:
 										HMI_DMI("Tro chan Truoc: ",	bientrochantruocValue,3);
 										break;
 									case 4:
-										HMI_DMI("Lazer trai ",lazeTraiValue,4);
+										HMI_DMI("Lazer trai: ",lazeTraiValue,4);
 										break;
 									case 5:
-										HMI_DMI("Tro chan Sau:  ",bientrochansauValue,5);
+										HMI_DMI("Tro chan Sau: ",bientrochansauValue,5);
 										break;
 									case 6:
-										HMI_DMI("Lazer sau ",lazeSauValue,6); 
+										HMI_DMI("Lazer sau: ",lazeSauValue,6); 
 										break;
 									case 7:
 										HMI_DMI("Tro day tay 1 ",bientrodaytay1Value, 7); 
