@@ -2505,7 +2505,7 @@ void kiem_tra_huong_ha_tay_gap_phia_truoc_400 (void) {
 		if (da_lay_tay1 == 0 && da_lay_tay2 == 0 && da_lay_tay3 == 0 && da_lay_tay4 == 0 && Xoay_ok == 1) {
 			if (abs(bientroxoaytayValue -   (vi_tri_tay_43 )) <= 5) {
 				speed_tay_gat2 = 80;
-				target_tay_gat2 = Min_tay_gat2 + 125;	
+				target_tay_gat2 = Min_tay_gat2 + 115;	
 				Kep_phai_4_ra; //
 			}
 
@@ -2513,7 +2513,7 @@ void kiem_tra_huong_ha_tay_gap_phia_truoc_400 (void) {
 		else if (da_lay_tay1 == 1 && da_lay_tay2 == 0 && da_lay_tay3 == 0 && da_lay_tay4 == 0 && Xoay_ok == 1) {
 					if (abs(bientroxoaytayValue -   (vi_tri_tay_12 + 3)) <= 5) {
 						speed_tay_gat1 = 200;
-						target_tay_gat1 = Max_tay_gat1 - 125;
+						target_tay_gat1 = Max_tay_gat1 - 115;
 						Kep_phai_1_ra; //
 								}
 						}
@@ -2542,7 +2542,7 @@ void kiem_tra_huong_ha_tay_gap_phia_truoc (void) {
 		else if (da_lay_tay1 == 1 && da_lay_tay2 == 1 && da_lay_tay3 == 0 && da_lay_tay4 == 0 && Xoay_ok == 1) {
 					if (abs(bientroxoaytayValue -  (vi_tri_tay_12 - 5)) <= 5) {
 						speed_tay_gat2 = 250;
-						target_tay_gat2 = Max_tay_gat2 - 105;
+						target_tay_gat2 = Max_tay_gat2 - 110;
 						Kep_phai_2_ra; //
 								}
 						}
@@ -2563,7 +2563,7 @@ void kiem_tra_huong_ha_tay_gap_phia_truoc_duoi (void) {
 		if (da_lay_tay1 == 0 && da_lay_tay2 == 0 && da_lay_tay3 == 0 && da_lay_tay4 == 0 && Xoay_ok == 1) {
 			if (abs(bientroxoaytayValue -   (vi_tri_tay_43 )) <= 5) {
 				speed_tay_gat2 = 250;
-				target_tay_gat2 = Min_tay_gat2 + 75;	
+				target_tay_gat2 = Min_tay_gat2 + 70;	
 				Kep_phai_4_ra; //
 			}
 
@@ -2571,7 +2571,7 @@ void kiem_tra_huong_ha_tay_gap_phia_truoc_duoi (void) {
 		else if (da_lay_tay1 == 1 && da_lay_tay2 == 0 && da_lay_tay3 == 0 && da_lay_tay4 == 0 && Xoay_ok == 1) {
 			if (abs(bientroxoaytayValue -   (vi_tri_tay_12 + 3)) <= 5) {
 				speed_tay_gat1 = 250;
-				target_tay_gat1 = Max_tay_gat1 - 80;
+				target_tay_gat1 = Max_tay_gat1 - 70;
 				Kep_phai_1_ra; //
 						}
 						}
@@ -2579,7 +2579,7 @@ void kiem_tra_huong_ha_tay_gap_phia_truoc_duoi (void) {
 		else if (da_lay_tay1 == 1 && da_lay_tay2 == 1 && da_lay_tay3 == 0 && da_lay_tay4 == 0 && Xoay_ok == 1) {
 				if (abs(bientroxoaytayValue -  (vi_tri_tay_12 - 5)) <= 5) {
 					speed_tay_gat2 = 250;
-					target_tay_gat2 = Max_tay_gat2 - 90;
+					target_tay_gat2 = Max_tay_gat2 - 75;
 					Kep_phai_2_ra; //
 							}
 						}
@@ -2587,7 +2587,7 @@ void kiem_tra_huong_ha_tay_gap_phia_truoc_duoi (void) {
 		else if (da_lay_tay1 == 1 && da_lay_tay2 == 1 && da_lay_tay3 == 1 && da_lay_tay4 == 0 && Xoay_ok == 1) {
 				if (abs(bientroxoaytayValue -  (vi_tri_tay_43 - 5)) <= 6) {
 					speed_tay_gat1 = 250;
-					target_tay_gat1 = Min_tay_gat1 + 95;
+					target_tay_gat1 = Min_tay_gat1 + 75;
 					Kep_phai_3_ra; 
 
 							}		

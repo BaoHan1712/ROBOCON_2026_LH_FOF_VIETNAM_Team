@@ -477,7 +477,7 @@ int cho_phep_chay = 0;
 
 /// **************** GIA TRI VI TRI DAT HOP ********************
 
-int vi_tri_dat_hop_1_2 = 409;
+int vi_tri_dat_hop_1_2 = 407;
 int vi_tri_dat_hop_3_4 = 602;
 int tin_hieu_dat_hop_3_4 = 0;
 int tin_hieu_dat_hop_1_2 = 0;
@@ -567,8 +567,8 @@ int vi_tri_dat_hop_1_tay41_do = 181;   /// ** DUNG LAZER truoc**
 int vi_tri_dat_hop_2_tay41_do = 156;
 int vi_tri_dat_hop_3_tay41_do = 130;
 
-int vi_tri_dat_hop_1_tay41_do_sau = 159;   /// ** DUNG LAZER sau**
-int vi_tri_dat_hop_2_tay41_do_sau = 184;
+int vi_tri_dat_hop_1_tay41_do_sau = 157;   /// ** DUNG LAZER sau**
+int vi_tri_dat_hop_2_tay41_do_sau = 183;
 int vi_tri_dat_hop_3_tay41_do_sau = 211;
 
 

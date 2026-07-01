@@ -3613,7 +3613,10 @@ void test_chon_tay (void) {
 void DatKFSxanh(int vitri)
 {
 	kiem_tra_so_qua_tren_tay();
-	kiem_tra_qua_tay_nao_xuong_rung(); // ham kiem tra co qua tay nao de dat
+//	kiem_tra_qua_tay_nao_xuong_rung(); // ham kiem tra co qua tay nao de dat
+	speed_tay_xoay = 150;
+  target_xoay_tay = vi_tri_dat_hop_1_2;
+	tin_hieu_dat_hop_1_2 = 1;
 	
 	Nang_cuc_nhanh();
 	target_chan_truoc = 300;
@@ -3806,7 +3809,7 @@ bool da_dat_tay_4 = false;
 
 
 void dat_qua_tay_1_2_xanh(void) {
-    if ((CB_kep_1_2 == 0 || CB_kep_1_1 == 0 || check_hop_1 == 0) && !da_dat_tay_1) {
+    if (( check_hop_1 == 0) && !da_dat_tay_1) {
         speed_tay_gat1 = 100;
         target_tay_gat1 = vitri_tay1home + 90;
     
@@ -3830,7 +3833,7 @@ void dat_qua_tay_1_2_xanh(void) {
 				vTaskDelay(1000);
         da_dat_tay_1 = true; 
     }
-    else if ((CB_kep_2_2 == 0 || CB_kep_2_1 == 0 || check_hop_2 == 0) && !da_dat_tay_2) {
+    else if ((check_hop_2 == 0) && !da_dat_tay_2) {
         speed_tay_gat2 = 100;
         target_tay_gat2 = vitri_tay2home + 90;
             
@@ -3881,7 +3884,7 @@ void dat_qua_tay_1_2_xanh(void) {
 }
 void dat_qua_tay_4_3_xanh(void) {
     
-    if ( ( CB_kep_4_2 == 0 || CB_kep_4_1 == 0 || check_hop_4 == 1) && !da_dat_tay_4) {
+    if ( (  check_hop_4 == 1) && !da_dat_tay_4) {
         speed_tay_gat2 = 100;
         target_tay_gat2 = vitri_tay2home - 90;
             
@@ -3905,7 +3908,7 @@ void dat_qua_tay_4_3_xanh(void) {
         da_dat_tay_4 = true; //
     }
     
-    else if ((CB_kep_3_2 == 0 || CB_kep_3_1 == 0 || check_hop_3 == 1) && !da_dat_tay_3) {
+    else if ((check_hop_3 == 1) && !da_dat_tay_3) {
         speed_tay_gat1 = 100;
         target_tay_gat1 = vitri_tay1home - 90;
 
@@ -3973,7 +3976,7 @@ void dat_hop_vao_o (void) {
 
 void dat_hop_vao_o_tang2 (void) {
 		if (tin_hieu_dat_hop_3_4 == 1 ) {
-				if (CB_kep_4_2 == 0 || CB_kep_4_1 == 0 || check_hop_4 == 1) {
+				if (check_hop_4 == 1) {
 					speed_tay_gat2 = 150;
 					target_tay_gat2 = 420;
 					for(i=0; i<550; i++) 
@@ -3985,7 +3988,7 @@ void dat_hop_vao_o_tang2 (void) {
 					speed_tay_gat2 = 250;
 					target_tay_gat2 = vitri_tay2home ;
 				}
-				else if (CB_kep_3_2 == 0 || CB_kep_3_1 == 0 || check_hop_3 == 1) {
+				else if (check_hop_3 == 1) {
 					speed_tay_gat1 = 150;
 					target_tay_gat1 = 425;
 					for(i=0; i<550; i++) 
@@ -4000,7 +4003,7 @@ void dat_hop_vao_o_tang2 (void) {
 				
 		}
 		else if (tin_hieu_dat_hop_1_2 == 1 ) {
-				if (CB_kep_1_2 == 0 || CB_kep_1_1 == 0 || check_hop_1 == 0) {
+				if (check_hop_1 == 0) {
 						speed_tay_gat1 = 150;
 						target_tay_gat1 = 470;
 						for(i=0; i<550; i++) 
@@ -4012,7 +4015,7 @@ void dat_hop_vao_o_tang2 (void) {
 						speed_tay_gat1 = 250;
 						target_tay_gat1 = vitri_tay1home ;
 				}
-				else if (CB_kep_2_2 == 0 || CB_kep_2_1 == 0 || check_hop_2 == 0) {
+				else if (check_hop_2 == 0) {
 						speed_tay_gat2 = 150;
 						target_tay_gat2 = 465;
 						for(i=0; i<550; i++) 
@@ -4050,7 +4053,7 @@ void nghieng_tay_k_dat_tang2(void) {
 void chuan_bi_dat_hop_tang3 (void) {
 		if (tin_hieu_dat_hop_3_4 == 1 && tay_4_co_qua == 1 ) {
 				speed_tay_gat1 = 100;
-        target_tay_gat1 = vitri_tay1home + 45;
+        target_tay_gat1 = vitri_tay1home + 75;
 				Tay2_len;
 				for(i=0;i<50;i++)	{ 
 									while(CB_xilanh_tay_2 == 1 )	{vTaskDelay(1); if(!wantExit())	break;}
@@ -4059,7 +4062,7 @@ void chuan_bi_dat_hop_tang3 (void) {
 		
 		else if (tin_hieu_dat_hop_1_2 == 1 && tay_1_co_qua == 1 ) {
 				speed_tay_gat2 = 100;
-        target_tay_gat2 = vitri_tay2home - 45;
+        target_tay_gat2 = vitri_tay2home - 75;
 				Tay1_len;
 				for(i=0;i<50;i++)	{ 
 									while(CB_xilanh_tay_1 == 1 )	{vTaskDelay(1); if(!wantExit())	break;}
@@ -4069,7 +4072,7 @@ void chuan_bi_dat_hop_tang3 (void) {
 		
 		else if (tin_hieu_dat_hop_1_2 == 1 && tay_2_co_qua == 1 ) {
 				speed_tay_gat1 = 100;
-        target_tay_gat1 = vitri_tay1home - 45;
+        target_tay_gat1 = vitri_tay1home - 75;
 				Tay2_len;
 				for(i=0;i<50;i++)	{ 
 									while(CB_xilanh_tay_2 == 1 )	{vTaskDelay(1); if(!wantExit())	break;}
@@ -4079,7 +4082,7 @@ void chuan_bi_dat_hop_tang3 (void) {
 		
 		else if (tin_hieu_dat_hop_3_4 == 1 && tay_3_co_qua == 1) {
 				speed_tay_gat2 = 100;
-        target_tay_gat2 = vitri_tay2home + 45;
+        target_tay_gat2 = vitri_tay2home + 75;
 				Tay1_len;
 				for(i=0;i<50;i++)	{ 
 									while(CB_xilanh_tay_1 == 1 )	{vTaskDelay(1); if(!wantExit())	break;}
@@ -4091,7 +4094,8 @@ void kiem_tra_so_qua_tren_tay(void) {
     int dem = 0;
 
     // Ki?m tra tay 1
-    if (CB_kep_1_2 == 0  || CB_kep_1_1 == 0 || check_hop_1 == 0) {
+//    if (CB_kep_1_2 == 0  || CB_kep_1_1 == 0 || check_hop_1 == 0) {
+	if (check_hop_1 == 0) {
         tay_1_co_qua = 1;
         dem++;
     } else {
@@ -4099,7 +4103,8 @@ void kiem_tra_so_qua_tren_tay(void) {
     }
 
     // Ki?m tra tay 2
-    if (CB_kep_2_1 == 0 || CB_kep_2_2 == 0 || check_hop_2 == 0) {
+//    if (CB_kep_2_1 == 0 || CB_kep_2_2 == 0 || check_hop_2 == 0) {
+		 if (check_hop_2 == 0) {
         tay_2_co_qua = 1;
         dem++;
     } else {
@@ -4107,7 +4112,8 @@ void kiem_tra_so_qua_tren_tay(void) {
     }
 
     // Ki?m tra tay 3
-    if (CB_kep_3_1 == 0 || CB_kep_3_2 == 0 || check_hop_3 == 1) {
+//    if (CB_kep_3_1 == 0 || CB_kep_3_2 == 0 || check_hop_3 == 1) {
+		if (check_hop_3 == 1) {
         tay_3_co_qua = 1;
         dem++;
     } else {
@@ -4115,7 +4121,8 @@ void kiem_tra_so_qua_tren_tay(void) {
     }
 
     // Ki?m tra tay 4
-    if (CB_kep_4_2 == 0 || CB_kep_4_1 == 0 || check_hop_4 == 1) {
+//    if (CB_kep_4_2 == 0 || CB_kep_4_1 == 0 || check_hop_4 == 1) {
+		if (check_hop_4 == 1) {
         tay_4_co_qua = 1;
         dem++;
     } else {
@@ -4354,7 +4361,7 @@ void be_len_dat_xanh_4_qua (void) {
                 if(!wantExit()) break;
             }
         }
-        chuan_bi_dat_hop_tang3();
+        chuan_bi_dat_hop_tang3(); // nghieng tay
         vTaskDelay (1000);
     
 				led_bao_hieu_on;
@@ -4935,7 +4942,7 @@ void tudonghoantoan(void) {
 				robotStop(0);
 				
 				su_dung_chan(720);
-				robotRunAngle(1800,20,900, 0.5);
+				robotRunAngle(1800,20,900, 0.2);
 				RESET_ENCODER(); 
 				while(abs(ENCODER_FR()) + abs(ENCODER_FL()) < 3000)	{
 				vTaskDelay (1); if(!wantExit())	break;}
@@ -5002,7 +5009,7 @@ void retry_zone_2(void) {
 				robotStop(0);
 				
 				su_dung_chan(720);
-				robotRunAngle(1800,20,900, 0.5);
+				robotRunAngle(1800,20,900, 0.2);
 				RESET_ENCODER(); 
 				while(abs(ENCODER_FR()) + abs(ENCODER_FL()) < 3000)	{
 				vTaskDelay (1); if(!wantExit())	break;}
@@ -5433,7 +5440,57 @@ retry:
     }
 }
 
+//void dat_hop1_3(int do_cao_chan, int goc_tay, int ha_chan, int chontay)
+//{
+//    int do_cao_chan_hien_tai = do_cao_chan;
+//    int timeout = 8000;
+//    int t = 0;
 
+//    Tay1_len;
+//		vTaskDelay(5000);
+//		for (i = 0; i < 550; i++)
+//    {
+//    while (CB_xilanh_tay_1 == 1)
+//    {
+//        vTaskDelay(1);
+//        t++;
+
+//        if (t > timeout)
+//        {
+//            do_cao_chan_hien_tai -= ha_chan;
+//            if (do_cao_chan_hien_tai < 440)
+//                do_cao_chan_hien_tai = 440;
+
+//            su_dung_chan(do_cao_chan_hien_tai);
+//            while (abs(bientrochansauValue - target_chan_sau) > 8)
+//            {
+//                vTaskDelay(1);
+//                if (!wantExit()) break;
+//            }
+//            break;
+//        }
+//        if (!wantExit()) break;
+//				}
+//			}
+//    speed_tay_gat1 = 150;
+//    target_tay_gat1 = goc_tay;
+//    for (i = 0; i < 550; i++)
+//    {
+//        while (abs(bientrodaytay1Value - target_tay_gat1) > 10)
+//        {
+//            vTaskDelay(1);
+//            if (!wantExit()) break;
+//        }
+//    }
+//    if (chontay == 1)
+//    {
+//        Kep_phai_1_ra;
+//    }
+//    else if (chontay == 3)
+//    {
+//        Kep_phai_3_ra;
+//    }
+//}
 
 void chon_o_retry3(void) {
 		int nhom_A;
@@ -5460,7 +5517,7 @@ void chon_o_retry3(void) {
 
     if  (id_dat_hop <= 3) { 
 				tu_dong_dat_tang2_xanh();
-				robotRunAngle(1800,20,900, 0.5);
+				robotRunAngle(1800,20,900, 0.2);
 				RESET_ENCODER(); 
 				while(abs(ENCODER_FR()) + abs(ENCODER_FL()) < 3000)	{
 				vTaskDelay (1); if(!wantExit())	break;}
