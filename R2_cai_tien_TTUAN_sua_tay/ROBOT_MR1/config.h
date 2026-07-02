@@ -250,14 +250,14 @@ vu8 DATA_SPEED[80]={255,1,0,0,				// 1- ID = 1, DIRECT = 0, SPEED = 0
 #define  CB_ROI_4														GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_0)//ok
 #define  CB_bung											    	GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_13)//ok
 #define  CB_bung_duoi												GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_0)//ok
-#define  CB_kep_1_1													GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_10)//okT 
-#define  CB_kep_1_2													GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_15)//okP 
-#define  CB_kep_2_1													GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_12)//okT 
-#define  CB_kep_2_2													GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_13)//okP ,
-#define  CB_kep_3_1													GPIO_ReadInputDataBit(GPIOD,GPIO_Pin_14)//okT  
-#define  CB_kep_3_2													GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_14)//okP
-#define  CB_kep_4_1													GPIO_ReadInputDataBit(GPIOD,GPIO_Pin_10)//OKT
-#define  CB_kep_4_2													GPIO_ReadInputDataBit(GPIOD,GPIO_Pin_11)//OKP 
+#define  CB_kep_1_1													GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_15)//okT 
+#define  CB_kep_1_2													GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_10)//okP 
+#define  CB_kep_2_1													GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_13)//okT 
+#define  CB_kep_2_2													GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_12)//okP ,
+#define  CB_kep_3_1													GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_14)//okT  
+#define  CB_kep_3_2													GPIO_ReadInputDataBit(GPIOD,GPIO_Pin_14)//okP
+#define  CB_kep_4_1													GPIO_ReadInputDataBit(GPIOD,GPIO_Pin_11)//OKT
+#define  CB_kep_4_2													GPIO_ReadInputDataBit(GPIOD,GPIO_Pin_10)//OKP 
 //#define  CB_vtri_leo												GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_6)  // con vang o dit
 
 #define  CB_xilanh_tay_1										GPIO_ReadInputDataBit(GPIOD,GPIO_Pin_15)//OK nhan la 0, khong nhan la 1
@@ -477,7 +477,7 @@ int cho_phep_chay = 0;
 
 /// **************** GIA TRI VI TRI DAT HOP ********************
 
-int vi_tri_dat_hop_1_2 = 407;
+int vi_tri_dat_hop_1_2 = 408;
 int vi_tri_dat_hop_3_4 = 602;
 int tin_hieu_dat_hop_3_4 = 0;
 int tin_hieu_dat_hop_1_2 = 0;
@@ -522,24 +522,23 @@ int vi_tri_cua_rung_xanh_1_lazer_phai_tay_41 = 253;
 int vi_tri_cua_rung_xanh_1_lazer_phai_tay_23 = 261;
 
 int vi_tri_cua_rung_xanh_2_lazer_phai_tay_41 = 323;
-int vi_tri_cua_rung_xanh_2_lazer_phai_tay_23 = 294;
 
 int vi_tri_cua_rung_xanh_3_lazer_trai_tay_41 = 224;
 int vi_tri_cua_rung_xanh_3_lazer_phai_tay_23 = 446;
 int vi_tri_cua_rung_xanh_3_lazer_phai_tay_41 = 387;
 
+
 //// ******** VI TRI LAZER CUA RUNG DO *********************
-int vi_tri_cua_rung_do_3_lazer_phai_tay_41 = 255;
+int vi_tri_cua_rung_do_3_lazer_phai_tay_41 = 246;
 int vi_tri_cua_rung_do_3_lazer_phai_tay_23 = 223;
 
-int vi_tri_cua_rung_do_2_lazer_phai_tay_41 = 322;
-int vi_tri_cua_rung_do_2_lazer_phai_tay_23 = 294;
+int vi_tri_cua_rung_do_2_lazer_phai_tay_41 = 316;
 
-int vi_tri_cua_rung_do_1_lazer_phai_tay_41 = 390;
+int vi_tri_cua_rung_do_1_lazer_phai_tay_41 = 380;
 int vi_tri_cua_rung_do_1_lazer_phai_tay_23 = 361;
 
-int vi_tri_cua_rung_do_1_lazer_trai_tay_41 = 222;
-int vi_tri_cua_rung_do_1_lazer_trai_tay_23 = 255;
+int vi_tri_cua_rung_do_1_lazer_trai_tay_41 = 232;
+
 
 ///*********************************************************
 
@@ -568,7 +567,7 @@ int vi_tri_dat_hop_2_tay41_do = 156;
 int vi_tri_dat_hop_3_tay41_do = 130;
 
 int vi_tri_dat_hop_1_tay41_do_sau = 157;   /// ** DUNG LAZER sau**
-int vi_tri_dat_hop_2_tay41_do_sau = 183;
+int vi_tri_dat_hop_2_tay41_do_sau = 182;
 int vi_tri_dat_hop_3_tay41_do_sau = 211;
 
 
@@ -2464,16 +2463,16 @@ void HMI_TRAN(vs32 _so_dong)
 										HMI_DMI("IMUxoay:", IMUxoay,35); 
 										break;
 									case 36:
-										HMI_DMI("check_dat_hop_T2 ",check_dat_hop_T2,36); 
+										HMI_DMI("CB_kep_4_1 ",CB_kep_4_1,36); 
 										break;
 									case 37:
-										HMI_DMI("nhay_den_lan_1 ",nhay_den_lan_1,37); 
+										HMI_DMI("CB_kep_4_2 ",CB_kep_4_2,37); 
 										break;
 									case 38:
-										HMI_DMI("ngang_qua_o3 ",chay_ngang_qua_o3_do,38); 
+										HMI_DMI("CB_kep_2_2 ",CB_kep_2_2,38); 
 										break;
 									case 39:
-										HMI_DMI("kt_laban ",kt_laban,39); 
+										HMI_DMI("CB_kep_2_1 ",CB_kep_2_1,39); 
 										break;
 									case 40:
 										HMI_DMI("check_time ",check_time,40); 

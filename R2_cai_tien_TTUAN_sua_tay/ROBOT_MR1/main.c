@@ -183,9 +183,9 @@ vTaskDelay(1000);
 //				if(TRIANGLE && L2 && !R2 )												bieu_dien();
 				
 //////				
-					if(TRIANGLE && L2 && !R2 )													tudonghoantoan_san_do(); 
-					if(SQUARE && L2 && !R2) 														test_datt2();
-//					if(X && L2 && !R2) 																	quyet_dinh_dat_hop_tang3_danh_nhanh(); 
+					if(TRIANGLE && L2 && !R2 )													Run_All_Blocks_From_Queue_san_do();
+//					if(SQUARE && L2 && !R2) 														Kep_phai_4_ra;
+//					if(X && L2 && !R2) 																	Kep_phai_4_ra;
 //					if(O && L2 && !R2 ) 															Tay2_len;
 				
 				
