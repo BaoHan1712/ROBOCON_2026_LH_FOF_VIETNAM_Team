@@ -203,10 +203,10 @@ vTaskDelay(1000);
 				bat_dau_chay_xanh();
 //			if(O && L2 && !R2)															Xuat_Phat_Lay_Vu_Khi_Xanh(163, -1700, 205); chon_o_retry3();
 
-					if(TRIANGLE && L2 && !R2 )												tudonghoantoan();
-//					if(SQUARE && L2 && !R2) 													chinh_lai_vi_tri_laser_phai_custom(183, 1000, 15, 72, 2);
-//					if(X && L2 && !R2) 																chinh_lai_vi_tri_laser_phai_custom(183, 1000, 10, 75, 5);
-//					if(O && L2 && !R2 ) 															chinh_lai_vi_tri_laser_phai_custom(183, 1000, 5, 67, 5);
+					if(TRIANGLE && L2 && !R2 )												Leo_bac_400_ko_thanh();
+					if(SQUARE && L2 && !R2) 													Kep_phai_1_ra;
+//					if(X && L2 && !R2) 																Kep_phai_4_ra;
+//					if(O && L2 && !R2 ) 															Kep_phai_1_ra;
 
 		
 				

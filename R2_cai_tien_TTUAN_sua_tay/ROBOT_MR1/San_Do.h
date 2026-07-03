@@ -185,7 +185,7 @@ void Xuat_Phat_Lay_Vu_Khi_Do(int vu_khi, int goc_ve, int vitri) {
 //				}
 				for(i=0;i<250;i++)
 				{
-					while(lazeSauValue > 133)	
+					while(lazeSauValue > 134)	
 					{	
 						vTaskDelay(1); 
 						if(!wantExit())	break;
@@ -479,10 +479,10 @@ void Vao_rung_mai_2_do(int vitri)
 					}
 			}
 		
-	robotRunAngle(900,40,-900,0.5);
+	robotRunAngle(900,45,-900,0.5);
 	for(i=0;i<250;i++)
 				{
-					while(lazeSauValue > 148)	
+					while(lazeSauValue > 155)	
 					{	
 						vTaskDelay (1);
 						if(!wantExit())	break;
@@ -493,7 +493,7 @@ void Vao_rung_mai_2_do(int vitri)
 	if (TinHieu_ChuanBi_GapThang == 0) {
 			for(i=0;i<250;i++)
 					{
-						while(lazeSauValue > 130)	
+						while(lazeSauValue > 135)	
 						{	
 							Bam_thanh_laser_phai(25,900,-900,vitri - 10,2,-100,10);
 							vTaskDelay (1);
@@ -504,7 +504,7 @@ void Vao_rung_mai_2_do(int vitri)
 						{
 							while( CB_Cap_Thanh_Sau == 0)	
 							{	
-								Bam_thanh_laser_phai(11,900,-900,vitri - 10,2,-150,10);
+								Bam_thanh_laser_phai(10,900,-900,vitri - 10,2,-150,10);
 								if(!wantExit())	break;
 								vTaskDelay (1);
 							}
@@ -516,7 +516,7 @@ void Vao_rung_mai_2_do(int vitri)
 					su_dung_chan_thuong(565);	
 					for(i=0;i<250;i++)
 					{
-						while(lazeSauValue > 133 || (abs(bientrochansauValue - target_chan_sau) > 200))	
+						while(lazeSauValue > 135 || (abs(bientrochansauValue - target_chan_sau) > 200))	
 						{	
 							Bam_thanh_laser_phai(25,900,-900,vitri ,2,-150,10);
 							vTaskDelay (1);
@@ -531,7 +531,7 @@ void Vao_rung_mai_2_do(int vitri)
 							{
 								while( CB_Cap_Thanh_Sau == 0)	
 								{	
-									Bam_thanh_laser_phai(11,900,-900,vitri,2,-150,10);
+									Bam_thanh_laser_phai(10,900,-900,vitri,2,-150,10);
 									if(!wantExit())	break;
 									vTaskDelay (1);
 								}
