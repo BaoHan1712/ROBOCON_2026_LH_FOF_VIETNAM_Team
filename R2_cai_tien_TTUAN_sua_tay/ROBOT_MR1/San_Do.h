@@ -185,7 +185,7 @@ void Xuat_Phat_Lay_Vu_Khi_Do(int vu_khi, int goc_ve, int vitri) {
 //				}
 				for(i=0;i<250;i++)
 				{
-					while(lazeSauValue > 134)	
+					while(lazeSauValue > 136)	
 					{	
 						vTaskDelay(1); 
 						if(!wantExit())	break;
@@ -2036,7 +2036,7 @@ void nhat_hop_zone3_do (void) {
 		robotRunAngle(1800, 10, 0, 0.5);
 		for(i=0;i<550;i++)	
 		{	
-				while(lazeSauValue > 134)	
+				while(lazeSauValue > 136)	
 				{	
 					vTaskDelay(1); 
 					if(!wantExit())	break;
@@ -2194,7 +2194,7 @@ void nhat_hop_zone3_do (void) {
         
         robotRunAngle(1800, 10, 0, 0.5);
         for(i=0; i<550; i++) {   
-            while(lazeSauValue > 134) {   
+            while(lazeSauValue > 136) {   
                 vTaskDelay(1); 
                 if(!wantExit()) break;
             }

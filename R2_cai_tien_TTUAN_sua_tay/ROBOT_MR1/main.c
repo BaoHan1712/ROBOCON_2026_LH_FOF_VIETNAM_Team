@@ -203,8 +203,8 @@ vTaskDelay(1000);
 				bat_dau_chay_xanh();
 //			if(O && L2 && !R2)															Xuat_Phat_Lay_Vu_Khi_Xanh(163, -1700, 205); chon_o_retry3();
 
-					if(TRIANGLE && L2 && !R2 )												Leo_bac_400_ko_thanh();
-					if(SQUARE && L2 && !R2) 													Kep_phai_1_ra;
+					if(TRIANGLE && L2 && !R2 )												Run_All_Blocks_From_Queue_san_xanh();
+//					if(SQUARE && L2 && !R2) 													su_dung_chan(565);
 //					if(X && L2 && !R2) 																Kep_phai_4_ra;
 //					if(O && L2 && !R2 ) 															Kep_phai_1_ra;
 
