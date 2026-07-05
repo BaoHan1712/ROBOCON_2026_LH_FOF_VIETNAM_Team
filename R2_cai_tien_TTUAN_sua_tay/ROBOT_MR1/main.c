@@ -183,10 +183,10 @@ vTaskDelay(1000);
 //				if(TRIANGLE && L2 && !R2 )												bieu_dien();
 				
 //////				
-					if(TRIANGLE && L2 && !R2 )													Run_All_Blocks_From_Queue_san_do();
-//					if(SQUARE && L2 && !R2) 														Kep_phai_4_ra;
-//					if(X && L2 && !R2) 																	Kep_phai_4_ra;
-//					if(O && L2 && !R2 ) 															Tay2_len;
+					if(TRIANGLE && L2 && !R2 )													ha_sat_xuong();
+					if(SQUARE && L2 && !R2) 														Tay1_len;
+					if(X && L2 && !R2) 																	Kep_phai_1_ra;
+					if(O && L2 && !R2 ) 																Kep_phai_3_ra;
 				
 				
 //					if(TRIANGLE && L2 && !R2 )											tu_dong_dat_tang2_do();
@@ -201,12 +201,13 @@ vTaskDelay(1000);
 			{
 				Init_Action_Table_san_xanh(); 
 				bat_dau_chay_xanh();
+				
 //			if(O && L2 && !R2)															Xuat_Phat_Lay_Vu_Khi_Xanh(163, -1700, 205); chon_o_retry3();
 
-					if(TRIANGLE && L2 && !R2 )												Run_All_Blocks_From_Queue_san_xanh();
-//					if(SQUARE && L2 && !R2) 													su_dung_chan(565);
-//					if(X && L2 && !R2) 																Kep_phai_4_ra;
-//					if(O && L2 && !R2 ) 															Kep_phai_1_ra;
+					if(TRIANGLE && L2 && !R2 )												nhat_hop_zone3_xanh();
+					if(SQUARE && L2 && !R2) 													chon_o_retry3();
+//					if(X && L2 && !R2) 																su_dung_chan(520);
+//					if(O && L2 && !R2 ) 															Tay1_len;
 
 		
 				

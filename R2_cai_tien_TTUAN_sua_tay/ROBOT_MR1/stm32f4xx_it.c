@@ -222,13 +222,13 @@ void DMA2_Stream1_IRQHandler(void)// ngat DMA uart6 RX
 }
 
 ////////////////
-extern vs16 	IMU,IMUxoay;
+extern vs16 	IMU,IMUxoay, IMUxoayDoc;
 void DMA2_Stream2_IRQHandler(void)// ngat DMA uart1 RX
 {
 	    
 			DMA_ClearITPendingBit(DMA2_Stream2,DMA_IT_TCIF2);
 			IMU=(RX_USART1[0]<<8)|RX_USART1[1];
-		//	GPIO_WriteBit(GPIOA,GPIO_Pin_5,1^GPIO_ReadOutputDataBit(GPIOA,GPIO_Pin_5));
+			IMUxoayDoc = (RX_USART1[2]<<8)|RX_USART1[3];
 			IMUxoay = (RX_USART1[4]<<8)|RX_USART1[5];
 }
 void DMA2_Stream5_IRQHandler(void)// ngat DMA uart1 RX

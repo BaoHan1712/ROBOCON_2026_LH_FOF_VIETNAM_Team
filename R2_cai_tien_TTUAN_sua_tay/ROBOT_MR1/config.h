@@ -411,7 +411,7 @@ extern int _RRRO, _RLRO, _FFRO, _FLRO , _speed0h;
 
 //End
 vs32 	sieu_am,num_over_t1=0,num_over_t2=0, num_over_t3=0,num_over_t5=0, num_over_t9=0,CCR2_Val,HMI_LOOP, num_over_t4;;
-vs16 	IMU,IMUxoay;
+vs16 	IMU,IMUxoay,IMUxoayDoc;
 vu8 	data_tx_gyro,en_gyro,dataTxGyro,enGyro, CB_DO_LINE[1], Home = 0; 
 int 	lazeSauValue,lazeTruocValue,lazeTraiValue,lazePhaiValue,quangTroValue,lazeTruocNhoValue;	
 int		bientroxoaytayValue, bientronangtayValue,bientrochantruocValue,bientrochansauValue,bientrodaytay1Value,bientrodaytay2Value;
@@ -477,7 +477,7 @@ int cho_phep_chay = 0;
 
 /// **************** GIA TRI VI TRI DAT HOP ********************
 
-int vi_tri_dat_hop_1_2 = 408;
+int vi_tri_dat_hop_1_2 = 407;
 int vi_tri_dat_hop_3_4 = 602;
 int tin_hieu_dat_hop_3_4 = 0;
 int tin_hieu_dat_hop_1_2 = 0;
@@ -488,7 +488,7 @@ int vi_tri_tay_4_dat_hop = 505;
 
 /// **************** GIA TRI VI TRI TAY ********************
 
-int vi_tri_tay_43 = 505;
+int vi_tri_tay_43 = 504;
 int vi_tri_tay_12 = 695;
 
 // VI TRI MAM XOAY LAY BEN PHAI 200 duoi
@@ -531,54 +531,54 @@ int vi_tri_cua_rung_xanh_3_lazer_phai_tay_23 = 378;
 
 
 //// ******** VI TRI LAZER CUA RUNG DO *********************
-int vi_tri_cua_rung_do_3_lazer_phai_tay_41 = 246;
-int vi_tri_cua_rung_do_3_lazer_phai_tay_23 = 223;
+int vi_tri_cua_rung_do_3_lazer_phai_tay_41 = 248;
+int vi_tri_cua_rung_do_3_lazer_phai_tay_23 = 245;
 
-int vi_tri_cua_rung_do_2_lazer_phai_tay_41 = 316;
+int vi_tri_cua_rung_do_2_lazer_phai_tay_41 = 317;
 
-int vi_tri_cua_rung_do_1_lazer_phai_tay_41 = 380;
+int vi_tri_cua_rung_do_1_lazer_phai_tay_41 = 384;
 int vi_tri_cua_rung_do_1_lazer_phai_tay_23 = 361;
 
-int vi_tri_cua_rung_do_1_lazer_trai_tay_41 = 232;
+int vi_tri_cua_rung_do_1_lazer_trai_tay_41 = 228;
 
 
 ///*********************************************************
 
 //// ******** VI TRI LAZER DAT HOP XANH *********************
 
-int vi_tri_dat_hop_1_tay41_xanh_truoc = 185; /// ** DUNG LAZER truoc**
-int vi_tri_dat_hop_2_tay41_xanh_truoc = 158;  
+int vi_tri_dat_hop_1_tay41_xanh_truoc = 187; /// ** DUNG LAZER truoc**
+int vi_tri_dat_hop_2_tay41_xanh_truoc = 161;  
 int vi_tri_dat_hop_3_tay41_xanh_truoc = 134;
 
-int vi_tri_dat_hop_1_tay41_xanh = 154; /// ** DUNG LAZER SAU**
-int vi_tri_dat_hop_2_tay41_xanh = 182;  
-int vi_tri_dat_hop_3_tay41_xanh = 208;
+int vi_tri_dat_hop_1_tay41_xanh = 153; /// ** DUNG LAZER SAU**
+int vi_tri_dat_hop_2_tay41_xanh = 179;  
+int vi_tri_dat_hop_3_tay41_xanh = 206;
 
 
-int vi_tri_dat_hop_1_tay23_xanh = 135;  //* DUNG LAZER SAU**
-int vi_tri_dat_hop_2_tay23_xanh = 162;
-int vi_tri_dat_hop_3_tay23_xanh = 189;
+int vi_tri_dat_hop_1_tay23_xanh = 132;  //* DUNG LAZER SAU**
+int vi_tri_dat_hop_2_tay23_xanh = 160;
+int vi_tri_dat_hop_3_tay23_xanh = 185;
 
-int vi_tri_dat_hop_1_tay23_xanh_truoc = 205;
-int vi_tri_dat_hop_2_tay23_xanh_truoc = 178;
-int vi_tri_dat_hop_3_tay23_xanh_truoc = 151;
+int vi_tri_dat_hop_1_tay23_xanh_truoc = 208;
+int vi_tri_dat_hop_2_tay23_xanh_truoc = 182;
+int vi_tri_dat_hop_3_tay23_xanh_truoc = 156;
 ///
 //// ******** VI TRI LAZER DAT HOP DO *********************
-int vi_tri_dat_hop_1_tay41_do = 181;   /// ** DUNG LAZER truoc**
-int vi_tri_dat_hop_2_tay41_do = 156;
+int vi_tri_dat_hop_1_tay41_do = 184;   /// ** DUNG LAZER truoc**
+int vi_tri_dat_hop_2_tay41_do = 157;
 int vi_tri_dat_hop_3_tay41_do = 130;
 
-int vi_tri_dat_hop_1_tay41_do_sau = 157;   /// ** DUNG LAZER sau**
+int vi_tri_dat_hop_1_tay41_do_sau = 155;   /// ** DUNG LAZER sau**
 int vi_tri_dat_hop_2_tay41_do_sau = 182;
-int vi_tri_dat_hop_3_tay41_do_sau = 211;
+int vi_tri_dat_hop_3_tay41_do_sau = 208;
 
 
 int vi_tri_dat_hop_1_tay23_do = 206;   /// ** DUNG LAZER truoc**
-int vi_tri_dat_hop_2_tay23_do = 179;
-int vi_tri_dat_hop_3_tay23_do = 154;
+int vi_tri_dat_hop_2_tay23_do = 180;
+int vi_tri_dat_hop_3_tay23_do = 153;
 
-int vi_tri_dat_hop_1_tay23_do_sau = 134;   /// ** DUNG LAZER sau**
-int vi_tri_dat_hop_2_tay23_do_sau = 161;
+int vi_tri_dat_hop_1_tay23_do_sau = 133;   /// ** DUNG LAZER sau**
+int vi_tri_dat_hop_2_tay23_do_sau = 160;
 int vi_tri_dat_hop_3_tay23_do_sau = 186;
 
 ///
@@ -2456,7 +2456,7 @@ void HMI_TRAN(vs32 _so_dong)
 										HMI_DMI("ENCODER_RL() ",ENCODER_RL(),32); 
 										break;
 									case 33:
-										HMI_DMI("chuyen_doi_T3 ",chuyen_doi_T3,33); 
+										HMI_DMI("IMUxoayDoc ",IMUxoayDoc,33); 
 										break;
 									case 34:
 										HMI_DMI("id_dat_hop ",id_dat_hop,34); 
