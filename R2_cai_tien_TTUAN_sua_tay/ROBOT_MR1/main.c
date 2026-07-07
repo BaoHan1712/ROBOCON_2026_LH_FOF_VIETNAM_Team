@@ -179,14 +179,14 @@ vTaskDelay(1000);
 				Init_Action_Table_san_do(); 
 				bat_dau_chay_do();
 				
-////			if(TRIANGLE && L2 && !R2 )												Xuat_Phat_Lay_Vu_Khi_Do(152,1450,215);
+////			if(TRIANGLE && L2 && !R2 )												Xuat_Phat_Lay_Vu_Khi_Do(152,1350,210);
 //				if(TRIANGLE && L2 && !R2 )												bieu_dien();
 				
 //////				
-					if(TRIANGLE && L2 && !R2 )													ha_sat_xuong();
-					if(SQUARE && L2 && !R2) 														Tay1_len;
-					if(X && L2 && !R2) 																	Kep_phai_1_ra;
-					if(O && L2 && !R2 ) 																Kep_phai_3_ra;
+					if(TRIANGLE && L2 && !R2 )												tudonghoantoan_san_do(); 
+//					if(SQUARE && L2 && !R2) 													su_dung_chan(730);
+//					if(X && L2 && !R2) 																quyet_dinh_dat_hop_tang3_danh_nhanh();
+//					if(O && L2 && !R2 ) 																Kep_phai_3_ra;
 				
 				
 //					if(TRIANGLE && L2 && !R2 )											tu_dong_dat_tang2_do();
@@ -206,7 +206,7 @@ vTaskDelay(1000);
 
 					if(TRIANGLE && L2 && !R2 )												nhat_hop_zone3_xanh();
 					if(SQUARE && L2 && !R2) 													chon_o_retry3();
-//					if(X && L2 && !R2) 																su_dung_chan(520);
+//					if(X && L2 && !R2) 																su_dung_chan(490);
 //					if(O && L2 && !R2 ) 															Tay1_len;
 
 		
