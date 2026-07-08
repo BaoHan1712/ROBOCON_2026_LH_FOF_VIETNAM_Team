@@ -1522,38 +1522,24 @@ void qua_trai_len_bac_400(void) {
 	
 	for(i=0;i<150;i++)		
 	{
-		while(abs(bientrochansauValue - target_chan_sau) > 30)	{vTaskDelay(1); if(!wantExit())	break;}
+		while(abs(bientrochansauValue - target_chan_sau) > 15)	{vTaskDelay(1); if(!wantExit())	break;}
 	}
-	for(i=0;i<1050;i++)	
-	{	
-		while( lazePhaiValue < 230)	{vTaskDelay(1); if(!wantExit())	break;}
-	}
+	vTaskDelay(1000);
+//	for(i=0;i<1050;i++)	
+//	{	
+//		while( lazePhaiValue < 230)	{vTaskDelay(1); if(!wantExit())	break;}
+//	}
 	robotStop(0);
 	chinh_lai_vi_tri_laser_phai_custom(vi_tri_cua_rung_xanh_1_lazer_phai_tay_41, 1000, 6, 40, 4);
 	
 		
-	robotRunAngle(-900,15,900,0.2);
+	robotRunAngle(-900,12,900,0.2);
 	for(i=0;i<1050;i++)	
 	{	
 		while(CB_Cap_Thanh_Sau == 0)	{vTaskDelay(1); if(!wantExit())	break;}
 	}
-	robotStop(10);
-		
-	if (TinHieu_ChuanBi_GapThang == 1 ) {
-		if (da_lay_tay1 == 1 && da_lay_tay2 == 0 && da_lay_tay3 == 0 && da_lay_tay4 == 0) {
-					chinh_lai_vi_tri_laser_phai_custom(vi_tri_cua_rung_xanh_1_lazer_phai_tay_41, 1000, 5, 50, 4);
-			
-					}
-		else if (da_lay_tay1 == 1 && da_lay_tay2 == 1 && da_lay_tay3 == 0 && da_lay_tay4 == 0) {
-					chinh_lai_vi_tri_laser_phai_custom(vi_tri_cua_rung_xanh_1_lazer_phai_tay_23, 1000, 5, 50, 4);
-					}
-		robotRunAngle(-900,14,900,0.2);
-		for(i=0;i<1050;i++)	
-		{	
-			while(CB_Cap_Thanh_Sau == 0)	{vTaskDelay(1); if(!wantExit())	break;}
-		}
-	}
-	robotStop(0);
+	robotStop(50);
+
 }
 
 //============== Sang phai lên bac 400 o ria rung ===================
@@ -1563,8 +1549,9 @@ void qua_phai_len_bac_400(void) {
 	
 	for(i=0;i<150;i++)		
 	{
-		while(abs(bientrochansauValue - target_chan_sau) > 40)	{vTaskDelay(1); if(!wantExit())	break;}
+		while(abs(bientrochansauValue - target_chan_sau) > 15)	{vTaskDelay(1); if(!wantExit())	break;}
 	}
+	vTaskDelay(1000);
 
 	chinh_lai_vi_tri_laser_phai_custom(vi_tri_cua_rung_xanh_3_lazer_phai_tay_41, 1000, 5, 45, 4);
 	
@@ -1575,30 +1562,17 @@ void qua_phai_len_bac_400(void) {
 		while(CB_Cap_Thanh_Sau == 0)	{vTaskDelay(1); if(!wantExit())	break;}
 	}
 
-	robotStop(10);
-	if (TinHieu_ChuanBi_GapThang == 1 ) {
-				
-		if (da_lay_tay1 == 1 && da_lay_tay2 == 0 && da_lay_tay3 == 0 && da_lay_tay4 == 0) {
-					chinh_lai_vi_tri_laser_phai_custom(vi_tri_cua_rung_xanh_3_lazer_phai_tay_41, 1000,5 ,50, 4 );
-					}
-		else if (da_lay_tay1 == 1 && da_lay_tay2 == 1 && da_lay_tay3 == 0 && da_lay_tay4 == 0) {
-					chinh_lai_vi_tri_laser_phai_custom(vi_tri_cua_rung_xanh_3_lazer_phai_tay_23, 1000, 5 , 50, 4);
-					}	
-	robotRunAngle(-900,15,900,0.8);
-	for(i=0;i<1050;i++)	
-	{	
-		while(CB_Cap_Thanh_Sau == 0)	{vTaskDelay(1); if(!wantExit())	break;}
-	}
-}
-	robotStop(0);
-		
+	robotStop(50);
+
 }
 //============== Sang trai lên bac 200 o ria ===================
 void qua_trai_len_bac_200_cua_vao(void) {
-	int encoder_qua_o_2 = 10200;
-	int encoder_qua_o_1 = 18000;
-	
 	su_dung_chan(720);
+	for(i=0;i<150;i++)		
+	{
+		while(abs(bientrochansauValue - target_chan_sau) > 15)	{vTaskDelay(1); if(!wantExit())	break;}
+	}
+	
 	for(i=0;i<1050;i++)	
 	{	
 		while( lazePhaiValue < 320)	{vTaskDelay(1); if(!wantExit())	break;}
@@ -1606,12 +1580,7 @@ void qua_trai_len_bac_200_cua_vao(void) {
 	vTaskDelay(4000);
 	robotStop(0);
 	if ( TinHieu_ChuanBi_GapThang == 1 ) {
-				robotRunAngle(1800,35,900,0.6);
-				RESET_ENCODER(); 
-				while(abs(ENCODER_FR()) + abs(ENCODER_FL()) < encoder_qua_o_2)	{vTaskDelay (5); if(!wantExit())	break;}
-				robotStop(0);
-				
-				chinh_lai_vi_tri_laser_phai_custom(vi_tri_cua_rung_xanh_2_lazer_phai_tay_41 , 1000, 5, 30, 5);
+				run_encoder(10000, 1800, 900, 45, 10, 3000, 50);
 				robotRunAngle(-900,15,900,0.8);
 				for(i=0;i<1050;i++)	
 				{	
@@ -1621,21 +1590,14 @@ void qua_trai_len_bac_200_cua_vao(void) {
 		
 	else if  ( TinHieu_ChuanBi_GapThang == 0 ) {
 			if (chay_ngang_qua_o1_xanh == 0) {
-					robotRunAngle(1800,35,900,0.6);
-					RESET_ENCODER(); 
-					while(abs(ENCODER_FR()) + abs(ENCODER_FL()) < encoder_qua_o_2)	{
-								vTaskDelay (1); if(!wantExit())	break;}
+					run_encoder(10000, 1800, 900, 45, 10, 3000, 50);
 					robotStop(0);
-					chinh_lai_vi_tri_laser_phai_custom(vi_tri_cua_rung_xanh_2_lazer_phai_tay_41 - 15, 1000, 5, 30, 4);
 			}
 			else if (chay_ngang_qua_o1_xanh == 1) {
-					robotRunAngle(1800,35,900,0.6);
-					RESET_ENCODER(); 
-					while(abs(ENCODER_FR()) + abs(ENCODER_FL()) < encoder_qua_o_1)	{
-								vTaskDelay (1); if(!wantExit())	break;}
+
+					run_encoder(18000, 1800, 900, 45, 10, 3000, 50);
 					robotStop(0);
-								
-					chinh_lai_vi_tri_laser_phai_custom(vi_tri_cua_rung_xanh_1_lazer_phai_tay_41 - 15, 1000, 5, 30, 4);
+
 					}
 				}
 		
@@ -1645,6 +1607,11 @@ void qua_trai_len_bac_200_cua_vao(void) {
 //============== Sang phai lên bac 200 o ria ===================
 void qua_phai_len_bac_200_cua_vao(void) {
 	su_dung_chan(720);
+		for(i=0;i<150;i++)		
+	{
+		while(abs(bientrochansauValue - target_chan_sau) > 15)	{vTaskDelay(1); if(!wantExit())	break;}
+	}
+	
 	robotRunAngle(750,10,900,0.6);
 	vTaskDelay(3500);
 	robotStop(20);
@@ -1655,12 +1622,9 @@ void qua_phai_len_bac_200_cua_vao(void) {
 	vTaskDelay(4000);
 	robotStop(0);
 	if ( TinHieu_ChuanBi_GapThang == 1 ) {
-				robotRunAngle(0,35,900,0.6);
-				RESET_ENCODER(); 
-				while(abs(ENCODER_FR()) + abs(ENCODER_FL()) < 10000)	{
-							vTaskDelay (5); if(!wantExit())	break;}
+				run_encoder(10000, 0, 900, 45, 15, 2500, 100);
 				robotStop(0);
-				chinh_lai_vi_tri_laser_phai_custom(vi_tri_cua_rung_xanh_2_lazer_phai_tay_41 , 1000, 8 , 30, 4);
+
 				robotRunAngle(-900,15,900,0.6);
 				for(i=0;i<1050;i++)	
 				{	
@@ -1670,20 +1634,18 @@ void qua_phai_len_bac_200_cua_vao(void) {
 		
 		else if  ( TinHieu_ChuanBi_GapThang == 0 ) {
 			if (chay_ngang_qua_o3_xanh == 0) {
-					robotRunAngle(0,35,900,0.6);
-					RESET_ENCODER(); 
-					while(abs(ENCODER_FR()) + abs(ENCODER_FL()) < 8000)	{
-								vTaskDelay (1); if(!wantExit())	break;}
+
+					run_encoder(8000, 0, 900, 45, 15, 2500, 100);
+				
 					robotStop(0);
-					chinh_lai_vi_tri_laser_phai_custom(vi_tri_cua_rung_xanh_2_lazer_phai_tay_41 , 1000, 8 , 35, 4);
+
 			}
 			else if (chay_ngang_qua_o3_xanh == 1) {
-						robotRunAngle(0,35,900,0.6);
-						RESET_ENCODER(); 
-						while(abs(ENCODER_FR()) + abs(ENCODER_FL()) < 18000)	{
-									vTaskDelay (1); if(!wantExit())	break;}
+
+						run_encoder(18000, 0, 900, 45, 15, 2500, 100);
+				
 						robotStop(0);
-						chinh_lai_vi_tri_laser_phai_custom(vi_tri_cua_rung_xanh_3_lazer_phai_tay_41 , 1000,8 ,35, 4);
+
 						}
 				}
 		robotStop(10);

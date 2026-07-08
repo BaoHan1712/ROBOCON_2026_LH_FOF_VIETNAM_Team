@@ -5091,10 +5091,11 @@ void check_dat_hop_tren_T2_xanh(void) {
     }
 		robotStop(0);
 		
-		robotRunAngle(1800,25,900, 0.8);
-		RESET_ENCODER(); 
-		while(abs(ENCODER_FR()) + abs(ENCODER_FL()) < 3800)	{
-		vTaskDelay (1); if(!wantExit())	break;}
+//		robotRunAngle(1800,25,900, 0.8);
+//		RESET_ENCODER(); 
+//		while(abs(ENCODER_FR()) + abs(ENCODER_FL()) < 3800)	{
+//		vTaskDelay (1); if(!wantExit())	break;}
+		run_encoder(3500, 1800, 900, 35, 10, 1500, 50);
 		robotStop(0);
 		
 		Kep_phai_1_vao;
@@ -5653,10 +5654,12 @@ retry:
         }
 				robotStop(0);
 				///// dat xong lui ve
-				robotRunAngle(0,25,0, 0.8);
-				RESET_ENCODER(); 
-				while(abs(ENCODER_FR()) + abs(ENCODER_FL()) < 3000)	{
-				vTaskDelay (1); if(!wantExit())	break;}
+//				robotRunAngle(0,25,0, 0.8);
+//				RESET_ENCODER(); 
+//				while(abs(ENCODER_FR()) + abs(ENCODER_FL()) < 3000)	{
+//				vTaskDelay (1); if(!wantExit())	break;}
+				run_encoder(3500, 0, 0, 35, 15, 1500, 50);
+				
 				robotStop(0);
 				speed_tay_gat2 = 150;
         target_tay_gat2 = 445;
@@ -6512,10 +6515,11 @@ void tu_dong_dat_tang2_xanh(void) {
 			robotStop(0);
 					
 					///// dat xong lui ve
-			robotRunAngle(1800,25,900, 0.8);
-			RESET_ENCODER(); 
-			while(abs(ENCODER_FR()) + abs(ENCODER_FL()) < 3800)	{
-			vTaskDelay (1); if(!wantExit())	break;}
+//			robotRunAngle(1800,25,900, 0.8);
+//			RESET_ENCODER(); 
+//			while(abs(ENCODER_FR()) + abs(ENCODER_FL()) < 3800)	{
+//			vTaskDelay (1); if(!wantExit())	break;}
+			run_encoder(3500, 1800, 900, 35, 10, 1500, 50);
 			robotStop(0);
 			
 			Kep_phai_1_vao;

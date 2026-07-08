@@ -183,9 +183,9 @@ vTaskDelay(1000);
 //				if(TRIANGLE && L2 && !R2 )												bieu_dien();
 				
 //////				
-					if(TRIANGLE && L2 && !R2 )												tudonghoantoan_san_do(); 
-//					if(SQUARE && L2 && !R2) 													su_dung_chan(730);
-//					if(X && L2 && !R2) 																quyet_dinh_dat_hop_tang3_danh_nhanh();
+					if(TRIANGLE && L2 && !R2 )												su_dung_chan(720);
+					if(SQUARE && L2 && !R2) 													RESET_ENCODER(); 
+					if(X && L2 && !R2) 																Tay2_len;
 //					if(O && L2 && !R2 ) 																Kep_phai_3_ra;
 				
 				

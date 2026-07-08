@@ -60,8 +60,10 @@
 //=================================================
 int robotLimitSpeed = 254;  // Toc do toi da se chinh la fixDirError + maxSpeed
 float f05 = 0.5, f1 = 1.0, f2 = 2.0, f4 = 4.0, f5 = 5.0, f6 = 6.0, f10 = 10.0, f20 = 20.0, f30 = 30.0, f45 = 45.0, f60 = 60.0, f120 = 120.0;
-int i100 = 100, khoangCachGocFix = 200;
+int i100 = 50, khoangCachGocFix = 200;
 
+/// i100 la bien goc se bat dau fix mô men xoan, tinh toan +- tuong ung voi tocdo hien tai
+// khoangCachGocFix la goc xoay tai cho bat dau giam toc 
 //------------ su dung cho ham gia toc bac 1 tuyen tinh--------------
 
 float _robotX = 120;
@@ -390,7 +392,7 @@ void robotRunAngle(float angle, int maxSpeed, float robotAngle, float rotate)
     {
 			_robotRunAngle = angle;
 			robotCurve(angle - _robotIMUAngle , maxSpeed, 0);
-			robotRotate(robotAngle, (abs(robotAngle - _robotIMUAngle) > 100? (robotAngle > _robotIMUAngle ? rotate: -rotate):(robotAngle - _robotIMUAngle)*0.005), 0);
+			robotRotate(robotAngle, (abs(robotAngle - _robotIMUAngle) > 50? (robotAngle > _robotIMUAngle ? rotate: -rotate):(robotAngle - _robotIMUAngle)*0.01), 0); // 0.005
 		}
 }
 //------------------------------------------------------------------------------
@@ -459,6 +461,7 @@ void robotDirectionAnalytics()
 									}
             }else calculateMotor(_robotRotate);
         }
+				//////////////////////////////////////////////////////
         else
         {// Vua chay thang vua xoay
             if((_robotRotate > 0 && _robotIMUAngle > _robotRotateAngle - _robotCurrentSpeed*_robotRotate - i100) ||
@@ -543,39 +546,6 @@ void robotAnalytics(void)//-------- Dat trong Interup Timer ---------
 }
 
 
-void robotRotateCompass(int goc_la_ban_tuyet_doi, float toc_do_quay, int tam_quay, int sai_so)
-{
-    int current_imu = robotAngle();
-    float actual_rotate = absF(toc_do_quay);
-
-    if (absI(goc_la_ban_tuyet_doi - current_imu) <= sai_so) {
-        return; 
-    }
-
-    if (goc_la_ban_tuyet_doi < current_imu) {
-        actual_rotate = -actual_rotate;
-    }
-
-    _robotAngleCounterFix = 1; 
-    _robotRotateAngle = goc_la_ban_tuyet_doi; 
-    _robotRotatePoint = tam_quay;
-    _robotRotate = actual_rotate;
-    _robotCounter = 0;
-
-    if(_robotAngle == 30000)
-    {
-        _robotRunSpeed = 30;
-        if(_robotCurrentSpeed == 0) _robotCurrentSpeed = 10;
-    }
-
-    calculateMotor(_robotRotate);
-
-    while(robotFixAngle() > 0)
-    {
-
-    }
-}
-
 
 // than so toi uu la robotRotateQuick(900, 1.6, 0, 0.2, 300); 
 void robotRotateQuick(int goc_la_ban, float toc_do_quay, int tam_quay, float min_toc, int vung_giam)
@@ -614,4 +584,54 @@ void robotRotateQuick(int goc_la_ban, float toc_do_quay, int tam_quay, float min
     robotStop(0);
 }
 //==========================================================================================
+
+float tinh_speed_sigmoid(int con_lai, int khoang_giam_toc, int toc_max, int toc_min) {
+    float t;
+    float x_sig;
+    float sig_val;
+    float speed;
+
+    if (con_lai >= khoang_giam_toc) return (float)toc_max;
+    if (con_lai <= 0) return (float)toc_min;
+
+    t = (float)con_lai / (float)khoang_giam_toc;
+    x_sig = (t - 0.5f) * 12.0f;
+    sig_val = 1.0f / (1.0f + exp(-x_sig));
+    speed = toc_min + (toc_max - toc_min) * sig_val;
+
+    return speed;
+}
+
+void run_encoder(int encoder_target, int goc_chay, int goc_giu, int toc_max, int toc_min, int khoang_giam_toc, int sai_so)
+{
+    int encoder;
+    int con_lai;
+    float speed;
+
+    if (khoang_giam_toc > encoder_target) {
+        khoang_giam_toc = encoder_target; 
+    }
+
+    RESET_ENCODER(); 
+
+    while( encoder_target - (abs(ENCODER_FR()) + abs(ENCODER_FL())) > sai_so)
+    {
+        encoder = abs(ENCODER_FR()) + abs(ENCODER_FL());
+        con_lai = encoder_target - encoder;
+
+        speed = tinh_speed_sigmoid(con_lai, khoang_giam_toc, toc_max, toc_min);
+
+        if (speed < toc_min) {
+            speed = toc_min;
+        }
+
+        robotRunAngle(goc_chay, speed, goc_giu, 0.6);
+
+        if (!wantExit()) {
+            break;
+        }
+    }
+    
+    robotStop(50);
+}
 
