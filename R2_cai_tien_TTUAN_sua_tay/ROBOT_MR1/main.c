@@ -136,7 +136,7 @@ static void taskMain(void *pvParameters)
 
 vTaskDelay(1000);
 	
-	Nang_thuong();
+	Nang_cham();
 
 	target_chan_truoc = bientrochantruocValue;
 	target_chan_sau = bientrochansauValue;
@@ -178,15 +178,15 @@ vTaskDelay(1000);
 				
 				Init_Action_Table_san_do(); 
 				bat_dau_chay_do();
-				
-////			if(TRIANGLE && L2 && !R2 )												Xuat_Phat_Lay_Vu_Khi_Do(152,1350,210);
-//				if(TRIANGLE && L2 && !R2 )												bieu_dien();
-				
-//////				
-					if(TRIANGLE && L2 && !R2 )												su_dung_chan(720);
-					if(SQUARE && L2 && !R2) 													RESET_ENCODER(); 
-					if(X && L2 && !R2) 																Tay2_len;
-//					if(O && L2 && !R2 ) 																Kep_phai_3_ra;
+//				
+//////			if(TRIANGLE && L2 && !R2 )												Xuat_Phat_Lay_Vu_Khi_Do(152,1350,210);
+////				if(TRIANGLE && L2 && !R2 )												bieu_dien();
+//				
+////////				
+					if(TRIANGLE && L2 && !R2 )												Xuat_Phat_Lay_Vu_Khi_Do(152,1350,210);
+//					if(SQUARE && L2 && !R2) 													RESET_ENCODER(); 
+//					if(X && L2 && !R2) 																auto_vao_rung_do_cua1();
+//					if(O && L2 && !R2 ) 															Kep_phai_1_ra;
 				
 				
 //					if(TRIANGLE && L2 && !R2 )											tu_dong_dat_tang2_do();
@@ -202,12 +202,12 @@ vTaskDelay(1000);
 				Init_Action_Table_san_xanh(); 
 				bat_dau_chay_xanh();
 				
-//			if(O && L2 && !R2)															Xuat_Phat_Lay_Vu_Khi_Xanh(163, -1700, 205); chon_o_retry3();
+//			if(O && L2 && !R2)															Xuat_Phat_Lay_Vu_Khi_Xanh(163, -1600, 205); chon_o_retry3();
 
-					if(TRIANGLE && L2 && !R2 )												nhat_hop_zone3_xanh();
-					if(SQUARE && L2 && !R2) 													chon_o_retry3();
-//					if(X && L2 && !R2) 																su_dung_chan(490);
-//					if(O && L2 && !R2 ) 															Tay1_len;
+					if(TRIANGLE && L2 && !R2 )													tudonghoantoan();
+//					if(SQUARE && L2 && !R2) 														su_dung_chan(720);
+//					if(X && L2 && !R2) 																Xuong_bac_200	(900, -900);
+//					if(O && L2 && !R2 ) 															Xuong_bac_400	(900, -900);
 
 		
 				
