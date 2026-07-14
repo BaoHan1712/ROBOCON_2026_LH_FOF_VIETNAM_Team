@@ -521,7 +521,7 @@ int tay_se_dung_tiep_theo = 0;
 int vi_tri_cua_rung_xanh_1_lazer_phai_tay_41 = 248;
 int vi_tri_cua_rung_xanh_1_lazer_phai_tay_23 = 261;
 
-int vi_tri_cua_rung_xanh_2_lazer_phai_tay_41 = 316;
+int vi_tri_cua_rung_xanh_2_lazer_phai_tay_41 = 317;
 
 int vi_tri_cua_rung_xanh_3_lazer_trai_tay_41 = 227;
 int vi_tri_cua_rung_xanh_3_lazer_phai_tay_41 = 383;

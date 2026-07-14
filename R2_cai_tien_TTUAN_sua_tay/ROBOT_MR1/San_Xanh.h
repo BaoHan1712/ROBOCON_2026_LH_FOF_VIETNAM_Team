@@ -231,14 +231,16 @@ void Xoay_dau_truoc_cua_xanh_2 (void)
 
 	
 	vTaskDelay(2000);
-	robotRunAngle(-1500,30,900,2);
+	robotRunAngle(-1450,30,900,2);
 //				
 				while(_robotIMUAngle < 895)	
 				{
-					vTaskDelay (5); 
+					vTaskDelay (1); 
 					if(!wantExit())	break;
 				}
 	robotStop(0);
+	run_encoder(3800, 1800, 900, 60, 15, 800, 50);
+				
 	if (TinHieu_ChuanBi_GapThang == 0) {
 			chinh_lai_vi_tri_laser_phai_custom(vi_tri_cua_rung_xanh_2_lazer_phai_tay_41  , 1000, 10, 70, 3);
 	}
@@ -2786,6 +2788,7 @@ void qua_trai_xuong_bac_200_7_xanh (void) {
 				di_cheo_41 = -1450;
 				di_cheo_23 = -450;
 		}
+		
 		else {
 				time_41 = 4500;
 				time_23 = 4500;
@@ -5180,10 +5183,17 @@ void tudonghoantoan(void) {
 				chay_toi_o_dat_qua(vi_tri_dat_hop_2_tay41_xanh, vi_tri_dat_hop_2_tay41_xanh_truoc);
 				robotStop(0);
 				check_dat_hop_tren_T2_xanh();
-				
 				robotStop(0);
-				
-				su_dung_chan(730);
+
+				robotRunAngle(1800, 15, 900, 0.5);
+				RESET_ENCODER(); 
+				while(abs(ENCODER_FR()) + abs(ENCODER_FL()) < 800)	{
+				su_dung_chan_thuong(730);
+				vTaskDelay (1); 
+				if(!wantExit())	break;
+				}
+				robotStop(0);
+
 				hoan_thanh_chay_rung = 3 ;
 			}
 		

@@ -197,8 +197,8 @@ void Xuat_Phat_Lay_Vu_Khi_Do(int vu_khi, int goc_ve, int vitri) {
 						if(!wantExit())	break;
 					}
 				}
-//				robotStop(0);
-//				chinh_lai_vi_tri_VK_do(vitri, 500, 14, 90, 1);
+				robotStop(2);
+				chinh_lai_vi_tri_VK_do(vitri, 500, 14, 90, 1);
 				robotStop(2);
 				robotRunAngle(-900,8,900,0.5);
 				for(i=0;i<100;i++)
@@ -1772,7 +1772,7 @@ void test_datt2(void ) {
 void chinh_lai_vi_tri_laser_truoc_do(int vitri, int gia_tri_lap, int min_toc, int max_toc);
 void tudonghoantoan_san_do(void) {
 		Kiem_Tra_Ket_Qua_Gap();
-		Xuat_Phat_Lay_Vu_Khi_Do(152,1350,210);
+		Xuat_Phat_Lay_Vu_Khi_Do(152,1350,199);
 	// cho rb1 lay vk xong thì vuot rung
 		mo_vk_san_do();
 	
@@ -2312,7 +2312,7 @@ void bat_dau_chay_do (void) {
     }
 		else if (Start == 0 && mode_chay_rung == 0 && mode_nhat_hop == 0 && mode_retry_zone_3 == 0) {
 				led_bao_hieu_off;
-        Xuat_Phat_Lay_Vu_Khi_Do(152,1350,210);
+        Xuat_Phat_Lay_Vu_Khi_Do(152,1350,199);
     }
     else if (Start == 0 && mode_chay_rung == 2) {
 				led_bao_hieu_off;
