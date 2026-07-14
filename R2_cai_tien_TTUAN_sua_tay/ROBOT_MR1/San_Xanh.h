@@ -1681,7 +1681,7 @@ void Leo_bac_200_xanh_7(void)  {
 	if (TinHieu_ChuanBi_GapThang == 0 && TinHieu_ChuanBi_GapTrai == 0 && TinHieu_ChuanBi_GapPhai == 0 && TinHieu_QuaPhai == 0) {
 			su_dung_chan(265);
 			// chay toi khi mat cam bien sau
-			robotRunAngle(-900,25,900,0.7);
+			robotRunAngle(-900,28,900,0.7);
 			for(i=0;i<1550;i++)
 					{
 							while( CB_Ha_Sau == 0 || (abs(bientrochansauValue - target_chan_sau) > 30)	)	
@@ -1852,7 +1852,7 @@ void Xuong_bac_200_xanh_9(void){
 		if (TinHieu_ChuanBi_GapThang == 0 && TinHieu_ChuanBi_GapTrai == 0 && TinHieu_ChuanBi_GapPhai == 0 && TinHieu_QuaTrai == 0 ) {
 				// chay toi khi mat cam bien sau
 				su_dung_chan(265);
-				robotRunAngle(-900,25,900,0.8);
+				robotRunAngle(-900,28,900,0.8);
 				for(i=0;i<250;i++)
 							{
 							while( CB_Ha_Sau == 0 || (abs(bientrochansauValue - target_chan_sau) > 40) ) 
@@ -1914,7 +1914,7 @@ void xuong_bac_200_xanh_12(void) {
 		if (TinHieu_ChuanBi_GapThang == 0 && TinHieu_ChuanBi_GapTrai == 0 && TinHieu_ChuanBi_GapPhai == 0 && TinHieu_QuaTrai == 0) {
 				su_dung_chan(265);
 				// chay toi khi mat cam bien sau
-				robotRunAngle(-900,25,900,0.8);
+				robotRunAngle(-900,28,900,0.8);
 				for(i=0;i<1550;i++)
 						{
 								while(CB_Ha_Sau == 0 || (abs(bientrochansauValue - target_chan_sau) > 30))	
@@ -3324,10 +3324,8 @@ void Init_Action_Table_san_xanh(void)
 //   move 4 , action 5,check camera nhin khoi 1
 //   ========================================= */
 		action_table[4][5][4]  = dung_cho_khoi_r1_duoi_xanh; 
-    action_table[4][5][5]  = dung_cho_khoi_r1_tren_xanh;  
     action_table[4][5][6]  = dung_cho_khoi_r1_tren_xanh; 
-    action_table[4][5][7]  = dung_cho_khoi_r1_tren_xanh;  
-    action_table[4][5][8]  = dung_cho_khoi_r1_tren_xanh;  
+    action_table[4][5][7]  = dung_cho_khoi_r1_tren_xanh;   
     action_table[4][5][9]  = dung_cho_khoi_r1_duoi_xanh;  
 //    action_table[4][5][10] = dung_cho_khoi_r1_duoi_xanh;  
 //    action_table[4][5][11] = dung_cho_khoi_r1_duoi_xanh;  
@@ -3336,11 +3334,8 @@ void Init_Action_Table_san_xanh(void)
 		/* =========================================
 //   move 5 , action 5,check camera nhin khoi 1 ben canh
 //   ========================================= */
-		action_table[5][5][4]  = bao_hieu_check_r1_ngang; 
-    action_table[5][5][5]  = bao_hieu_check_r1_ngang;  
-    action_table[5][5][6]  = bao_hieu_check_r1_ngang; 
-    action_table[5][5][7]  = bao_hieu_check_r1_ngang;  
-    action_table[5][5][8]  = bao_hieu_check_r1_ngang;  
+//		action_table[5][5][4]  = bao_hieu_check_r1_ngang; 
+    action_table[5][5][7]  = bao_hieu_check_r1_ngang;    
     action_table[5][5][9]  = bao_hieu_check_r1_ngang;  
     action_table[5][5][10] = bao_hieu_check_r1_ngang;  
     action_table[5][5][11] = bao_hieu_check_r1_ngang;  

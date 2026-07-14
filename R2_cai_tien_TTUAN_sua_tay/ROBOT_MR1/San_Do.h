@@ -1153,10 +1153,8 @@ void Init_Action_Table_san_do(void)
 //   move 4 , action 5,check camera nhin khoi 1
 //   ========================================= */
 		action_table[4][5][4]  = dung_cho_khoi_r1_duoi_do; 
-    action_table[4][5][5]  = dung_cho_khoi_r1_tren_do;  
     action_table[4][5][6]  = dung_cho_khoi_r1_tren_do; 
     action_table[4][5][7]  = dung_cho_khoi_r1_tren_do;  
-    action_table[4][5][8]  = dung_cho_khoi_r1_tren_do;  
     action_table[4][5][9]  = dung_cho_khoi_r1_duoi_do;  
 //    action_table[4][5][10] = dung_cho_khoi_r1_duoi_do;  
 //    action_table[4][5][11] = dung_cho_khoi_r1_duoi_do;  
@@ -1165,11 +1163,9 @@ void Init_Action_Table_san_do(void)
 				/* =========================================
 //   move 5 , action 5,check camera nhin khoi 1 ben canh
 //   ========================================= */
-		action_table[5][5][4]  = bao_hieu_check_r1_ngang; 
-    action_table[5][5][5]  = bao_hieu_check_r1_ngang;  
-    action_table[5][5][6]  = bao_hieu_check_r1_ngang; 
+//		action_table[5][5][4]  = bao_hieu_check_r1_ngang; 
+//    action_table[5][5][6]  = bao_hieu_check_r1_ngang; 
     action_table[5][5][7]  = bao_hieu_check_r1_ngang;  
-    action_table[5][5][8]  = bao_hieu_check_r1_ngang;  
     action_table[5][5][9]  = bao_hieu_check_r1_ngang;  
     action_table[5][5][10] = bao_hieu_check_r1_ngang;  
     action_table[5][5][11] = bao_hieu_check_r1_ngang;  

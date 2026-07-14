@@ -667,13 +667,13 @@ void Nang_thuong	(void) {
 }
 
 void Nang_nhanh	(void) {
-	speed_chan_sau = 110;
-	speed_chan_truoc = 110;
+	speed_chan_sau = 115;
+	speed_chan_truoc = 115;
 }
 
 void Nang_cuc_nhanh	(void) {
-	speed_chan_sau = 160;
-	speed_chan_truoc = 160;
+	speed_chan_sau = 150;
+	speed_chan_truoc = 150;
 }
 
 
@@ -1114,7 +1114,7 @@ void Leo_bac_200_ko_thanh(void)
 		su_dung_chan(265);
 	
 	if (TinHieu_ChuanBi_GapThang == 0 && TinHieu_ChuanBi_GapTrai == 0 && TinHieu_ChuanBi_GapPhai == 0 && TinHieu_QuaPhai == 0 && TinHieu_QuaTrai == 0){
-		robotRunAngle(-900,25,900,0.7);
+		robotRunAngle(-900,28,900,0.7);
 		for(i=0;i<1550;i++)
 				{
 						while(CB_Ha_Sau == 0 || (abs(bientrochansauValue - target_chan_sau) > 30))	
@@ -1383,7 +1383,7 @@ void Xuong_bac_200(int Angle, int Robot_Angle)
 		while(abs(bientrochansauValue - target_chan_sau) > 10)	{vTaskDelay(1); if(!wantExit())	break;}
 	}
 	
-	robotRunAngle(Angle,25,Robot_Angle,0.7);
+	robotRunAngle(Angle,28,Robot_Angle,0.7);
 
 	for(i=0;i<1000;i++)
 	{	
@@ -1477,7 +1477,7 @@ void xuong_bac_200_xanh_10 (void) {
 		if (TinHieu_ChuanBi_GapThang == 0 && TinHieu_ChuanBi_GapTrai == 0 && TinHieu_ChuanBi_GapPhai == 0 && TinHieu_QuaPhai == 0) {
 				// chay toi khi mat cam bien sau
 				su_dung_chan(265);
-				robotRunAngle(-900,25,900,0.7);
+				robotRunAngle(-900,28,900,0.7);
 				for(i=0;i<1550;i++)
 						{
 								while(CB_Ha_Sau == 0 || (abs(bientrochansauValue - target_chan_sau) > 30))	
@@ -1501,7 +1501,7 @@ void xuong_bac_200_end(void) {
 		if (TinHieu_ChuanBi_GapThang == 0 && TinHieu_ChuanBi_GapTrai == 0 && TinHieu_ChuanBi_GapPhai == 0 && TinHieu_QuaPhai == 0 && TinHieu_QuaTrai == 0) {
 				// chay toi khi mat cam bien sau
 				su_dung_chan(265);
-				robotRunAngle(-900,25,900,0.8);
+				robotRunAngle(-900,28,900,0.8);
 				for(i=0;i<1550;i++)
 						{
 								while(CB_Ha_Sau == 0|| (abs(bientrochansauValue - target_chan_sau) > 30))	
