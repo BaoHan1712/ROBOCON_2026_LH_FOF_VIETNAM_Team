@@ -385,7 +385,7 @@ void Vao_rung_mai_3_do(int vitri){
 					
 		for(i=0;i<250;i++)
 					{
-						while(lazeSauValue > 155)	
+						while(lazeSauValue > 158)	
 						{	
 							Bam_thanh_laser_phai(45,900,-900,vitri ,2,-200,20);
 							vTaskDelay (1);
@@ -492,7 +492,7 @@ void Vao_rung_mai_2_do(int vitri)
 	robotRunAngle(900,45,-900,0.5);
 	for(i=0;i<250;i++)
 				{
-					while(lazeSauValue > 155)	
+					while(lazeSauValue > 158)	
 					{	
 						vTaskDelay (1);
 						if(!wantExit())	break;
@@ -579,7 +579,7 @@ void Vao_rung_mai_1_do(int vitri)
 	if (TinHieu_ChuanBi_GapThang == 0) {
 				for(i=0;i<250;i++)
 					{
-						while(lazeSauValue > 155)	
+						while(lazeSauValue > 158)	
 						{	
 							Bam_thanh_laser_trai(40,900,-900,vitri ,2,200,10);
 							vTaskDelay (1);
@@ -812,20 +812,21 @@ void DatKFS_do(int vitri)
 			}
 	}		
 	
-	vTaskDelay(200); 
+	vTaskDelay(1700);
+	robotStop(50);
 		
-	robotRunAngle(900,20,-900,0.5);
+	robotRunAngle(900,28,-900,0.5);
 	for(i=0;i<550;i++)	
 	{	
-			while(lazeSauValue > 141)	
+			while(lazeSauValue > 148)	
 			{	
 				vTaskDelay(1); 
 				if(!wantExit())	break;
 			}
 	}
 
-	robotSetACC(50, 55);	
-	robotRunAngle(0,40,-900,0.3);
+	robotSetACC(55, 70);	
+	robotRunAngle(0,60,-900,0.3);
 	for(i=0;i<550;i++)	
 	{	
 			while(lazeTraiValue > 225)	
@@ -844,8 +845,7 @@ void DatKFS_do(int vitri)
 				}
 		}
 		
-		robotSetACC(120, 85);
-		
+
 		robotRunAngle(-150,45,900,1.6);
 				
 		while(_robotIMUAngle < 800)	
@@ -876,6 +876,9 @@ void DatKFS_do(int vitri)
 					if(!wantExit())	break;
 				}
 		}
+		
+		robotSetACC(120, 85);
+		
 		for(i=0;i<550;i++)	
 		{	
 				while(lazeTraiValue > 175)	
@@ -908,18 +911,21 @@ void DatKFS_do(int vitri)
 		}
 		for(i=0;i<550;i++)	
 		{	
-				while(lazeTraiValue > 172)	
+				while(lazeTraiValue > 174)	
 				{	
 					Bam_laser_truoc(20,0,900, vitri , 3, 300, 10);
 					vTaskDelay(1); 
 					if(!wantExit())	break;
 				}
 		}
+		
+		robotSetACC(120, 85);
+		
 		for(i=0;i<550;i++)	
 		{	
 				while(lazeTraiValue > 165)	
 				{	
-					Bam_laser_truoc(10,0,900, vitri , 2, 150, 10);
+					Bam_laser_truoc(10,0,900, vitri -1 , 2, 150, 10);
 					su_dung_chan_thuong(490);
 					vTaskDelay(1); 
 					if(!wantExit())	break;

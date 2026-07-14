@@ -204,9 +204,9 @@ vTaskDelay(1000);
 				
 //			if(O && L2 && !R2)															Xuat_Phat_Lay_Vu_Khi_Xanh(163, -1650, 199);
 
-					if(TRIANGLE && L2 && !R2 )													Xuat_Phat_Lay_Vu_Khi_Xanh(163, -1650, 199);
-//					if(SQUARE && L2 && !R2) 														Xuong_bac_200	(-900, 900);
-//					if(X && L2 && !R2) 																Xuong_bac_200	(900, -900);
+					if(TRIANGLE && L2 && !R2 )													Leo_bac_400(-900, 900);
+					if(SQUARE && L2 && !R2) 														Leo_bac_200(-900, 900);
+					if(X && L2 && !R2) 																	Xuong_bac_200	(-900, 900);
 //					if(O && L2 && !R2 ) 															Xuong_bac_400	(900, -900);
 
 		
@@ -219,7 +219,7 @@ vTaskDelay(1000);
 ////Leo_bac_400
 //Xuong_bac_200	(-900, 900)	
 ////Xuong_bac_400	
- ///auto_vao_rung_xanh_cua1(); tay 41, 262 tay 23
+ ///Leo_bac_200(900, -900);
 //Vao_rung_mai_2_xanh(460);  phai 410
 // Vao_rung_mai_3_xanh(308); tay 41, 371 tay  23
 ////  VI TRI LAZER CUA RUNG (note)
