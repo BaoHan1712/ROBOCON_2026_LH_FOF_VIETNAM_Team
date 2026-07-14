@@ -244,7 +244,7 @@ void calculateMotor(float rotate)
 	}
 	else // khi robot vua chay vua quay
 	{
-		angle = (float)(_robotAngle - (_robotIMUAngle - _robotIMUInit));// - _robotRotate * f30);		
+		angle = (float)(_robotAngle - (_robotIMUAngle - _robotIMUInit));	
 		angle = radian * (angle/f10 + f45);
 
 		_robotRunRR = sinf(angle)*2;
@@ -392,7 +392,7 @@ void robotRunAngle(float angle, int maxSpeed, float robotAngle, float rotate)
     {
 			_robotRunAngle = angle;
 			robotCurve(angle - _robotIMUAngle , maxSpeed, 0);
-			robotRotate(robotAngle, (abs(robotAngle - _robotIMUAngle) > 50? (robotAngle > _robotIMUAngle ? rotate: -rotate):(robotAngle - _robotIMUAngle)*0.01), 0); // 0.005
+			robotRotate(robotAngle, (abs(robotAngle - _robotIMUAngle) > 50? (robotAngle > _robotIMUAngle ? rotate: -rotate):(robotAngle - _robotIMUAngle)*0.008), 0); // 0.005
 		}
 }
 //------------------------------------------------------------------------------
@@ -625,7 +625,7 @@ void run_encoder(int encoder_target, int goc_chay, int goc_giu, int toc_max, int
             speed = toc_min;
         }
 
-        robotRunAngle(goc_chay, speed, goc_giu, 0.6);
+        robotRunAngle(goc_chay, speed, goc_giu, 0.5);
 
         if (!wantExit()) {
             break;

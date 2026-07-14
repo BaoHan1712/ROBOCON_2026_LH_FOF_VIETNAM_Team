@@ -197,15 +197,15 @@ vTaskDelay(1000);
 
 	
 			}
-			else															//SAN XANH
+			else	  														//SAN XANH
 			{
 				Init_Action_Table_san_xanh(); 
 				bat_dau_chay_xanh();
 				
-//			if(O && L2 && !R2)															Xuat_Phat_Lay_Vu_Khi_Xanh(163, -1600, 205); chon_o_retry3();
+//			if(O && L2 && !R2)															Xuat_Phat_Lay_Vu_Khi_Xanh(163, -1650, 199);
 
-					if(TRIANGLE && L2 && !R2 )													tudonghoantoan();
-//					if(SQUARE && L2 && !R2) 														su_dung_chan(720);
+					if(TRIANGLE && L2 && !R2 )													Xuat_Phat_Lay_Vu_Khi_Xanh(163, -1650, 199);
+//					if(SQUARE && L2 && !R2) 														Xuong_bac_200	(-900, 900);
 //					if(X && L2 && !R2) 																Xuong_bac_200	(900, -900);
 //					if(O && L2 && !R2 ) 															Xuong_bac_400	(900, -900);
 
