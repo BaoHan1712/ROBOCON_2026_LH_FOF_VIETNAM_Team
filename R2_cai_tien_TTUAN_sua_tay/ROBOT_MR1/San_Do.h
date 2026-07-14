@@ -191,7 +191,7 @@ void Xuat_Phat_Lay_Vu_Khi_Do(int vu_khi, int goc_ve, int vitri) {
 //				}
 				for(i=0;i<250;i++)
 				{
-					while(lazeSauValue > 134)	
+					while(lazeSauValue > 132)	
 					{	
 						vTaskDelay(1); 
 						if(!wantExit())	break;
@@ -774,17 +774,17 @@ void DatKFS_do(int vitri)
 	
 	if (vi_tri_chay_ngang_do == 10) {
 			robotSetACC(45, 60); // gia toc
-			chinh_vt_laser_trai_zone3_do_ngang(185, 1000, 10, 65, 30, 20);
+			chinh_vt_laser_trai_zone3_do_ngang(185, 1000, 15, 75, 30, 20);
 			robotSetACC(120, 85); // gia toc
 	}
 	else if (vi_tri_chay_ngang_do == 11) { 
 			robotSetACC(80, 65); // gia toc
-			chinh_vt_laser_trai_zone3_do_ngang(185, 1000, 10, 70, 60, 25);
+			chinh_vt_laser_trai_zone3_do_ngang(185, 1000, 12, 75, 60, 25);
 			robotSetACC(120, 85); // gia toc
 	}
 	else if ( vi_tri_chay_ngang_do == 12) { 
 			robotSetACC(100, 75); // gia toc nhanh
-			chinh_vt_laser_trai_zone3_do_ngang(185, 1000, 10, 70, 65, 40);
+			chinh_vt_laser_trai_zone3_do_ngang(185, 1000, 10, 75, 65, 40);
 			robotSetACC(120, 85); // gia toc
 	}
 	
@@ -1158,9 +1158,9 @@ void Init_Action_Table_san_do(void)
     action_table[4][5][7]  = dung_cho_khoi_r1_tren_do;  
     action_table[4][5][8]  = dung_cho_khoi_r1_tren_do;  
     action_table[4][5][9]  = dung_cho_khoi_r1_duoi_do;  
-    action_table[4][5][10] = dung_cho_khoi_r1_duoi_do;  
-    action_table[4][5][11] = dung_cho_khoi_r1_duoi_do;  
-		action_table[4][5][12] = dung_cho_khoi_r1_duoi_do; 
+//    action_table[4][5][10] = dung_cho_khoi_r1_duoi_do;  
+//    action_table[4][5][11] = dung_cho_khoi_r1_duoi_do;  
+//		action_table[4][5][12] = dung_cho_khoi_r1_duoi_do; 
 		
 				/* =========================================
 //   move 5 , action 5,check camera nhin khoi 1 ben canh
