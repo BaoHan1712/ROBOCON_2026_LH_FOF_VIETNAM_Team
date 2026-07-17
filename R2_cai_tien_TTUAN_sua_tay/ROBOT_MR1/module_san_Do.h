@@ -244,7 +244,7 @@ void qua_trai_len_bac_200_cua_vao_do(void) {
 			}
 			else if (chay_ngang_qua_o3_do == 1) {
 
-					run_encoder(21000, 40, -900, 45, 12, 5000, 100);
+					run_encoder(20700, 40, -900, 45, 12, 5000, 100);
 					robotStop(0);
 				}
 		}
@@ -314,7 +314,7 @@ void qua_phai_len_bac_200_cua_vao_do(void) {
 
 			}
 			else if (chay_ngang_qua_o1_do == 1) {
-						run_encoder(21000, 1760, -900, 45, 12, 5000, 50);
+						run_encoder(20700, 1760, -900, 45, 12, 5000, 50);
 				
 						}
 				}
@@ -1073,7 +1073,7 @@ void Leo_bac_400_ko_thanh_do(void)
 		su_dung_chan(265);
 		if (TinHieu_ChuanBi_GapThang == 0 && TinHieu_ChuanBi_GapTrai == 0 && TinHieu_ChuanBi_GapPhai == 0) {
 				// chay toi khi mat cam bien sau
-				robotRunAngle(900,25,-900,0.7);
+				robotRunAngle(900,28,-900,0.7);
 				for(i=0;i<250;i++)
 						{
 								while(CB_Ha_Sau == 0 || (abs(bientrochansauValue - target_chan_sau) > 30))

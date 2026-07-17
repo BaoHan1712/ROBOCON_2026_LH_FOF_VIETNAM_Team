@@ -60,7 +60,7 @@
 //=================================================
 int robotLimitSpeed = 254;  // Toc do toi da se chinh la fixDirError + maxSpeed
 float f05 = 0.5, f1 = 1.0, f2 = 2.0, f4 = 4.0, f5 = 5.0, f6 = 6.0, f10 = 10.0, f20 = 20.0, f30 = 30.0, f45 = 45.0, f60 = 60.0, f120 = 120.0;
-int i100 = 50, khoangCachGocFix = 200;
+int i100 = 70, khoangCachGocFix = 200;
 
 /// i100 la bien goc se bat dau fix mô men xoan, tinh toan +- tuong ung voi tocdo hien tai
 // khoangCachGocFix la goc xoay tai cho bat dau giam toc 
@@ -392,7 +392,7 @@ void robotRunAngle(float angle, int maxSpeed, float robotAngle, float rotate)
     {
 			_robotRunAngle = angle;
 			robotCurve(angle - _robotIMUAngle , maxSpeed, 0);
-			robotRotate(robotAngle, (abs(robotAngle - _robotIMUAngle) > 50? (robotAngle > _robotIMUAngle ? rotate: -rotate):(robotAngle - _robotIMUAngle)*0.008), 0); // 0.005
+			robotRotate(robotAngle, (abs(robotAngle - _robotIMUAngle) > 70? (robotAngle > _robotIMUAngle ? rotate: -rotate):(robotAngle - _robotIMUAngle)*0.008), 0); // 0.005
 		}
 }
 //------------------------------------------------------------------------------
