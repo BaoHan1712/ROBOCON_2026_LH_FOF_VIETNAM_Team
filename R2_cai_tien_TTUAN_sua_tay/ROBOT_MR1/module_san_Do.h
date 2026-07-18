@@ -367,7 +367,7 @@ void di_tren_buc_khong_thanh_2_ben_do(void) {
 		
 			robotRunAngle(900,10,-900,0.3);
 			RESET_ENCODER(); 
-			while(abs(ENCODER_FR()) + abs(ENCODER_FL()) < 250)	{vTaskDelay (1); if(!wantExit())	break;}
+			while(abs(ENCODER_FR()) + abs(ENCODER_FL()) < 200)	{vTaskDelay (1); if(!wantExit())	break;}
 			robotStop(0);
 			
 			
@@ -1553,7 +1553,7 @@ void chuan_bi_gap_trai_200_tren_do_4 (void ) {
 					vTaskDelay(2000);
 				}
 	else if (da_lay_tay1 == 1 && da_lay_tay2 == 1 && da_lay_tay3 == 0 && da_lay_tay4 == 0) {
-				robotRunAngle(-250,14,-900,0.5);
+				robotRunAngle(0,14,-900,0.5);
 				for(i=0;i<150;i++)
 				{
 				while(lazePhaiValue > vitri_tay23_phai_laser_GapQua ||(abs(bientrochansauValue - target_chan_sau) > 200))	
@@ -1576,7 +1576,7 @@ void chuan_bi_gap_trai_200_tren_do_4 (void ) {
 			}
 	
 		else if (da_lay_tay1 == 1 && da_lay_tay2 == 1 && da_lay_tay3 == 1 && da_lay_tay4 == 0) {
-					robotRunAngle(-250,14,-900,0.5);
+					robotRunAngle(-0,14,-900,0.5);
 					for(i=0;i<150;i++)
 					{
 					while(lazePhaiValue > vitri_tay23_phai_laser_GapQua ||(abs(bientrochansauValue - target_chan_sau) > 200))	
@@ -2098,7 +2098,7 @@ void xuong_bac_200_11_do(void) {
 				su_dung_chan(265);
 
 				// chay toi khi mat cam bien sau
-				robotRunAngle(900,28,-900,0.7);
+				robotRunAngle(900,22,-900,0.7);
 				for(i=0;i<1550;i++)
 						{
 								while(CB_Ha_Sau == 0 || (abs(bientrochansauValue - target_chan_sau) > 20))	

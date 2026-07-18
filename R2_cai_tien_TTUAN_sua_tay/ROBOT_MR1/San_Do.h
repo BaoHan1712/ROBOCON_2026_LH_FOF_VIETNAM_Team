@@ -86,7 +86,18 @@ void Xuat_Phat_Lay_Vu_Khi_Do(int vu_khi, int goc_ve, int vitri) {
 				{
 					while(lazeTruocValue > 160)	
 					{	
-						Bam_thanh_laser_trai(42,0,0,vu_khi  ,2,-150,30);
+						Bam_thanh_laser_trai(42,100,0,vu_khi  ,2,-150,30);
+						vTaskDelay(1); 
+						if(!wantExit())	break;
+					}
+				}
+				
+				for(i=0;i<250;i++)
+				{
+					while(lazeTruocValue > 152)	
+					{	
+	
+						Bam_thanh_laser_trai(34,50,0,vu_khi ,1,-100,15);
 						vTaskDelay(1); 
 						if(!wantExit())	break;
 					}
@@ -97,11 +108,12 @@ void Xuat_Phat_Lay_Vu_Khi_Do(int vu_khi, int goc_ve, int vitri) {
 					while(lazeTruocValue > 148)	
 					{	
 	
-						Bam_thanh_laser_trai(28,0,0,vu_khi ,1,-100,15);
+						Bam_thanh_laser_trai(25,0,0,vu_khi ,1,-100,15);
 						vTaskDelay(1); 
 						if(!wantExit())	break;
 					}
 				}
+				
 				for(i=0;i<250;i++)
 				{
 					while(lazeTruocValue > 141)	
@@ -854,7 +866,7 @@ void DatKFS_do(int vitri)
 			while(lazeTraiValue < 270)	
 			{
 				Bam_laser_sau(52,0,-900,135, 3, 150, 15);
-				if (lazeTruocValue > 170) { // r1 kh co do
+				if (lazeTruocValue > 180) { // r1 kh co do
 						phat_hien_r1_v3 = 1;
 				}
 				vTaskDelay(1); 
@@ -1772,7 +1784,7 @@ void check_dat_hop_tren_T2_do(void) {
 				robotStop(0);
 				vTaskDelay (20000);
 				led_bao_hieu_on;
-				while(lazePhaiValue > 190)	{
+				while(lazePhaiValue > 220)	{
 							vTaskDelay (1); 
 							if(!wantExit())	break;
 						}
