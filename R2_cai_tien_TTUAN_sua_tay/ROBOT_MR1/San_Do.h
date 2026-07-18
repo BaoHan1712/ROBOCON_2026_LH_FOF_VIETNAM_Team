@@ -86,7 +86,7 @@ void Xuat_Phat_Lay_Vu_Khi_Do(int vu_khi, int goc_ve, int vitri) {
 				{
 					while(lazeTruocValue > 160)	
 					{	
-						Bam_thanh_laser_trai(44,0,0,vu_khi  ,2,-150,30);
+						Bam_thanh_laser_trai(42,0,0,vu_khi  ,2,-150,30);
 						vTaskDelay(1); 
 						if(!wantExit())	break;
 					}
@@ -208,7 +208,7 @@ void Xuat_Phat_Lay_Vu_Khi_Do(int vu_khi, int goc_ve, int vitri) {
 					}
 				}
 				robotStop(2);
-				chinh_lai_vi_tri_VK_do(vitri, 500, 8, 60, 0);
+				chinh_lai_vi_tri_VK_do(vitri, 500, 6, 50, 0);
 				robotStop(2);
 				robotRunAngle(-900,8,900,0.5);
 				for(i=0;i<100;i++)
@@ -764,11 +764,11 @@ void chinh_vt_laser_trai_zone3_do_ngang(int vitri, int gia_tri_lap, int min_toc,
 		}   		
 	}
 
-	
 void DatKFS_do(int vitri)
 {
+
+	
 	kiem_tra_so_qua_tren_tay();
-//	kiem_tra_qua_tay_nao_xuong_rung(); // ham kiem tra co qua tay nao de dat
 	speed_tay_xoay = 150;
   target_xoay_tay = vi_tri_dat_hop_1_2;
 	tin_hieu_dat_hop_1_2 = 1;
@@ -784,17 +784,17 @@ void DatKFS_do(int vitri)
 	
 	if (vi_tri_chay_ngang_do == 10) {
 			robotSetACC(55, 65); // gia toc
-			chinh_vt_laser_trai_zone3_do_ngang(185, 1000, 8, 75, 45, 18);
+			chinh_vt_laser_trai_zone3_do_ngang(185, 1000, 11, 75, 45, 18);
 			robotSetACC(120, 85); // gia toc
 	}
 	else if (vi_tri_chay_ngang_do == 11) { 
 			robotSetACC(80, 65); // gia toc
-			chinh_vt_laser_trai_zone3_do_ngang(185, 1000, 8, 75, 60, 25);
+			chinh_vt_laser_trai_zone3_do_ngang(185, 1000, 11, 75, 60, 25);
 			robotSetACC(120, 85); // gia toc
 	}
 	else if ( vi_tri_chay_ngang_do == 12) { 
 			robotSetACC(100, 75); // gia toc nhanh
-			chinh_vt_laser_trai_zone3_do_ngang(185, 1000, 8, 75, 65, 40);
+			chinh_vt_laser_trai_zone3_do_ngang(185, 1000, 10, 75, 65, 40);
 			robotSetACC(120, 85); // gia toc
 	}
 	
@@ -836,26 +836,49 @@ void DatKFS_do(int vitri)
 	}
 
 	robotSetACC(55, 70);	
-	robotRunAngle(0,65,-900,0.3);
-	for(i=0;i<550;i++)	
-	{	
-			while(lazeTraiValue > 235)	
-			{	
+///// chay ngang	check
+	for(i=0;i<550;i++)	         //// check con 1 co dung day kh
+		{	
+			while(lazeTraiValue < 260)	
+			{
+				Bam_laser_sau(55,0,-900,135, 3, 150, 15);
 				vTaskDelay(1); 
 				if(!wantExit())	break;
 			}
-	}	
-		for(i=0;i<550;i++)	
-		{	
-				while(lazePhaiValue > 340)	
-				{	
-					Bam_laser_sau(70,0,-900, vitri - 25, 3, 100, 15);
-					vTaskDelay(1); 
-					if(!wantExit())	break;
-				}
-		}
-		
+		}	
 
+////////======================================			
+/// check r1 trong khoang 260 toi 270
+	for(i=0;i<550;i++)	         //// check con 1 co dung day kh
+		{	
+			while(lazeTraiValue < 270)	
+			{
+				Bam_laser_sau(52,0,-900,135, 3, 150, 15);
+				if (lazeTruocValue > 170) { // r1 kh co do
+						phat_hien_r1_v3 = 1;
+				}
+				vTaskDelay(1); 
+				if(!wantExit())	break;
+			}
+		}	
+
+////////======================================		
+		for(i=0;i<550;i++)	         //// check con 1 co dung day kh
+		{	
+			while(lazeTraiValue < 273)	
+			{
+				Bam_laser_sau(50,0,-900,135, 3, 150, 15);
+				vTaskDelay(1); 
+				if(!wantExit())	break;
+			}
+		}
+
+		nghieng_tay_k_dat_tang2(); // nghieng tay de tranh dung qua ngta
+
+
+//////////////////////////////////////////////////////////////		
+	if (phat_hien_r1_v3 == 0) {
+		
 		robotRunAngle(-150,50,900,1.6);
 				
 		while(_robotIMUAngle < 800)	
@@ -863,31 +886,66 @@ void DatKFS_do(int vitri)
 			vTaskDelay (1); 
 			if(!wantExit())	break;
 		}
-		nghieng_tay_k_dat_tang2(); // nghieng tay de tranh dung qua ngta
-					
-//		
-//		//	**************** che do cay diem  ******************
-	if (mode_cay_diem == 1 ) {
+		
 		for(i=0;i<550;i++)	
 		{	
-				while(lazeTraiValue > 210)	
+				while(lazeTraiValue > 200)	
 				{	
-					Bam_laser_truoc(55,0,900, vitri  , 3, 300, 10);
-					vTaskDelay(1); 
-					if(!wantExit())	break;
-				}
-		}
-		for(i=0;i<550;i++)	
-		{	
-				while(lazeTraiValue > 182)	
-				{	
-					Bam_laser_truoc(25,0,900, vitri  , 3, 300, 10);
+					Bam_laser_truoc(50,0,900, vitri  , 3, 300, 10);
 					vTaskDelay(1); 
 					if(!wantExit())	break;
 				}
 		}
 		
+	}
+	else if (phat_hien_r1_v3 == 1) {
+			led_bao_hieu_on;
+			run_encoder(5000, 0, -900, 40, 5, 2000, 50);
+			robotStop(0);
+			robotRotateQuick(900, 1.8, 0, 0.2, 300); 
+			robotStop(0);
+		
+			vTaskDelay(3000); 
+					
+			for(i=0;i<550;i++)	
+			{	
+					while(lazeSauValue > 170)	
+					{	
+						vTaskDelay(1); 
+						if(!wantExit())	break;
+					}
+			}
+			vTaskDelay(2000); 
+			led_bao_hieu_off;
+			
+			for(i=0;i<550;i++)	
+		{	
+				while(lazeTraiValue > 200)	
+				{	
+					Bam_laser_truoc(50,0,900, vitri  , 2, 150, 10);
+					vTaskDelay(1); 
+					if(!wantExit())	break;
+				}
+		}
+	
+	} 
+	
+	phat_hien_r1_v3 = 0;
+		
+//		//	**************** che do cay diem  ******************
+	if (mode_cay_diem == 1 ) {
+		
 		robotSetACC(120, 85);
+		
+				for(i=0;i<550;i++)	
+		{	
+				while(lazeTraiValue > 185)	
+				{	
+					Bam_laser_truoc(25,0,900, vitri , 3, 300, 10);
+					vTaskDelay(1); 
+					if(!wantExit())	break;
+				}
+		}
 		
 		for(i=0;i<550;i++)	
 		{	
@@ -910,18 +968,10 @@ void DatKFS_do(int vitri)
 //		
 ////	// ************** che do thang nhanh ***********
 	if (mode_cay_diem == 2 ) {
-			for(i=0;i<550;i++)	
-		{	
-				while(lazeTraiValue > 210)	
-				{	
-					Bam_laser_truoc(55,0,900, vitri , 3, 300, 10);
-					vTaskDelay(1); 
-					if(!wantExit())	break;
-				}
-		}
+
 		for(i=0;i<550;i++)	
 		{	
-				while(lazeTraiValue > 174)	
+				while(lazeTraiValue > 175)	
 				{	
 					Bam_laser_truoc(25,0,900, vitri , 3, 300, 10);
 					vTaskDelay(1); 
@@ -946,7 +996,6 @@ void DatKFS_do(int vitri)
 
 	robotStop(0);
 }
-
 
 
 void dat_qua_tay_1_2_do(void) {

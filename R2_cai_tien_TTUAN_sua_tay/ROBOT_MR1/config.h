@@ -2288,6 +2288,8 @@ void run_read_gyro_uart3(void)
 }
 int gui = 0;
 int check_time = 0;
+
+int phat_hien_r1_v3 = 0;
 //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 //---------------------------- TRUYEN DU LIEU VAO MANG-----------------------------
 void HMI_TRAN(vs32 _so_dong)
@@ -2477,7 +2479,7 @@ void HMI_TRAN(vs32 _so_dong)
 										HMI_DMI("CB_kep_2_1 ",CB_kep_2_1,39); 
 										break;
 									case 40:
-										HMI_DMI("check_time ",check_time,40); 
+										HMI_DMI("phat_hien_r1_v3 ",phat_hien_r1_v3,40); 
 										break;
 						}
 }

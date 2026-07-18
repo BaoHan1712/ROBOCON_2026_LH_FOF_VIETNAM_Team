@@ -183,8 +183,8 @@ vTaskDelay(1000);
 ////				if(TRIANGLE && L2 && !R2 )												bieu_dien();
 //				
 ////////				
-					if(TRIANGLE && L2 && !R2 )													Xuat_Phat_Lay_Vu_Khi_Do(152,1350,199);
-//					if(SQUARE && L2 && !R2) 														Tay2_len;
+					if(TRIANGLE && L2 && !R2 )														Xuat_Phat_Lay_Vu_Khi_Do(152,1350,199);
+//					if(SQUARE && L2 && !R2) 															su_dung_chan(300);
 //					if(X && L2 && !R2) 																	Kep_phai_4_ra;
 //					if(O && L2 && !R2 ) 																Kep_phai_2_ra;
 				

@@ -3,7 +3,7 @@
 <title>Static Call Graph - [.\Project\Project.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\Project\Project.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060750: Last Updated: Fri Jul 17 12:20:28 2026
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060750: Last Updated: Sat Jul 18 10:12:56 2026
 <BR><P>
 <H3>Maximum Stack Usage =        536 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -1443,7 +1443,7 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[147]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;robotAnalytics
 </UL>
 
-<P><STRONG><a name="[130]"></a>fixMotorValue</STRONG> (Thumb, 612 bytes, Stack size 48 bytes, main.o(.text))
+<P><STRONG><a name="[130]"></a>fixMotorValue</STRONG> (Thumb, 620 bytes, Stack size 48 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 136<LI>Call Chain = fixMotorValue &rArr; __aeabi_dsub &rArr; __aeabi_dadd &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[131]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_i2d
@@ -2098,6 +2098,7 @@ Global Symbols
 </UL>
 <BR>[Called By]<UL><LI><a href="#[161]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MD_qua_trai_phai_xuong_bac_200
 <LI><a href="#[15f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MD_qua_trai_phai_len_bac_200
+<LI><a href="#[20a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DatKFS_do
 <LI><a href="#[1f4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dat_hop4_2_retry
 </UL>
 
@@ -2131,12 +2132,14 @@ Global Symbols
 <LI><a href="#[236]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;tu_dong_dat_tang2_do
 <LI><a href="#[22d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;qua_trai_len_bac_200_cua_vao_do
 <LI><a href="#[22c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;qua_phai_len_bac_200_cua_vao_do
+<LI><a href="#[20a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DatKFS_do
 <LI><a href="#[204]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Xoay_dau_truoc_cua_do_1
 <LI><a href="#[200]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Xuat_Phat_Lay_Vu_Khi_Do
 <LI><a href="#[1fb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;nhat_hop_zone3_xanh
 <LI><a href="#[1f4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dat_hop4_2_retry
 <LI><a href="#[1eb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;tu_dong_dat_tang2_xanh
 <LI><a href="#[1e7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;check_dat_hop_tren_T2_xanh
+<LI><a href="#[1d4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DatKFSxanh
 <LI><a href="#[1b8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Xoay_dau_truoc_cua_xanh_2
 <LI><a href="#[1b7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Xoay_dau_truoc_cua_xanh_1
 <LI><a href="#[1b6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Xuat_Phat_Lay_Vu_Khi_Xanh
@@ -3514,41 +3517,41 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[68]"></a>Lay_phia_truoc_bac_400_tren</STRONG> (Thumb, 484 bytes, Stack size 16 bytes, main.o(.text))
-<BR><BR>[Stack]<UL><LI>Max Depth = 228<LI>Call Chain = Lay_phia_truoc_bac_400_tren &rArr; Gap_tay1_thang &rArr; ha_tay_1 &rArr; robotRun &rArr; robotCurve &rArr; calculateMotor &rArr; __hardfp_sinf &rArr; __mathlib_rredf2
+<BR><BR>[Stack]<UL><LI>Max Depth = 228<LI>Call Chain = Lay_phia_truoc_bac_400_tren &rArr; Gap_tay4_thang &rArr; ha_tay_4 &rArr; robotRun &rArr; robotCurve &rArr; calculateMotor &rArr; __hardfp_sinf &rArr; __mathlib_rredf2
 </UL>
-<BR>[Calls]<UL><LI><a href="#[191]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Gap_tay1_thang
-<LI><a href="#[18f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Gap_tay4_thang
+<BR>[Calls]<UL><LI><a href="#[18f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Gap_tay4_thang
 <LI><a href="#[151]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wantExit
 <LI><a href="#[11b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskDelay
 <LI><a href="#[19e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;reset_ha_tay_truoc
 <LI><a href="#[193]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Gap_tay2_thang
+<LI><a href="#[191]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Gap_tay1_thang
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> main.o(.text)
 </UL>
 <P><STRONG><a name="[69]"></a>Lay_phia_truoc_bac_200_tren</STRONG> (Thumb, 754 bytes, Stack size 16 bytes, main.o(.text))
-<BR><BR>[Stack]<UL><LI>Max Depth = 228<LI>Call Chain = Lay_phia_truoc_bac_200_tren &rArr; Gap_tay1_thang &rArr; ha_tay_1 &rArr; robotRun &rArr; robotCurve &rArr; calculateMotor &rArr; __hardfp_sinf &rArr; __mathlib_rredf2
+<BR><BR>[Stack]<UL><LI>Max Depth = 228<LI>Call Chain = Lay_phia_truoc_bac_200_tren &rArr; Gap_tay4_thang &rArr; ha_tay_4 &rArr; robotRun &rArr; robotCurve &rArr; calculateMotor &rArr; __hardfp_sinf &rArr; __mathlib_rredf2
 </UL>
-<BR>[Calls]<UL><LI><a href="#[191]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Gap_tay1_thang
-<LI><a href="#[18f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Gap_tay4_thang
+<BR>[Calls]<UL><LI><a href="#[18f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Gap_tay4_thang
 <LI><a href="#[151]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wantExit
 <LI><a href="#[11b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskDelay
 <LI><a href="#[19e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;reset_ha_tay_truoc
 <LI><a href="#[195]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Gap_tay3_thang
 <LI><a href="#[193]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Gap_tay2_thang
+<LI><a href="#[191]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Gap_tay1_thang
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> main.o(.text)
 </UL>
 <P><STRONG><a name="[19f]"></a>Lay_ben_phai_bac_200_tren</STRONG> (Thumb, 1016 bytes, Stack size 16 bytes, main.o(.text))
-<BR><BR>[Stack]<UL><LI>Max Depth = 228<LI>Call Chain = Lay_ben_phai_bac_200_tren &rArr; Gap_tay1_thang &rArr; ha_tay_1 &rArr; robotRun &rArr; robotCurve &rArr; calculateMotor &rArr; __hardfp_sinf &rArr; __mathlib_rredf2
+<BR><BR>[Stack]<UL><LI>Max Depth = 228<LI>Call Chain = Lay_ben_phai_bac_200_tren &rArr; Gap_tay4_thang &rArr; ha_tay_4 &rArr; robotRun &rArr; robotCurve &rArr; calculateMotor &rArr; __hardfp_sinf &rArr; __mathlib_rredf2
 </UL>
-<BR>[Calls]<UL><LI><a href="#[191]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Gap_tay1_thang
-<LI><a href="#[18f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Gap_tay4_thang
+<BR>[Calls]<UL><LI><a href="#[18f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Gap_tay4_thang
 <LI><a href="#[140]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;robotRunAngle
 <LI><a href="#[151]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wantExit
 <LI><a href="#[cd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_ReadInputDataBit
 <LI><a href="#[11b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskDelay
 <LI><a href="#[195]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Gap_tay3_thang
 <LI><a href="#[193]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Gap_tay2_thang
+<LI><a href="#[191]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Gap_tay1_thang
 </UL>
 <BR>[Called By]<UL><LI><a href="#[223]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Lay_ben_phai_bac_200_tren_do_2
 <LI><a href="#[21f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Lay_ben_phai_bac_200_tren_do_9
@@ -3559,10 +3562,9 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[1a0]"></a>Lay_ben_phai_bac_200_duoi</STRONG> (Thumb, 1070 bytes, Stack size 16 bytes, main.o(.text))
-<BR><BR>[Stack]<UL><LI>Max Depth = 228<LI>Call Chain = Lay_ben_phai_bac_200_duoi &rArr; Gap_tay1_thang &rArr; ha_tay_1 &rArr; robotRun &rArr; robotCurve &rArr; calculateMotor &rArr; __hardfp_sinf &rArr; __mathlib_rredf2
+<BR><BR>[Stack]<UL><LI>Max Depth = 228<LI>Call Chain = Lay_ben_phai_bac_200_duoi &rArr; Gap_tay4_thang &rArr; ha_tay_4 &rArr; robotRun &rArr; robotCurve &rArr; calculateMotor &rArr; __hardfp_sinf &rArr; __mathlib_rredf2
 </UL>
-<BR>[Calls]<UL><LI><a href="#[191]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Gap_tay1_thang
-<LI><a href="#[18f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Gap_tay4_thang
+<BR>[Calls]<UL><LI><a href="#[18f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Gap_tay4_thang
 <LI><a href="#[168]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ha_sat_xuong
 <LI><a href="#[156]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;su_dung_chan_thuong
 <LI><a href="#[140]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;robotRunAngle
@@ -3572,6 +3574,7 @@ Global Symbols
 <LI><a href="#[11b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskDelay
 <LI><a href="#[195]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Gap_tay3_thang
 <LI><a href="#[193]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Gap_tay2_thang
+<LI><a href="#[191]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Gap_tay1_thang
 </UL>
 <BR>[Called By]<UL><LI><a href="#[222]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Lay_ben_phai_bac_200_duoi_do_3
 <LI><a href="#[221]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Lay_ben_phai_bac_200_duoi_do_5
@@ -3582,7 +3585,7 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[71]"></a>Lay_ben_phai_bac_200_duoi_xanh_2</STRONG> (Thumb, 38 bytes, Stack size 8 bytes, main.o(.text))
-<BR><BR>[Stack]<UL><LI>Max Depth = 236<LI>Call Chain = Lay_ben_phai_bac_200_duoi_xanh_2 &rArr; Lay_ben_phai_bac_200_duoi &rArr; Gap_tay1_thang &rArr; ha_tay_1 &rArr; robotRun &rArr; robotCurve &rArr; calculateMotor &rArr; __hardfp_sinf &rArr; __mathlib_rredf2
+<BR><BR>[Stack]<UL><LI>Max Depth = 236<LI>Call Chain = Lay_ben_phai_bac_200_duoi_xanh_2 &rArr; Lay_ben_phai_bac_200_duoi &rArr; Gap_tay4_thang &rArr; ha_tay_4 &rArr; robotRun &rArr; robotCurve &rArr; calculateMotor &rArr; __hardfp_sinf &rArr; __mathlib_rredf2
 </UL>
 <BR>[Calls]<UL><LI><a href="#[15b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;di_tren_buc_khong_thanh_2_ben
 <LI><a href="#[13a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;robotStop
@@ -3593,7 +3596,7 @@ Global Symbols
 <BR>[Address Reference Count : 1]<UL><LI> main.o(.text)
 </UL>
 <P><STRONG><a name="[72]"></a>Lay_ben_phai_bac_200_tren_xanh_3</STRONG> (Thumb, 44 bytes, Stack size 8 bytes, main.o(.text))
-<BR><BR>[Stack]<UL><LI>Max Depth = 236<LI>Call Chain = Lay_ben_phai_bac_200_tren_xanh_3 &rArr; Lay_ben_phai_bac_200_tren &rArr; Gap_tay1_thang &rArr; ha_tay_1 &rArr; robotRun &rArr; robotCurve &rArr; calculateMotor &rArr; __hardfp_sinf &rArr; __mathlib_rredf2
+<BR><BR>[Stack]<UL><LI>Max Depth = 236<LI>Call Chain = Lay_ben_phai_bac_200_tren_xanh_3 &rArr; Lay_ben_phai_bac_200_tren &rArr; Gap_tay4_thang &rArr; ha_tay_4 &rArr; robotRun &rArr; robotCurve &rArr; calculateMotor &rArr; __hardfp_sinf &rArr; __mathlib_rredf2
 </UL>
 <BR>[Calls]<UL><LI><a href="#[162]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chuan_bi_thang_xanh_2
 <LI><a href="#[13a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;robotStop
@@ -3623,7 +3626,7 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[73]"></a>Lay_ben_phai_bac_200_tren_xanh_4</STRONG> (Thumb, 44 bytes, Stack size 8 bytes, main.o(.text))
-<BR><BR>[Stack]<UL><LI>Max Depth = 236<LI>Call Chain = Lay_ben_phai_bac_200_tren_xanh_4 &rArr; Lay_ben_phai_bac_200_tren &rArr; Gap_tay1_thang &rArr; ha_tay_1 &rArr; robotRun &rArr; robotCurve &rArr; calculateMotor &rArr; __hardfp_sinf &rArr; __mathlib_rredf2
+<BR><BR>[Stack]<UL><LI>Max Depth = 236<LI>Call Chain = Lay_ben_phai_bac_200_tren_xanh_4 &rArr; Lay_ben_phai_bac_200_tren &rArr; Gap_tay4_thang &rArr; ha_tay_4 &rArr; robotRun &rArr; robotCurve &rArr; calculateMotor &rArr; __hardfp_sinf &rArr; __mathlib_rredf2
 </UL>
 <BR>[Calls]<UL><LI><a href="#[13a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;robotStop
 <LI><a href="#[11b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskDelay
@@ -3634,7 +3637,7 @@ Global Symbols
 <BR>[Address Reference Count : 1]<UL><LI> main.o(.text)
 </UL>
 <P><STRONG><a name="[75]"></a>Lay_ben_phai_bac_200_duoi_xanh_8</STRONG> (Thumb, 64 bytes, Stack size 8 bytes, main.o(.text))
-<BR><BR>[Stack]<UL><LI>Max Depth = 236<LI>Call Chain = Lay_ben_phai_bac_200_duoi_xanh_8 &rArr; Lay_ben_phai_bac_200_duoi &rArr; Gap_tay1_thang &rArr; ha_tay_1 &rArr; robotRun &rArr; robotCurve &rArr; calculateMotor &rArr; __hardfp_sinf &rArr; __mathlib_rredf2
+<BR><BR>[Stack]<UL><LI>Max Depth = 236<LI>Call Chain = Lay_ben_phai_bac_200_duoi_xanh_8 &rArr; Lay_ben_phai_bac_200_duoi &rArr; Gap_tay4_thang &rArr; ha_tay_4 &rArr; robotRun &rArr; robotCurve &rArr; calculateMotor &rArr; __hardfp_sinf &rArr; __mathlib_rredf2
 </UL>
 <BR>[Calls]<UL><LI><a href="#[16a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chuan_bi_gap_trai_200_duoi_ko_thanh
 <LI><a href="#[15b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;di_tren_buc_khong_thanh_2_ben
@@ -3665,7 +3668,7 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[74]"></a>Lay_ben_phai_bac_200_tren_xanh_7</STRONG> (Thumb, 146 bytes, Stack size 8 bytes, main.o(.text))
-<BR><BR>[Stack]<UL><LI>Max Depth = 236<LI>Call Chain = Lay_ben_phai_bac_200_tren_xanh_7 &rArr; Lay_ben_phai_bac_200_tren &rArr; Gap_tay1_thang &rArr; ha_tay_1 &rArr; robotRun &rArr; robotCurve &rArr; calculateMotor &rArr; __hardfp_sinf &rArr; __mathlib_rredf2
+<BR><BR>[Stack]<UL><LI>Max Depth = 236<LI>Call Chain = Lay_ben_phai_bac_200_tren_xanh_7 &rArr; Lay_ben_phai_bac_200_tren &rArr; Gap_tay4_thang &rArr; ha_tay_4 &rArr; robotRun &rArr; robotCurve &rArr; calculateMotor &rArr; __hardfp_sinf &rArr; __mathlib_rredf2
 </UL>
 <BR>[Calls]<UL><LI><a href="#[152]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;su_dung_chan
 <LI><a href="#[140]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;robotRunAngle
@@ -3679,7 +3682,7 @@ Global Symbols
 <BR>[Address Reference Count : 1]<UL><LI> main.o(.text)
 </UL>
 <P><STRONG><a name="[76]"></a>Lay_ben_phai_bac_200_tren_xanh_11</STRONG> (Thumb, 14 bytes, Stack size 8 bytes, main.o(.text))
-<BR><BR>[Stack]<UL><LI>Max Depth = 236<LI>Call Chain = Lay_ben_phai_bac_200_tren_xanh_11 &rArr; Lay_ben_phai_bac_200_tren &rArr; Gap_tay1_thang &rArr; ha_tay_1 &rArr; robotRun &rArr; robotCurve &rArr; calculateMotor &rArr; __hardfp_sinf &rArr; __mathlib_rredf2
+<BR><BR>[Stack]<UL><LI>Max Depth = 236<LI>Call Chain = Lay_ben_phai_bac_200_tren_xanh_11 &rArr; Lay_ben_phai_bac_200_tren &rArr; Gap_tay4_thang &rArr; ha_tay_4 &rArr; robotRun &rArr; robotCurve &rArr; calculateMotor &rArr; __hardfp_sinf &rArr; __mathlib_rredf2
 </UL>
 <BR>[Calls]<UL><LI><a href="#[13a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;robotStop
 <LI><a href="#[19f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Lay_ben_phai_bac_200_tren
@@ -3687,10 +3690,9 @@ Global Symbols
 <BR>[Address Reference Count : 1]<UL><LI> main.o(.text)
 </UL>
 <P><STRONG><a name="[1a5]"></a>Lay_ben_trai_bac_200_tren</STRONG> (Thumb, 1144 bytes, Stack size 16 bytes, main.o(.text))
-<BR><BR>[Stack]<UL><LI>Max Depth = 228<LI>Call Chain = Lay_ben_trai_bac_200_tren &rArr; Gap_tay1_thang &rArr; ha_tay_1 &rArr; robotRun &rArr; robotCurve &rArr; calculateMotor &rArr; __hardfp_sinf &rArr; __mathlib_rredf2
+<BR><BR>[Stack]<UL><LI>Max Depth = 228<LI>Call Chain = Lay_ben_trai_bac_200_tren &rArr; Gap_tay4_thang &rArr; ha_tay_4 &rArr; robotRun &rArr; robotCurve &rArr; calculateMotor &rArr; __hardfp_sinf &rArr; __mathlib_rredf2
 </UL>
-<BR>[Calls]<UL><LI><a href="#[191]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Gap_tay1_thang
-<LI><a href="#[18f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Gap_tay4_thang
+<BR>[Calls]<UL><LI><a href="#[18f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Gap_tay4_thang
 <LI><a href="#[152]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;su_dung_chan
 <LI><a href="#[157]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Nang_thuong
 <LI><a href="#[140]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;robotRunAngle
@@ -3700,6 +3702,7 @@ Global Symbols
 <LI><a href="#[11b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskDelay
 <LI><a href="#[195]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Gap_tay3_thang
 <LI><a href="#[193]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Gap_tay2_thang
+<LI><a href="#[191]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Gap_tay1_thang
 </UL>
 <BR>[Called By]<UL><LI><a href="#[229]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Lay_ben_trai_bac_200_tren_do_2
 <LI><a href="#[228]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Lay_ben_trai_bac_200_tren_do_5_6
@@ -3709,10 +3712,9 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[1a6]"></a>Lay_ben_trai_bac_200_duoi</STRONG> (Thumb, 1076 bytes, Stack size 16 bytes, main.o(.text))
-<BR><BR>[Stack]<UL><LI>Max Depth = 228<LI>Call Chain = Lay_ben_trai_bac_200_duoi &rArr; Gap_tay1_thang &rArr; ha_tay_1 &rArr; robotRun &rArr; robotCurve &rArr; calculateMotor &rArr; __hardfp_sinf &rArr; __mathlib_rredf2
+<BR><BR>[Stack]<UL><LI>Max Depth = 228<LI>Call Chain = Lay_ben_trai_bac_200_duoi &rArr; Gap_tay4_thang &rArr; ha_tay_4 &rArr; robotRun &rArr; robotCurve &rArr; calculateMotor &rArr; __hardfp_sinf &rArr; __mathlib_rredf2
 </UL>
-<BR>[Calls]<UL><LI><a href="#[191]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Gap_tay1_thang
-<LI><a href="#[18f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Gap_tay4_thang
+<BR>[Calls]<UL><LI><a href="#[18f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Gap_tay4_thang
 <LI><a href="#[168]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ha_sat_xuong
 <LI><a href="#[156]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;su_dung_chan_thuong
 <LI><a href="#[140]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;robotRunAngle
@@ -3722,6 +3724,7 @@ Global Symbols
 <LI><a href="#[11b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskDelay
 <LI><a href="#[195]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Gap_tay3_thang
 <LI><a href="#[193]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Gap_tay2_thang
+<LI><a href="#[191]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Gap_tay1_thang
 </UL>
 <BR>[Called By]<UL><LI><a href="#[245]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Lay_ben_trai_bac_200_duoi_do_ko_thanh
 <LI><a href="#[22a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Lay_ben_trai_bac_200_duoi_do_1
@@ -3739,10 +3742,9 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[1a8]"></a>Lay_phia_truoc_bac_200_duoi</STRONG> (Thumb, 830 bytes, Stack size 16 bytes, main.o(.text))
-<BR><BR>[Stack]<UL><LI>Max Depth = 228<LI>Call Chain = Lay_phia_truoc_bac_200_duoi &rArr; Gap_tay1_thang &rArr; ha_tay_1 &rArr; robotRun &rArr; robotCurve &rArr; calculateMotor &rArr; __hardfp_sinf &rArr; __mathlib_rredf2
+<BR><BR>[Stack]<UL><LI>Max Depth = 228<LI>Call Chain = Lay_phia_truoc_bac_200_duoi &rArr; Gap_tay4_thang &rArr; ha_tay_4 &rArr; robotRun &rArr; robotCurve &rArr; calculateMotor &rArr; __hardfp_sinf &rArr; __mathlib_rredf2
 </UL>
-<BR>[Calls]<UL><LI><a href="#[191]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Gap_tay1_thang
-<LI><a href="#[18f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Gap_tay4_thang
+<BR>[Calls]<UL><LI><a href="#[18f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Gap_tay4_thang
 <LI><a href="#[152]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;su_dung_chan
 <LI><a href="#[13a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;robotStop
 <LI><a href="#[151]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wantExit
@@ -3750,6 +3752,7 @@ Global Symbols
 <LI><a href="#[19e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;reset_ha_tay_truoc
 <LI><a href="#[195]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Gap_tay3_thang
 <LI><a href="#[193]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Gap_tay2_thang
+<LI><a href="#[191]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Gap_tay1_thang
 </UL>
 <BR>[Called By]<UL><LI><a href="#[95]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;lay_thang_200_duoi_do
 <LI><a href="#[6a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;lay_thang_200_duoi
@@ -3773,14 +3776,14 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[6a]"></a>lay_thang_200_duoi</STRONG> (Thumb, 8 bytes, Stack size 8 bytes, main.o(.text))
-<BR><BR>[Stack]<UL><LI>Max Depth = 236<LI>Call Chain = lay_thang_200_duoi &rArr; Lay_phia_truoc_bac_200_duoi &rArr; Gap_tay1_thang &rArr; ha_tay_1 &rArr; robotRun &rArr; robotCurve &rArr; calculateMotor &rArr; __hardfp_sinf &rArr; __mathlib_rredf2
+<BR><BR>[Stack]<UL><LI>Max Depth = 236<LI>Call Chain = lay_thang_200_duoi &rArr; Lay_phia_truoc_bac_200_duoi &rArr; Gap_tay4_thang &rArr; ha_tay_4 &rArr; robotRun &rArr; robotCurve &rArr; calculateMotor &rArr; __hardfp_sinf &rArr; __mathlib_rredf2
 </UL>
 <BR>[Calls]<UL><LI><a href="#[1a8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Lay_phia_truoc_bac_200_duoi
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> main.o(.text)
 </UL>
 <P><STRONG><a name="[95]"></a>lay_thang_200_duoi_do</STRONG> (Thumb, 8 bytes, Stack size 8 bytes, main.o(.text))
-<BR><BR>[Stack]<UL><LI>Max Depth = 236<LI>Call Chain = lay_thang_200_duoi_do &rArr; Lay_phia_truoc_bac_200_duoi &rArr; Gap_tay1_thang &rArr; ha_tay_1 &rArr; robotRun &rArr; robotCurve &rArr; calculateMotor &rArr; __hardfp_sinf &rArr; __mathlib_rredf2
+<BR><BR>[Stack]<UL><LI>Max Depth = 236<LI>Call Chain = lay_thang_200_duoi_do &rArr; Lay_phia_truoc_bac_200_duoi &rArr; Gap_tay4_thang &rArr; ha_tay_4 &rArr; robotRun &rArr; robotCurve &rArr; calculateMotor &rArr; __hardfp_sinf &rArr; __mathlib_rredf2
 </UL>
 <BR>[Calls]<UL><LI><a href="#[1a8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Lay_phia_truoc_bac_200_duoi
 </UL>
@@ -4128,7 +4131,7 @@ Global Symbols
 <BR>[Address Reference Count : 1]<UL><LI> main.o(.text)
 </UL>
 <P><STRONG><a name="[6c]"></a>Lay_ben_trai_bac_200_duoi_xanh_3</STRONG> (Thumb, 38 bytes, Stack size 8 bytes, main.o(.text))
-<BR><BR>[Stack]<UL><LI>Max Depth = 236<LI>Call Chain = Lay_ben_trai_bac_200_duoi_xanh_3 &rArr; Lay_ben_trai_bac_200_duoi &rArr; Gap_tay1_thang &rArr; ha_tay_1 &rArr; robotRun &rArr; robotCurve &rArr; calculateMotor &rArr; __hardfp_sinf &rArr; __mathlib_rredf2
+<BR><BR>[Stack]<UL><LI>Max Depth = 236<LI>Call Chain = Lay_ben_trai_bac_200_duoi_xanh_3 &rArr; Lay_ben_trai_bac_200_duoi &rArr; Gap_tay4_thang &rArr; ha_tay_4 &rArr; robotRun &rArr; robotCurve &rArr; calculateMotor &rArr; __hardfp_sinf &rArr; __mathlib_rredf2
 </UL>
 <BR>[Calls]<UL><LI><a href="#[16c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chuan_bi_gap_thang_xanh_3
 <LI><a href="#[13a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;robotStop
@@ -4139,7 +4142,7 @@ Global Symbols
 <BR>[Address Reference Count : 1]<UL><LI> main.o(.text)
 </UL>
 <P><STRONG><a name="[6d]"></a>Lay_ben_trai_bac_200_duoi_xanh_5</STRONG> (Thumb, 144 bytes, Stack size 8 bytes, main.o(.text))
-<BR><BR>[Stack]<UL><LI>Max Depth = 236<LI>Call Chain = Lay_ben_trai_bac_200_duoi_xanh_5 &rArr; Lay_ben_trai_bac_200_duoi &rArr; Gap_tay1_thang &rArr; ha_tay_1 &rArr; robotRun &rArr; robotCurve &rArr; calculateMotor &rArr; __hardfp_sinf &rArr; __mathlib_rredf2
+<BR><BR>[Stack]<UL><LI>Max Depth = 236<LI>Call Chain = Lay_ben_trai_bac_200_duoi_xanh_5 &rArr; Lay_ben_trai_bac_200_duoi &rArr; Gap_tay4_thang &rArr; ha_tay_4 &rArr; robotRun &rArr; robotCurve &rArr; calculateMotor &rArr; __hardfp_sinf &rArr; __mathlib_rredf2
 </UL>
 <BR>[Calls]<UL><LI><a href="#[140]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;robotRunAngle
 <LI><a href="#[13a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;robotStop
@@ -4155,7 +4158,7 @@ Global Symbols
 <BR>[Address Reference Count : 1]<UL><LI> main.o(.text)
 </UL>
 <P><STRONG><a name="[6f]"></a>Lay_ben_trai_bac_200_duoi_xanh_ko_thanh</STRONG> (Thumb, 68 bytes, Stack size 8 bytes, main.o(.text))
-<BR><BR>[Stack]<UL><LI>Max Depth = 236<LI>Call Chain = Lay_ben_trai_bac_200_duoi_xanh_ko_thanh &rArr; Lay_ben_trai_bac_200_duoi &rArr; Gap_tay1_thang &rArr; ha_tay_1 &rArr; robotRun &rArr; robotCurve &rArr; calculateMotor &rArr; __hardfp_sinf &rArr; __mathlib_rredf2
+<BR><BR>[Stack]<UL><LI>Max Depth = 236<LI>Call Chain = Lay_ben_trai_bac_200_duoi_xanh_ko_thanh &rArr; Lay_ben_trai_bac_200_duoi &rArr; Gap_tay4_thang &rArr; ha_tay_4 &rArr; robotRun &rArr; robotCurve &rArr; calculateMotor &rArr; __hardfp_sinf &rArr; __mathlib_rredf2
 </UL>
 <BR>[Calls]<UL><LI><a href="#[15b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;di_tren_buc_khong_thanh_2_ben
 <LI><a href="#[13a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;robotStop
@@ -4169,7 +4172,7 @@ Global Symbols
 <BR>[Address Reference Count : 1]<UL><LI> main.o(.text)
 </UL>
 <P><STRONG><a name="[6e]"></a>Lay_ben_trai_bac_200_duoi_xanh_6</STRONG> (Thumb, 38 bytes, Stack size 8 bytes, main.o(.text))
-<BR><BR>[Stack]<UL><LI>Max Depth = 236<LI>Call Chain = Lay_ben_trai_bac_200_duoi_xanh_6 &rArr; Lay_ben_trai_bac_200_duoi &rArr; Gap_tay1_thang &rArr; ha_tay_1 &rArr; robotRun &rArr; robotCurve &rArr; calculateMotor &rArr; __hardfp_sinf &rArr; __mathlib_rredf2
+<BR><BR>[Stack]<UL><LI>Max Depth = 236<LI>Call Chain = Lay_ben_trai_bac_200_duoi_xanh_6 &rArr; Lay_ben_trai_bac_200_duoi &rArr; Gap_tay4_thang &rArr; ha_tay_4 &rArr; robotRun &rArr; robotCurve &rArr; calculateMotor &rArr; __hardfp_sinf &rArr; __mathlib_rredf2
 </UL>
 <BR>[Calls]<UL><LI><a href="#[15b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;di_tren_buc_khong_thanh_2_ben
 <LI><a href="#[13a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;robotStop
@@ -4256,7 +4259,7 @@ Global Symbols
 <BR>[Address Reference Count : 1]<UL><LI> main.o(.text)
 </UL>
 <P><STRONG><a name="[6b]"></a>Lay_ben_trai_bac_200_tren_xanh_1</STRONG> (Thumb, 162 bytes, Stack size 8 bytes, main.o(.text))
-<BR><BR>[Stack]<UL><LI>Max Depth = 236<LI>Call Chain = Lay_ben_trai_bac_200_tren_xanh_1 &rArr; Lay_ben_trai_bac_200_tren &rArr; Gap_tay1_thang &rArr; ha_tay_1 &rArr; robotRun &rArr; robotCurve &rArr; calculateMotor &rArr; __hardfp_sinf &rArr; __mathlib_rredf2
+<BR><BR>[Stack]<UL><LI>Max Depth = 236<LI>Call Chain = Lay_ben_trai_bac_200_tren_xanh_1 &rArr; Lay_ben_trai_bac_200_tren &rArr; Gap_tay4_thang &rArr; ha_tay_4 &rArr; robotRun &rArr; robotCurve &rArr; calculateMotor &rArr; __hardfp_sinf &rArr; __mathlib_rredf2
 </UL>
 <BR>[Calls]<UL><LI><a href="#[166]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chuan_bi_gap_phai_200_tren_3
 <LI><a href="#[162]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chuan_bi_thang_xanh_2
@@ -4270,7 +4273,7 @@ Global Symbols
 <BR>[Address Reference Count : 1]<UL><LI> main.o(.text)
 </UL>
 <P><STRONG><a name="[70]"></a>Lay_ben_trai_bac_200_tren_xanh_9</STRONG> (Thumb, 120 bytes, Stack size 8 bytes, main.o(.text))
-<BR><BR>[Stack]<UL><LI>Max Depth = 236<LI>Call Chain = Lay_ben_trai_bac_200_tren_xanh_9 &rArr; Lay_ben_trai_bac_200_tren &rArr; Gap_tay1_thang &rArr; ha_tay_1 &rArr; robotRun &rArr; robotCurve &rArr; calculateMotor &rArr; __hardfp_sinf &rArr; __mathlib_rredf2
+<BR><BR>[Stack]<UL><LI>Max Depth = 236<LI>Call Chain = Lay_ben_trai_bac_200_tren_xanh_9 &rArr; Lay_ben_trai_bac_200_tren &rArr; Gap_tay4_thang &rArr; ha_tay_4 &rArr; robotRun &rArr; robotCurve &rArr; calculateMotor &rArr; __hardfp_sinf &rArr; __mathlib_rredf2
 </UL>
 <BR>[Calls]<UL><LI><a href="#[152]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;su_dung_chan
 <LI><a href="#[13a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;robotStop
@@ -4725,14 +4728,15 @@ Global Symbols
 <LI><a href="#[1d4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DatKFSxanh
 </UL>
 
-<P><STRONG><a name="[1d4]"></a>DatKFSxanh</STRONG> (Thumb, 1594 bytes, Stack size 24 bytes, main.o(.text))
-<BR><BR>[Stack]<UL><LI>Max Depth = 200<LI>Call Chain = DatKFSxanh &rArr; Bam_laser_sau &rArr; robotRunAngle &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
+<P><STRONG><a name="[1d4]"></a>DatKFSxanh</STRONG> (Thumb, 2058 bytes, Stack size 24 bytes, main.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 352<LI>Call Chain = DatKFSxanh &rArr; run_encoder &rArr; tinh_speed_sigmoid &rArr; __hardfp_exp &rArr; __kernel_poly &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[178]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Bam_laser_sau
 <LI><a href="#[171]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chinh_lai_vi_tri_laser_phai_custom
 <LI><a href="#[156]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;su_dung_chan_thuong
 <LI><a href="#[152]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;su_dung_chan
 <LI><a href="#[153]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Nang_nhanh
+<LI><a href="#[14f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;run_encoder
 <LI><a href="#[140]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;robotRunAngle
 <LI><a href="#[13d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;robotRotate
 <LI><a href="#[15d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;robotSetACC
@@ -4757,7 +4761,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[1d9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dat_hop_vao_o
 </UL>
 
-<P><STRONG><a name="[1d8]"></a>dat_qua_tay_4_3_xanh</STRONG> (Thumb, 1206 bytes, Stack size 8 bytes, main.o(.text))
+<P><STRONG><a name="[1d8]"></a>dat_qua_tay_4_3_xanh</STRONG> (Thumb, 1214 bytes, Stack size 8 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 56<LI>Call Chain = dat_qua_tay_4_3_xanh &rArr; vTaskDelay &rArr; xTaskResumeAll &rArr; vTaskIncrementTick
 </UL>
 <BR>[Calls]<UL><LI><a href="#[151]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wantExit
@@ -4767,7 +4771,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[1d9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dat_hop_vao_o
 </UL>
 
-<P><STRONG><a name="[1d9]"></a>dat_hop_vao_o</STRONG> (Thumb, 114 bytes, Stack size 8 bytes, main.o(.text))
+<P><STRONG><a name="[1d9]"></a>dat_hop_vao_o</STRONG> (Thumb, 42 bytes, Stack size 8 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 64<LI>Call Chain = dat_hop_vao_o &rArr; dat_qua_tay_4_3_xanh &rArr; vTaskDelay &rArr; xTaskResumeAll &rArr; vTaskIncrementTick
 </UL>
 <BR>[Calls]<UL><LI><a href="#[1d8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dat_qua_tay_4_3_xanh
@@ -4778,7 +4782,7 @@ Global Symbols
 <LI><a href="#[1df]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;be_len_dat_xanh
 </UL>
 
-<P><STRONG><a name="[1da]"></a>dat_hop4_2</STRONG> (Thumb, 722 bytes, Stack size 64 bytes, main.o(.text))
+<P><STRONG><a name="[1da]"></a>dat_hop4_2</STRONG> (Thumb, 806 bytes, Stack size 64 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 200<LI>Call Chain = dat_hop4_2 &rArr; robotRunAngle &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[152]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;su_dung_chan
@@ -4794,7 +4798,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[1dc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dat_hop_vao_o_tang2
 </UL>
 
-<P><STRONG><a name="[1db]"></a>dat_hop1_3</STRONG> (Thumb, 778 bytes, Stack size 64 bytes, main.o(.text))
+<P><STRONG><a name="[1db]"></a>dat_hop1_3</STRONG> (Thumb, 722 bytes, Stack size 64 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 200<LI>Call Chain = dat_hop1_3 &rArr; robotRunAngle &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[152]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;su_dung_chan
@@ -4811,7 +4815,7 @@ Global Symbols
 <LI><a href="#[1dc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dat_hop_vao_o_tang2
 </UL>
 
-<P><STRONG><a name="[1dc]"></a>dat_hop_vao_o_tang2</STRONG> (Thumb, 748 bytes, Stack size 8 bytes, main.o(.text))
+<P><STRONG><a name="[1dc]"></a>dat_hop_vao_o_tang2</STRONG> (Thumb, 746 bytes, Stack size 8 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 208<LI>Call Chain = dat_hop_vao_o_tang2 &rArr; dat_hop1_3 &rArr; robotRunAngle &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[151]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wantExit
@@ -4838,7 +4842,7 @@ Global Symbols
 <LI><a href="#[1df]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;be_len_dat_xanh
 </UL>
 
-<P><STRONG><a name="[1de]"></a>ha_chan_dat_tang2_do</STRONG> (Thumb, 236 bytes, Stack size 8 bytes, main.o(.text))
+<P><STRONG><a name="[1de]"></a>ha_chan_dat_tang2_do</STRONG> (Thumb, 318 bytes, Stack size 8 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 56<LI>Call Chain = ha_chan_dat_tang2_do &rArr; vTaskDelay &rArr; xTaskResumeAll &rArr; vTaskIncrementTick
 </UL>
 <BR>[Calls]<UL><LI><a href="#[156]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;su_dung_chan_thuong
@@ -4851,7 +4855,7 @@ Global Symbols
 <LI><a href="#[1df]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;be_len_dat_xanh
 </UL>
 
-<P><STRONG><a name="[1df]"></a>be_len_dat_xanh</STRONG> (Thumb, 1310 bytes, Stack size 8 bytes, main.o(.text))
+<P><STRONG><a name="[1df]"></a>be_len_dat_xanh</STRONG> (Thumb, 1264 bytes, Stack size 8 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 72<LI>Call Chain = be_len_dat_xanh &rArr; dat_hop_vao_o &rArr; dat_qua_tay_4_3_xanh &rArr; vTaskDelay &rArr; xTaskResumeAll &rArr; vTaskIncrementTick
 </UL>
 <BR>[Calls]<UL><LI><a href="#[156]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;su_dung_chan_thuong
@@ -4870,7 +4874,7 @@ Global Symbols
 <LI><a href="#[1e2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;quyet_dinh_dat_hop_tang3
 </UL>
 
-<P><STRONG><a name="[1e0]"></a>be_len_dat_xanh_4_qua</STRONG> (Thumb, 1632 bytes, Stack size 8 bytes, main.o(.text))
+<P><STRONG><a name="[1e0]"></a>be_len_dat_xanh_4_qua</STRONG> (Thumb, 1592 bytes, Stack size 8 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 72<LI>Call Chain = be_len_dat_xanh_4_qua &rArr; dat_hop_vao_o &rArr; dat_qua_tay_4_3_xanh &rArr; vTaskDelay &rArr; xTaskResumeAll &rArr; vTaskIncrementTick
 </UL>
 <BR>[Calls]<UL><LI><a href="#[156]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;su_dung_chan_thuong
@@ -4946,7 +4950,7 @@ Global Symbols
 <LI><a href="#[1ec]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;tudonghoantoan
 </UL>
 
-<P><STRONG><a name="[1e4]"></a>chuan_bi_dat_tang_3</STRONG> (Thumb, 208 bytes, Stack size 16 bytes, main.o(.text), UNUSED)
+<P><STRONG><a name="[1e4]"></a>chuan_bi_dat_tang_3</STRONG> (Thumb, 286 bytes, Stack size 16 bytes, main.o(.text), UNUSED)
 <BR><BR>[Calls]<UL><LI><a href="#[175]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Bam_thanh_laser_trai
 <LI><a href="#[140]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;robotRunAngle
 <LI><a href="#[13a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;robotStop
@@ -4965,7 +4969,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[1e6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;mo_vk_san_xanh
 </UL>
 
-<P><STRONG><a name="[1e6]"></a>mo_vk_san_xanh</STRONG> (Thumb, 324 bytes, Stack size 8 bytes, main.o(.text))
+<P><STRONG><a name="[1e6]"></a>mo_vk_san_xanh</STRONG> (Thumb, 238 bytes, Stack size 8 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 72<LI>Call Chain = mo_vk_san_xanh &rArr; kiem_tra_vat_truoc_khi_bd &rArr; vTaskDelay &rArr; xTaskResumeAll &rArr; vTaskIncrementTick
 </UL>
 <BR>[Calls]<UL><LI><a href="#[151]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wantExit
@@ -5003,7 +5007,7 @@ Global Symbols
 <LI><a href="#[1eb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;tu_dong_dat_tang2_xanh
 </UL>
 
-<P><STRONG><a name="[1e9]"></a>chay_toi_o_dat_qua_do</STRONG> (Thumb, 128 bytes, Stack size 32 bytes, main.o(.text))
+<P><STRONG><a name="[1e9]"></a>chay_toi_o_dat_qua_do</STRONG> (Thumb, 200 bytes, Stack size 32 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 200<LI>Call Chain = chay_toi_o_dat_qua_do &rArr; chinh_lai_vi_tri_laser_truoc_do &rArr; robotRunAngle &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[13a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;robotStop
@@ -5025,7 +5029,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[1eb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;tu_dong_dat_tang2_xanh
 </UL>
 
-<P><STRONG><a name="[1eb]"></a>tu_dong_dat_tang2_xanh</STRONG> (Thumb, 664 bytes, Stack size 16 bytes, main.o(.text))
+<P><STRONG><a name="[1eb]"></a>tu_dong_dat_tang2_xanh</STRONG> (Thumb, 548 bytes, Stack size 16 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 344<LI>Call Chain = tu_dong_dat_tang2_xanh &rArr; run_encoder &rArr; tinh_speed_sigmoid &rArr; __hardfp_exp &rArr; __kernel_poly &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[152]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;su_dung_chan
@@ -5047,7 +5051,7 @@ Global Symbols
 <LI><a href="#[1ec]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;tudonghoantoan
 </UL>
 
-<P><STRONG><a name="[1ec]"></a>tudonghoantoan</STRONG> (Thumb, 374 bytes, Stack size 8 bytes, main.o(.text))
+<P><STRONG><a name="[1ec]"></a>tudonghoantoan</STRONG> (Thumb, 514 bytes, Stack size 8 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 368<LI>Call Chain = tudonghoantoan &rArr; Xuat_Phat_Lay_Vu_Khi_Xanh &rArr; run_encoder &rArr; tinh_speed_sigmoid &rArr; __hardfp_exp &rArr; __kernel_poly &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[156]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;su_dung_chan_thuong
@@ -5085,8 +5089,8 @@ Global Symbols
 <LI><a href="#[1ef]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;retry_zone_2
 </UL>
 
-<P><STRONG><a name="[1ef]"></a>retry_zone_2</STRONG> (Thumb, 472 bytes, Stack size 8 bytes, main.o(.text))
-<BR><BR>[Stack]<UL><LI>Max Depth = 352<LI>Call Chain = retry_zone_2 &rArr; tu_dong_dat_tang2_xanh &rArr; run_encoder &rArr; tinh_speed_sigmoid &rArr; __hardfp_exp &rArr; __kernel_poly &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
+<P><STRONG><a name="[1ef]"></a>retry_zone_2</STRONG> (Thumb, 352 bytes, Stack size 8 bytes, main.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 360<LI>Call Chain = retry_zone_2 &rArr; DatKFSxanh &rArr; run_encoder &rArr; tinh_speed_sigmoid &rArr; __hardfp_exp &rArr; __kernel_poly &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[152]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;su_dung_chan
 <LI><a href="#[13d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;robotRotate
@@ -5121,7 +5125,7 @@ Global Symbols
 <LI><a href="#[1f0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;retry_zone_3_o_1
 </UL>
 
-<P><STRONG><a name="[1f0]"></a>retry_zone_3_o_1</STRONG> (Thumb, 466 bytes, Stack size 32 bytes, main.o(.text))
+<P><STRONG><a name="[1f0]"></a>retry_zone_3_o_1</STRONG> (Thumb, 592 bytes, Stack size 32 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 208<LI>Call Chain = retry_zone_3_o_1 &rArr; Bam_laser_sau &rArr; robotRunAngle &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[178]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Bam_laser_sau
@@ -5138,7 +5142,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[1f5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chon_o_retry3
 </UL>
 
-<P><STRONG><a name="[1f2]"></a>retry_zone_3_o_2</STRONG> (Thumb, 562 bytes, Stack size 32 bytes, main.o(.text))
+<P><STRONG><a name="[1f2]"></a>retry_zone_3_o_2</STRONG> (Thumb, 464 bytes, Stack size 32 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 208<LI>Call Chain = retry_zone_3_o_2 &rArr; Bam_laser_sau &rArr; robotRunAngle &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[178]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Bam_laser_sau
@@ -5155,7 +5159,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[1f5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chon_o_retry3
 </UL>
 
-<P><STRONG><a name="[1f3]"></a>retry_zone_3_o_3</STRONG> (Thumb, 464 bytes, Stack size 32 bytes, main.o(.text))
+<P><STRONG><a name="[1f3]"></a>retry_zone_3_o_3</STRONG> (Thumb, 498 bytes, Stack size 32 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 208<LI>Call Chain = retry_zone_3_o_3 &rArr; Bam_laser_sau &rArr; robotRunAngle &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[178]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Bam_laser_sau
@@ -5172,7 +5176,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[1f5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chon_o_retry3
 </UL>
 
-<P><STRONG><a name="[1f4]"></a>dat_hop4_2_retry</STRONG> (Thumb, 1002 bytes, Stack size 88 bytes, main.o(.text))
+<P><STRONG><a name="[1f4]"></a>dat_hop4_2_retry</STRONG> (Thumb, 938 bytes, Stack size 88 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 416<LI>Call Chain = dat_hop4_2_retry &rArr; run_encoder &rArr; tinh_speed_sigmoid &rArr; __hardfp_exp &rArr; __kernel_poly &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[152]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;su_dung_chan
@@ -5192,7 +5196,7 @@ Global Symbols
 <LI><a href="#[1f8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chon_o_nhat_hop_xanh
 </UL>
 
-<P><STRONG><a name="[1f5]"></a>chon_o_retry3</STRONG> (Thumb, 292 bytes, Stack size 16 bytes, main.o(.text))
+<P><STRONG><a name="[1f5]"></a>chon_o_retry3</STRONG> (Thumb, 358 bytes, Stack size 16 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 360<LI>Call Chain = chon_o_retry3 &rArr; tu_dong_dat_tang2_xanh &rArr; run_encoder &rArr; tinh_speed_sigmoid &rArr; __hardfp_exp &rArr; __kernel_poly &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[152]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;su_dung_chan
@@ -5210,7 +5214,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[1fd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;bat_dau_chay_xanh
 </UL>
 
-<P><STRONG><a name="[1f6]"></a>chinh_lai_vi_tri_laser_sau_zone3</STRONG> (Thumb, 246 bytes, Stack size 24 bytes, main.o(.text))
+<P><STRONG><a name="[1f6]"></a>chinh_lai_vi_tri_laser_sau_zone3</STRONG> (Thumb, 152 bytes, Stack size 24 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 160<LI>Call Chain = chinh_lai_vi_tri_laser_sau_zone3 &rArr; robotRunAngle &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[165]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;custom_smooth_speed
@@ -5238,7 +5242,7 @@ Global Symbols
 <LI><a href="#[1f8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chon_o_nhat_hop_xanh
 </UL>
 
-<P><STRONG><a name="[1f8]"></a>chon_o_nhat_hop_xanh</STRONG> (Thumb, 722 bytes, Stack size 24 bytes, main.o(.text))
+<P><STRONG><a name="[1f8]"></a>chon_o_nhat_hop_xanh</STRONG> (Thumb, 830 bytes, Stack size 24 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 440<LI>Call Chain = chon_o_nhat_hop_xanh &rArr; dat_hop4_2_retry &rArr; run_encoder &rArr; tinh_speed_sigmoid &rArr; __hardfp_exp &rArr; __kernel_poly &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[156]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;su_dung_chan_thuong
@@ -5263,7 +5267,7 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[1f9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;run_align_center
 </UL>
 
-<P><STRONG><a name="[1f9]"></a>run_align_center</STRONG> (Thumb, 262 bytes, Stack size 16 bytes, main.o(.text))
+<P><STRONG><a name="[1f9]"></a>run_align_center</STRONG> (Thumb, 172 bytes, Stack size 16 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 108<LI>Call Chain = run_align_center &rArr; robotRun &rArr; robotCurve &rArr; calculateMotor &rArr; __hardfp_sinf &rArr; __mathlib_rredf2
 </UL>
 <BR>[Calls]<UL><LI><a href="#[13f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;robotRun
@@ -5282,7 +5286,7 @@ Global Symbols
 <LI><a href="#[1fb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;nhat_hop_zone3_xanh
 </UL>
 
-<P><STRONG><a name="[1fb]"></a>nhat_hop_zone3_xanh</STRONG> (Thumb, 2248 bytes, Stack size 56 bytes, main.o(.text))
+<P><STRONG><a name="[1fb]"></a>nhat_hop_zone3_xanh</STRONG> (Thumb, 2238 bytes, Stack size 56 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 496<LI>Call Chain = nhat_hop_zone3_xanh &rArr; chon_o_nhat_hop_xanh &rArr; dat_hop4_2_retry &rArr; run_encoder &rArr; tinh_speed_sigmoid &rArr; __hardfp_exp &rArr; __kernel_poly &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[156]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;su_dung_chan_thuong
@@ -5340,7 +5344,7 @@ Global Symbols
 <BR><BR>[Calls]<UL><LI><a href="#[159]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Nang_cuc_nhanh
 </UL>
 
-<P><STRONG><a name="[1ff]"></a>chinh_lai_vi_tri_VK_do</STRONG> (Thumb, 162 bytes, Stack size 32 bytes, main.o(.text))
+<P><STRONG><a name="[1ff]"></a>chinh_lai_vi_tri_VK_do</STRONG> (Thumb, 272 bytes, Stack size 32 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 168<LI>Call Chain = chinh_lai_vi_tri_VK_do &rArr; robotRunAngle &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[165]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;custom_smooth_speed
@@ -5351,7 +5355,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[200]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Xuat_Phat_Lay_Vu_Khi_Do
 </UL>
 
-<P><STRONG><a name="[200]"></a>Xuat_Phat_Lay_Vu_Khi_Do</STRONG> (Thumb, 1204 bytes, Stack size 32 bytes, main.o(.text))
+<P><STRONG><a name="[200]"></a>Xuat_Phat_Lay_Vu_Khi_Do</STRONG> (Thumb, 1188 bytes, Stack size 32 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 360<LI>Call Chain = Xuat_Phat_Lay_Vu_Khi_Do &rArr; run_encoder &rArr; tinh_speed_sigmoid &rArr; __hardfp_exp &rArr; __kernel_poly &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[175]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Bam_thanh_laser_trai
@@ -5387,7 +5391,7 @@ Global Symbols
 <LI><a href="#[202]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Xoay_dau_truoc_cua_do_3
 </UL>
 
-<P><STRONG><a name="[202]"></a>Xoay_dau_truoc_cua_do_3</STRONG> (Thumb, 316 bytes, Stack size 8 bytes, main.o(.text))
+<P><STRONG><a name="[202]"></a>Xoay_dau_truoc_cua_do_3</STRONG> (Thumb, 218 bytes, Stack size 8 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 176<LI>Call Chain = Xoay_dau_truoc_cua_do_3 &rArr; chinh_lai_vi_tri_laser_phai_custom_do &rArr; robotRunAngle &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[159]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Nang_cuc_nhanh
@@ -5419,7 +5423,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[90]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;auto_vao_rung_do_cua2
 </UL>
 
-<P><STRONG><a name="[204]"></a>Xoay_dau_truoc_cua_do_1</STRONG> (Thumb, 270 bytes, Stack size 16 bytes, main.o(.text))
+<P><STRONG><a name="[204]"></a>Xoay_dau_truoc_cua_do_1</STRONG> (Thumb, 266 bytes, Stack size 16 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 344<LI>Call Chain = Xoay_dau_truoc_cua_do_1 &rArr; run_encoder &rArr; tinh_speed_sigmoid &rArr; __hardfp_exp &rArr; __kernel_poly &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[152]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;su_dung_chan
@@ -5437,7 +5441,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[8f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;auto_vao_rung_do_cua1
 </UL>
 
-<P><STRONG><a name="[205]"></a>Vao_rung_mai_3_do</STRONG> (Thumb, 844 bytes, Stack size 24 bytes, main.o(.text))
+<P><STRONG><a name="[205]"></a>Vao_rung_mai_3_do</STRONG> (Thumb, 862 bytes, Stack size 24 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 200<LI>Call Chain = Vao_rung_mai_3_do &rArr; Bam_thanh_laser_phai &rArr; robotRunAngle &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[173]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Bam_thanh_laser_phai
@@ -5455,7 +5459,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[91]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;auto_vao_rung_do_cua3
 </UL>
 
-<P><STRONG><a name="[206]"></a>Vao_rung_mai_2_do</STRONG> (Thumb, 600 bytes, Stack size 24 bytes, main.o(.text))
+<P><STRONG><a name="[206]"></a>Vao_rung_mai_2_do</STRONG> (Thumb, 658 bytes, Stack size 24 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 200<LI>Call Chain = Vao_rung_mai_2_do &rArr; Bam_thanh_laser_phai &rArr; robotRunAngle &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[173]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Bam_thanh_laser_phai
@@ -5472,7 +5476,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[90]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;auto_vao_rung_do_cua2
 </UL>
 
-<P><STRONG><a name="[207]"></a>Vao_rung_mai_1_do</STRONG> (Thumb, 862 bytes, Stack size 24 bytes, main.o(.text))
+<P><STRONG><a name="[207]"></a>Vao_rung_mai_1_do</STRONG> (Thumb, 882 bytes, Stack size 24 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 200<LI>Call Chain = Vao_rung_mai_1_do &rArr; Bam_thanh_laser_trai &rArr; robotRunAngle &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[175]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Bam_thanh_laser_trai
@@ -5545,7 +5549,7 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> main.o(.text)
 </UL>
-<P><STRONG><a name="[208]"></a>chinh_vt_laser_trai_zone3_do_ngang</STRONG> (Thumb, 252 bytes, Stack size 40 bytes, main.o(.text))
+<P><STRONG><a name="[208]"></a>chinh_vt_laser_trai_zone3_do_ngang</STRONG> (Thumb, 168 bytes, Stack size 40 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 176<LI>Call Chain = chinh_vt_laser_trai_zone3_do_ngang &rArr; robotRunAngle &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[140]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;robotRunAngle
@@ -5556,14 +5560,16 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[20a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DatKFS_do
 </UL>
 
-<P><STRONG><a name="[20a]"></a>DatKFS_do</STRONG> (Thumb, 1472 bytes, Stack size 24 bytes, main.o(.text))
-<BR><BR>[Stack]<UL><LI>Max Depth = 200<LI>Call Chain = DatKFS_do &rArr; Bam_laser_sau &rArr; robotRunAngle &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
+<P><STRONG><a name="[20a]"></a>DatKFS_do</STRONG> (Thumb, 1830 bytes, Stack size 24 bytes, main.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 352<LI>Call Chain = DatKFS_do &rArr; run_encoder &rArr; tinh_speed_sigmoid &rArr; __hardfp_exp &rArr; __kernel_poly &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[178]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Bam_laser_sau
 <LI><a href="#[177]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Bam_laser_truoc
 <LI><a href="#[156]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;su_dung_chan_thuong
 <LI><a href="#[152]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;su_dung_chan
 <LI><a href="#[153]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Nang_nhanh
+<LI><a href="#[14f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;run_encoder
+<LI><a href="#[14c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;robotRotateQuick
 <LI><a href="#[140]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;robotRunAngle
 <LI><a href="#[15d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;robotSetACC
 <LI><a href="#[13a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;robotStop
@@ -5587,7 +5593,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[234]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dat_hop_vao_o_do
 </UL>
 
-<P><STRONG><a name="[20c]"></a>dat_qua_tay_4_3_do</STRONG> (Thumb, 590 bytes, Stack size 8 bytes, main.o(.text), UNUSED)
+<P><STRONG><a name="[20c]"></a>dat_qua_tay_4_3_do</STRONG> (Thumb, 574 bytes, Stack size 8 bytes, main.o(.text), UNUSED)
 <BR><BR>[Calls]<UL><LI><a href="#[151]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wantExit
 <LI><a href="#[cd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_ReadInputDataBit
 <LI><a href="#[11b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskDelay
@@ -5595,7 +5601,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[234]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dat_hop_vao_o_do
 </UL>
 
-<P><STRONG><a name="[20d]"></a>chuan_bi_gap_phai_200_duoi_ko_thanh_do</STRONG> (Thumb, 1326 bytes, Stack size 16 bytes, main.o(.text))
+<P><STRONG><a name="[20d]"></a>chuan_bi_gap_phai_200_duoi_ko_thanh_do</STRONG> (Thumb, 1296 bytes, Stack size 16 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 152<LI>Call Chain = chuan_bi_gap_phai_200_duoi_ko_thanh_do &rArr; robotRunAngle &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[168]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ha_sat_xuong
@@ -5618,7 +5624,7 @@ Global Symbols
 <LI><a href="#[ae]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;qua_phai_len_bac_200_11_do
 </UL>
 
-<P><STRONG><a name="[20e]"></a>chuan_bi_gap_trai_200_duoi_ko_thanh_do</STRONG> (Thumb, 1240 bytes, Stack size 16 bytes, main.o(.text))
+<P><STRONG><a name="[20e]"></a>chuan_bi_gap_trai_200_duoi_ko_thanh_do</STRONG> (Thumb, 1232 bytes, Stack size 16 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 152<LI>Call Chain = chuan_bi_gap_trai_200_duoi_ko_thanh_do &rArr; robotRunAngle &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[168]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ha_sat_xuong
@@ -5643,7 +5649,7 @@ Global Symbols
 <LI><a href="#[ae]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;qua_phai_len_bac_200_11_do
 </UL>
 
-<P><STRONG><a name="[ae]"></a>qua_phai_len_bac_200_11_do</STRONG> (Thumb, 652 bytes, Stack size 32 bytes, main.o(.text))
+<P><STRONG><a name="[ae]"></a>qua_phai_len_bac_200_11_do</STRONG> (Thumb, 668 bytes, Stack size 32 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 232<LI>Call Chain = qua_phai_len_bac_200_11_do &rArr; MD_qua_trai_phai_len_bac_200 &rArr; Leo_bac_200 &rArr; robotRunAngle &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[15f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MD_qua_trai_phai_len_bac_200
@@ -5658,7 +5664,7 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> main.o(.text)
 </UL>
-<P><STRONG><a name="[20f]"></a>chuan_bi_gap_trai_200_tren_do_7_10</STRONG> (Thumb, 1078 bytes, Stack size 16 bytes, main.o(.text))
+<P><STRONG><a name="[20f]"></a>chuan_bi_gap_trai_200_tren_do_7_10</STRONG> (Thumb, 1060 bytes, Stack size 16 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 152<LI>Call Chain = chuan_bi_gap_trai_200_tren_do_7_10 &rArr; robotRunAngle &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[156]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;su_dung_chan_thuong
@@ -5676,7 +5682,7 @@ Global Symbols
 <LI><a href="#[ad]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;qua_phai_xuong_bac_200_10_do
 </UL>
 
-<P><STRONG><a name="[ad]"></a>qua_phai_xuong_bac_200_10_do</STRONG> (Thumb, 580 bytes, Stack size 32 bytes, main.o(.text))
+<P><STRONG><a name="[ad]"></a>qua_phai_xuong_bac_200_10_do</STRONG> (Thumb, 582 bytes, Stack size 32 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 232<LI>Call Chain = qua_phai_xuong_bac_200_10_do &rArr; MD_qua_trai_phai_xuong_bac_200 &rArr; Xuong_bac_200 &rArr; robotRunAngle &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[161]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MD_qua_trai_phai_xuong_bac_200
@@ -5690,7 +5696,7 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> main.o(.text)
 </UL>
-<P><STRONG><a name="[210]"></a>di_tren_buc_khong_thanh_2_ben_do</STRONG> (Thumb, 724 bytes, Stack size 16 bytes, main.o(.text))
+<P><STRONG><a name="[210]"></a>di_tren_buc_khong_thanh_2_ben_do</STRONG> (Thumb, 716 bytes, Stack size 16 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 152<LI>Call Chain = di_tren_buc_khong_thanh_2_ben_do &rArr; robotRunAngle &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[152]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;su_dung_chan
@@ -5717,7 +5723,7 @@ Global Symbols
 <LI><a href="#[ac]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;qua_phai_len_bac_200_8_do
 </UL>
 
-<P><STRONG><a name="[ac]"></a>qua_phai_len_bac_200_8_do</STRONG> (Thumb, 696 bytes, Stack size 32 bytes, main.o(.text))
+<P><STRONG><a name="[ac]"></a>qua_phai_len_bac_200_8_do</STRONG> (Thumb, 608 bytes, Stack size 32 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 232<LI>Call Chain = qua_phai_len_bac_200_8_do &rArr; MD_qua_trai_phai_len_bac_200 &rArr; Leo_bac_200 &rArr; robotRunAngle &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[15f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MD_qua_trai_phai_len_bac_200
@@ -5733,7 +5739,7 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> main.o(.text)
 </UL>
-<P><STRONG><a name="[211]"></a>chuan_bi_gap_thang_do_7</STRONG> (Thumb, 804 bytes, Stack size 16 bytes, main.o(.text))
+<P><STRONG><a name="[211]"></a>chuan_bi_gap_thang_do_7</STRONG> (Thumb, 898 bytes, Stack size 16 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 152<LI>Call Chain = chuan_bi_gap_thang_do_7 &rArr; robotRunAngle &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[152]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;su_dung_chan
@@ -5751,7 +5757,7 @@ Global Symbols
 <LI><a href="#[ab]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;qua_phai_xuong_bac_200_7_do
 </UL>
 
-<P><STRONG><a name="[ab]"></a>qua_phai_xuong_bac_200_7_do</STRONG> (Thumb, 666 bytes, Stack size 32 bytes, main.o(.text))
+<P><STRONG><a name="[ab]"></a>qua_phai_xuong_bac_200_7_do</STRONG> (Thumb, 648 bytes, Stack size 32 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 232<LI>Call Chain = qua_phai_xuong_bac_200_7_do &rArr; MD_qua_trai_phai_xuong_bac_200 &rArr; Xuong_bac_200 &rArr; robotRunAngle &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[161]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MD_qua_trai_phai_xuong_bac_200
@@ -5766,7 +5772,7 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> main.o(.text)
 </UL>
-<P><STRONG><a name="[212]"></a>chuan_bi_gap_phai_200_duoi_do_5</STRONG> (Thumb, 1022 bytes, Stack size 8 bytes, main.o(.text))
+<P><STRONG><a name="[212]"></a>chuan_bi_gap_phai_200_duoi_do_5</STRONG> (Thumb, 1020 bytes, Stack size 8 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 144<LI>Call Chain = chuan_bi_gap_phai_200_duoi_do_5 &rArr; robotRunAngle &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[168]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ha_sat_xuong
@@ -5784,7 +5790,7 @@ Global Symbols
 <LI><a href="#[aa]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;qua_phai_xuong_bac_200_5_do
 </UL>
 
-<P><STRONG><a name="[213]"></a>chuan_bi_gap_trai_200_tren_do_4</STRONG> (Thumb, 1070 bytes, Stack size 8 bytes, main.o(.text))
+<P><STRONG><a name="[213]"></a>chuan_bi_gap_trai_200_tren_do_4</STRONG> (Thumb, 1064 bytes, Stack size 8 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 144<LI>Call Chain = chuan_bi_gap_trai_200_tren_do_4 &rArr; robotRunAngle &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[156]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;su_dung_chan_thuong
@@ -5801,7 +5807,7 @@ Global Symbols
 <LI><a href="#[aa]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;qua_phai_xuong_bac_200_5_do
 </UL>
 
-<P><STRONG><a name="[214]"></a>chuan_bi_gap_thang_do_4</STRONG> (Thumb, 1022 bytes, Stack size 16 bytes, main.o(.text))
+<P><STRONG><a name="[214]"></a>chuan_bi_gap_thang_do_4</STRONG> (Thumb, 1026 bytes, Stack size 16 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 152<LI>Call Chain = chuan_bi_gap_thang_do_4 &rArr; robotRunAngle &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[152]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;su_dung_chan
@@ -5852,7 +5858,7 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> main.o(.text)
 </UL>
-<P><STRONG><a name="[215]"></a>chuan_bi_gap_trai_200_tren_2_do</STRONG> (Thumb, 848 bytes, Stack size 8 bytes, main.o(.text))
+<P><STRONG><a name="[215]"></a>chuan_bi_gap_trai_200_tren_2_do</STRONG> (Thumb, 752 bytes, Stack size 8 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 144<LI>Call Chain = chuan_bi_gap_trai_200_tren_2_do &rArr; robotRunAngle &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[156]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;su_dung_chan_thuong
@@ -5867,7 +5873,7 @@ Global Symbols
 <LI><a href="#[a8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;qua_phai_xuong_bac_200_2_do
 </UL>
 
-<P><STRONG><a name="[216]"></a>chinh_lai_vi_tri_laser_trai_do</STRONG> (Thumb, 148 bytes, Stack size 24 bytes, main.o(.text))
+<P><STRONG><a name="[216]"></a>chinh_lai_vi_tri_laser_trai_do</STRONG> (Thumb, 228 bytes, Stack size 24 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 160<LI>Call Chain = chinh_lai_vi_tri_laser_trai_do &rArr; robotRunAngle &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[140]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;robotRunAngle
@@ -5878,7 +5884,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[217]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chuan_bi_gap_phai_200_tren_2_do
 </UL>
 
-<P><STRONG><a name="[217]"></a>chuan_bi_gap_phai_200_tren_2_do</STRONG> (Thumb, 714 bytes, Stack size 8 bytes, main.o(.text))
+<P><STRONG><a name="[217]"></a>chuan_bi_gap_phai_200_tren_2_do</STRONG> (Thumb, 656 bytes, Stack size 8 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 168<LI>Call Chain = chuan_bi_gap_phai_200_tren_2_do &rArr; chinh_lai_vi_tri_laser_trai_do &rArr; robotRunAngle &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[156]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;su_dung_chan_thuong
@@ -5894,7 +5900,7 @@ Global Symbols
 <LI><a href="#[a8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;qua_phai_xuong_bac_200_2_do
 </UL>
 
-<P><STRONG><a name="[218]"></a>chuan_bi_gap_thang_do_2</STRONG> (Thumb, 738 bytes, Stack size 16 bytes, main.o(.text))
+<P><STRONG><a name="[218]"></a>chuan_bi_gap_thang_do_2</STRONG> (Thumb, 810 bytes, Stack size 16 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 152<LI>Call Chain = chuan_bi_gap_thang_do_2 &rArr; robotRunAngle &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[152]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;su_dung_chan
@@ -5911,7 +5917,7 @@ Global Symbols
 <LI><a href="#[a8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;qua_phai_xuong_bac_200_2_do
 </UL>
 
-<P><STRONG><a name="[a8]"></a>qua_phai_xuong_bac_200_2_do</STRONG> (Thumb, 740 bytes, Stack size 24 bytes, main.o(.text))
+<P><STRONG><a name="[a8]"></a>qua_phai_xuong_bac_200_2_do</STRONG> (Thumb, 748 bytes, Stack size 24 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 224<LI>Call Chain = qua_phai_xuong_bac_200_2_do &rArr; MD_qua_trai_phai_xuong_bac_200 &rArr; Xuong_bac_200 &rArr; robotRunAngle &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[161]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MD_qua_trai_phai_xuong_bac_200
@@ -5942,7 +5948,7 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> main.o(.text)
 </UL>
-<P><STRONG><a name="[219]"></a>chuan_bi_gap_phai_200_tren_do</STRONG> (Thumb, 872 bytes, Stack size 8 bytes, main.o(.text))
+<P><STRONG><a name="[219]"></a>chuan_bi_gap_phai_200_tren_do</STRONG> (Thumb, 868 bytes, Stack size 8 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 144<LI>Call Chain = chuan_bi_gap_phai_200_tren_do &rArr; robotRunAngle &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[156]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;su_dung_chan_thuong
@@ -5957,7 +5963,7 @@ Global Symbols
 <LI><a href="#[a6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;qua_trai_xuong_bac_200_12_do
 </UL>
 
-<P><STRONG><a name="[a6]"></a>qua_trai_xuong_bac_200_12_do</STRONG> (Thumb, 648 bytes, Stack size 32 bytes, main.o(.text))
+<P><STRONG><a name="[a6]"></a>qua_trai_xuong_bac_200_12_do</STRONG> (Thumb, 570 bytes, Stack size 32 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 232<LI>Call Chain = qua_trai_xuong_bac_200_12_do &rArr; MD_qua_trai_phai_xuong_bac_200 &rArr; Xuong_bac_200 &rArr; robotRunAngle &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[161]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MD_qua_trai_phai_xuong_bac_200
@@ -5971,7 +5977,7 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> main.o(.text)
 </UL>
-<P><STRONG><a name="[a5]"></a>qua_trai_len_bac_200_11_do</STRONG> (Thumb, 616 bytes, Stack size 40 bytes, main.o(.text))
+<P><STRONG><a name="[a5]"></a>qua_trai_len_bac_200_11_do</STRONG> (Thumb, 710 bytes, Stack size 40 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 240<LI>Call Chain = qua_trai_len_bac_200_11_do &rArr; MD_qua_trai_phai_len_bac_200 &rArr; Leo_bac_200 &rArr; robotRunAngle &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[15f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MD_qua_trai_phai_len_bac_200
@@ -5986,7 +5992,7 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> main.o(.text)
 </UL>
-<P><STRONG><a name="[21a]"></a>chuan_bi_gap_thang_do_9</STRONG> (Thumb, 900 bytes, Stack size 16 bytes, main.o(.text))
+<P><STRONG><a name="[21a]"></a>chuan_bi_gap_thang_do_9</STRONG> (Thumb, 910 bytes, Stack size 16 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 152<LI>Call Chain = chuan_bi_gap_thang_do_9 &rArr; robotRunAngle &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[152]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;su_dung_chan
@@ -6005,7 +6011,7 @@ Global Symbols
 <LI><a href="#[a4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;qua_trai_xuong_bac_200_9_do
 </UL>
 
-<P><STRONG><a name="[a4]"></a>qua_trai_xuong_bac_200_9_do</STRONG> (Thumb, 658 bytes, Stack size 32 bytes, main.o(.text))
+<P><STRONG><a name="[a4]"></a>qua_trai_xuong_bac_200_9_do</STRONG> (Thumb, 582 bytes, Stack size 32 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 232<LI>Call Chain = qua_trai_xuong_bac_200_9_do &rArr; MD_qua_trai_phai_xuong_bac_200 &rArr; Xuong_bac_200 &rArr; robotRunAngle &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[161]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MD_qua_trai_phai_xuong_bac_200
@@ -6020,7 +6026,7 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> main.o(.text)
 </UL>
-<P><STRONG><a name="[a3]"></a>qua_trai_len_bac_200_8_do</STRONG> (Thumb, 602 bytes, Stack size 32 bytes, main.o(.text))
+<P><STRONG><a name="[a3]"></a>qua_trai_len_bac_200_8_do</STRONG> (Thumb, 686 bytes, Stack size 32 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 232<LI>Call Chain = qua_trai_len_bac_200_8_do &rArr; MD_qua_trai_phai_len_bac_200 &rArr; Leo_bac_200 &rArr; robotRunAngle &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[15f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MD_qua_trai_phai_len_bac_200
@@ -6036,7 +6042,7 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> main.o(.text)
 </UL>
-<P><STRONG><a name="[a2]"></a>qua_trai_len_bac_200_6_do</STRONG> (Thumb, 660 bytes, Stack size 32 bytes, main.o(.text))
+<P><STRONG><a name="[a2]"></a>qua_trai_len_bac_200_6_do</STRONG> (Thumb, 656 bytes, Stack size 32 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 232<LI>Call Chain = qua_trai_len_bac_200_6_do &rArr; MD_qua_trai_phai_len_bac_200 &rArr; Leo_bac_200 &rArr; robotRunAngle &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[15f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MD_qua_trai_phai_len_bac_200
@@ -6052,7 +6058,7 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> main.o(.text)
 </UL>
-<P><STRONG><a name="[a1]"></a>qua_trai_len_bac_200_5_do</STRONG> (Thumb, 646 bytes, Stack size 40 bytes, main.o(.text))
+<P><STRONG><a name="[a1]"></a>qua_trai_len_bac_200_5_do</STRONG> (Thumb, 570 bytes, Stack size 40 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 240<LI>Call Chain = qua_trai_len_bac_200_5_do &rArr; MD_qua_trai_phai_len_bac_200 &rArr; Leo_bac_200 &rArr; robotRunAngle &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[15f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MD_qua_trai_phai_len_bac_200
@@ -6068,7 +6074,7 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> main.o(.text)
 </UL>
-<P><STRONG><a name="[21b]"></a>chuan_bi_gap_thang_do_3</STRONG> (Thumb, 872 bytes, Stack size 8 bytes, main.o(.text))
+<P><STRONG><a name="[21b]"></a>chuan_bi_gap_thang_do_3</STRONG> (Thumb, 976 bytes, Stack size 8 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 144<LI>Call Chain = chuan_bi_gap_thang_do_3 &rArr; robotRunAngle &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[152]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;su_dung_chan
@@ -6083,7 +6089,7 @@ Global Symbols
 <LI><a href="#[a0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;qua_trai_len_bac_200_3_do
 </UL>
 
-<P><STRONG><a name="[a0]"></a>qua_trai_len_bac_200_3_do</STRONG> (Thumb, 698 bytes, Stack size 24 bytes, main.o(.text))
+<P><STRONG><a name="[a0]"></a>qua_trai_len_bac_200_3_do</STRONG> (Thumb, 706 bytes, Stack size 24 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 224<LI>Call Chain = qua_trai_len_bac_200_3_do &rArr; MD_qua_trai_phai_len_bac_200 &rArr; Leo_bac_200 &rArr; robotRunAngle &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[15f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MD_qua_trai_phai_len_bac_200
@@ -6098,7 +6104,7 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> main.o(.text)
 </UL>
-<P><STRONG><a name="[9f]"></a>qua_trai_xuong_bac_200_2_do</STRONG> (Thumb, 688 bytes, Stack size 24 bytes, main.o(.text))
+<P><STRONG><a name="[9f]"></a>qua_trai_xuong_bac_200_2_do</STRONG> (Thumb, 618 bytes, Stack size 24 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 224<LI>Call Chain = qua_trai_xuong_bac_200_2_do &rArr; MD_qua_trai_phai_xuong_bac_200 &rArr; Xuong_bac_200 &rArr; robotRunAngle &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[161]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MD_qua_trai_phai_xuong_bac_200
@@ -6114,7 +6120,7 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> main.o(.text)
 </UL>
-<P><STRONG><a name="[9e]"></a>xuong_bac_200_do_12</STRONG> (Thumb, 168 bytes, Stack size 8 bytes, main.o(.text))
+<P><STRONG><a name="[9e]"></a>xuong_bac_200_do_12</STRONG> (Thumb, 170 bytes, Stack size 8 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 168<LI>Call Chain = xuong_bac_200_do_12 &rArr; Xuong_bac_200 &rArr; robotRunAngle &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[160]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Xuong_bac_200
@@ -6127,7 +6133,7 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> main.o(.text)
 </UL>
-<P><STRONG><a name="[9d]"></a>xuong_bac_200_11_do</STRONG> (Thumb, 190 bytes, Stack size 8 bytes, main.o(.text))
+<P><STRONG><a name="[9d]"></a>xuong_bac_200_11_do</STRONG> (Thumb, 264 bytes, Stack size 8 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 168<LI>Call Chain = xuong_bac_200_11_do &rArr; Xuong_bac_200 &rArr; robotRunAngle &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[160]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Xuong_bac_200
@@ -6168,7 +6174,7 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> main.o(.text)
 </UL>
-<P><STRONG><a name="[99]"></a>Leo_bac_200_ko_thanh_do</STRONG> (Thumb, 244 bytes, Stack size 8 bytes, main.o(.text))
+<P><STRONG><a name="[99]"></a>Leo_bac_200_ko_thanh_do</STRONG> (Thumb, 202 bytes, Stack size 8 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 168<LI>Call Chain = Leo_bac_200_ko_thanh_do &rArr; Leo_bac_200 &rArr; robotRunAngle &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[15c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Leo_bac_200
@@ -6197,7 +6203,7 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> main.o(.text)
 </UL>
-<P><STRONG><a name="[98]"></a>Leo_bac_200_do_5</STRONG> (Thumb, 218 bytes, Stack size 8 bytes, main.o(.text))
+<P><STRONG><a name="[98]"></a>Leo_bac_200_do_5</STRONG> (Thumb, 274 bytes, Stack size 8 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 168<LI>Call Chain = Leo_bac_200_do_5 &rArr; Leo_bac_200 &rArr; robotRunAngle &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[15c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Leo_bac_200
@@ -6242,7 +6248,7 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> main.o(.text)
 </UL>
-<P><STRONG><a name="[21c]"></a>Leo_bac_200_bam_thanh_phai_do</STRONG> (Thumb, 276 bytes, Stack size 8 bytes, main.o(.text))
+<P><STRONG><a name="[21c]"></a>Leo_bac_200_bam_thanh_phai_do</STRONG> (Thumb, 210 bytes, Stack size 8 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 176<LI>Call Chain = Leo_bac_200_bam_thanh_phai_do &rArr; chuan_bi_gap_phai_200_tren_2_do &rArr; chinh_lai_vi_tri_laser_trai_do &rArr; robotRunAngle &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[15c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Leo_bac_200
@@ -6273,7 +6279,7 @@ Global Symbols
 <BR>[Address Reference Count : 1]<UL><LI> main.o(.text)
 </UL>
 <P><STRONG><a name="[21e]"></a>Lay_ben_phai_bac_200_duoi_do_8</STRONG> (Thumb, 64 bytes, Stack size 8 bytes, main.o(.text))
-<BR><BR>[Stack]<UL><LI>Max Depth = 236<LI>Call Chain = Lay_ben_phai_bac_200_duoi_do_8 &rArr; Lay_ben_phai_bac_200_duoi &rArr; Gap_tay1_thang &rArr; ha_tay_1 &rArr; robotRun &rArr; robotCurve &rArr; calculateMotor &rArr; __hardfp_sinf &rArr; __mathlib_rredf2
+<BR><BR>[Stack]<UL><LI>Max Depth = 236<LI>Call Chain = Lay_ben_phai_bac_200_duoi_do_8 &rArr; Lay_ben_phai_bac_200_duoi &rArr; Gap_tay4_thang &rArr; ha_tay_4 &rArr; robotRun &rArr; robotCurve &rArr; calculateMotor &rArr; __hardfp_sinf &rArr; __mathlib_rredf2
 </UL>
 <BR>[Calls]<UL><LI><a href="#[13a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;robotStop
 <LI><a href="#[11b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskDelay
@@ -6286,7 +6292,7 @@ Global Symbols
 <BR>[Address Reference Count : 1]<UL><LI> main.o(.text)
 </UL>
 <P><STRONG><a name="[21f]"></a>Lay_ben_phai_bac_200_tren_do_9</STRONG> (Thumb, 44 bytes, Stack size 8 bytes, main.o(.text))
-<BR><BR>[Stack]<UL><LI>Max Depth = 236<LI>Call Chain = Lay_ben_phai_bac_200_tren_do_9 &rArr; Lay_ben_phai_bac_200_tren &rArr; Gap_tay1_thang &rArr; ha_tay_1 &rArr; robotRun &rArr; robotCurve &rArr; calculateMotor &rArr; __hardfp_sinf &rArr; __mathlib_rredf2
+<BR><BR>[Stack]<UL><LI>Max Depth = 236<LI>Call Chain = Lay_ben_phai_bac_200_tren_do_9 &rArr; Lay_ben_phai_bac_200_tren &rArr; Gap_tay4_thang &rArr; ha_tay_4 &rArr; robotRun &rArr; robotCurve &rArr; calculateMotor &rArr; __hardfp_sinf &rArr; __mathlib_rredf2
 </UL>
 <BR>[Calls]<UL><LI><a href="#[13a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;robotStop
 <LI><a href="#[11b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskDelay
@@ -6296,8 +6302,8 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> main.o(.text)
 </UL>
-<P><STRONG><a name="[220]"></a>Lay_ben_phai_bac_200_duoi_do_6</STRONG> (Thumb, 138 bytes, Stack size 8 bytes, main.o(.text))
-<BR><BR>[Stack]<UL><LI>Max Depth = 236<LI>Call Chain = Lay_ben_phai_bac_200_duoi_do_6 &rArr; Lay_ben_phai_bac_200_duoi &rArr; Gap_tay1_thang &rArr; ha_tay_1 &rArr; robotRun &rArr; robotCurve &rArr; calculateMotor &rArr; __hardfp_sinf &rArr; __mathlib_rredf2
+<P><STRONG><a name="[220]"></a>Lay_ben_phai_bac_200_duoi_do_6</STRONG> (Thumb, 196 bytes, Stack size 8 bytes, main.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 236<LI>Call Chain = Lay_ben_phai_bac_200_duoi_do_6 &rArr; Lay_ben_phai_bac_200_duoi &rArr; Gap_tay4_thang &rArr; ha_tay_4 &rArr; robotRun &rArr; robotCurve &rArr; calculateMotor &rArr; __hardfp_sinf &rArr; __mathlib_rredf2
 </UL>
 <BR>[Calls]<UL><LI><a href="#[140]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;robotRunAngle
 <LI><a href="#[13a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;robotStop
@@ -6311,7 +6317,7 @@ Global Symbols
 <BR>[Address Reference Count : 1]<UL><LI> main.o(.text)
 </UL>
 <P><STRONG><a name="[221]"></a>Lay_ben_phai_bac_200_duoi_do_5</STRONG> (Thumb, 70 bytes, Stack size 8 bytes, main.o(.text))
-<BR><BR>[Stack]<UL><LI>Max Depth = 236<LI>Call Chain = Lay_ben_phai_bac_200_duoi_do_5 &rArr; Lay_ben_phai_bac_200_duoi &rArr; Gap_tay1_thang &rArr; ha_tay_1 &rArr; robotRun &rArr; robotCurve &rArr; calculateMotor &rArr; __hardfp_sinf &rArr; __mathlib_rredf2
+<BR><BR>[Stack]<UL><LI>Max Depth = 236<LI>Call Chain = Lay_ben_phai_bac_200_duoi_do_5 &rArr; Lay_ben_phai_bac_200_duoi &rArr; Gap_tay4_thang &rArr; ha_tay_4 &rArr; robotRun &rArr; robotCurve &rArr; calculateMotor &rArr; __hardfp_sinf &rArr; __mathlib_rredf2
 </UL>
 <BR>[Calls]<UL><LI><a href="#[13a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;robotStop
 <LI><a href="#[11b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskDelay
@@ -6324,7 +6330,7 @@ Global Symbols
 <BR>[Address Reference Count : 1]<UL><LI> main.o(.text)
 </UL>
 <P><STRONG><a name="[222]"></a>Lay_ben_phai_bac_200_duoi_do_3</STRONG> (Thumb, 44 bytes, Stack size 8 bytes, main.o(.text))
-<BR><BR>[Stack]<UL><LI>Max Depth = 236<LI>Call Chain = Lay_ben_phai_bac_200_duoi_do_3 &rArr; Lay_ben_phai_bac_200_duoi &rArr; Gap_tay1_thang &rArr; ha_tay_1 &rArr; robotRun &rArr; robotCurve &rArr; calculateMotor &rArr; __hardfp_sinf &rArr; __mathlib_rredf2
+<BR><BR>[Stack]<UL><LI>Max Depth = 236<LI>Call Chain = Lay_ben_phai_bac_200_duoi_do_3 &rArr; Lay_ben_phai_bac_200_duoi &rArr; Gap_tay4_thang &rArr; ha_tay_4 &rArr; robotRun &rArr; robotCurve &rArr; calculateMotor &rArr; __hardfp_sinf &rArr; __mathlib_rredf2
 </UL>
 <BR>[Calls]<UL><LI><a href="#[13a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;robotStop
 <LI><a href="#[11b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskDelay
@@ -6335,7 +6341,7 @@ Global Symbols
 <BR>[Address Reference Count : 1]<UL><LI> main.o(.text)
 </UL>
 <P><STRONG><a name="[223]"></a>Lay_ben_phai_bac_200_tren_do_2</STRONG> (Thumb, 70 bytes, Stack size 8 bytes, main.o(.text))
-<BR><BR>[Stack]<UL><LI>Max Depth = 236<LI>Call Chain = Lay_ben_phai_bac_200_tren_do_2 &rArr; Lay_ben_phai_bac_200_tren &rArr; Gap_tay1_thang &rArr; ha_tay_1 &rArr; robotRun &rArr; robotCurve &rArr; calculateMotor &rArr; __hardfp_sinf &rArr; __mathlib_rredf2
+<BR><BR>[Stack]<UL><LI>Max Depth = 236<LI>Call Chain = Lay_ben_phai_bac_200_tren_do_2 &rArr; Lay_ben_phai_bac_200_tren &rArr; Gap_tay4_thang &rArr; ha_tay_4 &rArr; robotRun &rArr; robotCurve &rArr; calculateMotor &rArr; __hardfp_sinf &rArr; __mathlib_rredf2
 </UL>
 <BR>[Calls]<UL><LI><a href="#[13a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;robotStop
 <LI><a href="#[11b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskDelay
@@ -6347,7 +6353,7 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> main.o(.text)
 </UL>
-<P><STRONG><a name="[224]"></a>chuan_bi_gap_phai_200_duoi_ko_thanh_do_8</STRONG> (Thumb, 1032 bytes, Stack size 8 bytes, main.o(.text))
+<P><STRONG><a name="[224]"></a>chuan_bi_gap_phai_200_duoi_ko_thanh_do_8</STRONG> (Thumb, 1020 bytes, Stack size 8 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 144<LI>Call Chain = chuan_bi_gap_phai_200_duoi_ko_thanh_do_8 &rArr; robotRunAngle &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[168]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ha_sat_xuong
@@ -6376,7 +6382,7 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[226]"></a>Lay_ben_trai_bac_200_duoi_do_8_11</STRONG> (Thumb, 68 bytes, Stack size 8 bytes, main.o(.text))
-<BR><BR>[Stack]<UL><LI>Max Depth = 236<LI>Call Chain = Lay_ben_trai_bac_200_duoi_do_8_11 &rArr; Lay_ben_trai_bac_200_duoi &rArr; Gap_tay1_thang &rArr; ha_tay_1 &rArr; robotRun &rArr; robotCurve &rArr; calculateMotor &rArr; __hardfp_sinf &rArr; __mathlib_rredf2
+<BR><BR>[Stack]<UL><LI>Max Depth = 236<LI>Call Chain = Lay_ben_trai_bac_200_duoi_do_8_11 &rArr; Lay_ben_trai_bac_200_duoi &rArr; Gap_tay4_thang &rArr; ha_tay_4 &rArr; robotRun &rArr; robotCurve &rArr; calculateMotor &rArr; __hardfp_sinf &rArr; __mathlib_rredf2
 </UL>
 <BR>[Calls]<UL><LI><a href="#[13a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;robotStop
 <LI><a href="#[11b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskDelay
@@ -6390,7 +6396,7 @@ Global Symbols
 <BR>[Address Reference Count : 1]<UL><LI> main.o(.text)
 </UL>
 <P><STRONG><a name="[227]"></a>Lay_ben_trai_bac_200_tren_do_7_10</STRONG> (Thumb, 114 bytes, Stack size 8 bytes, main.o(.text))
-<BR><BR>[Stack]<UL><LI>Max Depth = 236<LI>Call Chain = Lay_ben_trai_bac_200_tren_do_7_10 &rArr; Lay_ben_trai_bac_200_tren &rArr; Gap_tay1_thang &rArr; ha_tay_1 &rArr; robotRun &rArr; robotCurve &rArr; calculateMotor &rArr; __hardfp_sinf &rArr; __mathlib_rredf2
+<BR><BR>[Stack]<UL><LI>Max Depth = 236<LI>Call Chain = Lay_ben_trai_bac_200_tren_do_7_10 &rArr; Lay_ben_trai_bac_200_tren &rArr; Gap_tay4_thang &rArr; ha_tay_4 &rArr; robotRun &rArr; robotCurve &rArr; calculateMotor &rArr; __hardfp_sinf &rArr; __mathlib_rredf2
 </UL>
 <BR>[Calls]<UL><LI><a href="#[152]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;su_dung_chan
 <LI><a href="#[13a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;robotStop
@@ -6403,7 +6409,7 @@ Global Symbols
 <BR>[Address Reference Count : 1]<UL><LI> main.o(.text)
 </UL>
 <P><STRONG><a name="[228]"></a>Lay_ben_trai_bac_200_tren_do_5_6</STRONG> (Thumb, 118 bytes, Stack size 8 bytes, main.o(.text))
-<BR><BR>[Stack]<UL><LI>Max Depth = 236<LI>Call Chain = Lay_ben_trai_bac_200_tren_do_5_6 &rArr; Lay_ben_trai_bac_200_tren &rArr; Gap_tay1_thang &rArr; ha_tay_1 &rArr; robotRun &rArr; robotCurve &rArr; calculateMotor &rArr; __hardfp_sinf &rArr; __mathlib_rredf2
+<BR><BR>[Stack]<UL><LI>Max Depth = 236<LI>Call Chain = Lay_ben_trai_bac_200_tren_do_5_6 &rArr; Lay_ben_trai_bac_200_tren &rArr; Gap_tay4_thang &rArr; ha_tay_4 &rArr; robotRun &rArr; robotCurve &rArr; calculateMotor &rArr; __hardfp_sinf &rArr; __mathlib_rredf2
 </UL>
 <BR>[Calls]<UL><LI><a href="#[152]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;su_dung_chan
 <LI><a href="#[13a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;robotStop
@@ -6418,8 +6424,8 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> main.o(.text)
 </UL>
-<P><STRONG><a name="[229]"></a>Lay_ben_trai_bac_200_tren_do_2</STRONG> (Thumb, 124 bytes, Stack size 8 bytes, main.o(.text))
-<BR><BR>[Stack]<UL><LI>Max Depth = 236<LI>Call Chain = Lay_ben_trai_bac_200_tren_do_2 &rArr; Lay_ben_trai_bac_200_tren &rArr; Gap_tay1_thang &rArr; ha_tay_1 &rArr; robotRun &rArr; robotCurve &rArr; calculateMotor &rArr; __hardfp_sinf &rArr; __mathlib_rredf2
+<P><STRONG><a name="[229]"></a>Lay_ben_trai_bac_200_tren_do_2</STRONG> (Thumb, 68 bytes, Stack size 8 bytes, main.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 236<LI>Call Chain = Lay_ben_trai_bac_200_tren_do_2 &rArr; Lay_ben_trai_bac_200_tren &rArr; Gap_tay4_thang &rArr; ha_tay_4 &rArr; robotRun &rArr; robotCurve &rArr; calculateMotor &rArr; __hardfp_sinf &rArr; __mathlib_rredf2
 </UL>
 <BR>[Calls]<UL><LI><a href="#[13a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;robotStop
 <LI><a href="#[11b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskDelay
@@ -6433,7 +6439,7 @@ Global Symbols
 <BR>[Address Reference Count : 1]<UL><LI> main.o(.text)
 </UL>
 <P><STRONG><a name="[22a]"></a>Lay_ben_trai_bac_200_duoi_do_1</STRONG> (Thumb, 38 bytes, Stack size 8 bytes, main.o(.text))
-<BR><BR>[Stack]<UL><LI>Max Depth = 236<LI>Call Chain = Lay_ben_trai_bac_200_duoi_do_1 &rArr; Lay_ben_trai_bac_200_duoi &rArr; Gap_tay1_thang &rArr; ha_tay_1 &rArr; robotRun &rArr; robotCurve &rArr; calculateMotor &rArr; __hardfp_sinf &rArr; __mathlib_rredf2
+<BR><BR>[Stack]<UL><LI>Max Depth = 236<LI>Call Chain = Lay_ben_trai_bac_200_duoi_do_1 &rArr; Lay_ben_trai_bac_200_duoi &rArr; Gap_tay4_thang &rArr; ha_tay_4 &rArr; robotRun &rArr; robotCurve &rArr; calculateMotor &rArr; __hardfp_sinf &rArr; __mathlib_rredf2
 </UL>
 <BR>[Calls]<UL><LI><a href="#[13a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;robotStop
 <LI><a href="#[11b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskDelay
@@ -6456,7 +6462,7 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> main.o(.text)
 </UL>
-<P><STRONG><a name="[22c]"></a>qua_phai_len_bac_200_cua_vao_do</STRONG> (Thumb, 424 bytes, Stack size 16 bytes, main.o(.text))
+<P><STRONG><a name="[22c]"></a>qua_phai_len_bac_200_cua_vao_do</STRONG> (Thumb, 500 bytes, Stack size 16 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 344<LI>Call Chain = qua_phai_len_bac_200_cua_vao_do &rArr; run_encoder &rArr; tinh_speed_sigmoid &rArr; __hardfp_exp &rArr; __kernel_poly &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[152]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;su_dung_chan
@@ -6469,7 +6475,7 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> main.o(.text)
 </UL>
-<P><STRONG><a name="[22d]"></a>qua_trai_len_bac_200_cua_vao_do</STRONG> (Thumb, 456 bytes, Stack size 16 bytes, main.o(.text))
+<P><STRONG><a name="[22d]"></a>qua_trai_len_bac_200_cua_vao_do</STRONG> (Thumb, 388 bytes, Stack size 16 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 344<LI>Call Chain = qua_trai_len_bac_200_cua_vao_do &rArr; run_encoder &rArr; tinh_speed_sigmoid &rArr; __hardfp_exp &rArr; __kernel_poly &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[152]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;su_dung_chan
@@ -6495,7 +6501,7 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> main.o(.text)
 </UL>
-<P><STRONG><a name="[257]"></a>Init_Action_Table_san_do</STRONG> (Thumb, 504 bytes, Stack size 12 bytes, main.o(.text))
+<P><STRONG><a name="[257]"></a>Init_Action_Table_san_do</STRONG> (Thumb, 618 bytes, Stack size 12 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 12<LI>Call Chain = Init_Action_Table_san_do
 </UL>
 <BR>[Called By]<UL><LI><a href="#[b5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;taskMain
@@ -6512,7 +6518,7 @@ Global Symbols
 <LI><a href="#[23a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;tudonghoantoan_san_do
 </UL>
 
-<P><STRONG><a name="[230]"></a>mo_vk_san_do</STRONG> (Thumb, 412 bytes, Stack size 8 bytes, main.o(.text))
+<P><STRONG><a name="[230]"></a>mo_vk_san_do</STRONG> (Thumb, 186 bytes, Stack size 8 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 56<LI>Call Chain = mo_vk_san_do &rArr; vTaskDelay &rArr; xTaskResumeAll &rArr; vTaskIncrementTick
 </UL>
 <BR>[Calls]<UL><LI><a href="#[151]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wantExit
@@ -6521,7 +6527,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[23a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;tudonghoantoan_san_do
 </UL>
 
-<P><STRONG><a name="[231]"></a>retry_zone_3_o_1_do</STRONG> (Thumb, 458 bytes, Stack size 32 bytes, main.o(.text))
+<P><STRONG><a name="[231]"></a>retry_zone_3_o_1_do</STRONG> (Thumb, 668 bytes, Stack size 32 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 208<LI>Call Chain = retry_zone_3_o_1_do &rArr; Bam_laser_truoc &rArr; robotRunAngle &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[177]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Bam_laser_truoc
@@ -6538,7 +6544,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[237]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chon_o_retry3_do
 </UL>
 
-<P><STRONG><a name="[232]"></a>retry_zone_3_o_2_do</STRONG> (Thumb, 538 bytes, Stack size 32 bytes, main.o(.text))
+<P><STRONG><a name="[232]"></a>retry_zone_3_o_2_do</STRONG> (Thumb, 462 bytes, Stack size 32 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 208<LI>Call Chain = retry_zone_3_o_2_do &rArr; Bam_laser_truoc &rArr; robotRunAngle &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[177]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Bam_laser_truoc
@@ -6572,7 +6578,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[237]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chon_o_retry3_do
 </UL>
 
-<P><STRONG><a name="[234]"></a>dat_hop_vao_o_do</STRONG> (Thumb, 30 bytes, Stack size 8 bytes, main.o(.text), UNUSED)
+<P><STRONG><a name="[234]"></a>dat_hop_vao_o_do</STRONG> (Thumb, 72 bytes, Stack size 8 bytes, main.o(.text), UNUSED)
 <BR><BR>[Calls]<UL><LI><a href="#[20c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dat_qua_tay_4_3_do
 <LI><a href="#[20b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dat_qua_tay_1_2_do
 </UL>
@@ -6585,7 +6591,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[236]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;tu_dong_dat_tang2_do
 </UL>
 
-<P><STRONG><a name="[236]"></a>tu_dong_dat_tang2_do</STRONG> (Thumb, 654 bytes, Stack size 16 bytes, main.o(.text))
+<P><STRONG><a name="[236]"></a>tu_dong_dat_tang2_do</STRONG> (Thumb, 542 bytes, Stack size 16 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 344<LI>Call Chain = tu_dong_dat_tang2_do &rArr; run_encoder &rArr; tinh_speed_sigmoid &rArr; __hardfp_exp &rArr; __kernel_poly &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[152]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;su_dung_chan
@@ -6607,7 +6613,7 @@ Global Symbols
 <LI><a href="#[237]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chon_o_retry3_do
 </UL>
 
-<P><STRONG><a name="[237]"></a>chon_o_retry3_do</STRONG> (Thumb, 314 bytes, Stack size 16 bytes, main.o(.text))
+<P><STRONG><a name="[237]"></a>chon_o_retry3_do</STRONG> (Thumb, 446 bytes, Stack size 16 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 360<LI>Call Chain = chon_o_retry3_do &rArr; tu_dong_dat_tang2_do &rArr; run_encoder &rArr; tinh_speed_sigmoid &rArr; __hardfp_exp &rArr; __kernel_poly &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[152]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;su_dung_chan
@@ -6656,7 +6662,7 @@ Global Symbols
 <LI><a href="#[1aa]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chinh_lai_vi_tri_laser_trai
 </UL>
 
-<P><STRONG><a name="[23a]"></a>tudonghoantoan_san_do</STRONG> (Thumb, 470 bytes, Stack size 8 bytes, main.o(.text))
+<P><STRONG><a name="[23a]"></a>tudonghoantoan_san_do</STRONG> (Thumb, 362 bytes, Stack size 8 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 368<LI>Call Chain = tudonghoantoan_san_do &rArr; Xuat_Phat_Lay_Vu_Khi_Do &rArr; run_encoder &rArr; tinh_speed_sigmoid &rArr; __hardfp_exp &rArr; __kernel_poly &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[152]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;su_dung_chan
@@ -6683,8 +6689,8 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[240]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;bat_dau_chay_do
 </UL>
 
-<P><STRONG><a name="[23b]"></a>retry_zone2_do</STRONG> (Thumb, 338 bytes, Stack size 8 bytes, main.o(.text))
-<BR><BR>[Stack]<UL><LI>Max Depth = 352<LI>Call Chain = retry_zone2_do &rArr; check_dat_hop_tren_T2_do &rArr; run_encoder &rArr; tinh_speed_sigmoid &rArr; __hardfp_exp &rArr; __kernel_poly &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
+<P><STRONG><a name="[23b]"></a>retry_zone2_do</STRONG> (Thumb, 410 bytes, Stack size 8 bytes, main.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 360<LI>Call Chain = retry_zone2_do &rArr; DatKFS_do &rArr; run_encoder &rArr; tinh_speed_sigmoid &rArr; __hardfp_exp &rArr; __kernel_poly &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[152]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;su_dung_chan
 <LI><a href="#[13d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;robotRotate
@@ -6716,7 +6722,7 @@ Global Symbols
 <LI><a href="#[1aa]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chinh_lai_vi_tri_laser_trai
 </UL>
 
-<P><STRONG><a name="[23d]"></a>chon_o_nhat_hop_do</STRONG> (Thumb, 544 bytes, Stack size 24 bytes, main.o(.text))
+<P><STRONG><a name="[23d]"></a>chon_o_nhat_hop_do</STRONG> (Thumb, 486 bytes, Stack size 24 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 440<LI>Call Chain = chon_o_nhat_hop_do &rArr; dat_hop4_2_retry &rArr; run_encoder &rArr; tinh_speed_sigmoid &rArr; __hardfp_exp &rArr; __kernel_poly &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[156]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;su_dung_chan_thuong
@@ -6740,7 +6746,7 @@ Global Symbols
 <BR><BR>[Calls]<UL><LI><a href="#[1f9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;run_align_center
 </UL>
 
-<P><STRONG><a name="[23f]"></a>nhat_hop_zone3_do</STRONG> (Thumb, 2374 bytes, Stack size 56 bytes, main.o(.text))
+<P><STRONG><a name="[23f]"></a>nhat_hop_zone3_do</STRONG> (Thumb, 2396 bytes, Stack size 56 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 496<LI>Call Chain = nhat_hop_zone3_do &rArr; chon_o_nhat_hop_do &rArr; dat_hop4_2_retry &rArr; run_encoder &rArr; tinh_speed_sigmoid &rArr; __hardfp_exp &rArr; __kernel_poly &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[156]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;su_dung_chan_thuong
@@ -6770,7 +6776,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[240]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;bat_dau_chay_do
 </UL>
 
-<P><STRONG><a name="[240]"></a>bat_dau_chay_do</STRONG> (Thumb, 340 bytes, Stack size 16 bytes, main.o(.text))
+<P><STRONG><a name="[240]"></a>bat_dau_chay_do</STRONG> (Thumb, 430 bytes, Stack size 16 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 512<LI>Call Chain = bat_dau_chay_do &rArr; nhat_hop_zone3_do &rArr; chon_o_nhat_hop_do &rArr; dat_hop4_2_retry &rArr; run_encoder &rArr; tinh_speed_sigmoid &rArr; __hardfp_exp &rArr; __kernel_poly &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[152]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;su_dung_chan
@@ -6815,7 +6821,7 @@ Global Symbols
 <LI><a href="#[11b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskDelay
 </UL>
 
-<P><STRONG><a name="[244]"></a>di_vao_giua_do</STRONG> (Thumb, 384 bytes, Stack size 8 bytes, main.o(.text), UNUSED)
+<P><STRONG><a name="[244]"></a>di_vao_giua_do</STRONG> (Thumb, 254 bytes, Stack size 8 bytes, main.o(.text), UNUSED)
 <BR><BR>[Calls]<UL><LI><a href="#[140]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;robotRunAngle
 <LI><a href="#[13a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;robotStop
 <LI><a href="#[11b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskDelay
@@ -6843,7 +6849,7 @@ Global Symbols
 <LI><a href="#[db]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__2sprintf
 </UL>
 
-<P><STRONG><a name="[5d]"></a>main</STRONG> (Thumb, 328 bytes, Stack size 24 bytes, main.o(.text))
+<P><STRONG><a name="[5d]"></a>main</STRONG> (Thumb, 60 bytes, Stack size 24 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 200<LI>Call Chain = main &rArr; vTaskStartScheduler &rArr; xTimerCreateTimerTask &rArr; xTaskGenericCreate &rArr; prvAllocateTCBAndStack &rArr; pvPortMalloc &rArr; xTaskResumeAll &rArr; vTaskIncrementTick
 </UL>
 <BR>[Calls]<UL><LI><a href="#[253]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskGenericCreate
@@ -8581,8 +8587,7 @@ Global Symbols
 <LI><a href="#[279]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortYieldFromISR
 <LI><a href="#[2a4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;uxListRemove
 </UL>
-<BR>[Called By]<UL><LI><a href="#[191]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Gap_tay1_thang
-<LI><a href="#[190]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ha_tay_1
+<BR>[Called By]<UL><LI><a href="#[190]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ha_tay_1
 <LI><a href="#[18f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Gap_tay4_thang
 <LI><a href="#[18e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ha_tay_4
 <LI><a href="#[18a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Ktra_vtri_kep3_trai
@@ -8824,6 +8829,7 @@ Global Symbols
 <LI><a href="#[194]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ha_tay_3
 <LI><a href="#[193]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Gap_tay2_thang
 <LI><a href="#[192]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ha_tay_2
+<LI><a href="#[191]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Gap_tay1_thang
 </UL>
 
 <P><STRONG><a name="[2be]"></a>uxTaskPriorityGet</STRONG> (Thumb, 30 bytes, Stack size 16 bytes, tasks.o(.text), UNUSED)
@@ -9523,7 +9529,7 @@ Local Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> main.o(.text)
 </UL>
-<P><STRONG><a name="[b4]"></a>taskDieuKhienCoCau1</STRONG> (Thumb, 52 bytes, Stack size 0 bytes, main.o(.text))
+<P><STRONG><a name="[b4]"></a>taskDieuKhienCoCau1</STRONG> (Thumb, 158 bytes, Stack size 0 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 48<LI>Call Chain = taskDieuKhienCoCau1 &rArr; vTaskDelay &rArr; xTaskResumeAll &rArr; vTaskIncrementTick
 </UL>
 <BR>[Calls]<UL><LI><a href="#[24b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Xoay_tay_kep
