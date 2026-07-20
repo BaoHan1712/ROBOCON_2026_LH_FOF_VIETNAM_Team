@@ -1159,7 +1159,7 @@ void Leo_bac_400(int Angle, int Robot_Angle)
 		while(abs(bientrochansauValue - target_chan_sau) > 8)	{vTaskDelay(1); if(!wantExit())	break;}
 	}
 
-	robotRunAngle(Angle,12,Robot_Angle,0.6);
+	robotRunAngle(Angle,15,Robot_Angle,0.6);
 	
 	for(i=0;i<150;i++)	
 	{	
@@ -1184,7 +1184,7 @@ void Leo_bac_400(int Angle, int Robot_Angle)
 		while(CB_ROI_1 == 1  && CB_ROI_4 == 1)	{vTaskDelay(1); if(!wantExit())	break;}
 	}
 	
-	robotRunAngle(Angle,30,Robot_Angle,0.6);
+	robotRunAngle(Angle,31,Robot_Angle,0.6);
 	
 	for(i=0;i<550;i++)	
 	{	

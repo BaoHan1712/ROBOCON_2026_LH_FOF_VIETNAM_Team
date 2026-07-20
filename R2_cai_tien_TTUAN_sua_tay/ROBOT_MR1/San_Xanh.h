@@ -3830,7 +3830,7 @@ void DatKFSxanh(int vitri)
 							if(!wantExit())	break;
 						}
 				}
-				vTaskDelay(7000); 
+				vTaskDelay(7500); 
 				led_bao_hieu_off;
 				
 				robotRunAngle(20,60,900,0.6);

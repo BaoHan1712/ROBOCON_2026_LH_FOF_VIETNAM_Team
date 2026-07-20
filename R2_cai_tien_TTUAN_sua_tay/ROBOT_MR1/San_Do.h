@@ -860,10 +860,10 @@ void DatKFS_do(int vitri)
 		}	
 
 ////////======================================			
-/// check r1 trong khoang 260 toi 270
+/// check r1 trong khoang 260 toi 275
 	for(i=0;i<550;i++)	         //// check con 1 co dung day kh
 		{	
-			while(lazeTraiValue < 270)	
+			while(lazeTraiValue < 275)	
 			{
 				Bam_laser_sau(52,0,-900,135, 3, 150, 15);
 				if (lazeTruocValue > 180) { // r1 kh co do
@@ -903,7 +903,7 @@ void DatKFS_do(int vitri)
 		{	
 				while(lazeTraiValue > 200)	
 				{	
-					Bam_laser_truoc(50,0,900, vitri  , 3, 300, 10);
+					Bam_laser_truoc(50,-50,900, vitri  , 3, 300, 10);
 					vTaskDelay(1); 
 					if(!wantExit())	break;
 				}
@@ -927,14 +927,14 @@ void DatKFS_do(int vitri)
 						if(!wantExit())	break;
 					}
 			}
-			vTaskDelay(2000); 
+			vTaskDelay(4500); 
 			led_bao_hieu_off;
 			
 			for(i=0;i<550;i++)	
 		{	
 				while(lazeTraiValue > 200)	
 				{	
-					Bam_laser_truoc(50,0,900, vitri  , 2, 150, 10);
+					Bam_laser_truoc(50,-100,900, vitri  , 2, 150, 10);
 					vTaskDelay(1); 
 					if(!wantExit())	break;
 				}
