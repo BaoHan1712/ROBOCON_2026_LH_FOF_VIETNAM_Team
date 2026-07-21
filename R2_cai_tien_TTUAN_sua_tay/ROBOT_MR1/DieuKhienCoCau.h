@@ -788,8 +788,8 @@ void di_tren_buc_khong_thanh_2_ben (void) {
 void Leo_bac_200(int Angle, int Robot_Angle)
 {	
 	int i;
-	speed_chan_sau = 110;
-	speed_chan_truoc = 110;
+	speed_chan_sau = 100;
+	speed_chan_truoc = 100;
 	
 	target_chan_truoc = Min_chan_truoc + 247;
 	target_chan_sau = Min_chan_sau + 245;
@@ -926,7 +926,7 @@ void MD_qua_trai_phai_len_bac_200 (int goc_quay_ngang,int goc_quay_thang, int di
 
 void MD_qua_trai_phai_xuong_bac_200 (int goc_quay_ngang,int goc_quay_thang, int di_Cheo, int time_lui, int giu_dau, int Angle, int Robot_Angle) {
 		robotStop(0);
-		su_dung_chan_thuong(350);
+//		su_dung_chan_thuong(350);
 		robotStop(0);
 		robotRunAngle(di_Cheo, 16, giu_dau,0.5);
 		vTaskDelay (time_lui); 
@@ -1588,7 +1588,7 @@ void qua_trai_len_bac_200_cua_vao(void) {
 	vTaskDelay(4000);
 	robotStop(0);
 	if ( TinHieu_ChuanBi_GapThang == 1 ) {
-				run_encoder(10000, 1800, 900, 45, 5, 4000, 50);
+				run_encoder(12000, 1800, 900, 45, 5, 4000, 50);
 				robotRunAngle(-900,15,900,0.8);
 				for(i=0;i<1050;i++)	
 				{	
@@ -1598,7 +1598,7 @@ void qua_trai_len_bac_200_cua_vao(void) {
 		
 	else if  ( TinHieu_ChuanBi_GapThang == 0 ) {
 			if (chay_ngang_qua_o1_xanh == 0) {
-					run_encoder(10000, 1800, 900, 45, 5, 5000, 50);
+					run_encoder(12000, 1800, 900, 45, 5, 5000, 50);
 					robotStop(0);
 			}
 			else if (chay_ngang_qua_o1_xanh == 1) {
@@ -2763,7 +2763,7 @@ void Lay_phia_truoc_bac_200_tren (void) {
 						da_lay_tay4 = 1;
 				}
 		
-				TinHieu_ChuanBi_GapPhai =0;	
+				TinHieu_ChuanBi_GapPhai = 0;	
 	}
 
 	
@@ -2817,7 +2817,7 @@ void Lay_ben_phai_bac_200_duoi (void) {
 					
 					Gap_tay4_thang(Min_tay_gat2  ,75 ,250 ,24 ,1.4 ,0 ,1800 ,5);
 				
-					su_dung_chan_thuong(350);
+					su_dung_chan_thuong(295);
 					robotStop(0);
 					
 					if(CHON_SAN == 0)	{ // san do
@@ -2841,7 +2841,7 @@ void Lay_ben_phai_bac_200_duoi (void) {
 
 					Gap_tay1_thang(Max_tay_gat1 - 8 ,75 ,250 ,24 ,1.4 ,0 ,1800 ,5);
 					
-					su_dung_chan_thuong(350);
+					su_dung_chan_thuong(295);
 					robotStop(0);
 					if(CHON_SAN == 0)	{ // san do
 					robotRunAngle(600,16,-900,0.8);
@@ -2862,7 +2862,7 @@ void Lay_ben_phai_bac_200_duoi (void) {
 					}
 
 					Gap_tay2_thang(Max_tay_gat2 - 10  ,75 ,250 ,22 ,1.2 ,0 ,1800 ,5);
-					su_dung_chan_thuong(350);
+					su_dung_chan_thuong(295);
 					robotStop(0);
 					if(CHON_SAN == 0)	{ // san do
 						robotRunAngle(50,16,-900,0.8);
@@ -2884,7 +2884,7 @@ void Lay_ben_phai_bac_200_duoi (void) {
 
 					Gap_tay3_thang(Min_tay_gat1 - 8 ,75 ,250 ,22 ,1.2 ,0 ,1800 ,5);
 					da_lay_tay4 = 1;
-					su_dung_chan_thuong(350);
+					su_dung_chan_thuong(295);
 					robotStop(0);
 					if(CHON_SAN == 0)	{ // san do
 						robotRunAngle(50,16,-900,0.8);
@@ -3052,7 +3052,7 @@ void Lay_ben_trai_bac_200_duoi (void) {
 
 					Gap_tay4_thang(Min_tay_gat2  ,75 ,250 ,25 ,1.4 ,1800 ,0 ,5);
 					da_lay_tay1 = 1;
-					su_dung_chan_thuong(350);
+					su_dung_chan_thuong(295);
 					robotStop(0);
 					if(CHON_SAN == 0)		{							//SAN DO
 							robotRunAngle(-1600,16,-900,0.5);
@@ -3074,7 +3074,7 @@ void Lay_ben_trai_bac_200_duoi (void) {
 					Gap_tay1_thang(Max_tay_gat1 - 8  ,75 ,250 ,25 ,1.4 ,1800 ,0 ,6);
 					
 					da_lay_tay2 = 1;
-					su_dung_chan_thuong(350);
+					su_dung_chan_thuong(295);
 					robotStop(0);
 					if(CHON_SAN == 0)		{							//SAN DO
 							robotRunAngle(-1600,16,-900,0.5);
@@ -3094,7 +3094,7 @@ void Lay_ben_trai_bac_200_duoi (void) {
 
 					Gap_tay2_thang(Max_tay_gat2 - 8  ,75 ,250 ,25 ,1.2 ,1800 ,0 ,5);
 					da_lay_tay3 = 1;
-					su_dung_chan_thuong(350);
+					su_dung_chan_thuong(295);
 					robotStop(0);
 					if(CHON_SAN == 0)		{							//SAN DO
 							robotRunAngle(1400,18,-900,0.5);
@@ -3116,7 +3116,7 @@ void Lay_ben_trai_bac_200_duoi (void) {
 
 					Gap_tay3_thang(Min_tay_gat1 -5 ,75 ,250 ,25 ,1.2 ,1800 ,0 ,5);
 					da_lay_tay4 = 1;
-					su_dung_chan_thuong(350);
+					su_dung_chan_thuong(295);
 					robotStop(0);
 					if(CHON_SAN == 0)		{							//SAN DO
 							robotRunAngle(1400,18,-900,0.5);
@@ -3341,8 +3341,8 @@ void lay_thang_200_duoi_do(void) {
 
 }
 /// *********** HAM tracking vi tri bang laser ****************
-#define SPEED_FAST 30
-#define SPEED_MIN 6
+#define SPEED_FAST 35
+#define SPEED_MIN 8
 #define ERROR_MAX 50
 
 int smooth_speed(int error)
