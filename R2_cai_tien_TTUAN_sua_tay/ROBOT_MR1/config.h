@@ -411,7 +411,7 @@ extern int _RRRO, _RLRO, _FFRO, _FLRO , _speed0h;
 
 //End
 vs32 	sieu_am,num_over_t1=0,num_over_t2=0, num_over_t3=0,num_over_t5=0, num_over_t9=0,CCR2_Val,HMI_LOOP, num_over_t4;;
-vs16 	IMU,IMUxoay,IMUxoayDoc;
+vs16 	IMU,IMU_Doc,IMU_Ngang;
 vu8 	data_tx_gyro,en_gyro,dataTxGyro,enGyro, CB_DO_LINE[1], Home = 0; 
 int 	lazeSauValue,lazeTruocValue,lazeTraiValue,lazePhaiValue,quangTroValue,lazeTruocNhoValue;	
 int		bientroxoaytayValue, bientronangtayValue,bientrochantruocValue,bientrochansauValue,bientrodaytay1Value,bientrodaytay2Value;
@@ -477,8 +477,8 @@ int cho_phep_chay = 0;
 
 /// **************** GIA TRI VI TRI DAT HOP ********************
 
-int vi_tri_dat_hop_1_2 = 407;
-int vi_tri_dat_hop_3_4 = 602;
+int vi_tri_dat_hop_1_2 = 408;
+int vi_tri_dat_hop_3_4 = 603;
 int tin_hieu_dat_hop_3_4 = 0;
 int tin_hieu_dat_hop_1_2 = 0;
 
@@ -509,8 +509,8 @@ int vitri_tay23_laser_trai_GapQua = 222;
 int vitri_tay23_phai_laser_GapQua = 150;
 
 
-int vitri_tay1home = 445;
-int vitri_tay2home = 445;
+int vitri_tay1home = 454;
+int vitri_tay2home = 454;
 
 int vi_tri_gap_ngang_43 = 602;
 
@@ -548,11 +548,11 @@ int vi_tri_cua_rung_do_1_lazer_trai_tay_41 = 228;
 
 int vi_tri_dat_hop_1_tay41_xanh_truoc = 187; /// ** DUNG LAZER truoc**
 int vi_tri_dat_hop_2_tay41_xanh_truoc = 161;  
-int vi_tri_dat_hop_3_tay41_xanh_truoc = 134;
+int vi_tri_dat_hop_3_tay41_xanh_truoc = 132;
 
 int vi_tri_dat_hop_1_tay41_xanh = 153; /// ** DUNG LAZER SAU**
-int vi_tri_dat_hop_2_tay41_xanh = 179;  
-int vi_tri_dat_hop_3_tay41_xanh = 206;
+int vi_tri_dat_hop_2_tay41_xanh = 180;  
+int vi_tri_dat_hop_3_tay41_xanh = 208;
 
 
 int vi_tri_dat_hop_1_tay23_xanh = 132;  //* DUNG LAZER SAU**
@@ -2458,13 +2458,13 @@ void HMI_TRAN(vs32 _so_dong)
 										HMI_DMI("ENCODER_RL() ",ENCODER_RL(),32); 
 										break;
 									case 33:
-										HMI_DMI("IMUxoayDoc ",IMUxoayDoc,33); 
+										HMI_DMI("IMUxoayDoc ",IMU_Doc,33); 
 										break;
 									case 34:
 										HMI_DMI("id_dat_hop ",id_dat_hop,34); 
 										break;
 									case 35:
-										HMI_DMI("IMUxoay:", IMUxoay,35); 
+										HMI_DMI("IMU_Ngang:", IMU_Ngang,35); 
 										break;
 									case 36:
 										HMI_DMI("CB_kep_4_1 ",CB_kep_4_1,36); 

@@ -602,6 +602,8 @@ float tinh_speed_sigmoid(int con_lai, int khoang_giam_toc, int toc_max, int toc_
     return speed;
 }
 
+
+/// vid du run_encoder(10000, 0, 900, 45, 5, 4000, 100);
 void run_encoder(int encoder_target, int goc_chay, int goc_giu, int toc_max, int toc_min, int khoang_giam_toc, int sai_so)
 {
     int encoder;

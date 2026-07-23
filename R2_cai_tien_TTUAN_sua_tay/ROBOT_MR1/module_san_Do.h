@@ -39,7 +39,7 @@ void chinh_lai_vi_tri_VK_do(int vitri, int gia_tri_lap, int min, int max, int sa
 			dieuchinh = lazeTraiValue - vitri;
 			speed = custom_smooth_speed(dieuchinh,min, max);
 			
-					if  ((lazeTraiValue - vitri)> 0 ) {
+					if  ((lazeTraiValue - vitri)> sai_so ) {
 							robotRunAngle(-100, speed, 900, 0.5);
 					}
 					else if ((lazeTraiValue - vitri)< 0) {
@@ -1195,7 +1195,7 @@ void chuan_bi_gap_phai_200_tren_2_do (void ) {
 			robotRunAngle(900,14,-900,0.7);
 			for(i=0;i<1550;i++)
 						{
-							while(lazeSauValue > 132|| (abs(bientrochansauValue - target_chan_sau) > 300) )	
+							while(lazeSauValue > 132 )	
 							{	
 								if(!wantExit())	break;
 								vTaskDelay (1);
@@ -1216,7 +1216,7 @@ void chuan_bi_gap_phai_200_tren_2_do (void ) {
 			robotRunAngle(900,14,-900,0.7);
 			for(i=0;i<1550;i++)
 						{
-							while(lazeSauValue > 132 || (abs(bientrochansauValue - target_chan_sau) > 300) )	
+							while(lazeSauValue > 132  )	
 							{	
 								if(!wantExit())	break;
 								vTaskDelay (1);
@@ -1521,7 +1521,7 @@ void chuan_bi_gap_trai_200_tren_do_4 (void ) {
 	su_dung_chan_thuong(565);	
 	if (da_lay_tay1 == 0 && da_lay_tay2 == 0 && da_lay_tay3 == 0 && da_lay_tay4 == 0) {
 				for(i=0;i<1550;i++) {
-						while( lazeSauValue > 132 ||  (abs(bientrochansauValue - target_chan_sau) > 300))	
+						while( lazeSauValue > 132 )	
 						{	
 						if(lazePhaiValue > vitri_tay23_phai_laser_GapQua)			robotRunAngle(400,18,-900,0.7);
 						else																									robotRunAngle(900,15,-900,0.7);
@@ -1543,7 +1543,7 @@ void chuan_bi_gap_trai_200_tren_do_4 (void ) {
 		}
 	else if (da_lay_tay1 == 1 && da_lay_tay2 == 0 && da_lay_tay3 == 0 && da_lay_tay4 == 0) {
 					for(i=0;i<1550;i++) {
-						while( lazeSauValue > 132 ||  (abs(bientrochansauValue - target_chan_sau) > 300))	
+						while( lazeSauValue > 132 )	
 						{	
 						if(lazePhaiValue > vitri_tay23_phai_laser_GapQua)			robotRunAngle(400,18,-900,0.7);
 						else																									robotRunAngle(900,15,-900,0.7);
