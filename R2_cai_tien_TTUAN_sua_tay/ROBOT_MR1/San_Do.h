@@ -80,13 +80,13 @@ void Xuat_Phat_Lay_Vu_Khi_Do(int vu_khi, int goc_ve, int vitri) {
 	
 	
 				Nang_cuc_nhanh();
-				target_chan_truoc = 615, target_chan_sau =620;
+				target_chan_truoc = 618, target_chan_sau =622;
 
 				for(i=0;i<250;i++)
 				{
 					while(lazeTruocValue > 160)	
 					{	
-						Bam_thanh_laser_trai(45,50,0,vu_khi  ,2,-120,30);
+						Bam_thanh_laser_trai(47,-140,0,vu_khi  ,2,-100,10);
 						vTaskDelay(1); 
 						if(!wantExit())	break;
 					}
@@ -97,7 +97,7 @@ void Xuat_Phat_Lay_Vu_Khi_Do(int vu_khi, int goc_ve, int vitri) {
 					while(lazeTruocValue > 152)	
 					{	
 	
-						Bam_thanh_laser_trai(35,40,0,vu_khi ,1,-100,15);
+						Bam_thanh_laser_trai(34,-80,0,vu_khi ,2,-100,10);
 						vTaskDelay(1); 
 						if(!wantExit())	break;
 					}
@@ -108,7 +108,7 @@ void Xuat_Phat_Lay_Vu_Khi_Do(int vu_khi, int goc_ve, int vitri) {
 					while(lazeTruocValue > 148)	
 					{	
 	
-						Bam_thanh_laser_trai(26,0,0,vu_khi ,1,-100,15);
+						Bam_thanh_laser_trai(28,-10,0,vu_khi ,2,-100,10);
 						vTaskDelay(1); 
 						if(!wantExit())	break;
 					}
@@ -119,7 +119,7 @@ void Xuat_Phat_Lay_Vu_Khi_Do(int vu_khi, int goc_ve, int vitri) {
 					while(lazeTruocValue > 141)	
 					{	
 	
-						Bam_thanh_laser_trai(22,0,0,vu_khi ,1,-100,15);
+						Bam_thanh_laser_trai(22,0,0,vu_khi ,1, -80, 10);
 						vTaskDelay(1); 
 						if(!wantExit())	break;
 					}
@@ -131,7 +131,7 @@ void Xuat_Phat_Lay_Vu_Khi_Do(int vu_khi, int goc_ve, int vitri) {
 					while(HT_1 == 0 && HT_2 == 0)	
 					{			
 						if(lazeTruocValue < 141)	Tay_kep_xuong;
-						Bam_thanh_laser_trai(12,0,0,vu_khi,1,-50,15);
+						Bam_thanh_laser_trai(10,0,0,vu_khi,1,-50,10);
 						vTaskDelay(1); 
 						if(!wantExit())	break;
 					}
@@ -144,8 +144,8 @@ void Xuat_Phat_Lay_Vu_Khi_Do(int vu_khi, int goc_ve, int vitri) {
 				{
 					while(CB_tay_kep_vk_T == 1 || CB_tay_kep_vk_P == 1)	
 					{	
-						if	(CB_tay_kep_vk_T == 1) robotRun(880,10);
-						else if 	(CB_tay_kep_vk_P == 1) robotRun(-880,10);
+						if	(CB_tay_kep_vk_T == 1) robotRun(870  ,10);
+						else if 	(CB_tay_kep_vk_P == 1) robotRun(-870 ,10);
 						else		robotStop(0);				
 						vTaskDelay (1);
 						if(!wantExit())	break;
@@ -201,7 +201,7 @@ void Xuat_Phat_Lay_Vu_Khi_Do(int vu_khi, int goc_ve, int vitri) {
 				target_chan_truoc = 240, target_chan_sau = 240;
 				
 				
-				robotRunAngle(-900,13,900,0.8);
+				robotRunAngle(-900,16,900,0.8);
 				
 				for(i=0;i<250;i++)
 				{
@@ -213,7 +213,7 @@ void Xuat_Phat_Lay_Vu_Khi_Do(int vu_khi, int goc_ve, int vitri) {
 				}
 				robotStop(2);
 				
-				robotRunAngle(-900,6,900,0.6);
+				robotRunAngle(-900,10,900,0.6);
 				for(i=0;i<100;i++)
 				{
 					while(HT_3 == 0 && HT_4 == 0)	
@@ -226,7 +226,7 @@ void Xuat_Phat_Lay_Vu_Khi_Do(int vu_khi, int goc_ve, int vitri) {
 				robotStop(0);
 				chinh_lai_vi_tri_VK_do(vitri, 500, 5, 35, 0);
 				robotStop(0);
-				robotRunAngle(-900,6,900,0.6);
+				robotRunAngle(-900,7,900,0.6);
 				vTaskDelay(3000);
 				robotStop(0);
 				speed_chan_sau = 50;
@@ -322,10 +322,10 @@ void Xoay_dau_truoc_cua_do_2 (void)
 				}
 	robotStop(0); 
 	if (TinHieu_ChuanBi_GapThang == 1) {
-			chinh_lai_vi_tri_laser_phai_custom_do(vi_tri_cua_rung_do_2_lazer_phai_tay_41  , 1000, 10,  70, 1);
+			chinh_lai_vi_tri_laser_phai_custom_do(vi_tri_cua_rung_do_2_lazer_phai_tay_41  , 1000, 12,  70, 1);
 	}
 	else if (TinHieu_ChuanBi_GapThang == 0) {
-			chinh_lai_vi_tri_laser_phai_custom_do(vi_tri_cua_rung_do_2_lazer_phai_tay_41  , 1000, 10, 70, 3);
+			chinh_lai_vi_tri_laser_phai_custom_do(vi_tri_cua_rung_do_2_lazer_phai_tay_41  , 1000, 12, 70, 3);
 	}
 	if (block_pha == 2) {
 		SEND_UART (4,1);
@@ -363,9 +363,9 @@ void Xoay_dau_truoc_cua_do_1(void) {
 	robotStop(0);
 				
 	su_dung_chan(480);
-	run_encoder(21000, 1610, -900, 70, 10, 6000, 100);
+	run_encoder(21000, 1600, -900, 75, 10, 6000, 100);
 				
-	robotSetACC(90, 75); // gia toc nhanh
+	robotSetACC(80, 75); // gia toc nhanh
 	if (TinHieu_ChuanBi_GapThang == 1) {
 			chinh_lai_vi_tri_laser_phai_custom_do(vi_tri_cua_rung_do_1_lazer_phai_tay_41  , 1000, 10, 70, 2);
 	}
@@ -499,7 +499,7 @@ void Vao_rung_mai_2_do(int vitri)
 	target_chan_sau = Min_chan_sau + 250;
 	
 	robotSetACC(45, 60); // gia toc
-	robotRunAngle(900,60,-900,0.5);
+	robotRunAngle(900,62,-900,0.5);
 	for(i=0;i<250;i++)
 				{
 					while(lazeSauValue > 180)	
@@ -585,7 +585,7 @@ void Vao_rung_mai_1_do(int vitri)
 	
 		robotSetACC(45, 60); // gia toc nhanh
 	
-		robotRunAngle(900,55,-900,0.9);
+		robotRunAngle(900,62,-900,0.9);
 		for(i=0;i<250;i++)
 					{
 						while(lazeSauValue > 180)	
@@ -601,7 +601,7 @@ void Vao_rung_mai_1_do(int vitri)
 					{
 						while(lazeSauValue > 158)	
 						{	
-							Bam_thanh_laser_trai(40,900,-900,vitri ,2,200,10);
+							Bam_thanh_laser_trai(45,900,-900,vitri ,2,200,10);
 							vTaskDelay (1);
 							if(!wantExit())	break;
 						}
@@ -778,7 +778,6 @@ void chinh_vt_laser_trai_zone3_do_ngang(int vitri, int gia_tri_lap, int min_toc,
 void DatKFS_do(int vitri)
 {
 
-	
 	kiem_tra_so_qua_tren_tay();
 	speed_tay_xoay = 180;
   target_xoay_tay = vi_tri_dat_hop_1_2;
@@ -833,7 +832,7 @@ void DatKFS_do(int vitri)
 			}
 	}		
 	
-	vTaskDelay(100);
+	vTaskDelay(50);
 	robotStop(50);
 		
 	robotRunAngle(900,28,-900,0.5);
@@ -846,13 +845,14 @@ void DatKFS_do(int vitri)
 			}
 	}
 
-	robotSetACC(55, 70);	
+
+	robotSetACC(65, 75);	
 ///// chay ngang	check
 	for(i=0;i<550;i++)	         //// check con 1 co dung day kh
 		{	
 			while(lazeTraiValue < 260)	
 			{
-				Bam_laser_sau(55,0,-900,135, 3, 150, 15);
+				Bam_laser_sau(60,0,-900,135, 2, 150, 15);
 				vTaskDelay(1); 
 				if(!wantExit())	break;
 			}
@@ -864,7 +864,7 @@ void DatKFS_do(int vitri)
 		{	
 			while(lazeTraiValue < 275)	
 			{
-				Bam_laser_sau(52,0,-900,135, 3, 150, 15);
+				Bam_laser_sau(50,0,-900,135, 2, 150, 15);
 				if (lazeTruocValue > 180) { // r1 kh co do
 						phat_hien_r1_v3 = 1;
 				}
@@ -878,7 +878,7 @@ void DatKFS_do(int vitri)
 		{	
 			while(lazeTraiValue < 273)	
 			{
-				Bam_laser_sau(50,0,-900,135, 3, 150, 15);
+				Bam_laser_sau(60,0,-900,135, 2, 150, 15);
 				vTaskDelay(1); 
 				if(!wantExit())	break;
 			}
@@ -911,7 +911,7 @@ void DatKFS_do(int vitri)
 	}
 	else if (phat_hien_r1_v3 == 1) {
 			led_bao_hieu_on;
-			run_encoder(5000, 0, -900, 40, 5, 2000, 50);
+			run_encoder(5000, 0, -900, 45, 5, 3000, 50);
 			robotStop(0);
 			robotRotateQuick(900, 1.8, 0, 0.2, 300); 
 			robotStop(0);
@@ -1822,7 +1822,7 @@ void check_dat_hop_tren_T2_do(void) {
 }
 
 void test_datt2(void ) {
-		DatKFS_do(156);
+		DatKFS_do(vi_tri_dat_hop_2_tay41_do);
 		robotStop(0);
 		robotRotate(890,0.2, 0);
 		while(robotFixAngle()){
@@ -1851,7 +1851,7 @@ void tudonghoantoan_san_do(void) {
 				Run_All_Blocks_From_Queue_san_do();
 			}
 		
-		if (hoan_thanh_chay_rung == 1 ) DatKFS_do(160),hoan_thanh_chay_rung = 2 ;
+		if (hoan_thanh_chay_rung == 1 ) DatKFS_do(vi_tri_dat_hop_2_tay41_do),hoan_thanh_chay_rung = 2 ;
 	/// ******* //////
 		if (hoan_thanh_chay_rung == 2 && mode_cay_diem == 1)  {
 				quyet_dinh_dat_hop_tang3(); // danh cay diem 1
@@ -1919,7 +1919,7 @@ void retry_zone2_do(void) {
 		retry_co_qua_tren_tay();
 		Run_All_Blocks_From_Queue_san_do();
 	
-if (hoan_thanh_chay_rung == 1 ) DatKFS_do(160),hoan_thanh_chay_rung = 2 ;
+if (hoan_thanh_chay_rung == 1 ) DatKFS_do(vi_tri_dat_hop_2_tay41_do),hoan_thanh_chay_rung = 2 ;
 	/// ******* //////
 		if (hoan_thanh_chay_rung == 2 && mode_cay_diem == 1)  {
 				quyet_dinh_dat_hop_tang3(); // danh cay diem 1
