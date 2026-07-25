@@ -526,9 +526,6 @@ int vi_tri_cua_rung_xanh_2_lazer_phai_tay_41 = 317;
 int vi_tri_cua_rung_xanh_3_lazer_trai_tay_41 = 227;
 int vi_tri_cua_rung_xanh_3_lazer_phai_tay_41 = 383;
 
-int vi_tri_cua_rung_xanh_3_lazer_phai_tay_23 = 378;
-
-
 
 //// ******** VI TRI LAZER CUA RUNG DO *********************
 int vi_tri_cua_rung_do_3_lazer_phai_tay_41 = 248;
@@ -536,10 +533,8 @@ int vi_tri_cua_rung_do_3_lazer_phai_tay_23 = 245;
 
 int vi_tri_cua_rung_do_2_lazer_phai_tay_41 = 317;
 
-int vi_tri_cua_rung_do_1_lazer_phai_tay_41 = 384;
-int vi_tri_cua_rung_do_1_lazer_phai_tay_23 = 361;
-
-int vi_tri_cua_rung_do_1_lazer_trai_tay_41 = 228;
+int vi_tri_cua_rung_do_1_lazer_phai_tay_41 = 383;
+int vi_tri_cua_rung_do_1_lazer_trai_tay_41 = 230;
 
 
 ///*********************************************************

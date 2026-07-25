@@ -888,7 +888,7 @@ void MD_qua_trai_phai_len_bac_200 (int goc_quay_ngang,int goc_quay_thang, int di
 		robotRunAngle(di_Cheo, 16, giu_dau,0.7);
 		vTaskDelay (time_lui); 
 		robotStop(0);
-		robotRotateQuick(goc_quay_ngang, 1.6, 0, 0.3, 300); 
+		robotRotateQuick(goc_quay_ngang, 2.5, 0, 0.3, 300); 
 		robotStop(0);
 		Nang_nhanh();
 		target_chan_truoc = Min_chan_truoc + 250;
@@ -920,7 +920,7 @@ void MD_qua_trai_phai_len_bac_200 (int goc_quay_ngang,int goc_quay_thang, int di
 	
 		Leo_bac_200(Angle, Robot_Angle);
 		robotStop(0);
-		robotRotateQuick(goc_quay_thang, 1.6, 0, 0.3, 300); 
+		robotRotateQuick(goc_quay_thang, 2.5, 0, 0.3, 300); 
 		robotStop(0);
 }
 
@@ -931,7 +931,7 @@ void MD_qua_trai_phai_xuong_bac_200 (int goc_quay_ngang,int goc_quay_thang, int 
 		robotRunAngle(di_Cheo, 16, giu_dau,0.5);
 		vTaskDelay (time_lui); 
 		robotStop(0);
-		robotRotateQuick(goc_quay_ngang, 1.6, 0, 0.3, 300);
+		robotRotateQuick(goc_quay_ngang, 2.5, 0, 0.3, 300);
 		robotStop(0);
 				
 		su_dung_chan(265);
@@ -956,7 +956,7 @@ void MD_qua_trai_phai_xuong_bac_200 (int goc_quay_ngang,int goc_quay_thang, int 
 				
 		Xuong_bac_200(Angle, Robot_Angle);
 		robotStop(0);
-		robotRotateQuick(goc_quay_thang, 1.6, 0, 0.3, 300);
+		robotRotateQuick(goc_quay_thang, 2.5, 0, 0.3, 300);
 		robotStop(0);
 }
 
@@ -2374,8 +2374,6 @@ void kiem_tra_huong_quay_tay_gap_phia_truoc_200_duoi (void) {
 
 ///  200 tren thang
 void kiem_tra_huong_quay_tay_gap_phia_truoc (void) {
-	
-		led_bao_hieu_on;
 	
 		if (da_lay_tay1 == 0 && da_lay_tay2 == 0 && da_lay_tay3 == 0 && da_lay_tay4 == 0) {
 				led_bao_hieu_on;
