@@ -206,7 +206,7 @@ vTaskDelay(1000);
 
 					if(TRIANGLE && L2 && !R2 )													tudonghoantoan();
 					if(SQUARE && L2 && !R2) 														Run_All_Blocks_From_Queue_san_xanh();
-					if(X && L2 && !R2) 																	robotRotateQuick(900, 1.8, 0, 0.3, 300); 
+//					if(X && L2 && !R2) 																	robotRotateQuick(900, 1.8, 0, 0.3, 300); 
 //					if(O && L2 && !R2 ) 																robotRotateQuick(-850, 1.6, 0, 0.3, 300);
 
 		

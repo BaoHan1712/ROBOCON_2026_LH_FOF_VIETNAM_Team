@@ -258,7 +258,7 @@ vu8 DATA_SPEED[80]={255,1,0,0,				// 1- ID = 1, DIRECT = 0, SPEED = 0
 #define  CB_kep_3_2													GPIO_ReadInputDataBit(GPIOD,GPIO_Pin_14)//okP
 #define  CB_kep_4_1													GPIO_ReadInputDataBit(GPIOD,GPIO_Pin_11)//OKT
 #define  CB_kep_4_2													GPIO_ReadInputDataBit(GPIOD,GPIO_Pin_10)//OKP 
-//#define  CB_vtri_leo												GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_6)  // con vang o dit
+#define  CB_gap_qua_duoi										GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_6)  
 
 #define  CB_xilanh_tay_1										GPIO_ReadInputDataBit(GPIOD,GPIO_Pin_15)//OK nhan la 0, khong nhan la 1
 #define  CB_xilanh_tay_2										GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_11)//OK
@@ -2474,7 +2474,7 @@ void HMI_TRAN(vs32 _so_dong)
 										HMI_DMI("CB_kep_2_1 ",CB_kep_2_1,39); 
 										break;
 									case 40:
-										HMI_DMI("phat_hien_r1_v3 ",phat_hien_r1_v3,40); 
+										HMI_DMI("CB_gap_qua_duoi ",CB_gap_qua_duoi,40); 
 										break;
 						}
 }
