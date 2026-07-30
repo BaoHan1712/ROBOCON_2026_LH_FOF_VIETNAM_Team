@@ -556,7 +556,7 @@ int vi_tri_dat_hop_3_tay23_xanh = 185;
 
 int vi_tri_dat_hop_1_tay23_xanh_truoc = 208;
 int vi_tri_dat_hop_2_tay23_xanh_truoc = 182;
-int vi_tri_dat_hop_3_tay23_xanh_truoc = 156;
+int vi_tri_dat_hop_3_tay23_xanh_truoc = 154;
 ///
 //// ******** VI TRI LAZER DAT HOP DO *********************
 int vi_tri_dat_hop_1_tay41_do = 185;   /// ** DUNG LAZER truoc**
@@ -1829,6 +1829,7 @@ void ProcessReceivedData_2(void)
 			// Push vào FIFO
          Queue_Push(state_rb, move, action, id_block);
 				 led_bao_hieu_on;
+				 Tay_kep_mo;
 				
 				// dem khi co 2 qua thi cho gap cung phia
 				 if (move == 0 && (action == 1 || action == 2 || action == 3)) {
@@ -1858,6 +1859,7 @@ void ProcessReceivedData_2(void)
 			else if (id_rb == 2 && state_rb == 3) {
 					id_dat_hop = Get_Id_Dat_Hop(move, action, id_block);
 					led_bao_hieu_on;
+					Tay_kep_mo;
 					
 					if(id_dat_hop != 0)
 					{
@@ -1870,6 +1872,7 @@ void ProcessReceivedData_2(void)
 						if ( move == 1 && action == 1  ) {
 								mode_nhat_hop = 1;
 								led_bao_hieu_on;
+								Tay_kep_mo;
 						}
 						do_lech = move;
 						khoangcach = action;
