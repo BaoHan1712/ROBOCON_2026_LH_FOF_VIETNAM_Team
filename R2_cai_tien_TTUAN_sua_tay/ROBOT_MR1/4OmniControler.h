@@ -392,7 +392,7 @@ void robotRunAngle(float angle, int maxSpeed, float robotAngle, float rotate)
     {
 			_robotRunAngle = angle;
 			robotCurve(angle - _robotIMUAngle , maxSpeed, 0);
-			robotRotate(robotAngle, (abs(robotAngle - _robotIMUAngle) > 70? (robotAngle > _robotIMUAngle ? rotate: -rotate):(robotAngle - _robotIMUAngle)*0.008), 0); // 0.005
+			robotRotate(robotAngle, (abs(robotAngle - _robotIMUAngle) > 90? (robotAngle > _robotIMUAngle ? rotate: -rotate):(robotAngle - _robotIMUAngle)*0.008), 0); // 0.005
 		}
 }
 //------------------------------------------------------------------------------
@@ -627,7 +627,7 @@ void run_encoder(int encoder_target, int goc_chay, int goc_giu, int toc_max, int
             speed = toc_min;
         }
 
-        robotRunAngle(goc_chay, speed, goc_giu, 0.5);
+        robotRunAngle(goc_chay, speed, goc_giu, 0.4);
 
         if (!wantExit()) {
             break;

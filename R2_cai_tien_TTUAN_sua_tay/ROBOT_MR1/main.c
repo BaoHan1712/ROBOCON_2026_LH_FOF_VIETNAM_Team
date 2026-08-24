@@ -160,19 +160,19 @@ vTaskDelay(1000);
 	while (1)
 	{ 
 
-		while(SHARE) 
-		{	
-//			
-			robotGamePadControl(8,40);
-			Nang_Ha_tay1_Manual(); 
-			Nang_Ha_tay2_Manual();
-			Xoay_tay_Manual();
-			go_qua();
-		
-			if(OPTIONS) vehome();
-		
+//		while(SHARE) 
+//		{	
+////			
+//			robotGamePadControl(8,40);
+//			Nang_Ha_tay1_Manual(); 
+//			Nang_Ha_tay2_Manual();
+//			Xoay_tay_Manual();
+//			go_qua();
+//		
+//			if(OPTIONS) vehome();
+//		
 			
-			if(quangTroValue < 120)					Tay_kep_mo;
+			if(quangTroValue < 250)					Tay_kep_mo;
 			if(CHON_SAN == 0)									//SAN DO
 			{
 				
@@ -183,16 +183,16 @@ vTaskDelay(1000);
 ////				if(TRIANGLE && L2 && !R2 )												bieu_dien();
 //				
 ////////				
-					if(TRIANGLE && L2 && !R2 )														tudonghoantoan_san_do(); 
-					if(SQUARE && L2 && !R2) 															Run_All_Blocks_From_Queue_san_do();
-//					if(X && L2 && !R2) 																		testdat();
-//					if(O && L2 && !R2 ) 																	tesst();
+//					if(TRIANGLE && L2 && !R2 )														tudonghoantoan_san_do(); 
+//					if(SQUARE && L2 && !R2) 															Run_All_Blocks_From_Queue_san_do();
+//					if(X && L2 && !R2) 																		Lay_phia_truoc_bac_200_tren();
+//					if(O && L2 && !R2 ) 																	su_dung_chan(565);
 				
 				
-//					if(TRIANGLE && L2 && !R2 )											tu_dong_dat_tang2_do();
-//					if(SQUARE && L2 && !R2) 												Leo_bac_200(900, -900);
-//					if(X && L2 && !R2) 															Xuong_bac_200(900, -900);
-//					if(O && L2 && !R2 ) 														Xuong_bac_400(900, -900);
+//					if(TRIANGLE && L2 && !R2 )											su_dung_chan_cham(560);
+//					if(SQUARE && L2 && !R2) 												Tay2_len;
+//					if(X && L2 && !R2) 															su_dung_chan_cham(480);
+////					if(O && L2 && !R2 ) 														Xuong_bac_400(900, -900);
 
 
 	
@@ -204,10 +204,10 @@ vTaskDelay(1000);
 				
 //			if(O && L2 && !R2)															Xuat_Phat_Lay_Vu_Khi_Xanh(164, -1600, 199);
 
-					if(TRIANGLE && L2 && !R2 )													tudonghoantoan();
-					if(SQUARE && L2 && !R2) 														Run_All_Blocks_From_Queue_san_xanh();
-//					if(X && L2 && !R2) 																	robotRotateQuick(900, 1.8, 0, 0.3, 300); 
-//					if(O && L2 && !R2 ) 																robotRotateQuick(-850, 1.6, 0, 0.3, 300);
+//					if(TRIANGLE && L2 && !R2 )													Leo_bac_200(-900, 900);
+//					if(SQUARE && L2 && !R2) 														Xuong_bac_200(-900, 900);
+//					if(X && L2 && !R2) 																	Leo_bac_400(-900, 900);
+//					if(O && L2 && !R2 ) 																Xuong_bac_400(-900, 900);
 
 		
 				
@@ -232,7 +232,7 @@ vTaskDelay(1000);
 
 		robotStop(0);
 	}
-}
+//}
 	
 int main(void)
 {

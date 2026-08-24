@@ -857,12 +857,13 @@ ARM Macro Assembler    Page 14
               00000000 
 Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M4.fp.sp --apcs=
 interwork --depend=.\project\startup_stm32f4xx.d -o.\project\startup_stm32f4xx.
-o -I.\RTE\_Project -IC:\Users\DELL\AppData\Local\Arm\Packs\ARM\CMSIS\6.1.0\CMSI
-S\Core\Include -IC:\Users\DELL\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\3.1.1
-\Drivers\CMSIS\Device\ST\STM32F4xx\Include --predefine="__MICROLIB SETA 1" --pr
-edefine="__UVISION_VERSION SETA 529" --predefine="_RTE_ SETA 1" --predefine="ST
-M32F407xx SETA 1" --list=.\project\startup_stm32f4xx.lst ..\Libraries\CMSIS\Dev
-ice\ST\STM32F4xx\Source\Templates\arm\startup_stm32f4xx.s
+o -I.\RTE\_Project -IC:\Users\hanbao\AppData\Local\Arm\Packs\ARM\CMSIS\5.7.0\CM
+SIS\Core\Include -IC:\Users\hanbao\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\3
+.1.1\Drivers\CMSIS\Device\ST\STM32F4xx\Include --predefine="__MICROLIB SETA 1" 
+--predefine="__UVISION_VERSION SETA 531" --predefine="_RTE_ SETA 1" --predefine
+="STM32F407xx SETA 1" --predefine="_RTE_ SETA 1" --list=.\project\startup_stm32
+f4xx.lst ..\Libraries\CMSIS\Device\ST\STM32F4xx\Source\Templates\arm\startup_st
+m32f4xx.s
 
 
 
